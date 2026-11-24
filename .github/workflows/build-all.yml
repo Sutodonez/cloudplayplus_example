@@ -8,8 +8,9 @@ on:
 
 env:
   FLUTTER_VERSION: 3.35.1
-  FLUTTER_STORAGE_BASE_URL: https://storage.flutter-io.cn
-  PUB_HOSTED_URL: https://pub.flutter-io.cn
+  # Use default Flutter/pub CDNs on GitHub-hosted runners.
+  # CN mirrors (storage.flutter-io.cn / pub.flutter-io.cn) stall or reset from
+  # these runners (curl 56/92/18 during Setup Flutter).
   PUB_CACHE: ${{ github.workspace }}/.pub-cache
   APP_DIR: vendor/cloudplayplus
 
