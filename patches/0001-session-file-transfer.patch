@@ -1,0 +1,413 @@
+diff --git a/lib/entities/messages.dart b/lib/entities/messages.dart
+index 88376ef..bbe3ac5 100644
+--- a/lib/entities/messages.dart
++++ b/lib/entities/messages.dart
+@@ -20,6 +20,12 @@ const int LP_KEYPRESSED = 1 << 4; //16
+ const int LP_EMPTY = 1 << 6; //64
+ const int LP_AUDIO_CONNECT = 65;
+ const int LP_AUDIO_DISCONNECT = 66;
++/// Session file/folder transfer chunk (see plugins/session_file_transfer).
++const int LP_FILE_CHUNK = 67;
++/// Privacy / blank-display mode (reserved; privacy PR owns the wire value).
++const int LP_PRIVACY_MODE = 68;
++/// Remote terminal I/O chunk (reserved; see plugins/session_terminal_link).
++const int LP_TERM_CHUNK = 69;
+ const int LP_DISCONNECT = 1 << 7;
+ // [--end of message definitions--]
+ 
+diff --git a/lib/entities/session.dart b/lib/entities/session.dart
+index d74019c..743ae97 100644
+--- a/lib/entities/session.dart
++++ b/lib/entities/session.dart
+@@ -13,6 +13,7 @@ import 'package:cloudplayplus/utils/widgets/message_box.dart';
+ import 'package:flutter/foundation.dart';
+ import 'package:flutter_webrtc/flutter_webrtc.dart';
+ import 'package:hardware_simulator/hardware_simulator.dart';
++import 'package:session_file_transfer/session_file_transfer.dart';
+ import 'package:synchronized/synchronized.dart';
+ import 'package:flutter/services.dart';
+ import 'package:flutter/widgets.dart';
+@@ -109,6 +110,10 @@ class StreamingSession {
+   Timer? _clipboardTimer;
+   String _lastClipboardContent = '';
+ 
++  /// Isolated session file/folder transfer (reliable data channel).
++  FileTransferEngine? fileTransfer;
++  StreamSubscription<FileTransferProgress>? _fileTransferProgressSub;
++
+   // 添加生命周期监听器
+   static final _lifecycleObserver = _AppLifecycleObserver();
+ 
+@@ -118,6 +123,67 @@ class StreamingSession {
+     WidgetsBinding.instance.addObserver(_lifecycleObserver);
+   }
+ 
++  void _ensureFileTransfer() {
++    if (fileTransfer != null || channel == null) return;
++    // Web lacks dart:io receive path used by the engine.
++    if (AppPlatform.isWeb) return;
++    fileTransfer = FileTransferEngine(
++      sendText: (text) async {
++        if (channel?.state == RTCDataChannelState.RTCDataChannelOpen) {
++          await channel!.send(RTCDataChannelMessage(text));
++        }
++      },
++      sendBinary: (bytes) async {
++        if (channel?.state == RTCDataChannelState.RTCDataChannelOpen) {
++          await channel!.send(RTCDataChannelMessage.fromBinary(bytes));
++        }
++      },
++      autoAcceptIncoming: true,
++    );
++    fileTransfer!.onIncomingOffer = (offer) async {
++      final count = offer.files.length;
++      final total = offer.bytesTotal;
++      MessageBoxManager().showMessage(
++        '正在接收 $count 个文件（约 ${_formatBytes(total)}）\n保存到: ${fileTransfer!.receiveRoot}',
++        '文件传输',
++      );
++      return true;
++    };
++    _fileTransferProgressSub = fileTransfer!.progress.listen((p) {
++      if (p.state == FileTransferState.completed) {
++        MessageBoxManager().showMessage(
++          p.isIncoming
++              ? '已接收完成（${p.fileCount} 个文件）\n${fileTransfer!.receiveRoot}'
++              : '发送完成（${p.fileCount} 个文件）',
++          '文件传输',
++        );
++      } else if (p.state == FileTransferState.failed ||
++          p.state == FileTransferState.aborted) {
++        if (p.error != null && p.error!.isNotEmpty) {
++          MessageBoxManager().showMessage(p.error!, '文件传输中断');
++        }
++      }
++    });
++  }
++
++  static String _formatBytes(int bytes) {
++    if (bytes < 1024) return '$bytes B';
++    if (bytes < 1024 * 1024) {
++      return '${(bytes / 1024).toStringAsFixed(1)} KB';
++    }
++    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
++  }
++
++  /// Controller-side helper: send local files/folders over the session.
++  Future<void> sendFiles(List<String> paths) async {
++    _ensureFileTransfer();
++    final engine = fileTransfer;
++    if (engine == null) {
++      throw StateError('File transfer unavailable on this platform');
++    }
++    await engine.sendPaths(paths);
++  }
++
+   Function(String mediatype, MediaStream stream)? onAddRemoteStream;
+ 
+   //We are the controller
+@@ -233,6 +299,7 @@ class StreamingSession {
+             if (state == RTCDataChannelState.RTCDataChannelOpen) {
+               await channel?.send(RTCDataChannelMessage.fromBinary(
+                   Uint8List.fromList([LP_PING, RP_PING])));
++              _ensureFileTransfer();
+               if (StreamingSettings.streamAudio!) {
+                 StreamingSettings.audioBitrate ??= 32;
+                 audioBitrate = StreamingSettings.audioBitrate!;
+@@ -463,6 +530,7 @@ class StreamingSession {
+         ..ordered = true;
+       channel =
+           await pc!.createDataChannel('userInput', reliableDataChannelDict);
++      _ensureFileTransfer();
+ 
+       channel?.onMessage = (RTCDataChannelMessage msg) {
+         if (!image_hooked && !AppPlatform.isWeb) {
+@@ -742,6 +810,10 @@ class StreamingSession {
+     });
+ 
+     stopClipboardSync();
++    await _fileTransferProgressSub?.cancel();
++    _fileTransferProgressSub = null;
++    fileTransfer?.dispose();
++    fileTransfer = null;
+   }
+ 
+   Timer? _pingTimeoutTimer;
+@@ -837,11 +909,20 @@ class StreamingSession {
+           audioSession = AudioSession(channel!, controller, controlled, audioBitrate);
+           audioSession?.audioRequested();
+           break;
++        case LP_FILE_CHUNK:
++          _ensureFileTransfer();
++          fileTransfer?.onBinaryMessage(message.binary);
++          break;
+         default:
+           VLOG0("unhandled message.please debug");
+       }
+     } else {
+       Map<String, dynamic> data = jsonDecode(message.text);
++      if (FileXferJsonCodec.isFileXferEnvelope(data)) {
++        _ensureFileTransfer();
++        fileTransfer?.onTextMessage(message.text);
++        return;
++      }
+       switch (data.keys.first) {
+         case "candidate":
+           var candidateMap = data["candidate"];
+@@ -894,11 +975,20 @@ class StreamingSession {
+           break;
+         case LP_EMPTY:
+           break;
++        case LP_FILE_CHUNK:
++          _ensureFileTransfer();
++          fileTransfer?.onBinaryMessage(message.binary);
++          break;
+         default:
+           VLOG0("unhandled message from host.please debug");
+       }
+     } else {
+       Map<String, dynamic> data = jsonDecode(message.text);
++      if (FileXferJsonCodec.isFileXferEnvelope(data)) {
++        _ensureFileTransfer();
++        fileTransfer?.onTextMessage(message.text);
++        return;
++      }
+       switch (data.keys.first) {
+         case "candidate":
+           var candidateMap = data['candidate'];
+diff --git a/lib/utils/widgets/device_tile_page.dart b/lib/utils/widgets/device_tile_page.dart
+index 9013cbd..22a7f59 100644
+--- a/lib/utils/widgets/device_tile_page.dart
++++ b/lib/utils/widgets/device_tile_page.dart
+@@ -6,6 +6,7 @@ import 'package:cloudplayplus/services/shared_preferences_manager.dart';
+ import 'package:cloudplayplus/services/streaming_manager.dart';
+ import 'package:cloudplayplus/services/websocket_service.dart';
+ import 'package:cloudplayplus/utils/system_tray_manager.dart';
++import 'package:cloudplayplus/utils/widgets/file_transfer_sheet.dart';
+ import 'package:cloudplayplus/utils/widgets/global_remote_screen_renderer.dart';
+ import 'package:cloudplayplus/utils/widgets/message_box.dart';
+ import 'package:floating_menu_panel/floating_menu_panel.dart';
+@@ -314,6 +315,9 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+                           !ScreenController.showVirtualGamePad.value);
+                     }
+                     if (index == 5) {
++                      await FileTransferSheet.show(context);
++                    }
++                    if (index == 6) {
+                       ScreenController.setshowDetailUseScrollView(true);
+                       ScreenController.setOnlyShowRemoteScreen(false);
+                       StreamingManager.stopStreaming(widget.device);
+@@ -325,6 +329,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+                     Icons.keyboard,
+                     Icons.mouse,
+                     Icons.gamepad,
++                    Icons.folder_open,
+                     Icons.close,
+                   ],
+                 ),
+diff --git a/lib/utils/widgets/file_transfer_sheet.dart b/lib/utils/widgets/file_transfer_sheet.dart
+new file mode 100644
+index 0000000..3c7f0c4
+--- /dev/null
++++ b/lib/utils/widgets/file_transfer_sheet.dart
+@@ -0,0 +1,186 @@
++import 'dart:async';
++
++import 'package:cloudplayplus/entities/session.dart';
++import 'package:cloudplayplus/services/app_info_service.dart';
++import 'package:cloudplayplus/services/webrtc_service.dart';
++import 'package:cloudplayplus/utils/widgets/message_box.dart';
++import 'package:file_picker/file_picker.dart';
++import 'package:flutter/material.dart';
++import 'package:session_file_transfer/session_file_transfer.dart';
++
++/// Minimal send/receive UI for session file transfer.
++class FileTransferSheet {
++  static Future<void> show(BuildContext context) async {
++    if (AppPlatform.isWeb) {
++      MessageBoxManager().showMessage('网页端暂不支持文件传输', '文件传输');
++      return;
++    }
++    final session = WebrtcService.currentRenderingSession;
++    if (session == null ||
++        session.connectionState != StreamingSessionConnectionState.connected) {
++      MessageBoxManager().showMessage('当前没有已连接的会话', '文件传输');
++      return;
++    }
++
++    await showModalBottomSheet<void>(
++      context: context,
++      showDragHandle: true,
++      builder: (ctx) {
++        return SafeArea(
++          child: Padding(
++            padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
++            child: _FileTransferBody(session: session),
++          ),
++        );
++      },
++    );
++  }
++}
++
++class _FileTransferBody extends StatefulWidget {
++  final StreamingSession session;
++
++  const _FileTransferBody({required this.session});
++
++  @override
++  State<_FileTransferBody> createState() => _FileTransferBodyState();
++}
++
++class _FileTransferBodyState extends State<_FileTransferBody> {
++  FileTransferProgress? _progress;
++  StreamSubscription<FileTransferProgress>? _sub;
++  bool _busy = false;
++
++  @override
++  void initState() {
++    super.initState();
++    final engine = widget.session.fileTransfer;
++    if (engine != null) {
++      _sub = engine.progress.listen((p) {
++        if (mounted) setState(() => _progress = p);
++      });
++    }
++  }
++
++  @override
++  void dispose() {
++    _sub?.cancel();
++    super.dispose();
++  }
++
++  Future<void> _pickAndSend({required bool folder}) async {
++    setState(() => _busy = true);
++    try {
++      final List<String> paths = [];
++      if (folder) {
++        final dir = await FilePicker.platform.getDirectoryPath(
++          dialogTitle: '选择要发送的文件夹',
++        );
++        if (dir != null) paths.add(dir);
++      } else {
++        final result = await FilePicker.platform.pickFiles(
++          allowMultiple: true,
++          withData: false,
++          dialogTitle: '选择要发送的文件',
++        );
++        if (result != null) {
++          for (final f in result.files) {
++            if (f.path != null) paths.add(f.path!);
++          }
++        }
++      }
++      if (paths.isEmpty) return;
++      await widget.session.sendFiles(paths);
++      if (mounted) {
++        final engine = widget.session.fileTransfer;
++        await _sub?.cancel();
++        if (engine != null) {
++          _sub = engine.progress.listen((p) {
++            if (mounted) setState(() => _progress = p);
++          });
++        }
++      }
++    } catch (e) {
++      MessageBoxManager().showMessage(e.toString(), '发送失败');
++    } finally {
++      if (mounted) setState(() => _busy = false);
++    }
++  }
++
++  @override
++  Widget build(BuildContext context) {
++    final p = _progress;
++    return Column(
++      mainAxisSize: MainAxisSize.min,
++      crossAxisAlignment: CrossAxisAlignment.stretch,
++      children: [
++        Text('会话文件传输', style: Theme.of(context).textTheme.titleLarge),
++        const SizedBox(height: 4),
++        Text(
++          '通过当前远程会话的可靠数据通道发送文件或文件夹。对方默认保存到 Downloads/CloudPlayPlusTransfers。',
++          style: Theme.of(context).textTheme.bodySmall,
++        ),
++        const SizedBox(height: 16),
++        FilledButton.icon(
++          onPressed: _busy ? null : () => _pickAndSend(folder: false),
++          icon: const Icon(Icons.insert_drive_file_outlined),
++          label: const Text('发送文件'),
++        ),
++        const SizedBox(height: 8),
++        OutlinedButton.icon(
++          onPressed: _busy ? null : () => _pickAndSend(folder: true),
++          icon: const Icon(Icons.folder_outlined),
++          label: const Text('发送文件夹'),
++        ),
++        if (p != null) ...[
++          const SizedBox(height: 16),
++          LinearProgressIndicator(value: p.bytesTotal > 0 ? p.fraction : null),
++          const SizedBox(height: 8),
++          Text(
++            '${_stateLabel(p.state)}  ${p.fileIndex + 1}/${p.fileCount}'
++            '${p.currentPath != null ? '  ${p.currentPath}' : ''}',
++            maxLines: 2,
++            overflow: TextOverflow.ellipsis,
++          ),
++          Text(
++            '${_fmt(p.bytesTransferred)} / ${_fmt(p.bytesTotal)}'
++            '${p.isIncoming ? '  (接收)' : '  (发送)'}',
++          ),
++          if (p.state == FileTransferState.transferring ||
++              p.state == FileTransferState.offering)
++            TextButton(
++              onPressed: () => widget.session.fileTransfer?.abort(reason: 'user abort'),
++              child: const Text('取消'),
++            ),
++        ],
++      ],
++    );
++  }
++
++  static String _stateLabel(FileTransferState s) {
++    switch (s) {
++      case FileTransferState.offering:
++        return '等待对方接受';
++      case FileTransferState.transferring:
++        return '传输中';
++      case FileTransferState.completed:
++        return '已完成';
++      case FileTransferState.aborted:
++        return '已取消';
++      case FileTransferState.failed:
++        return '失败';
++      case FileTransferState.paused:
++        return '暂停';
++      case FileTransferState.idle:
++        return '空闲';
++    }
++  }
++
++  static String _fmt(int bytes) {
++    if (bytes < 1024) return '$bytes B';
++    if (bytes < 1024 * 1024) {
++      return '${(bytes / 1024).toStringAsFixed(1)} KB';
++    }
++    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
++  }
++}
+diff --git a/pubspec.yaml b/pubspec.yaml
+index e0efbf1..1588718 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -46,6 +46,9 @@ dependencies:
+     path: plugins/virtual.keyboard.dart
+   hardware_simulator:
+     path: plugins/hardware_simulator
++  session_file_transfer:
++    path: ../../plugins/session_file_transfer
++  file_picker: ^8.1.7
+   flutter_sticky_header: ^0.8.0
+   fullscreen_window:
+     path: plugins/fullscreen_window

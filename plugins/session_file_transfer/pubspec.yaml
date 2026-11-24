@@ -1,0 +1,18 @@
+name: session_file_transfer
+description: >
+  Isolated session file/folder transfer over a reliable side channel
+  (WebRTC data channel). Rebuild-friendly: no native code; app wires
+  send/receive callbacks only.
+version: 0.1.0
+publish_to: "none"
+
+environment:
+  sdk: ">=3.2.0 <4.0.0"
+
+dependencies:
+  crypto: ^3.0.6
+  path: ^1.9.0
+
+dev_dependencies:
+  lints: ^3.0.0
+  test: ^1.25.0
