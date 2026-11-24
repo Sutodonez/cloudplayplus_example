@@ -24,3 +24,10 @@ Use zero-padded numeric prefixes so lexical order matches apply order:
 3. Run `scripts/apply-patches.sh` and verify `scripts/build.sh`.
 
 Do not commit dirty ad-hoc edits in `vendor/` on the cppp branch.
+
+## Series present
+
+| Patch | Topic |
+|-------|-------|
+| `0001-nat-punch-ice-policy-and-wireup.patch` | NAT punch — ICE policy, Dart helper, session/settings — see [`nat-punch/`](./nat-punch/) |
+| `0002-nat-punch-flutter-webrtc-methodchannel.patch` | NAT punch — flutter-webrtc MethodChannel (bounded fork) |

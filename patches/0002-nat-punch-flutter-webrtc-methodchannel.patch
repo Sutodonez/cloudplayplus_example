@@ -1,0 +1,388 @@
+diff --git a/plugins/flutter-webrtc/common/cpp/include/flutter_nat_punch.h b/plugins/flutter-webrtc/common/cpp/include/flutter_nat_punch.h
+new file mode 100644
+index 0000000..cac92f7
+--- /dev/null
++++ b/plugins/flutter-webrtc/common/cpp/include/flutter_nat_punch.h
+@@ -0,0 +1,27 @@
++#ifndef FLUTTER_WEBRTC_NAT_PUNCH_HXX
++#define FLUTTER_WEBRTC_NAT_PUNCH_HXX
++
++#include "flutter_common.h"
++
++#include <memory>
++#include <string>
++#include <vector>
++
++namespace flutter_webrtc_plugin {
++
++// Bounded NAT punch helpers (replayable onto future flutter-webrtc).
++// Ideas only from hard-NAT ladder design — original implementation.
++class FlutterNatPunch {
++ public:
++  // UDP probes to public DNS-style hosts (port 53 by default).
++  static void ProbeFirewall(const EncodableMap& params,
++                            std::unique_ptr<MethodResultProxy> result);
++
++  // Multi-socket UDP bursts toward remote ICE candidate endpoints.
++  static void SymmetricPunch(const EncodableMap& params,
++                             std::unique_ptr<MethodResultProxy> result);
++};
++
++}  // namespace flutter_webrtc_plugin
++
++#endif  // FLUTTER_WEBRTC_NAT_PUNCH_HXX
+diff --git a/plugins/flutter-webrtc/common/cpp/src/flutter_nat_punch.cc b/plugins/flutter-webrtc/common/cpp/src/flutter_nat_punch.cc
+new file mode 100644
+index 0000000..35b09c1
+--- /dev/null
++++ b/plugins/flutter-webrtc/common/cpp/src/flutter_nat_punch.cc
+@@ -0,0 +1,181 @@
++#include "flutter_nat_punch.h"
++
++#include <chrono>
++#include <cstring>
++#include <thread>
++#include <vector>
++
++#if defined(_WIN32)
++#ifndef WIN32_LEAN_AND_MEAN
++#define WIN32_LEAN_AND_MEAN
++#endif
++#include <winsock2.h>
++#include <ws2tcpip.h>
++#pragma comment(lib, "ws2_32.lib")
++using socket_t = SOCKET;
++static const socket_t kInvalidSocket = INVALID_SOCKET;
++static int CloseSocket(socket_t s) { return closesocket(s); }
++#else
++#include <arpa/inet.h>
++#include <fcntl.h>
++#include <netinet/in.h>
++#include <sys/socket.h>
++#include <unistd.h>
++using socket_t = int;
++static const socket_t kInvalidSocket = -1;
++static int CloseSocket(socket_t s) { return close(s); }
++#endif
++
++namespace flutter_webrtc_plugin {
++namespace {
++
++#if defined(_WIN32)
++struct WinsockLifetime {
++  WinsockLifetime() {
++    WSADATA wsa;
++    ready_ = (WSAStartup(MAKEWORD(2, 2), &wsa) == 0);
++  }
++  ~WinsockLifetime() {
++    if (ready_) WSACleanup();
++  }
++  bool ready_ = false;
++};
++#endif
++
++socket_t CreateUdpSocket() {
++#if defined(_WIN32)
++  static WinsockLifetime init;
++  if (!init.ready_) return kInvalidSocket;
++#endif
++  socket_t fd = ::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
++  if (fd == kInvalidSocket) return kInvalidSocket;
++  sockaddr_in addr{};
++  addr.sin_family = AF_INET;
++  addr.sin_addr.s_addr = htonl(INADDR_ANY);
++  addr.sin_port = htons(0);
++  if (::bind(fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) != 0) {
++    CloseSocket(fd);
++    return kInvalidSocket;
++  }
++  return fd;
++}
++
++bool SendUdp(socket_t fd, const std::string& ip, int port,
++             const uint8_t* data, size_t len) {
++  sockaddr_in dest{};
++  dest.sin_family = AF_INET;
++  dest.sin_port = htons(static_cast<uint16_t>(port));
++  if (::inet_pton(AF_INET, ip.c_str(), &dest.sin_addr) != 1) {
++    return false;
++  }
++  int sent = ::sendto(fd, reinterpret_cast<const char*>(data),
++                      static_cast<int>(len), 0,
++                      reinterpret_cast<sockaddr*>(&dest), sizeof(dest));
++  return sent > 0;
++}
++
++}  // namespace
++
++void FlutterNatPunch::ProbeFirewall(
++    const EncodableMap& params,
++    std::unique_ptr<MethodResultProxy> result) {
++  EncodableList hosts_enc = findList(params, "hosts");
++  int port = findInt(params, "port");
++  if (port <= 0) port = 53;
++
++  std::vector<std::string> reachable;
++  uint8_t payload[1] = {0x00};
++
++  for (const auto& h : hosts_enc) {
++    if (!TypeIs<std::string>(h)) continue;
++    std::string host = GetValue<std::string>(h);
++    socket_t fd = CreateUdpSocket();
++    if (fd == kInvalidSocket) continue;
++    if (SendUdp(fd, host, port, payload, sizeof(payload))) {
++      reachable.push_back(host);
++    }
++    CloseSocket(fd);
++  }
++
++  EncodableList out_hosts;
++  for (const auto& h : reachable) {
++    out_hosts.push_back(EncodableValue(h));
++  }
++  EncodableMap out;
++  out[EncodableValue("reachableHosts")] = EncodableValue(out_hosts);
++  out[EncodableValue("supported")] = EncodableValue(true);
++  result->Success(EncodableValue(out));
++}
++
++void FlutterNatPunch::SymmetricPunch(
++    const EncodableMap& params,
++    std::unique_ptr<MethodResultProxy> result) {
++  EncodableList targets = findList(params, "targets");
++  int socket_count = findInt(params, "socketCount");
++  int packets_per_socket = findInt(params, "packetsPerSocket");
++  int interval_ms = findInt(params, "intervalMs");
++  if (socket_count <= 0) socket_count = 8;
++  if (packets_per_socket <= 0) packets_per_socket = 4;
++  if (interval_ms < 0) interval_ms = 20;
++  if (socket_count > 32) socket_count = 32;
++  if (packets_per_socket > 16) packets_per_socket = 16;
++
++  struct Target {
++    std::string ip;
++    int port = 0;
++  };
++  std::vector<Target> parsed;
++  for (const auto& t : targets) {
++    if (!TypeIs<EncodableMap>(t)) continue;
++    const EncodableMap& m = GetValue<EncodableMap>(t);
++    std::string ip = findString(m, "ip");
++    int port = findInt(m, "port");
++    if (ip.empty() || port <= 0 || port > 65535) continue;
++    parsed.push_back(Target{ip, port});
++  }
++
++  std::vector<socket_t> sockets;
++  sockets.reserve(static_cast<size_t>(socket_count));
++  for (int i = 0; i < socket_count; i++) {
++    socket_t fd = CreateUdpSocket();
++    if (fd != kInvalidSocket) sockets.push_back(fd);
++  }
++
++  uint8_t payload[20];
++  std::memset(payload, 0, sizeof(payload));
++  payload[0] = 0x00;
++  payload[1] = 0x01;  // STUN Binding Request type hint
++
++  int packets_sent = 0;
++  for (int p = 0; p < packets_per_socket; p++) {
++    for (socket_t fd : sockets) {
++      for (const auto& ep : parsed) {
++        int port = ep.port;
++        if (p > 0) {
++          port = ep.port + ((p % 5) - 2);
++          if (port < 1) port = 1;
++          if (port > 65535) port = 65535;
++        }
++        if (SendUdp(fd, ep.ip, port, payload, sizeof(payload))) {
++          packets_sent++;
++        }
++      }
++    }
++    if (p + 1 < packets_per_socket && interval_ms > 0) {
++      std::this_thread::sleep_for(std::chrono::milliseconds(interval_ms));
++    }
++  }
++
++  for (socket_t fd : sockets) {
++    CloseSocket(fd);
++  }
++
++  EncodableMap out;
++  out[EncodableValue("supported")] = EncodableValue(true);
++  out[EncodableValue("targetsAttempted")] =
++      EncodableValue(static_cast<int>(parsed.size()));
++  out[EncodableValue("packetsSent")] = EncodableValue(packets_sent);
++  result->Success(EncodableValue(out));
++}
++
++}  // namespace flutter_webrtc_plugin
+diff --git a/plugins/flutter-webrtc/common/cpp/src/flutter_webrtc.cc b/plugins/flutter-webrtc/common/cpp/src/flutter_webrtc.cc
+index 77cddc1..91f1b0f 100644
+--- a/plugins/flutter-webrtc/common/cpp/src/flutter_webrtc.cc
++++ b/plugins/flutter-webrtc/common/cpp/src/flutter_webrtc.cc
+@@ -1,5 +1,6 @@
+ #include "flutter_webrtc.h"
+ 
++#include "flutter_nat_punch.h"
+ #include "flutter_webrtc/flutter_web_r_t_c_plugin.h"
+ 
+ namespace flutter_webrtc_plugin {
+@@ -1241,6 +1242,22 @@ void FlutterWebRTC::HandleMethodCall(
+     state[EncodableValue("state")] =
+         peerConnectionStateString(pc->peer_connection_state());
+     result->Success(EncodableValue(state));
++  } else if (method_call.method_name().compare("natPunchProbeFirewall") == 0) {
++    if (!method_call.arguments()) {
++      result->Error("Bad Arguments", "Null arguments received");
++      return;
++    }
++    const EncodableMap params =
++        GetValue<EncodableMap>(*method_call.arguments());
++    FlutterNatPunch::ProbeFirewall(params, std::move(result));
++  } else if (method_call.method_name().compare("natPunchSymmetric") == 0) {
++    if (!method_call.arguments()) {
++      result->Error("Bad Arguments", "Null arguments received");
++      return;
++    }
++    const EncodableMap params =
++        GetValue<EncodableMap>(*method_call.arguments());
++    FlutterNatPunch::SymmetricPunch(params, std::move(result));
+   } else {
+     if (HandleFrameCryptorMethodCall(method_call, std::move(result), &result)) {
+       return;
+diff --git a/plugins/flutter-webrtc/elinux/CMakeLists.txt b/plugins/flutter-webrtc/elinux/CMakeLists.txt
+index 1cd46af..77d60b9 100644
+--- a/plugins/flutter-webrtc/elinux/CMakeLists.txt
++++ b/plugins/flutter-webrtc/elinux/CMakeLists.txt
+@@ -20,6 +20,7 @@ add_library(${PLUGIN_NAME} SHARED
+   "../common/cpp/src/flutter_video_renderer.cc"
+   "../common/cpp/src/flutter_screen_capture.cc"
+   "../common/cpp/src/flutter_webrtc.cc"
++  "../common/cpp/src/flutter_nat_punch.cc"
+   "../common/cpp/src/flutter_webrtc_base.cc"
+   "../common/cpp/src/flutter_common.cc"
+   "flutter_webrtc_plugin.cc"
+diff --git a/plugins/flutter-webrtc/lib/flutter_webrtc.dart b/plugins/flutter-webrtc/lib/flutter_webrtc.dart
+index 12921d5..de3494f 100644
+--- a/plugins/flutter-webrtc/lib/flutter_webrtc.dart
++++ b/plugins/flutter-webrtc/lib/flutter_webrtc.dart
+@@ -19,3 +19,5 @@ export 'src/native/android/audio_configuration.dart';
+ export 'src/native/ios/audio_configuration.dart';
+ export 'src/native/rtc_video_platform_view_controller.dart';
+ export 'src/native/rtc_video_platform_view.dart';
++export 'src/native/nat_punch.dart'
++    if (dart.library.html) 'src/web/nat_punch.dart';
+diff --git a/plugins/flutter-webrtc/lib/src/native/nat_punch.dart b/plugins/flutter-webrtc/lib/src/native/nat_punch.dart
+new file mode 100644
+index 0000000..dea8479
+--- /dev/null
++++ b/plugins/flutter-webrtc/lib/src/native/nat_punch.dart
+@@ -0,0 +1,59 @@
++import 'package:flutter/services.dart';
++
++import 'utils.dart';
++
++/// Thin MethodChannel for enhanced NAT punch (firewall probe + symmetric burst).
++///
++/// Channel methods (ABI freeze — see patches/nat-punch/FILE_LIST.md):
++/// - `natPunchProbeFirewall`
++/// - `natPunchSymmetric`
++///
++/// Returns null when the native plugin does not implement the method (older
++/// builds); callers must fall back to Dart [RawDatagramSocket] punch.
++class NatPunch {
++  static Future<Map<String, dynamic>?> probeFirewall({
++    required List<String> hosts,
++    int port = 53,
++    int timeoutMs = 800,
++  }) async {
++    try {
++      final result = await WebRTC.invokeMethod('natPunchProbeFirewall', {
++        'hosts': hosts,
++        'port': port,
++        'timeoutMs': timeoutMs,
++      });
++      if (result is Map) {
++        return Map<String, dynamic>.from(result);
++      }
++      return null;
++    } on MissingPluginException {
++      return null;
++    } on PlatformException {
++      return null;
++    }
++  }
++
++  static Future<Map<String, dynamic>?> symmetricPunch({
++    required List<Map<String, dynamic>> targets,
++    int socketCount = 8,
++    int packetsPerSocket = 4,
++    int intervalMs = 20,
++  }) async {
++    try {
++      final result = await WebRTC.invokeMethod('natPunchSymmetric', {
++        'targets': targets,
++        'socketCount': socketCount,
++        'packetsPerSocket': packetsPerSocket,
++        'intervalMs': intervalMs,
++      });
++      if (result is Map) {
++        return Map<String, dynamic>.from(result);
++      }
++      return null;
++    } on MissingPluginException {
++      return null;
++    } on PlatformException {
++      return null;
++    }
++  }
++}
+diff --git a/plugins/flutter-webrtc/lib/src/web/nat_punch.dart b/plugins/flutter-webrtc/lib/src/web/nat_punch.dart
+new file mode 100644
+index 0000000..2922681
+--- /dev/null
++++ b/plugins/flutter-webrtc/lib/src/web/nat_punch.dart
+@@ -0,0 +1,17 @@
++/// Web stub — browser owns ICE; no app-layer UDP punch.
++class NatPunch {
++  static Future<Map<String, dynamic>?> probeFirewall({
++    required List<String> hosts,
++    int port = 53,
++    int timeoutMs = 800,
++  }) async =>
++      null;
++
++  static Future<Map<String, dynamic>?> symmetricPunch({
++    required List<Map<String, dynamic>> targets,
++    int socketCount = 8,
++    int packetsPerSocket = 4,
++    int intervalMs = 20,
++  }) async =>
++      null;
++}
+diff --git a/plugins/flutter-webrtc/linux/CMakeLists.txt b/plugins/flutter-webrtc/linux/CMakeLists.txt
+index 9d06ed2..2916165 100644
+--- a/plugins/flutter-webrtc/linux/CMakeLists.txt
++++ b/plugins/flutter-webrtc/linux/CMakeLists.txt
+@@ -20,6 +20,7 @@ add_library(${PLUGIN_NAME} SHARED
+   "../common/cpp/src/flutter_webrtc.cc"
+   "../common/cpp/src/flutter_webrtc_base.cc"
+   "../common/cpp/src/flutter_common.cc"
++  "../common/cpp/src/flutter_nat_punch.cc"
+   "flutter_webrtc_plugin.cc"
+   "flutter/core_implementations.cc"
+   "flutter/standard_codec.cc"
+diff --git a/plugins/flutter-webrtc/windows/CMakeLists.txt b/plugins/flutter-webrtc/windows/CMakeLists.txt
+index ffa61d7..6cb5e7f 100644
+--- a/plugins/flutter-webrtc/windows/CMakeLists.txt
++++ b/plugins/flutter-webrtc/windows/CMakeLists.txt
+@@ -20,6 +20,7 @@ add_library(${PLUGIN_NAME} SHARED
+   "../common/cpp/src/flutter_screen_capture.cc"
+   "../common/cpp/src/flutter_webrtc.cc"
+   "../common/cpp/src/flutter_webrtc_base.cc"
++  "../common/cpp/src/flutter_nat_punch.cc"
+   "../third_party/uuidxx/uuidxx.cc"
+   "flutter_webrtc_plugin.cc"
+ )
