@@ -1,7 +1,7 @@
 # CloudPlayPlus — enhanced hole punch rebase / replay playbook
 
 **Updated:** 2026-11-24 Asia/Shanghai  
-**Repo:** https://github.com/Sutodonez/cloudplayplus_example  
+**Repo:** https://github.com/Sutodonez/cloudplayplus_plus  
 **Branch hint:** `cursor/feat-enhanced-hole-punch-cc1d`  
 **Owned paths:** in-repo `patches/nat-punch/FILE_LIST.md`
 

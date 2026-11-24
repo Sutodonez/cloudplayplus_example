@@ -1,7 +1,7 @@
 # CloudPlayPlus vs GameViewer — feature comparison & plugin migration
 
 **Updated:** 2026-11-24 Asia/Shanghai  
-**CPP checkout:** `https://github.com/Sutodonez/cloudplayplus_example` (this workspace)  
+**CPP checkout:** `https://github.com/Sutodonez/cloudplayplus_plus` (this workspace)  
 **GV evidence:**  
 - RE: [gameviewer-tech-notes-plain.md](./gameviewer-tech-notes-plain.md); deep RE `gameviewer-analysis.md` not in this portable pack (REA Project store only)  
 - Public: [gameviewer-public-features.md](./gameviewer-public-features.md) (官网 / 帮助 / 社区；访问日 2026-11-24 Asia/Shanghai)  

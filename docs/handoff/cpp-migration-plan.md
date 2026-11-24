@@ -1,7 +1,7 @@
 # CloudPlayPlus migration plan — punch / vhid / file transfer
 
 **Updated:** 2026-11-24 Asia/Shanghai  
-**Repo:** https://github.com/Sutodonez/cloudplayplus_example  
+**Repo:** https://github.com/Sutodonez/cloudplayplus_plus  
 **Constraint:** Three independent branches + PRs. Prefer plugin-shaped work; punch may touch vendored ICE if **replayable** onto future CPP.
 
 ## Tracks

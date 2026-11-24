@@ -6,7 +6,7 @@ cursor:
 # Enhanced hole punch — delivery report
 
 **Task:** REA-23  
-**PR:** https://github.com/Sutodonez/cloudplayplus_example/pull/1  
+**PR:** https://github.com/Sutodonez/cloudplayplus_plus/pull/1  
 **Branch:** `cursor/feat-enhanced-hole-punch-cc1d`  
 **Playbook:** [cpp-punch-replay.md](./cpp-punch-replay.md)
 

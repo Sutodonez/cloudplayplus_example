@@ -5,7 +5,7 @@ cursor:
 
 # VHID relative mouse — implementation report
 
-**PR:** https://github.com/Sutodonez/cloudplayplus_example/pull/3  
+**PR:** https://github.com/Sutodonez/cloudplayplus_plus/pull/3  
 **Branch:** `cursor/vhid-relative-mouse-5758`  
 **Task:** REA-22
 

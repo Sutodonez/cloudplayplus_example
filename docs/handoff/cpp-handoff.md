@@ -2,7 +2,7 @@
 
 **Updated:** 2026-11-24 Asia/Shanghai  
 **Status:** 本 Project 内 CPP 增强开发**取消**；工作迁至用户新建 Project。  
-**Repo:** https://github.com/Sutodonez/cloudplayplus_example  
+**Repo:** https://github.com/Sutodonez/cloudplayplus_plus  
 
 **跨 Project：** Context / Agent Store 内链无效。请用本目录 [README.md](./README.md)（portable handoff）及下方 sibling 文件；GitHub blob/raw URL 见 README 顶部。  
 **Legacy note:** 原 Project store 链接跨 Project 不可用。
@@ -11,9 +11,9 @@
 
 | 功能 | PR | 分支 |
 |------|-----|------|
-| 增强打洞 + 软 ICE | https://github.com/Sutodonez/cloudplayplus_example/pull/1 | `cursor/feat-enhanced-hole-punch-cc1d` |
-| 文件传输 | https://github.com/Sutodonez/cloudplayplus_example/pull/2 | `cursor/feat-file-transfer-c757` |
-| VHID 相对鼠标 | https://github.com/Sutodonez/cloudplayplus_example/pull/3 | `cursor/vhid-relative-mouse-5758` |
+| 增强打洞 + 软 ICE | https://github.com/Sutodonez/cloudplayplus_plus/pull/1 | `cursor/feat-enhanced-hole-punch-cc1d` |
+| 文件传输 | https://github.com/Sutodonez/cloudplayplus_plus/pull/2 | `cursor/feat-file-transfer-c757` |
+| VHID 相对鼠标 | https://github.com/Sutodonez/cloudplayplus_plus/pull/3 | `cursor/vhid-relative-mouse-5758` |
 
 ## 2. 决策与约束（必须保留）
 
