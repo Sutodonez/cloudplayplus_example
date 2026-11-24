@@ -1,0 +1,615 @@
+diff --git a/lib/entities/messages.dart b/lib/entities/messages.dart
+index 88376ef..6f13929 100644
+--- a/lib/entities/messages.dart
++++ b/lib/entities/messages.dart
+@@ -20,6 +20,9 @@ const int LP_KEYPRESSED = 1 << 4; //16
+ const int LP_EMPTY = 1 << 6; //64
+ const int LP_AUDIO_CONNECT = 65;
+ const int LP_AUDIO_DISCONNECT = 66;
++/// Host privacy / blank-display mode request (see privacy_blank_display plugin).
++/// Payload: [LP_PRIVACY_MODE, mode] where mode is 0=off, 1=blankDisplay, 2=privacyScreen.
++const int LP_PRIVACY_MODE = 68;
+ const int LP_DISCONNECT = 1 << 7;
+ // [--end of message definitions--]
+ 
+diff --git a/lib/entities/session.dart b/lib/entities/session.dart
+index d74019c..a34f9a9 100644
+--- a/lib/entities/session.dart
++++ b/lib/entities/session.dart
+@@ -6,6 +6,7 @@ import 'package:cloudplayplus/controller/hardware_input_controller.dart';
+ import 'package:cloudplayplus/dev_settings.dart/develop_settings.dart';
+ import 'package:cloudplayplus/entities/audiosession.dart';
+ import 'package:cloudplayplus/entities/device.dart';
++import 'package:cloudplayplus/services/privacy_blank_service.dart';
+ import 'package:cloudplayplus/services/streamed_manager.dart';
+ import 'package:cloudplayplus/services/streaming_manager.dart';
+ import 'package:cloudplayplus/services/websocket_service.dart';
+@@ -13,6 +14,7 @@ import 'package:cloudplayplus/utils/widgets/message_box.dart';
+ import 'package:flutter/foundation.dart';
+ import 'package:flutter_webrtc/flutter_webrtc.dart';
+ import 'package:hardware_simulator/hardware_simulator.dart';
++import 'package:privacy_blank_display/privacy_blank_display.dart';
+ import 'package:synchronized/synchronized.dart';
+ import 'package:flutter/services.dart';
+ import 'package:flutter/widgets.dart';
+@@ -837,6 +839,12 @@ class StreamingSession {
+           audioSession = AudioSession(channel!, controller, controlled, audioBitrate);
+           audioSession?.audioRequested();
+           break;
++        case LP_PRIVACY_MODE:
++          if (message.binary.length >= 2) {
++            final mode = PrivacyBlankService.modeFromIndex(message.binary[1]);
++            PrivacyBlankService.applyMode(mode);
++          }
++          break;
+         default:
+           VLOG0("unhandled message.please debug");
+       }
+@@ -869,6 +877,13 @@ class StreamingSession {
+     }
+   }
+ 
++  /// Controller: request host privacy / blank-display mode mid-session.
++  Future<void> requestHostPrivacyMode(PrivacyBlankMode mode) async {
++    if (channel?.state != RTCDataChannelState.RTCDataChannelOpen) return;
++    await channel!.send(RTCDataChannelMessage.fromBinary(
++        Uint8List.fromList([LP_PRIVACY_MODE, mode.index])));
++  }
++
+   void processDataChannelMessageFromHost(RTCDataChannelMessage message) async {
+     if (message.isBinary) {
+       switch (message.binary[0]) {
+diff --git a/lib/global_settings/streaming_settings.dart b/lib/global_settings/streaming_settings.dart
+index d4607d8..47977f9 100644
+--- a/lib/global_settings/streaming_settings.dart
++++ b/lib/global_settings/streaming_settings.dart
+@@ -91,6 +91,12 @@ class StreamingSettings {
+   static int customScreenWidth = 1920;
+   static int customScreenHeight = 1080;
+ 
++  // Host privacy / blank display (防窥). 0=off, 1=blankDisplay, 2=privacyScreen.
++  static int privacyMode = 0;
++  static bool privacyAutoOnConnect = true;
++  static bool privacyDismissLocks = true;
++  static bool privacyLockOnDisconnect = false;
++
+   static bool? isStreamingStateEnabled;
+ 
+   static void init() {
+@@ -170,6 +176,14 @@ class StreamingSettings {
+ 
+     isStreamingStateEnabled = SharedPreferencesManager.getBool('streamingState') ?? false;
+     ScreenController.setShowVideoInfo(isStreamingStateEnabled!);
++
++    privacyMode = SharedPreferencesManager.getInt('privacyMode') ?? 0;
++    privacyAutoOnConnect =
++        SharedPreferencesManager.getBool('privacyAutoOnConnect') ?? true;
++    privacyDismissLocks =
++        SharedPreferencesManager.getBool('privacyDismissLocks') ?? true;
++    privacyLockOnDisconnect =
++        SharedPreferencesManager.getBool('privacyLockOnDisconnect') ?? false;
+   }
+ 
+   //Screen id setting is not global, so we need to call before start streaming.
+@@ -198,6 +212,7 @@ class StreamingSettings {
+       'streamMode': streamMode,
+       'customScreenWidth': customScreenWidth,
+       'customScreenHeight': customScreenHeight,
++      'privacyMode': privacyMode,
+     };
+     data.removeWhere((key, value) => value == null);
+     return data;
+@@ -232,6 +247,8 @@ class StreamedSettings {
+   int? streamMode;
+   int? customScreenWidth;
+   int? customScreenHeight;
++  // Controller-requested host privacy mode (0/1/2). Optional.
++  int? privacyMode;
+ 
+   static StreamedSettings fromJson(Map<String, dynamic> settings) {
+     return StreamedSettings()
+@@ -248,6 +265,7 @@ class StreamedSettings {
+       ..syncMousePosition = settings['syncMousePosition'] as bool?
+       ..streamMode = settings['streamMode'] as int?
+       ..customScreenWidth = settings['customScreenWidth'] as int?
+-      ..customScreenHeight = settings['customScreenHeight'] as int?;
++      ..customScreenHeight = settings['customScreenHeight'] as int?
++      ..privacyMode = settings['privacyMode'] as int?;
+   }
+ }
+diff --git a/lib/services/app_init_service.dart b/lib/services/app_init_service.dart
+index 91cadc9..0f2f166 100644
+--- a/lib/services/app_init_service.dart
++++ b/lib/services/app_init_service.dart
+@@ -1,5 +1,6 @@
+ import 'package:cloudplayplus/base/logging.dart';
+ import 'package:cloudplayplus/services/login_service.dart';
++import 'package:cloudplayplus/services/privacy_blank_service.dart';
+ import 'package:cloudplayplus/services/websocket_service.dart';
+ import 'package:hardware_simulator/hardware_simulator.dart';
+ 
+@@ -78,6 +79,7 @@ class AppInitService {
+     ApplicationInfo.screencount = await HardwareSimulator.getMonitorCount();
+     //TODO:implement for other platforms
+     if (AppPlatform.isWindows) {
++      await PrivacyBlankService.init();
+       HardwareSimulator.initParsecVdd();
+       ApplicationInfo.screencount = await HardwareSimulator.getAllDisplays();
+       HardwareSimulator.addDisplayCountChangedCallback((displayCount) {
+diff --git a/lib/services/privacy_blank_service.dart b/lib/services/privacy_blank_service.dart
+new file mode 100644
+index 0000000..4ba4e30
+--- /dev/null
++++ b/lib/services/privacy_blank_service.dart
+@@ -0,0 +1,126 @@
++import 'dart:async';
++
++import 'package:cloudplayplus/base/logging.dart';
++import 'package:cloudplayplus/global_settings/streaming_settings.dart';
++import 'package:cloudplayplus/services/app_info_service.dart';
++import 'package:cloudplayplus/services/shared_preferences_manager.dart';
++import 'package:privacy_blank_display/privacy_blank_display.dart';
++
++/// Host-side privacy / blank-display orchestrator.
++///
++/// Applies [PrivacyBlankMode] while at least one inbound stream session is
++/// active (when auto-on), and restores [PrivacyBlankMode.off] when the last
++/// session ends — unless the user dismissed via Ctrl+Alt+P (single-shot).
++class PrivacyBlankService {
++  PrivacyBlankService._();
++
++  static bool _initialized = false;
++  static bool _sessionEngaged = false;
++  static bool _dismissedThisSession = false;
++  static StreamSubscription<void>? _dismissSub;
++  static PrivacyBlankMode _active = PrivacyBlankMode.off;
++
++  static PrivacyBlankMode get activeMode => _active;
++
++  static Future<void> init() async {
++    if (_initialized) return;
++    _initialized = true;
++    if (!AppPlatform.isWindows) return;
++
++    await PrivacyBlankDisplay.setDismissLocksHost(
++        StreamingSettings.privacyDismissLocks);
++    _dismissSub ??= PrivacyBlankDisplay.onDismissedByHotkey.listen((_) {
++      _dismissedThisSession = true;
++      _sessionEngaged = false;
++      _active = PrivacyBlankMode.off;
++      VLOG0('Privacy blank dismissed by host hotkey');
++    });
++  }
++
++  static PrivacyBlankMode modeFromIndex(int? index) {
++    if (index == null || index < 0 || index >= PrivacyBlankMode.values.length) {
++      return PrivacyBlankMode.off;
++    }
++    return PrivacyBlankMode.values[index];
++  }
++
++  /// Preferred mode for a new inbound session: controller request overrides
++  /// host default when non-zero; otherwise host [StreamingSettings.privacyMode].
++  static PrivacyBlankMode resolveModeForSession({int? requestedMode}) {
++    final requested = modeFromIndex(requestedMode);
++    if (requested != PrivacyBlankMode.off) return requested;
++    return modeFromIndex(StreamingSettings.privacyMode);
++  }
++
++  static Future<bool> applyMode(PrivacyBlankMode mode) async {
++    await init();
++    if (!AppPlatform.isWindows) return false;
++    final supported = await PrivacyBlankDisplay.isSupported();
++    if (!supported) return false;
++
++    await PrivacyBlankDisplay.setDismissLocksHost(
++        StreamingSettings.privacyDismissLocks);
++    final ok = await PrivacyBlankDisplay.setMode(mode);
++    if (ok) {
++      _active = mode;
++      _sessionEngaged = mode != PrivacyBlankMode.off;
++      if (mode != PrivacyBlankMode.off) {
++        _dismissedThisSession = false;
++      }
++      VLOG0('Privacy blank mode -> $mode');
++    } else {
++      VLOG0('Privacy blank mode apply failed: $mode');
++    }
++    return ok;
++  }
++
++  /// Called when an inbound streaming session becomes active.
++  static Future<void> onSessionStarted({int? requestedMode}) async {
++    await init();
++    if (!AppPlatform.isWindows) return;
++    if (_dismissedThisSession) return;
++
++    final auto = StreamingSettings.privacyAutoOnConnect;
++    final mode = resolveModeForSession(requestedMode: requestedMode);
++    if (!auto && (requestedMode == null || requestedMode == 0)) {
++      return;
++    }
++    if (mode == PrivacyBlankMode.off) return;
++    if (_sessionEngaged && _active == mode) return;
++    await applyMode(mode);
++  }
++
++  /// Called when the last inbound streaming session ends.
++  static Future<void> onAllSessionsEnded() async {
++    await init();
++    _dismissedThisSession = false;
++    if (_active == PrivacyBlankMode.off) {
++      _sessionEngaged = false;
++      return;
++    }
++    await applyMode(PrivacyBlankMode.off);
++
++    if (StreamingSettings.privacyLockOnDisconnect && AppPlatform.isWindows) {
++      final locked = await PrivacyBlankDisplay.lockWorkstation();
++      VLOG0('privacyLockOnDisconnect lockWorkstation=$locked');
++    }
++  }
++
++  static Future<void> persistHostDefaults({
++    required int mode,
++    required bool autoOnConnect,
++    required bool dismissLocks,
++    required bool lockOnDisconnect,
++  }) async {
++    StreamingSettings.privacyMode = mode;
++    StreamingSettings.privacyAutoOnConnect = autoOnConnect;
++    StreamingSettings.privacyDismissLocks = dismissLocks;
++    StreamingSettings.privacyLockOnDisconnect = lockOnDisconnect;
++    await SharedPreferencesManager.setInt('privacyMode', mode);
++    await SharedPreferencesManager.setBool('privacyAutoOnConnect', autoOnConnect);
++    await SharedPreferencesManager.setBool('privacyDismissLocks', dismissLocks);
++    await SharedPreferencesManager.setBool(
++        'privacyLockOnDisconnect', lockOnDisconnect);
++    await PrivacyBlankDisplay.setDismissLocksHost(dismissLocks);
++  }
++}
+diff --git a/lib/services/streamed_manager.dart b/lib/services/streamed_manager.dart
+index fa8365f..bfdbec9 100644
+--- a/lib/services/streamed_manager.dart
++++ b/lib/services/streamed_manager.dart
+@@ -12,6 +12,7 @@ import '../base/logging.dart';
+ import '../entities/device.dart';
+ import '../entities/session.dart';
+ import 'app_info_service.dart';
++import 'privacy_blank_service.dart';
+ 
+ // ignore: constant_identifier_names
+ const int AUDIO_SYSTEM = 255;
+@@ -268,7 +269,12 @@ class StreamedManager {
+             sources = await desktopCapturer.getSources(types: [SourceType.Screen]);
+             //await HardwareSimulator.setMultiDisplayMode(MultiDisplayMode.primaryOnly);
+             if (sources.length != 1) {
+-              await HardwareSimulator.setPrimaryDisplayOnly(virtualDisplayIds[0]!);
++              final vddId = virtualDisplayIds[settings.screenId!];
++              if (vddId == null) {
++                VLOG0('独占模式缺少虚拟显示器映射');
++                return;
++              }
++              await HardwareSimulator.setPrimaryDisplayOnly(vddId);
+               retryCount = 0;
+               while (sources.length != 1) {
+                 retryCount++;
+@@ -319,6 +325,9 @@ class StreamedManager {
+       session.acceptRequest(settings);
+       sessions[target.websocketSessionid] = session;
+       setCurrentStreamedState(sessions.length);
++      // Host privacy / blank display after the capture pipeline is up.
++      await PrivacyBlankService.onSessionStarted(
++          requestedMode: settings.privacyMode);
+     });
+   }
+ 
+@@ -360,6 +369,9 @@ class StreamedManager {
+         VLOG0("No session found with sessionId: $target.websocketSessionid");
+       }
+       setCurrentStreamedState(sessions.length);
++      if (sessions.isEmpty) {
++        PrivacyBlankService.onAllSessionsEnded();
++      }
+     });
+   }
+ 
+diff --git a/lib/settings_screen.dart b/lib/settings_screen.dart
+index fa49a5c..dbd807c 100644
+--- a/lib/settings_screen.dart
++++ b/lib/settings_screen.dart
+@@ -6,6 +6,7 @@ import 'package:cloudplayplus/pages/display_manager_page.dart';
+ import 'package:cloudplayplus/pages/login_screen.dart';
+ import 'package:cloudplayplus/services/app_info_service.dart';
+ import 'package:cloudplayplus/services/login_service.dart';
++import 'package:cloudplayplus/services/privacy_blank_service.dart';
+ import 'package:cloudplayplus/services/secure_storage_manager.dart';
+ import 'package:cloudplayplus/services/websocket_service.dart';
+ import 'package:cloudplayplus/utils/widgets/text_field_wrapper.dart';
+@@ -113,6 +114,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
+                   );
+                 },
+               ),
++              if (AppPlatform.isWindows)
++                SettingsTile.navigation(
++                  leading: const Icon(Icons.visibility_off),
++                  title: const Text('防窥 / Privacy blank display'),
++                  onPressed: (context) {
++                    Navigation.navigateTo(
++                      context: context,
++                      screen: const PrivacyBlankSettingsScreen(),
++                      style: NavigationRouteStyle.cupertino,
++                    );
++                  },
++                ),
+             ],
+           ),
+           if (!AppPlatform.isDeskTop)
+@@ -1637,3 +1650,136 @@ class _DisplaySettingsScreenState extends State<DisplaySettingsScreen> {
+     }
+   }
+ }
++
++/// Host privacy / blank-display settings (Windows). Modes mirror UU 防窥 ladder
++/// (off / blank display / privacy screen) — ideas only; see docs/reference/gameviewer/.
++class PrivacyBlankSettingsScreen extends StatefulWidget {
++  const PrivacyBlankSettingsScreen({Key? key}) : super(key: key);
++
++  @override
++  State<PrivacyBlankSettingsScreen> createState() =>
++      _PrivacyBlankSettingsScreenState();
++}
++
++class _PrivacyBlankSettingsScreenState extends State<PrivacyBlankSettingsScreen> {
++  int _mode = 0;
++  bool _autoOn = true;
++  bool _dismissLocks = true;
++  bool _lockOnDisconnect = false;
++
++  @override
++  void initState() {
++    super.initState();
++    _mode = StreamingSettings.privacyMode;
++    _autoOn = StreamingSettings.privacyAutoOnConnect;
++    _dismissLocks = StreamingSettings.privacyDismissLocks;
++    _lockOnDisconnect = StreamingSettings.privacyLockOnDisconnect;
++  }
++
++  Future<void> _persist() async {
++    await PrivacyBlankService.persistHostDefaults(
++      mode: _mode,
++      autoOnConnect: _autoOn,
++      dismissLocks: _dismissLocks,
++      lockOnDisconnect: _lockOnDisconnect,
++    );
++  }
++
++  @override
++  Widget build(BuildContext context) {
++    return CupertinoPageScaffold(
++      navigationBar: CupertinoNavigationBar(
++        middle: Text(
++          '防窥 / Privacy',
++          style: TextStyle(
++            color: Theme.of(context).textTheme.titleLarge?.color,
++          ),
++        ),
++      ),
++      child: SafeArea(
++        bottom: false,
++        child: SettingsList(
++          applicationType: ApplicationType.cupertino,
++          sections: [
++            SettingsSection(
++              title: const Text('被控端默认防窥模式'),
++              tiles: [
++                SettingsTile(
++                  title: const Text('不启用'),
++                  leading: Icon(
++                    Icons.check,
++                    color: _mode == 0 ? Colors.blue : Colors.transparent,
++                  ),
++                  onPressed: (_) async {
++                    setState(() => _mode = 0);
++                    await _persist();
++                  },
++                ),
++                SettingsTile(
++                  title: const Text('关闭显示屏 (blank display)'),
++                  description: const Text(
++                    '关闭物理屏背光。更强的虚拟屏独占可用连接「独占模式」。',
++                  ),
++                  leading: Icon(
++                    Icons.check,
++                    color: _mode == 1 ? Colors.blue : Colors.transparent,
++                  ),
++                  onPressed: (_) async {
++                    setState(() => _mode = 1);
++                    await _persist();
++                  },
++                ),
++                SettingsTile(
++                  title: const Text('隐私屏保 (privacy screen)'),
++                  description: const Text(
++                    '物理屏黑屏遮罩，捕获排除遮罩 (WDA_EXCLUDEFROMCAPTURE)。',
++                  ),
++                  leading: Icon(
++                    Icons.check,
++                    color: _mode == 2 ? Colors.blue : Colors.transparent,
++                  ),
++                  onPressed: (_) async {
++                    setState(() => _mode = 2);
++                    await _persist();
++                  },
++                ),
++              ],
++            ),
++            SettingsSection(
++              title: const Text('行为'),
++              tiles: [
++                SettingsTile.switchTile(
++                  title: const Text('被控连接时自动开启'),
++                  leading: const Icon(Icons.play_circle_outline),
++                  initialValue: _autoOn,
++                  onToggle: (v) async {
++                    setState(() => _autoOn = v);
++                    await _persist();
++                  },
++                ),
++                SettingsTile.switchTile(
++                  title: const Text('本机 Ctrl+Alt+P 解除后锁屏'),
++                  leading: const Icon(Icons.lock),
++                  initialValue: _dismissLocks,
++                  onToggle: (v) async {
++                    setState(() => _dismissLocks = v);
++                    await _persist();
++                  },
++                ),
++                SettingsTile.switchTile(
++                  title: const Text('断开后锁屏'),
++                  leading: const Icon(Icons.lock_clock),
++                  initialValue: _lockOnDisconnect,
++                  onToggle: (v) async {
++                    setState(() => _lockOnDisconnect = v);
++                    await _persist();
++                  },
++                ),
++              ],
++            ),
++          ],
++        ),
++      ),
++    );
++  }
++}
+diff --git a/lib/utils/widgets/device_tile_page.dart b/lib/utils/widgets/device_tile_page.dart
+index 9013cbd..05078eb 100644
+--- a/lib/utils/widgets/device_tile_page.dart
++++ b/lib/utils/widgets/device_tile_page.dart
+@@ -4,6 +4,7 @@ import 'package:cloudplayplus/dev_settings.dart/develop_settings.dart';
+ import 'package:cloudplayplus/global_settings/streaming_settings.dart';
+ import 'package:cloudplayplus/services/shared_preferences_manager.dart';
+ import 'package:cloudplayplus/services/streaming_manager.dart';
++import 'package:cloudplayplus/services/webrtc_service.dart';
+ import 'package:cloudplayplus/services/websocket_service.dart';
+ import 'package:cloudplayplus/utils/system_tray_manager.dart';
+ import 'package:cloudplayplus/utils/widgets/global_remote_screen_renderer.dart';
+@@ -13,12 +14,12 @@ import 'package:flutter/material.dart';
+ import 'package:flutter/services.dart';
+ import 'package:hardware_simulator/hardware_simulator.dart';
+ import 'package:native_textfield_tv/native_textfield_tv.dart';
++import 'package:privacy_blank_display/privacy_blank_display.dart';
+ import '../../base/logging.dart';
+ import '../../controller/platform_key_map.dart';
+ import '../../entities/device.dart';
+ import '../../entities/session.dart';
+ import '../../services/app_info_service.dart';
+-import '../../services/webrtc_service.dart';
+ import '../hash_util.dart';
+ import 'cpp_icon.dart';
+ 
+@@ -124,6 +125,8 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+   int _virtualDisplayWidth = 1920; // 虚拟显示器宽度
+   int _virtualDisplayHeight = 1080; // 虚拟显示器高度
+   bool _syncRemoteMousePosition = false; // 同步远程鼠标位置
++  // Controller-requested host privacy: 0=off, 1=blankDisplay, 2=privacyScreen
++  int _privacyMode = 0;
+   
+   // 屏幕尺寸缓存，用于检测屏幕尺寸变化
+   Size? _lastScreenSize;
+@@ -314,6 +317,19 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+                           !ScreenController.showVirtualGamePad.value);
+                     }
+                     if (index == 5) {
++                      // Toggle host privacy screen mid-session.
++                      final session = WebrtcService.currentRenderingSession;
++                      if (session != null) {
++                        final next = _privacyMode == 0
++                            ? PrivacyBlankMode.privacyScreen
++                            : PrivacyBlankMode.off;
++                        setState(() {
++                          _privacyMode = next.index;
++                        });
++                        await session.requestHostPrivacyMode(next);
++                      }
++                    }
++                    if (index == 6) {
+                       ScreenController.setshowDetailUseScrollView(true);
+                       ScreenController.setOnlyShowRemoteScreen(false);
+                       StreamingManager.stopStreaming(widget.device);
+@@ -325,6 +341,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+                     Icons.keyboard,
+                     Icons.mouse,
+                     Icons.gamepad,
++                    Icons.visibility_off,
+                     Icons.close,
+                   ],
+                 ),
+@@ -772,6 +789,46 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+                           );
+                         }),
+                         
++                        const SizedBox(height: 16),
++
++                        const Text(
++                          "被控端防窥 (Privacy)",
++                          style: TextStyle(
++                            fontSize: 14,
++                            fontWeight: FontWeight.w500,
++                          ),
++                        ),
++                        const SizedBox(height: 8),
++                        ...List.generate(3, (index) {
++                          final names = [
++                            "不启用",
++                            "关闭显示屏",
++                            "隐私屏保",
++                          ];
++                          final descs = [
++                            "不请求被控端防窥",
++                            "关闭被控端物理屏背光 (Windows)",
++                            "被控端黑屏遮罩且排除捕获",
++                          ];
++                          return ListTile(
++                            contentPadding: EdgeInsets.zero,
++                            leading: Radio(
++                              value: index,
++                              groupValue: _privacyMode,
++                              onChanged: (int? value) {
++                                setState(() {
++                                  _privacyMode = value ?? 0;
++                                });
++                              },
++                            ),
++                            title: Text(names[index],
++                                style: const TextStyle(fontSize: 16)),
++                            subtitle: Text(descs[index],
++                                style: const TextStyle(
++                                    fontSize: 12, color: Colors.grey)),
++                          );
++                        }),
++
+                         const SizedBox(height: 16),
+                         
+                         // 虚拟显示器尺寸设置（仅在非标准模式下显示）
+@@ -1037,6 +1094,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+     }
+     StreamingSettings.customScreenWidth = _virtualDisplayWidth;
+     StreamingSettings.customScreenHeight = _virtualDisplayHeight;
++    StreamingSettings.privacyMode = _privacyMode;
+     
+     // 保存虚拟显示器尺寸到缓存
+     await SharedPreferencesManager.setInt('virtualDisplayWidth', _virtualDisplayWidth);
+diff --git a/pubspec.yaml b/pubspec.yaml
+index e0efbf1..2f0f13d 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -46,6 +46,8 @@ dependencies:
+     path: plugins/virtual.keyboard.dart
+   hardware_simulator:
+     path: plugins/hardware_simulator
++  privacy_blank_display:
++    path: ../../plugins/privacy_blank_display
+   flutter_sticky_header: ^0.8.0
+   fullscreen_window:
+     path: plugins/fullscreen_window

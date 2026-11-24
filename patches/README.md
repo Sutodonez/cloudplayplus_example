@@ -24,3 +24,9 @@ Use zero-padded numeric prefixes so lexical order matches apply order:
 3. Run `scripts/apply-patches.sh` and verify `scripts/build.sh`.
 
 Do not commit dirty ad-hoc edits in `vendor/` on the cppp branch.
+
+## Series present
+
+| Patch | Topic |
+|-------|-------|
+| `0001-privacy-blank-display-wireup.patch` | Privacy / blank display wireup — see [`privacy-blank/`](./privacy-blank/) |
