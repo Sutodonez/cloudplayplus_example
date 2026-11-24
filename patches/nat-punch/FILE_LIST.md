@@ -4,7 +4,6 @@ Replayable patches (applied by `scripts/apply-patches.sh`):
 
 | Patch | Topic |
 |-------|-------|
-| `patches/0000-linux-no-error-deprecated-literal-operator.patch` | Shared Linux CI: `-Wno-error=deprecated-literal-operator` in `linux/CMakeLists.txt` |
 | `patches/0001-nat-punch-ice-policy-and-wireup.patch` | IcePunchOptions / IcePolicy / punch helper / session+settings+tests |
 | `patches/0002-nat-punch-flutter-webrtc-methodchannel.patch` | Desktop C++ MethodChannel + Dart `NatPunch` (bounded flutter-webrtc fork) |
 
