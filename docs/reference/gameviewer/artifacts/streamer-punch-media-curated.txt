@@ -1,0 +1,224 @@
+### Punch
+.?AV<lambda_36>@?0??PunchCheckFireWall@P2PTransportChannel@cricket@@AEAAXAEBVSocketAddress@rtc@@AEBUProxyInfo@5@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@_K@Z@
+Enhanced Hole Punching 
+OnCandidateErrorForPunch, do nothing
+P2P punch
+Set enable_ice_full_punch to 
+[session:{}] [ice:{}] [a:{}] [i:{}] OnPunchStoppedByFirewall
+fail to allocate udp port for RandomSymmericPunchToCone
+has writable p2p connection, stop punch
+ice restart, reset punch_thread
+ice_full_punch
+need_to_p2p_punch
+no candidate group pair found, either side maybe none NAT, skip punching
+peer connection is already p2p, skip punching
+unknown ice role, skip punching
+
+### force_relay
+force_relay
+
+### forced_relay
+forced_relay
+
+### manual_switch
+[session:{}][i:{}] has_success_manual_switched_relay
+manual_switch_relay_enabled
+
+### UpdateIce
+[session:{}] UpdateIceConnectionConfig 
+[session:{}] is invalid when the UpdateIceConnectionConfig is called
+
+### IceConnection
+Changing IceConnectionState 
+Changing standardized IceConnectionState 
+[session:{}] UpdateIceConnectionConfig 
+[session:{}] [ice:{}]  [a:{}] [i:{}] OnIceConnectionReceivingChange : {}
+[session:{}] [ice:{}] [a:{}] [i:{}] OnIceConnectionChange :{}
+[session:{}] [ice:{}] [a:{}] [i:{}] OnStandardizedIceConnectionChange :{}
+[session:{}] failed to create IceConnection
+[session:{}] is invalid when the UpdateIceConnectionConfig is called
+
+### iceServers
+iceServers
+
+### signaling_domain
+signaling_domain_map
+
+### relay_cap
+relay_cap
+
+### publisher_relay
+publisher_relay_isp
+
+### local_relay
+local_relay_protocol
+
+### remote_relay
+remote_relay_protocol
+
+### relayProtocol
+relayProtocol
+
+### relay-protocol
+relay-protocol
+
+### skip_relay
+Set skip_relay_to_non_relay_connections
+skip_relay_to_non_relay_connections
+
+### turns:
+turns:
+
+### turn:
+ turn: 
+
+### CreateTurn
+.?AV<lambda_15>@?0??CreateTurnPort@AllocationSequence@cricket@@AEAAXAEBURelayServerConfig@3@H@Z@
+.?AV<lambda_2>@?0??CreateTurnClientSocket@TurnPort@cricket@@AEAA_NXZ@
+
+### mix_kcp
+ mix_kcp=
+ test_mix_kcp1=
+ test_mix_kcp2=
+, enable_mix_kcp=
+
+### quic_enabled
+ quic_enabled=
+
+### DataChannel
+Created QuicDataChannel for label: 
+DisconnectQuicDataChannel called when sctp_transport_ is NULL.
+Fail to SetupQuicDataChannelTransport_n for mid: 
+Failed to initialize the QUIC data channel due to invalid DataChannelInit.
+SdpOfferAnswerHandler::UpdateTransceiversAndDataChannels
+[session:{}] [ice:{}] StreamerDataChannelEventLoop cancelled
+[session:{}] [ice:{}] StreamerDataChannelEventLoop, AsyncWaitStreamerData failed, err:{}
+[session:{}] [ice:{}] StreamerDataChannelEventLoop, failed to parse json: {}
+webrtc-datachannel
+
+### SDP
+ sdp: 
+..\..\pc\sdp_offer_answer.cc
+..\..\pc\webrtc_sdp.cc
+.?AV<lambda_12>@?0??CreateChannels@SdpOfferAnswerHandler@webrtc@@AEAA?AVRTCError@3@AEBVSessionDescription@cricket@@@Z@
+.?AV<lambda_13>@?0??CreateChannels@SdpOfferAnswerHandler@webrtc@@AEAA?AVRTCError@3@AEBVSessionDescription@cricket@@@Z@
+.?AV<lambda_19>@?0??Initialize@SdpOfferAnswerHandler@webrtc@@AEAAXAEBURTCConfiguration@PeerConnectionInterface@3@AEAUPeerConnectionDependencies@3@PEAVConnectionContext@3@@Z@
+.?AV<lambda_4>@?0???0SdpOfferAnswerHandler@webrtc@@AEAA@PEAVPeerConnectionSdpMethods@2@PEAVConnectionContext@2@@Z@
+.?AV<lambda_65>@?0??AddStream@SdpOfferAnswerHandler@webrtc@@QEAA_NPEAVMediaStreamInterface@3@@Z@
+.?AV<lambda_66>@?0??AddStream@SdpOfferAnswerHandler@webrtc@@QEAA_NPEAVMediaStreamInterface@3@@Z@
+.?AV<lambda_67>@?0??AddStream@SdpOfferAnswerHandler@webrtc@@QEAA_NPEAVMediaStreamInterface@3@@Z@
+.?AV<lambda_68>@?0??AddStream@SdpOfferAnswerHandler@webrtc@@QEAA_NPEAVMediaStreamInterface@3@@Z@
+AddStream is not available with Unified Plan SdpSemantics. Please use AddTrack instead.
+AddTransceiver is only available with Unified Plan SdpSemantics
+Called with SDP without DTLS fingerprint.
+Called with SDP without ice-ufrag and ice-pwd.
+Create SDP failed: 
+CreateSender is not available with Unified Plan SdpSemantics. Please use AddTransceiver instead.
+GetTransceivers is only supported with Unified Plan SdpSemantics.
+Invalid SDP line.
+Multiple FlexFEC streams in local SDP, but our implementation only supports a single FlexFEC stream. Will not enable FlexFEC for proposed stream with SSRC: 
+Multiple RSFEC streams in local SDP, but our implementation only supports a single RSFEC stream. Will not enable RSFEC for proposed stream with SSRC: 
+Neither sdp_mline_index nor sdp_mid specified.
+PeerConnection constructed with legacy SDP semantics!
+RemoveStream is not available with Unified Plan SdpSemantics. Please use RemoveTrack instead.
+SDP_SYNTAX_ERROR
+SdpOfferAnswerHandler::AddIceCandidate
+SdpOfferAnswerHandler::ApplyLocalDescription
+SdpOfferAnswerHandler::ApplyRemoteDescription
+SdpOfferAnswerHandler::AssociateTransceiver
+SdpOfferAnswerHandler::ChangeSignalingState
+SdpOfferAnswerHandler::CreateAnswer
+SdpOfferAnswerHandler::CreateChannels
+SdpOfferAnswerHandler::DoCreateAnswer
+SdpOfferAnswerHandler::DoCreateOffer
+SdpOfferAnswerHandler::DoSetLocalDescription
+SdpOfferAnswerHandler::DoSetRemoteDescription
+SdpOfferAnswerHandler::EnableSending
+SdpOfferAnswerHandler::PushdownMediaDescription
+SdpOfferAnswerHandler::PushdownTransportDescription
+SdpOfferAnswerHandler::RemoveIceCandidates
+
+### offer
+..\..\pc\sdp_offer_answer.cc
+.?AV<lambda_12>@?0??CreateChannels@SdpOfferAnswerHandler@webrtc@@AEAA?AVRTCError@3@AEBVSessionDescription@cricket@@@Z@
+.?AV<lambda_13>@?0??CreateChannels@SdpOfferAnswerHandler@webrtc@@AEAA?AVRTCError@3@AEBVSessionDescription@cricket@@@Z@
+.?AV<lambda_19>@?0??Initialize@SdpOfferAnswerHandler@webrtc@@AEAAXAEBURTCConfiguration@PeerConnectionInterface@3@AEAUPeerConnectionDependencies@3@PEAVConnectionContext@3@@Z@
+.?AV<lambda_4>@?0???0SdpOfferAnswerHandler@webrtc@@AEAA@PEAVPeerConnectionSdpMethods@2@PEAVConnectionContext@2@@Z@
+.?AV<lambda_65>@?0??AddStream@SdpOfferAnswerHandler@webrtc@@QEAA_NPEAVMediaStreamInterface@3@@Z@
+.?AV<lambda_66>@?0??AddStream@SdpOfferAnswerHandler@webrtc@@QEAA_NPEAVMediaStreamInterface@3@@Z@
+.?AV<lambda_67>@?0??AddStream@SdpOfferAnswerHandler@webrtc@@QEAA_NPEAVMediaStreamInterface@3@@Z@
+.?AV<lambda_68>@?0??AddStream@SdpOfferAnswerHandler@webrtc@@QEAA_NPEAVMediaStreamInterface@3@@Z@
+CreateAnswer: offer_to_receive_audio is not supported with Unified Plan semantics. Use the RtpTransceiver API instead.
+CreateAnswer: offer_to_receive_video is not supported with Unified Plan semantics. Use the RtpTransceiver API instead.
+Invalid state for change of RTCP mux offer
+Local fingerprint supplied when caller didn't offer DTLS.
+SdpOfferAnswerHandler::AddIceCandidate
+SdpOfferAnswerHandler::ApplyLocalDescription
+SdpOfferAnswerHandler::ApplyRemoteDescription
+SdpOfferAnswerHandler::AssociateTransceiver
+SdpOfferAnswerHandler::ChangeSignalingState
+SdpOfferAnswerHandler::CreateAnswer
+SdpOfferAnswerHandler::CreateChannels
+SdpOfferAnswerHandler::DoCreateAnswer
+SdpOfferAnswerHandler::DoCreateOffer
+SdpOfferAnswerHandler::DoSetLocalDescription
+SdpOfferAnswerHandler::DoSetRemoteDescription
+SdpOfferAnswerHandler::EnableSending
+SdpOfferAnswerHandler::PushdownMediaDescription
+SdpOfferAnswerHandler::PushdownTransportDescription
+SdpOfferAnswerHandler::RemoveIceCandidates
+SdpOfferAnswerHandler::RemoveStoppedTransceivers
+SdpOfferAnswerHandler::Rollback
+SdpOfferAnswerHandler::UpdateLocalSenders
+SdpOfferAnswerHandler::UpdatePayloadTypeDemuxingState
+SdpOfferAnswerHandler::UpdateRemoteSendersList
+SdpOfferAnswerHandler::UpdateTransceiverChannel
+SdpOfferAnswerHandler::UpdateTransceiversAndDataChannels
+SendOffer: ice_connection is null
+Wrong state to update SRTP offer
+[session:{}] [i:{}] can not found ice connection, drop this offer 
+[session:{}] [i:{}] have empty offer
+[session:{}] [ice:{}] [a:{}] [i:{}] create offer failed 
+
+### answer
+..\..\pc\sdp_offer_answer.cc
+.?AV<lambda_12>@?0??CreateChannels@SdpOfferAnswerHandler@webrtc@@AEAA?AVRTCError@3@AEBVSessionDescription@cricket@@@Z@
+.?AV<lambda_13>@?0??CreateChannels@SdpOfferAnswerHandler@webrtc@@AEAA?AVRTCError@3@AEBVSessionDescription@cricket@@@Z@
+.?AV<lambda_19>@?0??Initialize@SdpOfferAnswerHandler@webrtc@@AEAAXAEBURTCConfiguration@PeerConnectionInterface@3@AEAUPeerConnectionDependencies@3@PEAVConnectionContext@3@@Z@
+.?AV<lambda_4>@?0???0SdpOfferAnswerHandler@webrtc@@AEAA@PEAVPeerConnectionSdpMethods@2@PEAVConnectionContext@2@@Z@
+.?AV<lambda_65>@?0??AddStream@SdpOfferAnswerHandler@webrtc@@QEAA_NPEAVMediaStreamInterface@3@@Z@
+.?AV<lambda_66>@?0??AddStream@SdpOfferAnswerHandler@webrtc@@QEAA_NPEAVMediaStreamInterface@3@@Z@
+.?AV<lambda_67>@?0??AddStream@SdpOfferAnswerHandler@webrtc@@QEAA_NPEAVMediaStreamInterface@3@@Z@
+.?AV<lambda_68>@?0??AddStream@SdpOfferAnswerHandler@webrtc@@QEAA_NPEAVMediaStreamInterface@3@@Z@
+CreateAnswer: offer_to_receive_audio is not supported with Unified Plan semantics. Use the RtpTransceiver API instead.
+CreateAnswer: offer_to_receive_video is not supported with Unified Plan semantics. Use the RtpTransceiver API instead.
+Invalid parameters in RTCP mux answer
+Invalid parameters in RTCP mux provisional answer
+Invalid parameters in SRTP answer
+Invalid state for RTCP mux answer, state is 
+Invalid state for RTCP mux provisional answer
+Invalid state for SRTP answer
+SdpOfferAnswerHandler::AddIceCandidate
+SdpOfferAnswerHandler::ApplyLocalDescription
+SdpOfferAnswerHandler::ApplyRemoteDescription
+SdpOfferAnswerHandler::AssociateTransceiver
+SdpOfferAnswerHandler::ChangeSignalingState
+SdpOfferAnswerHandler::CreateAnswer
+SdpOfferAnswerHandler::CreateChannels
+SdpOfferAnswerHandler::DoCreateAnswer
+SdpOfferAnswerHandler::DoCreateOffer
+SdpOfferAnswerHandler::DoSetLocalDescription
+SdpOfferAnswerHandler::DoSetRemoteDescription
+SdpOfferAnswerHandler::EnableSending
+SdpOfferAnswerHandler::PushdownMediaDescription
+SdpOfferAnswerHandler::PushdownTransportDescription
+SdpOfferAnswerHandler::RemoveIceCandidates
+SdpOfferAnswerHandler::RemoveStoppedTransceivers
+SdpOfferAnswerHandler::Rollback
+SdpOfferAnswerHandler::UpdateLocalSenders
+SdpOfferAnswerHandler::UpdatePayloadTypeDemuxingState
+SdpOfferAnswerHandler::UpdateRemoteSendersList
+SdpOfferAnswerHandler::UpdateTransceiverChannel
+SdpOfferAnswerHandler::UpdateTransceiversAndDataChannels
+WebRTC.PeerConnection.ProvisionalAnswer
+

@@ -1,0 +1,264 @@
+    Signature Algorithm: 
+ protocol="%ssignature";
+ terminate_code=
+ terminated=
+#NetEase (Hangzhou) Network Co., Ltd0
+#NetEase (Hangzhou) Network Co., Ltd1,0*
+%*s<EMPTY>
+%*sSignature : 
+%*sUser Notice:
+--candidate-type
+--uuyc-mux-attach-existing
+--uuyc-mux-config
+--uuyc-mux-session
+.?AV?$AlgorithmImpl@V?$ConcretePolicyHolder@VEmpty@CryptoPP@@V?$CFB_EncryptionTemplate@V?$AbstractPolicyHolder@VCFB_CipherAbstractPolicy@CryptoPP@@VCFB_ModePolicy@2@@CryptoPP@@@2@VCFB_CipherAbstractPolicy@2@@CryptoPP@@V?$CipherModeFinalTemplate_CipherHolder@V?$BlockCipherFinal@$0A@VEnc@?$MDC@VSHA1@CryptoPP@@@CryptoPP@@@CryptoPP@@V?$ConcretePolicyHolder@VEmpty@CryptoPP@@V?$CFB_EncryptionTemplate@V?$AbstractPolicyHolder@VCFB_CipherAbstractPolicy@CryptoPP@@VCFB_ModePolicy@2@@CryptoPP@@@2@VCFB_CipherAbstractPolicy@2@@2@@2@@CryptoPP@@
+.?AV?$AlgorithmImpl@V?$DL_SignerBase@UEC2NPoint@CryptoPP@@@CryptoPP@@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@2@@CryptoPP@@
+.?AV?$AlgorithmImpl@V?$DL_SignerBase@UECPPoint@CryptoPP@@@CryptoPP@@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@2@@CryptoPP@@
+.?AV?$AlgorithmImpl@V?$DL_VerifierBase@UEC2NPoint@CryptoPP@@@CryptoPP@@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@2@@CryptoPP@@
+.?AV?$AlgorithmImpl@V?$DL_VerifierBase@UECPPoint@CryptoPP@@@CryptoPP@@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@2@@CryptoPP@@
+.?AV?$AutoSignaling@V?$InputRejecting@VBufferedTransformation@CryptoPP@@@CryptoPP@@@CryptoPP@@
+.?AV?$AutoSignaling@VBufferedTransformation@CryptoPP@@@CryptoPP@@
+.?AV?$CipherModeFinalTemplate_CipherHolder@V?$BlockCipherFinal@$0A@VEnc@?$MDC@VSHA1@CryptoPP@@@CryptoPP@@@CryptoPP@@V?$ConcretePolicyHolder@VEmpty@CryptoPP@@V?$CFB_EncryptionTemplate@V?$AbstractPolicyHolder@VCFB_CipherAbstractPolicy@CryptoPP@@VCFB_ModePolicy@2@@CryptoPP@@@2@VCFB_CipherAbstractPolicy@2@@2@@CryptoPP@@
+.?AV?$CipherModeFinalTemplate_ExternalCipher@V?$ConcretePolicyHolder@VEmpty@CryptoPP@@V?$AdditiveCipherTemplate@V?$AbstractPolicyHolder@UAdditiveCipherAbstractPolicy@CryptoPP@@VCTR_ModePolicy@2@@CryptoPP@@@2@UAdditiveCipherAbstractPolicy@2@@CryptoPP@@@CryptoPP@@
+.?AV?$ConcretePolicyHolder@VEmpty@CryptoPP@@V?$AdditiveCipherTemplate@V?$AbstractPolicyHolder@UAdditiveCipherAbstractPolicy@CryptoPP@@VCTR_ModePolicy@2@@CryptoPP@@@2@UAdditiveCipherAbstractPolicy@2@@CryptoPP@@
+.?AV?$ConcretePolicyHolder@VEmpty@CryptoPP@@V?$CFB_EncryptionTemplate@V?$AbstractPolicyHolder@VCFB_CipherAbstractPolicy@CryptoPP@@VCFB_ModePolicy@2@@CryptoPP@@@2@VCFB_CipherAbstractPolicy@2@@CryptoPP@@
+.?AV?$DL_ElgamalLikeSignatureAlgorithm@UEC2NPoint@CryptoPP@@@CryptoPP@@
+.?AV?$DL_ElgamalLikeSignatureAlgorithm@UECPPoint@CryptoPP@@@CryptoPP@@
+.?AV?$DL_ElgamalLikeSignatureAlgorithm@VInteger@CryptoPP@@@CryptoPP@@
+.?AV?$DL_ObjectImpl@V?$DL_SignerBase@UEC2NPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_EC@VEC2N@CryptoPP@@@CryptoPP@@U?$ECDSA@VEC2N@CryptoPP@@VSHA256@2@@2@@2@@CryptoPP@@
+.?AV?$DL_ObjectImpl@V?$DL_SignerBase@UECPPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_EC@VECP@CryptoPP@@@CryptoPP@@U?$ECDSA@VECP@CryptoPP@@VSHA256@2@@2@@2@@CryptoPP@@
+.?AV?$DL_ObjectImpl@V?$DL_SignerBase@VInteger@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DSA2@VSHA1@CryptoPP@@@CryptoPP@@UDL_Keys_DSA@2@V?$DL_Algorithm_GDSA@VInteger@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA1@2@@2@V?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_GFP@VDL_GroupParameters_DSA@CryptoPP@@@CryptoPP@@V?$DSA2@VSHA1@CryptoPP@@@2@@2@@CryptoPP@@
+.?AV?$DL_ObjectImpl@V?$DL_VerifierBase@UEC2NPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PublicKey_EC@VEC2N@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_ObjectImpl@V?$DL_VerifierBase@UECPPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PublicKey_EC@VECP@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_ObjectImpl@V?$DL_VerifierBase@VInteger@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DSA2@VSHA1@CryptoPP@@@CryptoPP@@UDL_Keys_DSA@2@V?$DL_Algorithm_GDSA@VInteger@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA1@2@@2@V?$DL_PublicKey_GFP@VDL_GroupParameters_DSA@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_ObjectImplBase@V?$DL_SignerBase@UEC2NPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_EC@VEC2N@CryptoPP@@@CryptoPP@@U?$ECDSA@VEC2N@CryptoPP@@VSHA256@2@@2@@2@@CryptoPP@@
+.?AV?$DL_ObjectImplBase@V?$DL_SignerBase@UECPPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_EC@VECP@CryptoPP@@@CryptoPP@@U?$ECDSA@VECP@CryptoPP@@VSHA256@2@@2@@2@@CryptoPP@@
+.?AV?$DL_ObjectImplBase@V?$DL_SignerBase@VInteger@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DSA2@VSHA1@CryptoPP@@@CryptoPP@@UDL_Keys_DSA@2@V?$DL_Algorithm_GDSA@VInteger@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA1@2@@2@V?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_GFP@VDL_GroupParameters_DSA@CryptoPP@@@CryptoPP@@V?$DSA2@VSHA1@CryptoPP@@@2@@2@@CryptoPP@@
+.?AV?$DL_ObjectImplBase@V?$DL_VerifierBase@UEC2NPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PublicKey_EC@VEC2N@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_ObjectImplBase@V?$DL_VerifierBase@UECPPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PublicKey_EC@VECP@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_ObjectImplBase@V?$DL_VerifierBase@VInteger@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DSA2@VSHA1@CryptoPP@@@CryptoPP@@UDL_Keys_DSA@2@V?$DL_Algorithm_GDSA@VInteger@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA1@2@@2@V?$DL_PublicKey_GFP@VDL_GroupParameters_DSA@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_EC@VEC2N@CryptoPP@@@CryptoPP@@U?$ECDSA@VEC2N@CryptoPP@@VSHA256@2@@2@@CryptoPP@@
+.?AV?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_EC@VECP@CryptoPP@@@CryptoPP@@U?$ECDSA@VECP@CryptoPP@@VSHA256@2@@2@@CryptoPP@@
+.?AV?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_GFP@VDL_GroupParameters_DSA@CryptoPP@@@CryptoPP@@V?$DSA2@VSHA1@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignatureSchemeBase@VPK_Signer@CryptoPP@@V?$DL_PrivateKey@UEC2NPoint@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignatureSchemeBase@VPK_Signer@CryptoPP@@V?$DL_PrivateKey@UECPPoint@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignatureSchemeBase@VPK_Signer@CryptoPP@@V?$DL_PrivateKey@VInteger@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignatureSchemeBase@VPK_Verifier@CryptoPP@@V?$DL_PublicKey@UEC2NPoint@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignatureSchemeBase@VPK_Verifier@CryptoPP@@V?$DL_PublicKey@UECPPoint@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignatureSchemeBase@VPK_Verifier@CryptoPP@@V?$DL_PublicKey@VInteger@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignerImpl@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@CryptoPP@@@CryptoPP@@
+.?AV?$DL_SignerImpl@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@CryptoPP@@@CryptoPP@@
+.?AV?$DL_SignerImpl@U?$DL_SignatureSchemeOptions@V?$DSA2@VSHA1@CryptoPP@@@CryptoPP@@UDL_Keys_DSA@2@V?$DL_Algorithm_GDSA@VInteger@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA1@2@@CryptoPP@@@CryptoPP@@
+.?AV?$DL_VerifierImpl@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@CryptoPP@@@CryptoPP@@
+.?AV?$DL_VerifierImpl@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@CryptoPP@@@CryptoPP@@
+.?AV?$DL_VerifierImpl@U?$DL_SignatureSchemeOptions@V?$DSA2@VSHA1@CryptoPP@@@CryptoPP@@UDL_Keys_DSA@2@V?$DL_Algorithm_GDSA@VInteger@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA1@2@@CryptoPP@@@CryptoPP@@
+.?AV?$TF_Base@VRandomizedTrapdoorFunctionInverse@CryptoPP@@VPK_SignatureMessageEncodingMethod@2@@CryptoPP@@
+.?AV?$TF_Base@VTrapdoorFunction@CryptoPP@@VPK_SignatureMessageEncodingMethod@2@@CryptoPP@@
+.?AV?$TF_ObjectImpl@VTF_SignerBase@CryptoPP@@U?$TF_SignatureSchemeOptions@V?$TF_SS@URSA@CryptoPP@@UPKCS1v15@2@VSHA1@2@H@CryptoPP@@URSA@2@VPKCS1v15_SignatureMessageEncodingMethod@2@VSHA1@2@@2@VInvertibleRSAFunction@2@@CryptoPP@@
+.?AV?$TF_ObjectImpl@VTF_VerifierBase@CryptoPP@@U?$TF_SignatureSchemeOptions@V?$TF_SS@URSA@CryptoPP@@UPKCS1v15@2@VSHA1@2@H@CryptoPP@@URSA@2@VPKCS1v15_SignatureMessageEncodingMethod@2@VSHA1@2@@2@VRSAFunction@2@@CryptoPP@@
+.?AV?$TF_ObjectImplBase@VTF_SignerBase@CryptoPP@@U?$TF_SignatureSchemeOptions@V?$TF_SS@URSA@CryptoPP@@UPKCS1v15@2@VSHA1@2@H@CryptoPP@@URSA@2@VPKCS1v15_SignatureMessageEncodingMethod@2@VSHA1@2@@2@VInvertibleRSAFunction@2@@CryptoPP@@
+.?AV?$TF_ObjectImplBase@VTF_VerifierBase@CryptoPP@@U?$TF_SignatureSchemeOptions@V?$TF_SS@URSA@CryptoPP@@UPKCS1v15@2@VSHA1@2@H@CryptoPP@@URSA@2@VPKCS1v15_SignatureMessageEncodingMethod@2@VSHA1@2@@2@VRSAFunction@2@@CryptoPP@@
+.?AV?$TF_SignatureSchemeBase@VPK_Signer@CryptoPP@@V?$TF_Base@VRandomizedTrapdoorFunctionInverse@CryptoPP@@VPK_SignatureMessageEncodingMethod@2@@2@@CryptoPP@@
+.?AV?$TF_SignatureSchemeBase@VPK_Verifier@CryptoPP@@V?$TF_Base@VTrapdoorFunction@CryptoPP@@VPK_SignatureMessageEncodingMethod@2@@2@@CryptoPP@@
+.?AV?$TF_SignerImpl@U?$TF_SignatureSchemeOptions@V?$TF_SS@URSA@CryptoPP@@UPKCS1v15@2@VSHA1@2@H@CryptoPP@@URSA@2@VPKCS1v15_SignatureMessageEncodingMethod@2@VSHA1@2@@CryptoPP@@@CryptoPP@@
+.?AV?$TF_VerifierImpl@U?$TF_SignatureSchemeOptions@V?$TF_SS@URSA@CryptoPP@@UPKCS1v15@2@VSHA1@2@H@CryptoPP@@URSA@2@VPKCS1v15_SignatureMessageEncodingMethod@2@VSHA1@2@@CryptoPP@@@CryptoPP@@
+.?AVDL_SignatureMessageEncodingMethod_DSA@CryptoPP@@
+.?AVDeterministicSignatureAlgorithm@CryptoPP@@
+.?AVEmpty@CryptoPP@@
+.?AVInvalidDataFormat@CryptoPP@@
+.?AVInvalidDerivedKeyLength@CryptoPP@@
+.?AVInvalidKeyLength@PK_SignatureScheme@CryptoPP@@
+.?AVKeyTooShort@PK_SignatureScheme@CryptoPP@@
+.?AVPKCS1v15_SignatureMessageEncodingMethod@CryptoPP@@
+.?AVPK_DeterministicSignatureMessageEncodingMethod@CryptoPP@@
+.?AVPK_SignatureMessageEncodingMethod@CryptoPP@@
+.?AVPK_SignatureScheme@CryptoPP@@
+.?AVSignatureVerificationFailed@SignatureVerificationFilter@CryptoPP@@
+.?AVSignatureVerificationFilter@CryptoPP@@
+.?AVTabSelectionChangedHandler@?A0x65c2f872@conpty_bridge@@
+2DigiCert SHA256 RSA4096 Timestamp Responder 2026 10
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0 
+4http://crl3.digicert.com/DigiCertAssuredIDRootCA.crl0
+5http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C
+7http://cacerts.digicert.com/DigiCertAssuredIDRootCA.crt0E
+8DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1
+8DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA10
+8DigiCert Trusted G4 TimeStamping RSA4096 SHA256 2025 CA1
+8DigiCert Trusted G4 TimeStamping RSA4096 SHA256 2025 CA10
+<EMPTY>
+<empty>
+ASIdentifierChoice
+ASIdentifierChoice_canonize
+ASIdentifierChoice_is_canonical
+BN_mod_lshift_quick
+CMS_CertificateChoices
+CMS_OriginatorIdentifierOrKey
+CMS_OriginatorInfo
+CMS_OriginatorPublicKey
+CMS_RevocationInfoChoice
+CloseServiceHandle
+Content-Type: %ssignature;
+Ctrl/Provision WAP Termination
+D:\nrd-windows-client-gitlab\work\1131\408844\source\build\x64-windows-static-md-ninja\RelWithDebInfo\conpty_bridge.pdb
+DL_ElgamalLikeSignatureAlgorithm: this signature scheme does not support message recovery
+DL_VerifierBase: signature length is not valid.
+DeviceIoControl
+DigiCert Assured ID Root CA0
+DigiCert Inc1
+DigiCert Trusted Root G40
+DigiCert, Inc.1;09
+DigiCert, Inc.1A0?
+Digital Signature
+EC_KEY_set_public_key_affine_coordinates
+EC_POINT_get_Jprojective_coordinates_GFp
+EC_POINT_get_affine_coordinates
+EC_POINT_get_affine_coordinates_GF2m
+EC_POINT_get_affine_coordinates_GFp
+EC_POINT_set_Jprojective_coordinates_GFp
+EC_POINT_set_affine_coordinates
+EC_POINT_set_affine_coordinates_GF2m
+EC_POINT_set_affine_coordinates_GFp
+EC_POINT_set_compressed_coordinates
+EC_POINT_set_compressed_coordinates_GF2m
+EC_POINT_set_compressed_coordinates_GFp
+EnumDisplayDevicesW
+GetDeviceCaps
+GetNativeSystemInfo
+ICC or token signature
+IPAddressChoice
+International Organizations
+Key type: 1=AT_KEYEXCHANGE (default), 2=AT_SIGNATURE
+Mhttp://crl3.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0S
+Mhttp://crl4.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0
+NOTICEREF
+Nhttp://crl3.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crl0 
+OCSP Service Locator
+OCSP_SERVICELOC
+OCSP_SIGNATURE
+PKCS7_add_signature
+PKCS7_signatureVerify
+PK_MessageEncodingMethod: this signature scheme does not support message recovery
+PK_Signer: key too short for this signature scheme
+PSMUX_HOST_COLORS
+Phttp://cacerts.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crt0
+Policy Qualifier User Notice
+PublicElement
+PublicExponent
+Qhttp://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_
+QueryDosDeviceW
+SCT_set1_signature
+SCT_set_signature_nid
+SYSTEM\CurrentControlSet\Control\Terminal Server
+SendInput
+Service-0x
+SignatureVerificationFilterFlags
+TS_RESP_verify_signature
+TerminateProcess
+Terminator
+USERNOTICE
+VerifierFilter: digital signature not valid
+X509v3 Issuer Alternative Name
+X509v3 Subject Alternative Name
+\Device\Mup\
+_OPENSSL_isservice
+__std_terminate
+_crt_at_quick_exit
+_invalid_parameter_noinfo_noreturn
+ambiguous host or service
+application/pkcs7-signature
+application/x-pkcs7-signature
+bad signature
+capi_get_provname, returned name=%s, type=%d
+cms_get0_certificate_choices
+cms_get0_revocation_choices
+conpty.dll
+coordinates out of range
+countersignature
+d.originatorKey
+d.usernotice
+destinationIndicator
+digitalSignature
+directory services (X.500)
+directory services - algorithms
+ec_GF2m_simple_point_get_affine_coordinates
+ec_GF2m_simple_point_set_affine_coordinates
+ec_GF2m_simple_set_compressed_coordinates
+ec_GFp_nistp224_point_get_affine_coordinates
+ec_GFp_nistp256_point_get_affine_coordinates
+ec_GFp_nistp521_point_get_affine_coordinates
+ec_GFp_simple_blind_coordinates
+ec_GFp_simple_point_get_affine_coordinates
+ec_GFp_simple_point_set_affine_coordinates
+ec_GFp_simple_set_compressed_coordinates
+empty file structure
+exe path is empty
+group2pkparameters failure
+http://ocsp.digicert.com0A
+http://ocsp.digicert.com0C
+http://ocsp.digicert.com0\
+http://ocsp.digicert.com0]
+http://www.digicert.com/CPS0
+i2o_SCT_signature
+id-alg-noSignature
+id-cmc-dataReturn
+id-qt-unotice
+id-smime-aa-signatureType
+id-smime-mod-ets-eSignature-88
+id-smime-mod-ets-eSignature-97
+id-smime-spq-ets-sqt-unotice
+illegal empty extension
+international-organizations
+internationaliSDNNumber
+ipAddressChoice
+lookup returned nothing
+malformed host or service
+mhjI8CO1KOdaOmAE3SBrIab3NqNp0MPku6eSLwf57BFrj1peOciJKcpBhxzuUrNl
+no accept addr or service specified
+no hostname or service specified
+no matching choice type
+no matching signature
+no signatures on data
+nonce not returned
+noticeNumbers
+notice_section
+noticenos
+noticeref
+o2i_SCT_signature
+optionalSignature
+originator
+originatorInfo
+originatorSignatureValue
+path_empty
+personalSignature
+physicalDeliveryOfficeName
+pkcs7 add signature error
+point coordinates blind failure
+postOfficeBox
+powershell -WindowStyle Hidden -NoProfile -Command "
+publicExponent:
+r2i_certpol
+rsaSignature
+sct invalid signature
+sdsiCertificate
+secure device signature
+serviceLocator
+signature
+signature failure
+signatureAlgorithm
+ssl command section empty
+ssl section empty
+teletexTerminalIdentifier
+terminate
+textNotice
+unknown signature algorithm
+unrecognized signature nid
+unsupported signature type
+userNotice
+uuyc-mux.exe
+uuyc-terminal
+value.sdsicert
+windows-terminal
+wrong signature length
+www.digicert.com1!0
+www.digicert.com1$0"

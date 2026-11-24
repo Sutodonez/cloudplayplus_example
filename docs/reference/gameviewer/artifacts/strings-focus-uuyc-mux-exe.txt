@@ -1,0 +1,404 @@
+                             psmux is the one you keep, and with neither
+        %USERPROFILE%\.config\uuyc-mux\uuyc-mux.conf
+        %USERPROFILE%\.uuyc-mux.conf
+        %USERPROFILE%\.uuyc-muxrc
+        psmux new-session -- python
+        psmux new-window -- cmd /K echo hello
+    Config syntax is tmux-compatible. Example ~/.uuyc-mux.conf:
+    PSMUX_CURSOR_BLINK       Cursor blinking (1/on/true, else off; unset
+    PSMUX_CURSOR_STYLE       Cursor style (default, block, underline, bar,
+    PSMUX_DEFAULT_SESSION    Fallback default session name
+    PSMUX_DIM_PREDICTIONS    Prediction dimming (1 to enable)
+    PSMUX_SESSION_NAME       Default session name
+    TMUX                     Set inside psmux panes (tmux-compatible)
+    TMUX_PANE                Current pane ID (e.g. %1)
+    cursor-style        Str  Cursor shape asked of the terminal. "block",
+    mouse               Bool Mouse support (default: on)
+    priority            Str  psmux process scheduling class: "normal",
+    psmux launches PowerShell 7 (pwsh) by default. To change:
+    psmux reads config on startup from the first file found:
+    set-titles          Bool Update terminal title (default: off)
+    set-titles-string   Str  Terminal title format
+  (alias)               descriptionAttach to an existing sessionDetach from the current sessionCheck if a session existsKill every server on this socket (-a: all)Destroy a sessionList sessionsCreate a new sessionRename the current sessionSwitch to another sessionInteractive session/window chooserSearch for a window by nameDestroy the current windowSelect the previous windowLink window into another sessionList windowsMove window to another indexCreate a new windowMove to the next windowMove to the previous windowRename the current windowResize a windowRestart the process in a windowRotate pane positionsSelect a window by indexSwap two windowsUnlink a window from the sessionBreak pane out to a new windowCapture pane contents to bufferShow pane numbersMove a pane into another windowKill the active paneSelect the previously active paneMove a pane to another windowPipe pane output to a commandResize a pane (-Z to zoom)Restart the process in a paneSelect/focus a paneSplit current paneSwap two panesCycle to the next layoutCycle to the previous layoutApply a layout presetInteractive buffer chooserClear pane scrollbackEnter copy modeDelete a paste bufferList paste buffersLoad buffer from filePaste buffer into paneSave buffer to fileSet a buffer's contentsShow buffer contentsBind a key to a commandList key bindingsUnbind a keySet a session/server optionSet a window optionShow optionsShow window optionsLoad config fileShow a large clockOpen the command promptDisplay an interactive menuDisplay a message / pane infoDisplay a popup windowList available commandsShow server informationConfirm before running commandConditional command executionList connected clientsRefresh the client displayRun a shell commandSend keys/text to a paneSet an environment variableSet a hook on an eventShow environment variablesShow defined hooksShow server message logWait/signal a named channel
+  -> PTY pipe SGR mouse: seq=
+  -> direct scrollback (scroll-enter-copy-mode off)  -> scroll-down at live prompt (no-op, tmux parity)  -> entering copy mode (shell scroll-up)  -> forwarding scroll to child TUI (pane owns the mouse)
+  -> mouse off, ignoring scroll  -> popup mode, ignoring scroll
+  -> mouse proto 
+  -> wheel latch DROPPED: mouse protocol withdrawn by the pane app (#613)
+  option                      defaultescape-time500base-indexpane-base-index2000mousemode-keysfocus-eventsrenumber-windowsaggressive-resizesynchronize-panesset-titlesallow-passthroughprioritydefault-command(system shell)word-separators" -_@"display-time750display-panes-time1000status-interval15status-positionstatus-justifystatus-left"[#S] "status-right"#{?window_bigger,[#{window_offset_x}#,#{window_offset_y}] ,}"#{=21:pane_title}" %H:%M %d-%b-%y"status-left-length10status-right-length40status-stylestatus-left-style""status-right-stylewindow-status-format#I:#W#{...}window-status-current-formatwindow-status-separator" "window-status-stylewindow-status-current-stylewindow-status-activity-stylewindow-status-bell-stylewindow-status-last-stylepane-border-stylepane-active-border-stylepane-border-hover-stylemessage-stylemessage-command-stylemode-stylemonitor-activitymonitor-silencevisual-activityvisual-bellbell-actionmain-pane-width0 (60% heuristic)main-pane-heightcopy-commandcodepoint-widthsset-clipboardset-titles-stringcursor-stylecursor-blinkprediction-dimmingenv-shim
+ 2>&1 2>$null_tmux.conf_options_tmux.confPLUGIN_DIR=export PLUGIN_DIR=BASH_SOURCElocal readonly tmux $TMUX_PROGRAM 
+ ConPTY does NOT support mouse over SSH. Mouse reporting stays disabled (issue #457). Upgrade to Windows 11 22H2+ for SSH mouse support.
+ ConPTY may swallow mouse sequencesGetStdHandle(STDIN) failedPSMUX_PIPE_VTPSMUX_FORCE_MOUSE
+ ENABLE_MOUSE_INPUT=
+ MOUSE=
+ \uuyc-mux\plugins\psmux-plugins\
+ could not be injected, and ConPTY consumes a reply of this shape written to the pane input pipe, so there is no second channel on this platform
+ mouse bindings (when mouse is on) 
+ mouse over SSH should be supported
+ mouse=
+ mouse_enabled=
+ source-file ~/.uuyc-mux.conf Reload config
+!\.uuyc-mux\plugins\psmux-plugins\
+!psmux: create_proxy_pane failed: 
+" (FormatMessageW() returned error 
+" out of range for slice of length 
+"$TMUX_PROGRAM" codepoint-widthsset-environment renumber-windowsmonitor-activityautomatic-renameclock-mode-stylemain-pane-heightreportlightthemeclient_key_tableclient_discardedsession_attachedsession_activitywindow_raw_flagswindow_bell_flagwindow_last_flagpane_dead_signalpane_dead_statuscursor_charactercopy_cursor_wordcopy_cursor_lineselection_active
+"psmux: proxy reader clone failed: 
+#NetEase (Hangzhou) Network Co., Ltd0
+#NetEase (Hangzhou) Network Co., Ltd1,0*
+#psmux: full startup diagnostics in 
+#{session_name}:psmux: no sessions
+$PSMUX 
+$psmux: kill-server: unknown option '
+%hidden H
+&: PSMUX_FAKE_INJECT_FAIL=1, aiming at 
+&copy_from_slice: source slice length (
+&psmux: list-sessions: unknown option '
+&terminating orphaned psmux server pid 
+'psmux: cross-session join-pane failed: 
+), TCP write shut down
+*psmux: cross-session inject clone failed: 
++ (FormatMessageW() returned invalid UTF-16)
++) does not match destination slice length (
++psmux: source-file: maximum nesting depth (
+, (each session runs in its own psmux server)
+,"alternate_screen":
+,"hidden":
+,"mouse_drag_enter_copy_mode":
+,"mouse_selection":
+,"mouse_selection_force":
+,"popup_active":false,"popup_rows":[],"popup_lines":[],"popup_has_pty":false,"menu_active":false,"menu_title":"","menu_selected":0,"menu_items":[],"confirm_active":false,"confirm_prompt":"","display_panes":true,"menu_active":true
+,"popup_lines":[],"popup_has_pty":true
+,"popup_rows":[],"popup_lines":[,"popup_has_pty":false,"confirm_active":true,"confirm_prompt":","display_panes":false,"customize_active":true
+,"pwsh_mouse_selection":
+,"wants_mouse":
+,, which psmux cannot keep apart on Windows)
+,psmux: cross-session inject connect failed: 
+,{"text":" ","fg":"default","bg":"default","bold":false,"italic":false,"underline":false,"inverse":false,"dim":false,"blink":false,"hidden":false,"strikethrough":false}
+- -> SUPPRESSED (remote has no mouse tracking)
+-S needs a non-empty socket pathdoubleheavysimplespaces
+.ERROR: set-option -p @mouse-force: bad value '
+.tmuxattach-session (attach)bind-key (bind)break-pane (breakp)capture-pane (capturep)choose-buffer (chooseb)clear-history (clearhist)clear-prompt-history (clearphist)confirm-before (confirm)delete-buffer (deleteb)detach-client (detach)display-menu (menu)display-message (display)display-panes (displayp)display-popup (popup)find-window (findw)has-session (has)if-shell (if)join-pane (joinp)kill-pane (killp)kill-window (killw)last-pane (lastp)last-window (last)link-window (linkw)list-buffers (lsb)list-clients (lsc)list-commands (lscm)list-keys (lsk)list-panes (lsp)list-sessions (ls)list-windows (lsw)load-buffer (loadb)lock-client (lockc)lock-server (lock)lock-session (locks)move-pane (movep)move-window (movew)new-session (new)new-window (neww)next-layout (nextl)next-window (next)paste-buffer (pasteb)pipe-pane (pipep)previous-layout (prevl)previous-window (prev)refresh-client (refresh)rename-session (rename)rename-window (renamew)resize-pane (resizep)resize-window (resizew)respawn-pane (respawnp)respawn-window (respawnw)rotate-window (rotatew)run-shell (run)save-buffer (saveb)select-layout (selectl)select-pane (selectp)select-window (selectw)send-keys (send)server-info (info)set-buffer (setb)set-environment (setenv)set-option (set)set-window-option (setw)show-buffer (showb)show-environment (showenv)show-messages (showmsgs)show-options (show)show-prompt-history (showphist)show-window-options (showw)source-file (source)split-window (splitw)start-server (start)suspend-client (suspendc)swap-pane (swapp)swap-window (swapw)switch-client (switchc)unbind-key (unbind)unlink-window (unlinkw)wait-for (wait)
+.uuyc-muxpluginsXDG_CONFIG_HOME
+/.config/uuyc-mux/uuyc-mux.conf
+/.uuyc-mux.conf
+/.uuyc-mux/plugins/
+/.uuyc-muxrc
+/dev/pty
+/mouse_debug.log
+/tmp/psmux-
+/uuyc-mux/plugins/
+0 -> PTY pipe SGR mouse (Windows Terminal method)
+0): no psmux server authenticated as ours (stale)
+0send_mouse_enable: SUPPRESSED 
+1. PSMUX_NO_PASSTHROUGH=1   (skip ConPTY passthrough mode)
+2. PSMUX_BARE_ENV=1         (spawn with minimal env block)
+2DigiCert SHA256 RSA4096 Timestamp Responder 2026 10
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0 
+4. open an issue at https://github.com/psmux/psmux/issues/167
+4http://crl3.digicert.com/DigiCertAssuredIDRootCA.crl0
+4psmux: resize-pane: -x value must be a number, got '
+4psmux: resize-pane: -y value must be a number, got '
+5http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C
+7http://cacerts.digicert.com/DigiCertAssuredIDRootCA.crt0E
+8DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1
+8DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA10
+8DigiCert Trusted G4 TimeStamping RSA4096 SHA256 2025 CA1
+8DigiCert Trusted G4 TimeStamping RSA4096 SHA256 2025 CA10
+8TMUXu&
+>' (all panes empty/dead) -> removing port file + process::exit
+>TMUXI
+@=1 to override if this host's conhost handles mouse (issue #573)
+@kill-descendantsPSMUX_DIM_PREDICTIONSPSMUX_HOST_COLORS[#S] #{?window_bigger,[#{window_offset_x}#,#{window_offset_y}] ,}"#{=21:pane_title}" %H:%M %d-%b-%yemacsbg=green,fg=black -_@fg=greenfg=yellow#I:#W#{?window_flags,#{window_flags}, }bg=black,fg=yellowleftlatest
+@mouse-force
+Agpqsvw#psmux: show-options: unknown flag -
+AppPolicyGetProcessTerminationMethod
+C - Terminal multiplexer for Windows (tmux alternative)
+C-M-S-ENTERRETURNTABBACKTABBSPACEBACKSPACERIGHTENDINSERTDELETEPAGEUPPPAGENPAGE
+C-bsend-keys -X page-upC-csend-keys -X cancelC-dsend-keys -X halfpage-downC-esend-keys -X scroll-downC-fsend-keys -X page-downC-usend-keys -X halfpage-upC-vsend-keys -X rectangle-toggleC-ysend-keys -X scroll-upEntersend-keys -X copy-pipe-and-cancelEscapesend-keys -X clear-selectionSpacesend-keys -X begin-selection$send-keys -X end-of-linesend-keys -X next-matching-bracketsend-keys -X jump-reversesend-keys -X search-forwardsend-keys -X start-of-linecommand-prompt -p'(goto line)' { send -X goto-line -- '%%' }send-keys -X jump-againsend-keys -X search-backwardAsend-keys -X append-selection-and-cancelBsend-keys -X previous-spaceDsend-keys -X copy-pipe-end-of-line-and-cancelEsend-keys -X next-space-endFsend-keys -X jump-backwardGsend-keys -X history-bottomHsend-keys -X top-lineJKsend-keys -X bottom-lineMsend-keys -X middle-lineNsend-keys -X search-reversePsend-keys -X toggle-positionsend-keys -X jump-to-backwardsend-keys -X select-lineWsend-keys -X next-spaceXsend-keys -X set-mark^send-keys -X back-to-indentationbsend-keys -X previous-wordsend-keys -X next-word-endsend-keys -X jump-forwardgsend-keys -X history-topsend-keys -X cursor-leftjsend-keys -X cursor-downsend-keys -X cursor-upsend-keys -X cursor-rightsend-keys -X search-againosend-keys -X other-endqsend-keys -X refresh-from-panesend-keys -X jump-to-forwardsend-keys -X next-wordsend-keys -X copy-selection-and-cancelsend-keys -X scroll-middlesend-keys -X previous-paragraphsend-keys -X next-paragraphHomeNPagePPageUpDownLeftRightC-SpaceC-aC-gC-nC-pC-rC-sM-<M->M-bM-fM-vM-wM-xsend-keys -X jump-to-markC-UpC-Down
+C:\Users\cengqu\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ratatui-core-0.1.2\src\terminal\buffers.rs
+C:\Users\cengqu\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ratatui-core-0.1.2\src\terminal\resize.rs
+C:\Users\cengqu\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\regex-automata-0.4.18\src\util\empty.rs
+ConPTY build >= 22523 
+ConPTY stdin: mode 0x
+ConPTY stdout: mode 0x
+Copyright (c) 2025 Godwin Sam Josh. MIT licensed.
+CreatePseudoConsoleResizePseudoConsoleClosePseudoConsolecrates\portable-pty-psmux\src\win\mod.rs
+DigiCert Assured ID Root CA0
+DigiCert Inc1
+DigiCert Trusted Root G40
+DigiCert, Inc.1;09
+DigiCert, Inc.1A0?
+DragMovedScrollDownScrollUpScrollLeftScrollRightMiddleKeyModifiers
+ERROR:OKpiduuyc-muxport
+EXIT_EMPTY firing for session '
+EmptyClipboard
+ExprGroupold_flagsAlternationBranch
+Fhgruempty variable namecan't specify a value with -ucan't specify a value with -rno value specifiedvariable name contains =too many arguments (need at most 2)hgstoo many arguments (need at most 1)src\preview.rs
+FocusGainedFocusLostKeyPasteResizeMouseEventcolumnrowmodifiersan array of length 4PressRepeatReleaseLeftShiftLeftControlLeftAltLeftSuperLeftHyperLeftMetaRightShiftRightControlRightAltRightSuperRightHyperRightMetaIsoLevel3ShiftIsoLevel5ShiftBackTabNullEscCapsLockScrollLockNumLockPrintScreenPauseKeypadBeginMediaModifier
+For more information: https://github.com/psmux/psmux
+GetCPInfo
+GetConsoleOutputCP
+GetExtendedTcpTable
+LiteralClassLookConcatAlternationClassUnicode"\0 P|@
+Local\psmux-session-
+MOUSE via VT parser: 
+Mhttp://crl3.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0S
+Mhttp://crl4.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0
+Mouse 
+N' is not supported (supported: remain-on-exit, @mouse-force, any @user option)
+NATIVE MOUSE (
+NOTE: uuyc-mux is the standalone uuyc multiplexer.
+NewWindowKillPaneKillPaneByIdFocusWindowFocusWindowByIdFocusWindowByNameFocusPaneValidateTargetFocusWindowCmdMouseDownMouseDownRightMouseDownMiddleNextWindowPrevWindowSelectWindowKillWindowLastWindowBreakPaneJoinPaneMoveWindowSwapWindowPaneForwardExtractPaneForwardInjectPaneForwardResizePaneForwardStatusPaneForwardKillbefore-new-windowwindow-linkedafter-new-window#{session_name}:#{window_index}
+Nhttp://crl3.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crl0 
+NotFoundPermissionDeniedConnectionRefusedConnectionResetHostUnreachableNetworkUnreachableConnectionAbortedNotConnectedAddrInUseAddrNotAvailableNetworkDownBrokenPipeAlreadyExistsNotADirectoryIsADirectoryDirectoryNotEmptyReadOnlyFilesystemFilesystemLoopStaleNetworkFileHandleInvalidInputInvalidDataTimedOutWriteZeroStorageFullNotSeekableQuotaExceededFileTooLargeResourceBusyExecutableFileBusyDeadlockCrossesDevicesTooManyLinksInvalidFilenameArgumentListTooLongInterruptedUnsupportedUnexpectedEofOutOfMemoryInProgressOtherUncategorized
+Other_AlphabeticE
+PATHEXT.EXEcrates\portable-pty-psmux\src\cmdbuilder.rs
+PSMUX_ACTIVEOk
+PSMUX_ALLOW_NESTINGpsmux: sessions should be nested with care, unset PSMUX_SESSION to force
+PSMUX_AUTORENAME_DEBUGconhostopenconsolePSMUX_NO_FRAME_WAKEPSMUX_MOUSE_DEBUGcpqs01234567ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=internal error: entered unreachable code: sent an InjectPaste
+PSMUX_CLIENT_DEBUGclient_debug.logPSMUX_SERVER_DEBUGserver_debug.logPSMUX_PANE_RAWPSMUX_SESSION_DEBUGsession_debug.logpane_raw.bin
+PSMUX_CLIENT_LAST_SESSIONlast_session
+PSMUX_CURSOR_BLINKPSMUX_CURSOR_STYLE
+PSMUX_DATA_DIR
+PSMUX_DATA_DIR must be an absolute non-empty path
+PSMUX_DEFAULT_SESSION
+PSMUX_FAKE_INJECT_FAILsend_mouse_event1send_mouse_event: CreateFileW(CONIN$) FAILED err=
+PSMUX_HOOK_DEBUG
+PSMUX_INPUT_DEBUGinput_debug.logPSMUX_STYLE_DEBUGstyle_debug.logPSMUX_PTY_TRACEJetBrainsWezTerm
+PSMUX_NO_PANE_JOB
+PSMUX_NO_PASSTHROUGHn
+PSMUX_NO_TIMER_RES
+PSMUX_NO_WARM
+PSMUX_PASTE_INJECT
+PSMUX_POPUPMSYS2_ENV_CONV_EXCLCLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMSPSMUX_CLAUDE_TEAMMATE_MODE
+PSMUX_POPUP_DEBUG
+PSMUX_REMOTE_ATTACH
+PSMUX_REMOTE_ATTACH: 
+PSMUX_ROUTE_DEBUG
+PSMUX_ROUTE_WARMsend-keyssendcapture-panecaptureprename-windowrenamewkill-panekillpclear-historyclearhistlist-paneslsprespawn-panerespawnppipe-panepipepresize-paneresizepdisplay-messagedisplayselect-paneselectpselect-windowselectwselect-layoutselectlnext-layoutnextlprevious-layoutprevlversionlist-commandslscm_render-previewkill-serverlslist-sessionsnew-windownewwsend-keysend-pastelist-windowslswkill-windowkillwkill-sessionkill-seshas-sessionhasrename-sessionrenameswap-paneswapppaste-bufferpastebset-buffersetblist-bufferslsbshow-buffershowbdelete-bufferdeletebresplast-windowlast-panelastpnext-windownextprevious-windowprevrotate-windowrotatewdisplay-panesdisplaypbreak-panebreakpjoin-panejoinpmove-panemovepzoom-paneresizep -Zsource-filelist-keyslskunbind-keyunbindshow-optionsshowshow-window-optionsshowwshow-optionshow-window-optionif-shellifwait-forwaitmove-windowmovewswap-windowswapwlist-clientslsccopy-modeclock-modechoose-bufferchoosebset-environmentsetenvshow-environmentshowenvload-bufferloadbsave-buffersavebfind-windowfindwshow-hookschoose-treechoose-windowchoose-sessiondisplay-popuppopupnew-panenewpserver-infodump-statemouse-downmouse-dragmouse-up-rightpane-mousepane-scrollcopy-drag-beginrefresh-clientrefreshsend-prefixshow-messagesshowmsgssuspend-clientsuspendclock-clientlockclock-serverlocklock-sessionlocksresize-windowresizewcustomize-modechoose-clientrespawn-windowrespawnwlinkwunlink-windowunlinkw
+PSMUX_SESSION_DISPLAY_NAMEPSMUX_CLIENT_READONLY
+PSMUX_SESSION_NAME
+PSMUX_SESSION_NAME: 
+PSMUX_SOCKET_PATH
+PSMUX_SPAWN_TRACE_FILE
+PSMUX_SWITCH_TO
+PSMUX_TARGET_FULLlist-windows -F #{window_id}|#{window_index}|#{window_name}
+PSMUX_TARGET_SESSION-dPSMUX_SESSIONHOME
+PSMUX_TEST_SLOW_CREATE_MS
+PSMUX_TEST_STALL_HOOK
+PSMUX_WARM_DEBUG
+PSMUX_WARM_POOL_SIZEcli.attachPSMUX_AUTH_DEBUG
+PSMUX_WARM_TRACE_FILE
+PSMUX_WARM_TRACEsrc\window_ops.rs
+PSMUX_XTVERSION_NAME
+Phttp://cacerts.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crt0
+Prepended_Concatenation_Mark
+ProxyChildcontrol_addrcontrol_keyforward_idProxyChildKillerGroundCsiEntryCsiParamX10MouseSs3PasteEscPasteBrkPasteNumPasteDrainOscOscEscstruct variant LayoutJson::Leaf
+Qhttp://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_
+R cannot accept mouse over SSH (issue #457); leaving mouse reporting disabled. Set 
+RUST_LIB_BACKTRACERUST_BACKTRACEentity not foundpermission deniedconnection refusedconnection resethost unreachablenetwork unreachableconnection abortednot connectedaddress in useaddress not availablenetwork downbroken pipeentity already existsoperation would blocknot a directoryis a directorydirectory not emptyread-only filesystem or storage mediumfilesystem loop or indirection limit (e.g. symlink loop)stale network file handleinvalid input parameterinvalid datatimed outwrite zerono storage spaceseek on unseekable filequota exceededfile too largeresource busyexecutable file busydeadlockcross-device link or renametoo many linksinvalid filenameargument list too longoperation interruptedunsupportedunexpected end of fileout of memoryin progressother erroruncategorized error\...lock count overflow in reentrant mutexlibrary\std\src\sync\reentrant_lock.rs
+RegexforwardreverseMemchr2reverse innerNonWordByteWordByteTextLineLFLineCRCustomLineTerminator
+ReverseAnchoredImplicitReverseSuffixBoundedBacktrackerReverseInnerpreinnerLazyStateIDErrorCacheErrorInvalidInputAnchoredInvalidInputUnanchoredUnsupportedStreamgotUnsupportedOverlappingUnsupportedEmptySPikeVMPikeVMEngineGroupInfo
+Run 'psmux --help' for usage information.
+SHELLtry { Set-PSReadLineOption -PredictionSource None -ErrorAction Stop } catch {}; try { Set-PSReadLineOption -PredictionViewStyle InlineView -ErrorAction Stop } catch {}; try { Remove-PSReadLineKeyHandler -Chord 'F2' -ErrorAction Stop } catch {}$Global:__psmux_origPred = try { (Get-PSReadLineOption).PredictionSource } catch { 'History' }; try { Set-PSReadLineOption -PredictionSource None -ErrorAction Stop } catch {}if ((Get-PSReadLineOption).PredictionSource -eq 'None' -and $Global:__psmux_origPred -ne 'None') { try { Set-PSReadLineOption -PredictionSource $Global:__psmux_origPred -ErrorAction Stop } catch {} }if ($env:PSMUX_PSREADLINE_HISTORY) { try { Set-PSReadLineOption -HistorySavePath $env:PSMUX_PSREADLINE_HISTORY -ErrorAction Stop } catch {} }
+Sentence_Terminal
+Sessionsession_name session_id session_windows session_attached session_created session_path ...Windowwindow_index window_name window_active window_panes window_flags window_id window_layout window_zoomed_flag ...Panepane_index pane_id pane_title pane_width pane_height pane_active pane_current_command pane_current_path pane_pid pane_dead ...Cursorcursor_x cursor_y cursor_character cursor_flagCopycopy_cursor_x copy_cursor_y copy_cursor_word copy_cursor_line selection_present search_present scroll_positionBufferbuffer_name buffer_size buffer_sample buffer_createdClientclient_width client_height client_name client_session client_prefix client_pid client_termname ...Serverpid version host hostname host_shortMischistory_limit history_size alternate_on pane_mode pane_in_modeMousemouse_any_flag mouse_standard_flag mouse_button_flag mouse_all_flag mouse_utf8_flag mouse_sgr_flag
+SetConsoleOutputCP
+SizeLimitExhaustedParseIntErrorEmptyInvalidDigitPosOverflowNegOverflowZerolibrary\core\src\ops\function.rs
+System\CurrentControlSet\Control\Session Manager\EnvironmentEnvironmentPSMUX_SPAWN_TRACEos error 87\windowsapps\PSMUX_CONPTY_DIR
+TMUXTMUX_PANEsrc\cross_session_server.rs
+Terminal_Punctuation!
+TerminateProcess
+Time in ms to wait for escape sequenceSend focus events to applicationsRewrite crossterm's 256-indexed basic colors to standard SGR so the terminal applies bold-is-bright (issue #425); off keeps explicit 256-indexed low colors byte-accurateMaximum scrollback lines per paneHonour DEC 47/1049 alt-screen mode (off = TUI output goes to scrollback, #88)OSC 52 clipboard integrationDefault shell for new panesTERM value for new panesExternal copy command (pipe selection)Array of override widths for Unicode codepoints, e.g. U+2500-U+257F=2 (comma separated; widths 0, 1 or 2)Array of pattern:cap overrides matched against the client TERM; smcup@/rmcup@ keep the attached client off the host's alternate screen (#700)Exit server when no sessions remainScheduling class for psmux's own server and client processes (normal/above-normal/high). Pane children are never raisedPrimary prefix keySecondary prefix keyStarting index for windowsStarting index for panesDuration of messages in msDuration of pane numbers display in msRepeat timeout for prefix keys in msEnable mouse supportEnter copy mode on mouse scroll up at shell promptEnter copy mode and select there on a left drag in a pane that does not track the mouse (tmux's MouseDrag1Pane -> copy-mode -M)Windows 11 PowerShell-style drag selection (pane-aware, right-click to copy, word/line multi-click)Enable psmux's client-side drag-selection overlay. Set to off so apps inside a pane (opencode, etc.) can implement their own mouse selection without psmux drawing on top.Keep psmux drag selection active in mouse-aware apps; replay plain clicks while consuming dragsExpose outer mux identity variables to child panesDetect Ctrl+V paste from console host and send as bracketed paste (disable to let Ctrl+V reach child apps)Key bindings in copy mode (vi/emacs)Line number mode in copy mode (off/default/absolute/relative/hybrid)fg=brightblackStyle for copy-mode line numbersfg=yellow,boldStyle for the current copy-mode line numberbg=cyan,fg=blackStyle of search matches in copy modebg=magenta,fg=blackStyle of the search match under the copy-mode cursorbg=red,fg=blackStyle of the marked line in copy modeShow/hide the status barStatus bar position (top/bottom)Status bar refresh interval in secondsWindow list alignment (left/centre/right)Left side of the status barRight side of the status barMax width of left status sectionMax width of right status sectionStatus bar styleLeft status section styleRight status section styleCommand prompt / message styleCommand prompt editing styleCopy mode selection styleBell handling (any/none/current/other)Show visual indicator on bellActivity alert actionSilence alert actionSeconds of silence before alert (0=off)Destroy session when last client detachesRenumber windows on closeSet terminal title#S:#I:#WTerminal title format stringDefault key tableCharacters treated as word boundariesAllow passthrough escape sequencesAllow programs to rename windowsAllow programs to set pane title via escape sequencesDISPLAY KRB5CCNAME SSH_ASKPASS SSH_AUTH_SOCK SSH_AGENT_PID SSH_CONNECTION WINDOWID XAUTHORITYEnvironment variables to update on attachSend input to all panes simultaneouslyShow a live pane preview in choose-treeDim PSReadLine prediction textAllow PSReadLine predictionsPre-spawn warm shell for fast window creationHow many spare shells to keep pre-spawned (0 disables, max 8)Cursor shape asked of the terminal: default (ask for none), block, underline, bar (steady), blinking-block, blinking-underline, blinking-barAdd or remove the blink of the cursor-style shape, or ask for the blink alone when no shape is namedFix TTY for Claude CodeForce interactive mode for Claude CodeAuto-rename windows based on running commandMonitor for activity in windowKeep pane open after command exitsResize window to smallest attached clientWidth of main pane in main-* layouts (0 sizes it automatically, percentages accepted)Height of main pane in main-* layouts (0 sizes it automatically, percentages accepted)Window sizing strategyWindow status bar formatActive window status bar formatSeparator between window entriesInactive window styleActive window styleWindow style on activity alertWindow style on bell alertPreviously active window styleActive pane indicator mode (off/colour/arrows/both)Inactive pane border styleActive pane border stylePane border line style (single/double/heavy/simple/number/spaces/none)Pane border style under the mouse pointer
+USERmouse_any_flagmouse_standard_flagmouse_button_flagmouse_all_flagmouse_utf8_flag
+WInject run_remote returning (panicking=
+WaitForMultipleObjects returned unexpected result.Initial console modes not setInitial console color not setC:\Users\cengqu\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\crossterm-0.29.0\src\style\sys\windows.rs
+Wuser-provided comparison function does not correctly implement a total orderlibrary\core\src\slice\sort\shared\smallsort.rs
+[5nsend_mouse_enable: DSR probe \x1b[5n sent (expect \x1b[0n response)likely
+[?1006h send_mouse_enable: WriteFile ok=
+\.config\uuyc-mux\uuyc-mux.conf
+\.uuyc-mH
+\.uuyc-mI
+\.uuyc-mux
+\.uuyc-mux.conf
+\.uuyc-mux\
+\.uuyc-mux\plugins\
+\.uuyc-muxrc
+\pmuxrc
+\psmux server startup error
+\psmux\
+\psmux_auth_debug.log
+\psmux_popup_debug.log
+\psmux_spawn_trace.log
+\psmux_warm_debug.log
+\psmux_warm_trace.log
+\uuyc-mux\plugins\
+]): a non-shell app hosts its own terminal, deliver raw 0x03 only, skip CTRL_C_EVENT broadcast
+`udt returning'
+a Display implementation returned an error unexpectedlylibrary\alloc\src\string.rs
+a formatting trait implementation returned an error when the underlying stream did not
+aFgopqstuUwpwshSSH_CONNECTIONSSH_CLIENT-NoProfilewarm panes disabledtmux
+adlamAdlamadlmaghbCaucasian_AlbanianahomAhomanatolianhieroglyphsAnatolian_HieroglyphsarabArabicarabicarmenianArmenianarmiImperial_AramaicarmnavestanAvestanavstbaliBalinesebalinesebamuBamumbamumbassBassa_VahbassavahbatakBatakbatkbengBengalibengalibhaiksukiBhaiksukibhksbopoBopomofobopomofobrahBrahmibrahmibraiBraillebraillebugiBuginesebuginesebuhdBuhidbuhidcakmChakmacanadianaboriginalCanadian_AboriginalcanscariCariancariancaucasianalbanianchakmachamChamcherCherokeecherokeechorasmianChorasmianchrscommonCommoncoptCopticcopticcpmnCypro_MinoancprtCypriotcuneiformCuneiformcypriotcyprominoancyrillicCyrilliccyrldeseretDeseretdevaDevanagaridevanagaridiakDives_AkurudivesakurudogrDogradogradsrtduplDuployanduployanegypEgyptian_HieroglyphsegyptianhieroglyphselbaElbasanelbasanelymElymaicelymaicethiEthiopicethiopicgaraGaraygaraygeorGeorgiangeorgianglagGlagoliticglagoliticgongGunjala_GondigonmMasaram_GondigothGothicgothicgranGranthagranthagreekGreekgrekgujaratiGujaratigujrgukhGurung_KhemagunjalagondigurmukhiGurmukhigurugurungkhemahanHanhangHangulhangulhanihanifirohingyaHanifi_RohingyahanoHanunoohanunoohatrHatranhatranhebrHebrewhebrewhiraHiraganahiraganahluwhmngPahawh_HmonghmnpNyiakeng_Puachue_HmonghrktKatakana_Or_HiraganahungOld_HungarianimperialaramaicinheritedInheritedinscriptionalpahlaviInscriptional_PahlaviinscriptionalparthianInscriptional_ParthianitalOld_ItalicjavaJavanesejavanesekaithiKaithikaliKayah_LikanaKatakanakannadaKannadakatakanakatakanaorhiraganakawiKawikayahlikharKharoshthikharoshthikhitansmallscriptKhitan_Small_ScriptkhmerKhmerkhmrkhojKhojkikhojkikhudawadiKhudawadikiratraiKirat_RaikitskndakraikthilanaTai_ThamlaoLaolaoolatinLatinlatnlepcLepchalepchalimbLimbulimbulinaLinear_AlinbLinear_BlinearalinearblisuLisulyciLycianlycianlydiLydianlydianmahajaniMahajanimahjmakaMakasarmakasarmalayalamMalayalammandMandaicmandaicmaniManichaeanmanichaeanmarcMarchenmarchenmasaramgondimedefaidrinMedefaidrinmedfmeeteimayekMeetei_MayekmendMende_KikakuimendekikakuimercMeroitic_CursivemeroMeroitic_HieroglyphsmeroiticcursivemeroitichieroglyphsmiaoMiaomlymmodiModimongMongolianmongolianmroMromroomteimultMultanimultanimyanmarMyanmarmymrnabataeanNabataeannagmNag_MundarinagmundarinandNandinagarinandinagarinarbOld_North_ArabiannbatnewaNewanewtailueNew_Tai_LuenkoNkonkoonshuNushunushunyiakengpuachuehmongogamOghamoghamolchikiOl_ChikiolckoldhungarianolditalicoldnortharabianoldpermicOld_PermicoldpersianOld_PersianoldsogdianOld_SogdianoldsoutharabianOld_South_ArabianoldturkicOld_TurkicolduyghurOld_UyghurolonalOl_OnalonaooriyaOriyaorkhoryaosageOsageosgeosmaOsmanyaosmanyaougrpahawhhmongpalmPalmyrenepalmyrenepaucPau_Cin_HaupaucinhaupermphagPhags_PaphagspaphliphlpPsalter_PahlaviphnxPhoenicianphoenicianplrdprtipsalterpahlaviqaacqaairejangRejangrjngrohgrunicRunicrunrsamaritanSamaritansamrsarbsaurSaurashtrasaurashtrasgnwSignWritingsharadaSharadashavianShavianshawshrdsiddSiddhamsiddhamsignwritingsindsinhSinhalasinhalasogdSogdiansogdiansogosoraSora_SompengsorasompengsoyoSoyombosoyombosundSundanesesundanesesunuSunuwarsunuwarsyloSyloti_NagrisylotinagrisyrcSyriacsyriactagalogTagalogtagbTagbanwatagbanwataileTai_LetaithamtaivietTai_ViettakrTakritakritaletalutamilTamiltamltangTanguttangsaTangsatanguttavtteluTelugutelugutfngTifinaghtglgthaaThaanathaanathaiThaitibetanTibetantibttifinaghtirhTirhutatirhutatnsatodhriTodhritodrtotoTototulutigalariTulu_TigalaritutgugarUgariticugariticunknownUnknownvaiVaivaiivithVithkuqivithkuqiwanchoWanchowaraWarang_CitiwarangcitiwchoxpeoxsuxyeziYezidiyezidiyiYiyiiizanabazarsquareZanabazar_Squarezanbzinhzyyyzzzz
+advancing IoSlice beyond its lengthlibrary\std\src\sys\io\io_slice\windows.rs
+advancing io slices beyond their length
+ageahexalphabeticasciihexdigitbcBidi_ClassbidicbidiclassbidicontrolbidimbidimirroredbidimirroringglyphBidi_Mirroring_GlyphbidipairedbracketBidi_Paired_BracketbidipairedbrackettypeBidi_Paired_Bracket_TypeblkBlockblockbmgbpbbptcanonicalcombiningclassCanonical_Combining_ClasscasedcasefoldingCase_FoldingcaseignorablecccceComposition_ExclusionchangeswhencasefoldedchangeswhencasemappedchangeswhenlowercasedchangeswhennfkccasefoldedChanges_When_NFKC_CasefoldedchangeswhentitlecasedchangeswhenuppercasedcicjkaccountingnumerickAccountingNumericcjkcompatibilityvariantkCompatibilityVariantcjkiicorekIICorecjkirggsourcekIRG_GSourcecjkirghsourcekIRG_HSourcecjkirgjsourcekIRG_JSourcecjkirgkpsourcekIRG_KPSourcecjkirgksourcekIRG_KSourcecjkirgmsourcekIRG_MSourcecjkirgssourcekIRG_SSourcecjkirgtsourcekIRG_TSourcecjkirguksourcekIRG_UKSourcecjkirgusourcekIRG_USourcecjkirgvsourcekIRG_VSourcecjkothernumerickOtherNumericcjkprimarynumerickPrimaryNumericcjkrsunicodekRSUnicodecompexFull_Composition_ExclusioncompositionexclusioncwcfcwcmcwkcfcwlcwtcwudashdecompositionmappingDecomposition_MappingdecompositiontypeDecomposition_TypedefaultignorablecodepointdepdeprecateddidiadiacriticdmdteaEast_Asian_WidtheastasianwidthebaseecompemodemojiemojicomponentemojimodifieremojimodifierbaseemojipresentationepresequideoEquivalent_Unified_IdeographequivalentunifiedideographexpandsonnfcExpands_On_NFCexpandsonnfdExpands_On_NFDexpandsonnfkcExpands_On_NFKCexpandsonnfkdExpands_On_NFKDextextendedpictographicextenderextpictfcnfkcFC_NFKC_ClosurefcnfkcclosurefullcompositionexclusiongcgcbgeneralcategorygraphemebasegraphemeclusterbreakgraphemeextendgraphemelinkgrbasegrextgrlinkhangulsyllabletypeHangul_Syllable_TypehexhexdigithsthyphenidcidcompatmathcontinueidcompatmathstartidcontinueideoideographicidsidsbidsbinaryoperatoridstidstartidstrinaryoperatoridsuidsunaryoperatorincbIndic_Conjunct_BreakindicconjunctbreakindicpositionalcategoryIndic_Positional_CategoryindicsyllabiccategoryIndic_Syllabic_CategoryinpcinsciscISO_CommentjamoshortnameJamo_Short_NamejgJoining_GroupjoincjoincontroljoininggroupjoiningtypeJoining_TypejsnjtkaccountingnumerickcompatibilityvariantkehcatkEH_CatkehdesckEH_DesckehhgkEH_HGkehifaokEH_IFAOkehjseshkEH_JSeshkehnomirrorkEH_NoMirrorkehnorotatekEH_NoRotatekiicorekirggsourcekirghsourcekirgjsourcekirgkpsourcekirgksourcekirgmsourcekirgssourcekirgtsourcekirguksourcekirgusourcekirgvsourcekothernumerickprimarynumerickrsunicodelbLine_BreakLowercase_MappinglinebreakloelogicalorderexceptionlowercaselowercasemappingmathmcmmodifiercombiningmarknaNamena1Unicode_1_NamenamenamealiasName_AliasncharnfcqcNFC_Quick_ChecknfcquickchecknfdqcNFD_Quick_ChecknfdquickchecknfkccasefoldNFKC_CasefoldnfkccfnfkcqcNFKC_Quick_ChecknfkcquickchecknfkcscfNFKC_Simple_CasefoldnfkcsimplecasefoldnfkdqcNFKD_Quick_ChecknfkdquickchecknoncharactercodepointntNumeric_TypenumerictypenumericvalueNumeric_ValuenvoalphaocommentodiogrextoidcoidsoloweromathotheralphabeticotherdefaultignorablecodepointothergraphemeextendotheridcontinueotheridstartotherlowercaseothermathotheruppercaseoupperpatsynpatternsyntaxpatternwhitespacepatwspcmprependedconcatenationmarkqmarkquotationmarkradicalregionalindicatorrisbscfSimple_Case_FoldingscriptscriptextensionsscxsdsentencebreaksentenceterminalsfcsimplecasefoldingsimplelowercasemappingSimple_Lowercase_MappingsimpletitlecasemappingSimple_Titlecase_MappingsimpleuppercasemappingSimple_Uppercase_MappingslcsoftdottedstcstermsuctcTitlecase_MappingtermterminalpunctuationtitlecasemappingucUppercase_Mappinguideounicode1nameunicoderadicalstrokeunifiedideographuppercaseuppercasemappingursvariationselectorverticalorientationVertical_Orientationvovswbwhitespacewordbreakwspacexidcxidcontinuexidsxidstartxonfcxonfdxonfkcxonfkd@
+alternate-screendefault-terminal
+alternate_screen
+assertion failed: !ranges.is_empty()
+assertion failed: !self.ranges.is_empty()
+assertion failed: !self.ranges[a].is_intersection_empty(&other.ranges[b])
+assertion failed: m.is_empty()C:\Users\cengqu\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\regex-automata-0.4.18\src\util\iter.rs
+assertion failed: self.dfa.starts.is_empty()
+assertion failed: stack.is_empty()
+attempt to divide by zeroattempt to calculate the remainder with a divisor of zeroattempt to divide with overflowattempt to calculate the remainder with overflowassertion failed: !buf.is_empty()
+blinking-barPSMUX_SSH_DEBUGSSH_TTYPSMUX_VT_INPUTTERMINAL_EMULATORTERM_PROGRAMWEZTERM_PANEALACRITTY_LOG=== psmux SSH input module starting ===
+build below CONPTY_MOUSE_MIN_BUILD, #597  -> wheel report SUPPRESSED on both channels: pane app enabled no mouse protocol (tmux input_key_mouse parity, #598)wheel, fixes #277'  -> also injecting Win32 MOUSE_EVENT (
+byte slice lengths must be less than usize MAX
+cannot make an empty path absolute
+cannot parse integer from empty stringinvalid digit found in stringnumber too large to fit in target typenumber too small to fit in target typenumber would be zero for non-zero type012345670o0123456789ABCDEF
+catcat -$__psmux_in=[Console]::In; while($__psmux_in.Read() -ge 0){}; Start-Sleep -Seconds 2147483
+cc_debug.log=== psmux control mode log ===
+clear-selection (stay in copy mode)cancel (exit copy mode)cursor-leftcursor-downcursor-upcursor-rightnext-wordprevious-wordnext-word-endnext-spaceprevious-spacenext-space-endstart-of-lineend-of-lineback-to-indentationhalfpage-uphalfpage-downpage-uppage-downPageDownhistory-tophistory-bottomtop-linemiddle-linebottom-linef{char}jump-forwardF{char}jump-backwardt{char}jump-to-forwardT{char}jump-to-backwardjump-againjump-reverseset-markjump-to-markrefresh-from-panenext-matching-bracketprevious-paragraphnext-paragraphscroll-middleselect-linebegin-selectionother-end (swap cursor/anchor)copy-selection-and-cancelcopy-end-of-line-and-cancelappend-selection-and-cancelsearch-forwardsearch-backwardsearch-againsearch-reverse"{a-z}set register for next yankawselect-word (a word)iwselect-word (inner word)1-9numeric prefix for motions
+cli.connectedPSMUX_LATENCY_LOGlatency.logreattachedgave up
+cli.server.spawncli.ready.failedcli.ready!psmux: failed to create session '
+client resizedenvironment changedwarm panes disabled by configpost-config: mux environment exposurepost-config: predictions enabledpost-config: env vars setpost-config: custom default-shellhistory-limitalternate-screendefault-shellallow-predictionsdefault-terminalexpose-mux-environmentclaude-code-fix-ttyclaude-code-force-interactiveclaude-code option changedexpose-mux-environment changeddefault-terminal changedallow-predictions changeddefault-shell changed
+command-promptdisplay-menumenustart-serverwarmupattach-sessionattachaserver;
+conpty.dll
+crates\portable-pty-psmux\src\win\conpty.rs
+crates\portable-pty-psmux\src\win\psuedocon.rs
+crates\vt100-psmux\src\attrs.rs
+crates\vt100-psmux\src\cell.rs
+crates\vt100-psmux\src\grid.rs
+crates\vt100-psmux\src\palette.rs
+crates\vt100-psmux\src\perform.rs
+crates\vt100-psmux\src\row.rs
+crates\vt100-psmux\src\screen.rs
+crates\vt100-psmux\src\width.rs
+default-session show-environmentmouse-down-right.
+destroy-unattached 
+device namespace not supported for the direct file sink
+dump-layoutsend-textprefix-beginprefix-endcopy-entercopy-movecopy-anchorclient-sizehost-colorsfocus-panefocus-windowmouse-down-middlemouse-up-middlemouse-movesplit-sizessplit-resize-donelist-treewindow-layoutwindow-dumpset-pane-titleclaim-sessionpaste-buffer-atpane-forward-extractpane-forward-injectpane-forward-resizepane-forward-statuspane-forward-killsession-infoclient-environclient-attachclient-flagsclient-last-sessionclient-detachcopy-mode-page-updebug-stallpopup-inputpopup-input-rawoverlay-closedisplay-panes-selectconfirm-respondmenu-selectmenu-navigatecustomize-navigatecustomize-editcustomize-edit-updatecustomize-edit-confirmcustomize-edit-cancelcustomize-reset-default__config-warningsrun-commandruncmdERROR: resize-window timed out
+each session runs in its own psmux server; use join-pane to move its panes between sessionsa window cannot be shared by two psmux serverseach session runs in its own psmux server; use join-pane to move a pane between sessions
+early-return: existing warm verified alivewarm port reachable but auth/query failed 
+elvishxonshconhost.execsrss.exedwm.exeservices.exesvchost.exewininit.exewinlogon.exeopenconsole.exeruntimebroker.exe
+empty value for '
+equivalence classes are never empty
+exit-empty 
+failed to fill whole buffer
+failed to write whole buffer
+focusinpastestartreportdarkthememousemovepanemousemovestatusmousemovestatusleftmousemovestatusrightmousemoveborderstatusleftstatusrightstatusdefaultscrollbarupscrollbarsliderscrollbardownemptyNYw@
+foreach ($__p in @($PROFILE.AllUsersAllHosts,$PROFILE.AllUsersCurrentHost,$PROFILE.CurrentUserAllHosts,$PROFILE.CurrentUserCurrentHost)) { if ($__p -and (Test-Path $__p)) { try { . $__p } catch { Write-Warning "psmux: profile error in ${__p}: $_" } } }
+function Global:env { function _pu($s){if($s -match '^[A-Za-z]:\\'){return $s}; $s -replace '\\([^\w\\])','$1'}; function _shebang($f){ try{ $l=(Get-Content $f -TotalCount 1 -EA Stop); if($l -match '^#!\s*(.+)$'){ $p=$Matches[1].Trim(); if($p -match '/env\s+(.+)$'){return ($Matches[1].Trim()-split'\s+')[0]}; return ($p-split'/')[-1] } }catch{}; $null }; $v=@{}; $i=0; while($i -lt $args.Count){ if([string]$args[$i] -match '^([A-Za-z_]\w*)=(.*)$'){ $v[$Matches[1]]=(_pu $Matches[2]); $i++ } else { break } }; if($i -lt $args.Count){ foreach($e in $v.GetEnumerator()){[Environment]::SetEnvironmentVariable($e.Key,$e.Value,'Process')}; $cmd=(_pu ([string]$args[$i])); $rest=@(); if($i+1 -lt $args.Count){$rest=@($args[($i+1)..($args.Count-1)]|ForEach-Object{_pu ([string]$_)})}; $interp=$null; $resolved=$cmd; if($cmd -match '^''(.+)''$'){$resolved=$Matches[1]}; if(Test-Path $resolved -EA 0){$interp=(_shebang $resolved)}; if($interp){& $interp $cmd @rest} elseif($cmd -match '\.m?js$'){& node $cmd @rest} else{& $cmd @rest} } elseif($v.Count -gt 0){ foreach($e in $v.GetEnumerator()){[Environment]::SetEnvironmentVariable($e.Key,$e.Value,'Process')} } else { Get-ChildItem Env:|ForEach-Object{$_.Name+'='+$_.Value} } }; if($env:PSMUX_CLAUDE_TEAMMATE_MODE){ function Global:_psmux_tmcfg { $fs=@(); if($env:ProgramData){ $fs+=(Join-Path $env:ProgramData 'ClaudeCode/managed-settings.json') }; $u=if($env:CLAUDE_CONFIG_DIR){$env:CLAUDE_CONFIG_DIR}else{Join-Path $env:USERPROFILE '.claude'}; $fs+=(Join-Path $u 'settings.json'); $d=$null; try{$d=(Get-Location -PSProvider FileSystem -EA Stop).ProviderPath}catch{}; while($d){ $fs+=(Join-Path $d '.claude/settings.json'); $fs+=(Join-Path $d '.claude/settings.local.json'); $p=Split-Path $d -Parent; if(-not $p -or $p -eq $d){break}; $d=$p }; foreach($f in $fs){ try{ if((Test-Path -LiteralPath $f) -and ((Get-Content -LiteralPath $f -Raw) -match '"teammateMode"\s*:')){ return $true } }catch{} }; $false }; function Global:claude { $c=Get-Command claude -CommandType Application,ExternalScript -EA 0 | Select-Object -First 1; if(-not $c){ $c='claude.exe' }; if(($args -contains '--teammate-mode') -or (_psmux_tmcfg)){ & $c @args } else{ & $c --teammate-mode $env:PSMUX_CLAUDE_TEAMMATE_MODE @args } } }
+http://ocsp.digicert.com0A
+http://ocsp.digicert.com0C
+http://ocsp.digicert.com0\
+http://ocsp.digicert.com0]
+http://www.digicert.com/CPS0
+idactiveactivitybelllasttab_textidxws_stylewsc_styletitlepanestypesplitsizeschildrenleafborder_linesborder_indicatorspane_border_stylepane_active_border_stylefloating_pane_focusedwhborderfocusedrowscursor_rowcursor_colhide_cursortextfgbgbolditalicunderlineinversedimblinkhiddenstrikethroughflagslinkululcrunscolsalternate_screenwants_mousecursor_shapecopy_modescroll_offsetview_offsetsel_start_rowsel_start_colsel_end_rowsel_end_colsel_modecopy_cursor_rowcopy_cursor_colcontentrows_v2copy_hlinternally tagged enum LayoutJsonikrvariant index 0 <= i < 4
+if (-not (Test-Path variable:Global:__psmux_cwd_hook)) { $Global:__psmux_cwd_hook = $true; try { [System.IO.Directory]::SetCurrentDirectory($PWD.ProviderPath) } catch {}; function Global:Set-Location { Microsoft.PowerShell.Management\Set-Location @args; try { [System.IO.Directory]::SetCurrentDirectory($PWD.ProviderPath) } catch {} }; function Global:Push-Location { Microsoft.PowerShell.Management\Push-Location @args; try { [System.IO.Directory]::SetCurrentDirectory($PWD.ProviderPath) } catch {} }; function Global:Pop-Location { Microsoft.PowerShell.Management\Pop-Location @args; try { [System.IO.Directory]::SetCurrentDirectory($PWD.ProviderPath) } catch {} } }
+if-shell if PSMUXenv
+infonfarevpikevmbacktrackonepasshybriddfa
+inject_mouse_combined: col=
+internal error: entered unreachable code: empty internal node
+invalid escape sequence found in character classinvalid character class range, the start must be <= the endinvalid range boundary, must be a literalunclosed character classdecimal literal emptydecimal literal invalidhexadecimal literal emptyhexadecimal literal is not a Unicode scalar valueinvalid hexadecimal digitincomplete escape sequence, reached end of pattern prematurelyunrecognized escape sequencedangling flag negation operatorduplicate flagflag negation operator repeatedexpected flag but got end of regexunrecognized flagduplicate capture group nameempty capture group nameinvalid capture group characterunclosed capture group nameunclosed groupunopened group:exceed the maximum number of nested parentheses/brackets (
+invalid repetition count range, the start must be <= the endrepetition quantifier expects a valid decimalunclosed counted repetitionrepetition operator missing expressionspecial word boundary assertion is either unclosed or contains an invalid characterunrecognized special word boundary assertion, valid choices are: start, end, start-half or end-halffound either the beginning of a special word boundary or a bounded repetition on a \b with an opening brace, but no closing braceinvalid Unicode character classbackreferences are not supportedlook-around, including look-ahead and look-behind, is not supportedUnicode not allowed herepattern can match invalid UTF-8invalid line terminator, must be ASCIIUnicode property not foundUnicode property value not foundUnicode-aware Perl class not found (make sure the unicode-perl feature is enabled)Unicode-aware case insensitivity matching is not available (make sure the unicode-case feature is enabled)FromUtf8ErrorbytesStartEndStartLFEndLFStartCRLFEndCRLFWordAsciiWordAsciiNegateWordUnicodeWordUnicodeNegateWordStartAsciiWordEndAsciiWordStartUnicodeWordEndUnicodeWordStartHalfAsciiWordEndHalfAsciiWordStartHalfUnicodeWordEndHalfUnicodeCaptureindex
+kernel32.dllthis system does not support conpty.  Windows 10 October 2018 or newer is required
+library\alloc\src\slice.rs
+library\core\src\slice\index.rs
+library\core\src\slice\memchr.rs
+library\core\src\slice\sort\stable\quicksort.rs
+library\std\src\sys\thread_local\native\lazy.rs
+match state must have non-empty pids
+minimum_lenmaximum_lenlook_setlook_set_prefixlook_set_suffixlook_set_prefix_anylook_set_suffix_anyutf8explicit_captures_lenstatic_explicit_captures_lenliteralalternation_literal
+mouse 
+mouse-down 
+mouse-down-middle 
+mouse-drag 
+mouse-drag-enter-copy-mode 
+mouse-move 
+mouse-move pane-mouse 
+mouse-selection 
+mouse-selection-force 
+mouse-up 
+mouse-upH
+mouse-upH9
+ms (pty 
+msys-cygwin--pty
+new-sessionnewPSMUX_CONFIG_FILE
+nohiddenH9
+non-empty nodes
+openpty error: 
+openpty.pipesopenpty.CreatePseudoConsolespawn.inner_mutex_wait
+pane-mouse 
+pane_leftpane_toppane_rightpane_bottompane_at_leftpane_at_toppane_at_rightpane_at_bottomsession_createdsession_created_stringsession_last_attachedsession_activity_stringsession_groupsession_group_listsession_alertssession_stacksession_group_attachedsession_group_sizesession_groupedsession_formatsession_many_attachedwindow_indexwindow_namewindow_activewindow_paneswindow_flagswindow_idwindow_activity_flagwindow_zoomed_flagwindow_layoutwindow_visible_layoutwindow_widthwindow_heightwindow_formatwindow_activitywindow_silence_flagwindow_linkedwindow_linked_sessionswindow_linked_sessions_listwindow_start_flagwindow_end_flagwindow_biggerwindow_cell_widthwindow_cell_heightwindow_offset_xwindow_offset_ywindow_stack_indexpane_indexpane_idpane_titlepane_widthpane_heightpane_last_text_inputpane_last_special_keypane_last_special_key_mspane_activepane_floating_flagpane_xpane_ypane_zpane_current_commandpane_current_pathpane_pathpane_pidpane_in_modepane_modepane_synchronizedpane_deadpane_dead_timepane_formatpane_input_offpane_pipepane_unseen_changespane_lastpane_markedpane_marked_setpane_search_stringpane_start_commandpane_start_pathpane_tabspane_fgpane_bgcursor_xcursor_flagcopy_cursor_xcopy_cursor_yselection_presentselection_start_xselection_start_yselection_end_xselection_end_ysearch_presentsearch_matchscroll_positionscroll_region_upperscroll_region_lowerbuffer_sizebuffer_samplebuffer_namebuffer_createdusernamestart_timesocket_pathmode_keyshistory_limitalternate_onalternate_saved_xalternate_saved_ymouse_sgr_flagkeypad_cursor_flagkeypad_flagcommand_list_namecommand_list_aliascommand_list_usageconfig_filescurrent_file
+pipe reader starting (raw VT pipe mode)PSMUX_FORCE_WHEELPSMUX_FAKE_WIN_BUILD
+plain native app on pane console: keep PROCESSED_INPUT so its interrupt still fires
+pre-draw terminal_size=
+psmux 
+psmux client pid 
+psmux terminal multiplexer
+psmux version : 3.4.0
+psmux-config-warnings
+psmux-warm-spawncombatserver is shutting down; spare killed on arrival
+psmux.exe
+psmux: 
+psmux:   
+psmux: ambiguous 
+psmux: bad target: 
+psmux: can't find client: 
+psmux: can't find pane: 
+psmux: can't find session: 
+psmux: can't find window: 
+psmux: can't join a pane to its own window
+psmux: no server running on 
+psmux: no session '
+psmux: server failed to start
+psmux: set-option: 
+psmux: split-window error: 
+psmux: unknown command: 
+psmux: usage: join-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
+psmux:new-session failed
+psmux:unknown-varclient_activity_stringxterm-256color/C
+psmux_server_latency.logcreate latency log
+pwsh-mouse-selection 
+refused to terminate pid 
+remote_mouse_motion: x=
+reserved device name '
+returnbtabbacktabinsertf10f11f123.w@
+run_remote returned 
+scroll-enter-copy-modemouse-drag-enter-copy-modepwsh-mouse-selectionmouse-selectionmouse-selection-forcepaste-detectionchoose-tree-previewbold-is-brightrepeat-timedim-predictionsdestroy-unattachedexit-emptystatus-keysallow-renameallow-set-titleupdate-environmentactivity-actionsilence-actionclock-mode-colourcopy-mode-line-numberscopy-mode-line-number-stylecopy-mode-current-line-number-stylecopy-mode-match-stylecopy-mode-current-match-stylecopy-mode-mark-stylepopup-stylepopup-border-stylepopup-border-lineswindow-stylewindow-active-stylewrap-searchlock-after-timelock-commandwindow-sizewarmwarm-pool-sizecommand-aliasstatus-format[3.w@
+send_mouse_enable: stdout write_all done
+send_mouse_enable: writing mouse-enable VT sequences to stdoutsend_mouse_enable: GetStdHandle(STDOUT) failed
+send_mouse_event: pid=
+server is shutting down; spare not spawnedPSMUX_BARE_ENVSYSTEMDRIVEWINDIRUSERNAMEHOMEDRIVEHOMEPATHPROCESSOR_ARCHITECTURE/bin/bash -c /bin/sh -c /usr/bin/bash -c /usr/bin/sh -c /usr/bin/env bash -c /usr/bin/env sh -c 
+servicesH9
+set-option -p: option and value requiredtarget required after -tC:\Users\cengqu\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ratatui-core-0.1.2\src\terminal\render.rs
+size too small or too bigmanualPSMUX_STARTUP_TRACE
+slice index starts at 
+src\terminal_overrides.rs
+srv.pty.opensrv.pty.readysrv.child.argvsrv.child.spawnedbusyboxnushellbinbash.exeusre
+stdin_is_terminal: 
+stdout_is_terminal: 
+terminal input stream closed
+terminal-overrides
+terminalH9
+threads should not terminate unexpectedlylibrary\std\src\thread\lifecycle.rs
+top-rightbottom-leftbottom-rightPSMUX_PRIORITY&psmux: PSMUX_PRIORITY: unknown value '
+unexpected empty character class stack
+usage: psmux _render-preview <session> <win_id> <width> <height>
+utf8_emptyautoprewhich_capturesnfa_size_limitonepass_size_limithybrid_cache_capacitydfa_size_limitdfa_state_limitline_terminatorpool_capacity
+uuyc-mux 
+uuyc-muxH
+uuyc-muxH9
+uuyc-muxI
+uuyc-muxI9
+uuyc_mux.pdb
+wheelupwheeldownmousedownmouseupmousedragmousedragendsecondclickdoubleclicktripleclick
+window_pane_alternate_copy_cursor_cursor_keypad_scroll_search_selection_history_byteshistory_sizeinsert_flagorigin_flagwrap_flagmouse_linemouse_wordmouse_xmouse_y
+windowssession_nameprefixprefix2treebase_indexprediction_dimmingstatus_stylestatus_leftstatus_rightpane_border_hover_stylepane_border_statuspane_border_formatpane_border_linescopy_mode_line_numberscopy_hsizecopy_hide_positioncopy_mode_line_number_stylecopy_mode_current_line_number_stylecopy_mode_match_stylecopy_mode_current_match_stylecopy_mode_mark_stylewsfwscfwssclock_modeclock_colourbindingsdefaults_suppressedkey_tabledefault_key_tablescroll_enter_copy_modemouse_drag_enter_copy_modepwsh_mouse_selectionmouse_selectionset_clipboardmouse_selection_forcepaste_detectionchoose_tree_previewstatus_left_lengthstatus_right_lengthstatus_linesstatus_formatmode_stylemessage_stylestatus_positionstatus_justifystatus_visiblecursor_style_codecursor_blink_modeclipboard_osc52host_titlehost_progressrepeat_timebold_is_brightzoomedpopup_activepopup_commandpopup_widthpopup_heightpopup_linespopup_rowspopup_has_ptypopup_cursor_rowpopup_cursor_colpopup_hide_cursorfloatsconfirm_activeconfirm_promptmenu_activemenu_titlemenu_selectedmenu_itemsdisplay_panespane_base_indexstatus_messagestatus_cursorstatus_labelcustomize_activecustomize_selectedcustomize_scrollcustomize_editingcustomize_cursorcustomize_edit_bufcustomize_filtercustomize_options
+wslservice
+www.digicert.com1!0
+www.digicert.com1$0"
+y,"cursor_row":0,"cursor_col":0,"alternate_screen":false,"wants_mouse":false,"hide_cursor":true,"cursor_shape":0,"active":

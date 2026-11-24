@@ -1,0 +1,199 @@
+!_dirs.empty()
+!_path.empty()
+!hostAndPort.empty()
+#NetEase (Hangzhou) Network Co., Ltd0
+#NetEase (Hangzhou) Network Co., Ltd1,0*
+%s failed to duplicate worker native handle before detach, error:%u
+%s failed to retain detached worker native handle: %s
+%s failed to retain detached worker native handle: unknown exception
+%s gateway returned invalid index:%s, keep local hint:%s
+%s gateway returned no index, keep local hint:%s
+%s retained detached worker native handle
+%s skip sync success return while stopping
+.?AV?$BasicEvent@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@$$CBVKeyValue@AbstractConfiguration@Util@Poco@@VFastMutex@4@@Poco@@
+.?AV?$BasicEvent@$$CB_NVFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@HVFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UAndroidLaunchProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UAppCallHostProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UAppInfoProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UAppProgressProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UEngineInstallProgressProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UEngineInstallProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UMainPlayerListChangedProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UMainProcessProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UMainStatusChangedProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UPlayerCustomActionProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UPlayerPingProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UPlayerProgressProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UPlayerProtocolBase@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UPlayerRuntimeErrorProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UPlayerStatusChangedProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UProtocolBase@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UStoreAppOpenProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UStorePkgStatusProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@VKeyValue@AbstractConfiguration@Util@Poco@@VFastMutex@4@@Poco@@
+.?AVDirectoryNotEmptyException@Poco@@
+.?AVLogicException@Poco@@
+.?AVServiceNotFoundException@Net@Poco@@
+.?AVTCPConnectionNotification@Net@Poco@@
+.?AVTCPServer@Net@Poco@@
+.?AVTCPServerConnection@Net@Poco@@
+.?AVTCPServerConnectionFactory@Net@Poco@@
+.?AVTCPServerConnectionFilter@Net@Poco@@
+.?AVTCPServerDispatcher@Net@Poco@@
+.?AVTCPServerParams@Net@Poco@@
+.?AVWebSocketException@Net@Poco@@
+2DigiCert SHA256 RSA4096 Timestamp Responder 2025 10
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0 
+4http://crl3.digicert.com/DigiCertAssuredIDRootCA.crl0
+5http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C
+7http://cacerts.digicert.com/DigiCertAssuredIDRootCA.crt0E
+8DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1
+8DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA10
+8DigiCert Trusted G4 TimeStamping RSA4096 SHA256 2025 CA1
+8DigiCert Trusted G4 TimeStamping RSA4096 SHA256 2025 CA10
+AppPolicyGetProcessTerminationMethod
+Attempt to set value on an empty stack
+Can not access empty value.
+Can not convert empty value.
+Can not extract empty value.
+D9'u@IcEDE3
+DataReportUtil configureDataReportPreservePathMode std exception:%s
+DataReportUtil configureDataReportPreservePathMode unknown exception
+DataReportUtil dataReportFilePathConfiguredOrEmpty std exception:%s
+DataReportUtil dataReportFilePathConfiguredOrEmpty unknown exception
+DataReportUtil dataReportFilePathReadyOrEmpty std exception:%s
+DataReportUtil dataReportFilePathReadyOrEmpty unknown exception
+Destination address required
+DigiCert Assured ID Root CA0
+DigiCert Inc1
+DigiCert Trusted Root G40
+DigiCert, Inc.1;09
+DigiCert, Inc.1A0?
+Directory not empty
+E:\liuting\gitlab-source\nemu-api\build\x64-windows-static-mt\vcpkg_installed\vcpkg\blds\poco\src\49720c5896-61fa9215f4.clean\Net\src\TCPServer.cpp
+E:\liuting\gitlab-source\nemu-api\build\x64-windows-static-mt\vcpkg_installed\vcpkg\blds\poco\src\49720c5896-61fa9215f4.clean\Net\src\TCPServerDispatcher.cpp
+E:\liuting\gitlab-source\nemu-api\build\x64-windows-static-mt\vcpkg_installed\vcpkg\blds\poco\src\49720c5896-61fa9215f4.clean\Net\src\TCPServerParams.cpp
+Empty string.
+Fatal,Critical,Error,Warning,Notice,Information,Debug,Trace
+Forbidden
+FreeLibraryWhenCallbackReturns
+GetCPInfo
+GetConsoleOutputCP
+GetNativeSystemInfo
+L9|$ptYH
+Mhttp://crl3.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0S
+Mhttp://crl4.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0
+Multiple Choices
+NEMUX_PLAYER_INSTANCE_MUTEX_
+NEMUX_PLAYER_INSTANCE_MUTEX_LAUNCHER_
+Nhttp://crl3.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crl0 
+Not a valid AM/PM designator
+Phttp://cacerts.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crt0
+ProcessWatcher failed to duplicate watcher native handle before detach, error:%u
+ProcessWatcher failed to retain detached watcher native handle
+ProcessWatcher failed to retain detached watcher native handle: %s
+Qhttp://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_
+Service Unavailable
+Service not found
+Siddham
+TCPServer: 
+TCPServerConnection
+TerminateProcess
+Unterminated HTTP response line
+Unterminated array
+Unterminated object
+WebSocket Exception
+[%s] active console user process timeout, terminate
+[%s] required stdout is empty
+[CmdUtil::killProcessByExePath] TerminateProcess %d success
+[CmdUtil::killProcessByExePath] TerminateProcess error: %d
+[device]
+[device]L
+[highestNxDeviceAndroidVersionOrDefault] poco exception code: %d, message: %s, displayText: %s
+_device_pid_:
+`udt returning'
+callback returned invalid response size %d.. error code %d
+client uuid or target empty
+createDeviceProcessWatcher shared_from_this failed: %s
+createDeviceProcessWatcher shared_from_this failed: unknown exception
+createDeviceProcessWatcher start failed: %s
+createDeviceProcessWatcher start failed: unknown exception
+createMainProcessWatcher start returned false pid:%d
+cross device link
+destination address required
+device exit detected: %s, reason:%s exit code:0x%x
+device exit: %s, reason:%s exit code:0x%x
+device or resource busy
+device_crash
+device_exit
+device_exited_before_android_ready
+directory not empty
+dumpsys meminfo com.netease.nemu_vapi_android.nemu
+empty_index
+engines.nemux.player.android_version
+http://ocsp.digicert.com0A
+http://ocsp.digicert.com0C
+http://ocsp.digicert.com0\
+http://ocsp.digicert.com0]
+http://www.digicert.com/CPS0
+importPlayer
+importPlayerWithAndroidVersion
+installEngine androidVersion:%s extraJson_empty:%d extraJson_size:%d
+invalid random_device value
+key is empty
+killMain wait finish for devices auto close
+killMain wait for devices auto close
+main_port_empty
+mainnx connect skip: mainnx port empty, serverPort:%d
+mainnx importPlayer createIndex:%s path:%s androidVersion:%s
+mainnx importPlayer errcode:%d
+mainnx importPlayer index:%s path:%s androidVersion:%s
+mainnx importPlayer request error: %d, %s
+mainnxPortProbeDelayMs
+mainnxPortProbeMaxAttempts
+missing terminating ] for character class
+no candidate log path
+no space on device
+no such device
+no such device or address
+notice
+nx_device
+onEventStoreAppOpen skipped empty callback
+onEventStorePkgStatus skipped empty callback
+player_android_device_id
+requestDeviceProcess
+requestDeviceProcess request preparation failed: %s
+requestDeviceProcess request preparation failed: unknown exception
+requestDeviceProcess skip request task while stopping
+requestDeviceProcess task enqueue failed, index:%s
+return
+return.
+return.active
+return.index
+return.installed
+return.launch_action
+return.launch_code
+return.launch_err_code
+return.launch_err_msg
+return.launch_msg
+return.output
+return.renderer_ginstance
+return.state
+sendAndReceiveNotLimited, RES-DATA empty error: 
+sendAndReceiveNotLimited, [RES-LEN] empty error: 
+server_port_empty
+skip launch failure attribution for restart action device crash index:%s attribution:%s
+skip launch failure attribution for restart action device exit index:%s attribution:%s
+syntax error in subpattern name (missing terminator)
+unterminated IPv6 address
+unterminated JSON string
+unterminated string literal
+unterminated string literal in Unicode
+unterminated string literal in escape
+vm.nat.port_forward.gateway.host_port
+www.digicert.com1!0
+www.digicert.com1$0"
+|$ H;|$PtyH

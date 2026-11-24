@@ -1,0 +1,93 @@
+[
+  {
+    "t": "GameViewerServer.exe",
+    "size": 34032632,
+    "stringCount": 37572,
+    "focusHits": 1907,
+    "urlHits": 38
+  },
+  {
+    "t": "GameViewerService.exe",
+    "size": 8470520,
+    "stringCount": 11484,
+    "focusHits": 340,
+    "urlHits": 17
+  },
+  {
+    "t": "streamer.dll",
+    "size": 20443128,
+    "stringCount": 34370,
+    "focusHits": 3659,
+    "urlHits": 56
+  },
+  {
+    "t": "uuyc-mux.exe",
+    "size": 10003448,
+    "stringCount": 5453,
+    "focusHits": 404,
+    "urlHits": 18
+  },
+  {
+    "t": "uuyc-cli.exe",
+    "size": 12666872,
+    "stringCount": 15553,
+    "focusHits": 719,
+    "urlHits": 17
+  },
+  {
+    "t": "conpty_bridge.exe",
+    "size": 6556664,
+    "stringCount": 10031,
+    "focusHits": 264,
+    "urlHits": 15
+  },
+  {
+    "t": "conpty.dll",
+    "size": 109880,
+    "stringCount": 567,
+    "focusHits": 31,
+    "urlHits": 10
+  },
+  {
+    "t": "OpenConsole.exe",
+    "size": 1066296,
+    "stringCount": 2414,
+    "focusHits": 77,
+    "urlHits": 11
+  },
+  {
+    "t": "nemu-api.dll",
+    "size": 10529784,
+    "stringCount": 7089,
+    "focusHits": 199,
+    "urlHits": 20
+  },
+  {
+    "t": "remote-nemu-api.dll",
+    "size": 4939256,
+    "stringCount": 3900,
+    "focusHits": 112,
+    "urlHits": 18
+  },
+  {
+    "t": "nrd_renderer_ipc.dll",
+    "size": 185336,
+    "stringCount": 633,
+    "focusHits": 38,
+    "urlHits": 15
+  },
+  {
+    "t": "GameViewerHealthd.exe",
+    "size": 11334648,
+    "stringCount": 14910,
+    "focusHits": 697,
+    "urlHits": 32
+  },
+  {
+    "t": "GameViewerLauncher.exe",
+    "size": 10354680,
+    "stringCount": 14010,
+    "focusHits": 416,
+    "urlHits": 23
+  }
+]

@@ -1,0 +1,77 @@
+.?AU?$default_delete@VSixelParser@VirtualTerminal@Console@Microsoft@@@std@@
+.?AV<lambda_1>@?1??AssignUserPreferenceCharset@AdaptDispatch@VirtualTerminal@Console@Microsoft@@UEAA?AV?$function@$$A6A_N_W@Z@std@@W4CharsetSize@DispatchTypes@345@@Z@
+.?AV<lambda_1>@?1??DownloadDRCS@AdaptDispatch@VirtualTerminal@Console@Microsoft@@UEAA?AV?$function@$$A6A_N_W@Z@std@@HVVTParameter@345@W4DrcsEraseControl@DispatchTypes@345@W4DrcsCellMatrix@DispatchTypes@345@W4DrcsFontSet@DispatchTypes@345@W4DrcsFontUsage@DispatchTypes@345@0W4CharsetSize@DispatchTypes@345@@Z@
+.?AV<lambda_1>@?1??RequestSetting@AdaptDispatch@VirtualTerminal@Console@Microsoft@@UEAA?AV?$function@$$A6A_N_W@Z@std@@XZ@
+.?AV<lambda_1>@?1??_RestoreColorTable@AdaptDispatch@VirtualTerminal@Console@Microsoft@@AEAA?AV?$function@$$A6A_N_W@Z@std@@XZ@
+.?AV<lambda_1>@?1??_RestoreCursorInformation@AdaptDispatch@VirtualTerminal@Console@Microsoft@@AEAA?AV?$function@$$A6A_N_W@Z@std@@XZ@
+.?AV<lambda_1>@?1??_RestoreTabStops@AdaptDispatch@VirtualTerminal@Console@Microsoft@@AEAA?AV?$function@$$A6A_N_W@Z@std@@XZ@
+.?AV<lambda_1>@?4??DefineImage@SixelParser@VirtualTerminal@Console@Microsoft@@QEAA?AV?$function@$$A6A_N_W@Z@std@@HW4SixelBackground@DispatchTypes@345@VVTParameter@345@@Z@
+.?AV<lambda_1>@?4??InvokeMacro@AdaptDispatch@VirtualTerminal@Console@Microsoft@@UEAAXH@Z@
+.?AV<lambda_1>@?7??DefineMacro@AdaptDispatch@VirtualTerminal@Console@Microsoft@@UEAA?AV?$function@$$A6A_N_W@Z@std@@HW4MacroDeleteControl@DispatchTypes@345@W4MacroEncoding@9345@@Z@
+.text$lp00OpenConsole
+<assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3"><description>Console Window Host</description><dependency><dependentAssembly><assemblyIdentity type="win32" name="Microsoft.Windows.Common-Controls" version="6.0.0.0" processorArchitecture="*" publicKeyToken="6595b64144ccf1df" language="*"></assemblyIdentity></dependentAssembly></dependency><trustInfo xmlns="urn:schemas-microsoft-com:asm.v3"><security><requestedPrivileges><requestedExecutionLevel level="asInvoker" uiAccess="false"></requestedExecutionLevel></requestedPrivileges></security></trustInfo><application xmlns="urn:schemas-microsoft-com:asm.v3"><windowsSettings><longPathAware xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">true</longPathAware><heapType xmlns="http://schemas.microsoft.com/SMI/2020/WindowsSettings">SegmentHeap</heapType></windowsSettings></application><ms_compatibility:compatibility xmlns:ms_compatibility="urn:schemas-microsoft-com:compatibility.v1" xmlns="urn:schemas-microsoft-com:compatibility.v1"><ms_compatibility:application xmlns:ms_compatibility="urn:schemas-microsoft-com:compatibility.v1"><ms_compatibility:supportedOS xmlns:ms_compatibility="urn:schemas-microsoft-com:compatibility.v1" Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}"></ms_compatibility:supportedOS><ms_compatibility:supportedOS xmlns:ms_compatibility="urn:schemas-microsoft-com:compatibility.v1" Id="{1f676c76-80e1-4239-95bb-83d0f6d0da78}"></ms_compatibility:supportedOS><ms_compatibility:supportedOS xmlns:ms_compatibility="urn:schemas-microsoft-com:compatibility.v1" Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}"></ms_compatibility:supportedOS><ms_compatibility:supportedOS xmlns:ms_compatibility="urn:schemas-microsoft-com:compatibility.v1" Id="{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}"></ms_compatibility:supportedOS></ms_compatibility:application></ms_compatibility:compatibility></assembly>
+API_GetConsoleMouseInfo
+C:\__w\1\s\bin\x64\Release\OpenConsole.pdb
+C:\__w\1\s\src\host\PtySignalInputThread.cpp
+C:\__w\1\s\src\interactivity\base\ServiceLocator.cpp
+C:\__w\1\s\src\server\ConDrvDeviceComm.cpp
+C:\__w\1\s\src\terminal\adapter\InteractDispatch.cpp
+C:\__w\1\s\src\terminal\input\terminalInput.cpp
+C:\__w\1\s\src\terminal\parser\InputStateMachineEngine.cpp
+C:\__w\1\s\src\terminal\parser\OutputStateMachineEngine.cpp
+C:\__w\1\s\src\terminal\parser\stateMachine.cpp
+ConPTY Input Handler Thread
+ConPTY ReadFile
+ConPTY Signal Handler Thread
+ConPTY WriteFile
+Console Window and PTY Host (Open Source)
+D3D11CreateDevice
+DelegationTerminal
+DestinationOrigin
+DeviceIoControl
+DeviceIoControl failed
+EmptyClipboard
+GetCPInfo
+GetGlyphIndicesW
+GetNumberOfConsoleMouseButtons
+Microsoft Time-Stamp Service
+Microsoft Time-Stamp Service0
+Microsoft.Windows.Console.VirtualTerminal.Parser
+OpenConsole.exe
+OriginatingProcess
+OriginatingThread
+OscTermination
+QuickEdit
+ReturnHr
+ReturnNt
+RoOriginateError
+RoOriginateErrorW
+SetProcessDpiAwareness
+SetProcessDpiAwarenessContext
+SrvInit_CreatedDelegationTerminal
+SrvInit_DelegateToTerminalSucceeded
+SrvInit_FoundDelegationTerminal
+SrvInit_PrepareToCreateDelegationTerminal
+Terminal
+TerminalClsid
+TerminalScrolling
+TerminateProcess
+UiaReturnRawElementProvider
+VirtualTerminalLevel
+Windows Terminal
+WindowsIsStringEmpty
+\Device\ConDrv\Server
+`udt returning'
+aliceblue
+cross device link
+destination address required
+device or resource busy
+directory not empty
+minATL$__a
+minATL$__f
+minATL$__m
+minATL$__z
+no space on device
+no such device
+no such device or address
+terminate

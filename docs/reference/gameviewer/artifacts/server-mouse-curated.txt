@@ -1,0 +1,123 @@
+        "feature": "simulate_mouse",
+        "feature": "virtual_mouse",
+ cursor_hidden=
+ virtual_mouse_device=
+#FF_VIRTUAL_MOUSE_DEVICE_INIT_VERION
+%ViGEmBus.DeviceDesc%=ViGEmBus_Device, Nefarius\ViGEmBus\Gen1
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_1>@?4??onEventConnectStateChanged@KeyboardMouseRunner@host@@QEAAXAEA_N@Z@@detail@thread_runtime@utils@@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_2>@?4??onEventConnectStateChanged@KeyboardMouseRunner@host@@QEAAXAEA_N@Z@@detail@thread_runtime@utils@@XAEBUQueryConfigureResponse@business_api@shared@@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryRelativeMouseReportBytes@?A0x80ed80e2@input@support@@YA?AV?$optional@G@std@@PEB_W@Z@X$$V@std@@
+.?AV?$WeakCallback@V<lambda_1>@?1???R<lambda_2>@?4??onEventConnectStateChanged@KeyboardMouseRunner@host@@QEAAXAEA_N@Z@QEBA@AEBUQueryConfigureResponse@business_api@shared@@@Z@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_1>@?1???R1?1???R1?4??onEventConnectStateChanged@KeyboardMouseRunner@host@@QEAAXAEA_N@Z@QEBA@XZ@QEBA@AEBUQueryConfigureResponse@business_api@shared@@@Z@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_1>@?1???R1?4??onEventConnectStateChanged@KeyboardMouseRunner@host@@QEAAXAEA_N@Z@QEBA@XZ@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_1>@?4??onEventConnectStateChanged@KeyboardMouseRunner@host@@QEAAXAEA_N@Z@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_2>@?4??onEventConnectStateChanged@KeyboardMouseRunner@host@@QEAAXAEA_N@Z@@detail@thread_runtime@utils@@
+.?AV<lambda_1>@?1??queryRelativeMouseReportBytes@?A0x80ed80e2@input@support@@YA?AV?$optional@G@std@@PEB_W@Z@
+.?AVVirtualMouseSwitchRequest@gv_pb@@
+.?AVVirtualMouseSwitchResponse@gv_pb@@
+; -------------- ViGEmBus driver install sections
+;--- ViGEmBus_Device Coinstaller installation ------
+[InputDiag] side=server stage=mouse_inject event=
+[InputDiag] side=server stage=raw_control vigem_handled=0 keyboard_handled=1
+[InputDiag] side=server stage=raw_control vigem_handled=1 keyboard_handled=0
+[ViGEmBus_Device.NT.CoInstallers]
+[ViGEmBus_Device.NT.Services]
+[ViGEmBus_Device.NT.Wdf]
+[ViGEmBus_Device.NT]
+[ViGEmBus_Device_CoInstaller_AddReg]
+[ViGEmBus_Device_CoInstaller_CopyFiles]
+[ViGEmBus_Service_Inst]
+[ViGEmBus_wdfsect]
+[ViGEmDriver] cannot resolve inf path
+[ViGEmDriver] device absent -> install
+[ViGEmDriver] ensureReady device_count:
+[ViGEmDriver] ensureReady final device_count:
+[ViGEmDriver] install failed
+[ViGEmDriver] installDriver result=
+[ViGEmDriver] multi-instance detected, reinstall
+[ViGEmDriver] removeDriver result=
+[ViGEmDriver] repair inf CreateFile failed error:
+[ViGEmDriver] repair inf success bytesWritten:
+[ViGEmDriver] repair inf WriteFile failed error:
+[ViGEmDriver] server/arm uninstall, device_count_after_remove:
+\drivers\ViGEmBus\ViGEmBus.inf
+2 .gv_pb.VirtualMouseSwitchRequestH
+2!.gv_pb.VirtualMouseSwitchResponseH
+AddReg=ViGEmBus_Device_CoInstaller_AddReg
+AddService = ViGEmBus,%SPSVCINST_ASSOCSERVICE%, ViGEmBus_Service_Inst
+auto __cdecl host::KeyboardMouseRunner::onEventConnectStateChanged::<lambda_1>::()::<lambda_1>::operator ()(const struct shared::business_api::QueryConfigureResponse &) const
+auto __cdecl host::KeyboardMouseRunner::onEventConnectStateChanged::<lambda_2>::operator ()(const struct shared::business_api::QueryConfigureResponse &) const
+CatalogFile=ViGEmBus.cat
+controlled_mouse_cursor_observation result=unavailable action=sent
+CopyFiles=ViGEmBus_Device_CoInstaller_CopyFiles
+cursor_event source=streamer hidden=
+cursor_high_resolution result=nullptr stage=resolve_path reason=empty_cursor_path cursor_id=
+cursor_poll controlled_mouse_capture=
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\input\mouse\cursor_arbitrator.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\input\mouse\cursor_capture_module.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\input\mouse\cursor_shape_helper.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\input\mouse\cursor_state_sender.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\input\mouse\virtual_mouse_switch_setting_manager.cpp
+DiskName = "Nefarius ViGEmBus Installation Disk"
+DisplayName    = %ViGEmBus.SVCDESC%
+ff_virtual_mouse_device
+FF_VIRTUAL_MOUSE_DEVICE_UNKNOWN
+HidD_FreePreparsedData
+HidD_GetFeature
+HidD_GetHidGuid
+HidD_GetPreparsedData
+KmdfService =  ViGEmBus, ViGEmBus_wdfsect
+mouse_switch_request
+mouse_switch_response
+Nefarius\ViGEmBus\Gen1
+SendInput
+ServiceBinary  = %12%\ViGEmBus.sys
+simulation_mouse_switch
+streamer_cursor_capture result=forced_off reason=no_pointing_device
+uuycinput
+vhid_report_layout result=failed reason=relative_mouse_collection_unavailable action=close
+vigem_alloc() failed
+vigem_connect() failed: 
+vigem_control_data result=failed reason=exception bytes=
+vigem_driver result=degraded reason=sdk_warning
+vigem_driver result=failed reason=sdk_error
+vigem_driver result=unsupported reason=below_win10
+vigem_driver result=unsupported reason=wine_compatibility_layer
+vigem_driver_inf result=failed reason=unexpected_target
+vigem_initialize result=skipped reason=already_initialized
+vigem_initialize result=skipped reason=wine_compatibility_layer
+vigem_target_add result=failed reason=driver_not_ready
+vigem_target_add result=skipped reason=already_connected
+vigem_target_add() succeeded, index=
+vigem_target_remove() succeeded, index=
+vigem_target_x360_register_notification() succeeded, index=
+vigem_update result=degraded reason=target_missing fallback=auto_connect
+vigem_update result=dropped reason=driver_not_ready
+ViGEmBus
+vigembus driver failed to add target(index=%d)
+vigembus driver failed to register target(index=%d) notification: %s
+vigembus driver not ready
+ViGEmBus.DeviceDesc = "Nefarius Virtual Gamepad Emulation Bus"
+ViGEmBus.inf
+ViGEmBus.SVCDESC = "Nefarius Virtual Gamepad Emulation Service"
+ViGEmBus.sys
+ViGEmBus.sys = 1,,
+ViGEmBus_Device_CoInstaller_CopyFiles = 11
+vigemClient connected.
+vigemClient created.
+ViGEmSdk driver destroy.
+ViGEmSdk init end
+ViGEmSdk init start
+ViGEmSdk::connect(), index=
+ViGEmSdk::connectInternal(), index=
+ViGEmSdk::disconnect(), index=
+ViGEmSdk::disconnectAll()
+ViGEmSdk::disconnectInternal(), index=
+ViGEmSdk::init()
+Virtual_Mouse_Device
+virtual_mouse_setting result=updated enabled=
+virtual_mouse_switch
+VirtualMouseSwitchRequest
+VirtualMouseSwitchResponse
+void __cdecl host::KeyboardMouseRunner::onEventConnectStateChanged(bool &)
+wetpe_ime not install use SendInput

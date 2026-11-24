@@ -1,0 +1,165 @@
+ code=503 error=terminal_open_timeout
+ mux_session=
+ --uuyc-mux-attach-existing
+ --uuyc-mux-config 
+ --uuyc-mux-session 
+.?AV?$_Associated_state@UResponse@mux_control@terminal@shared@@@std@@
+.?AV?$_Func_base@UResponse@mux_control@terminal@shared@@AEBURequest@234@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??findWindowsTerminalSettingsPath@visible_mux_attach@terminal@business@host@@YA?AV?$optional@Vpath@filesystem@std@@@std@@PEAX@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??handleMuxControlRequest@TerminalManager@terminal@business@host@@AEAA?AUResponse@mux_control@4shared@@AEBURequest@849@@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??killUuycMuxSession@TerminalSession@terminal@business@host@@AEAAXXZ@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_2>@?1??findSupportedWindowsTerminal@visible_mux_attach@terminal@business@host@@YA?AV?$optional@V?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@PEAX@Z@X$$V@std@@
+.?AV?$_Ref_count_obj2@V?$promise@UResponse@mux_control@terminal@shared@@@std@@@std@@
+.?AV<lambda_1>@?1??destroyTerminalSessionAsync@?A0x0f61e48f@terminal@business@host@@YAXV?$unique_ptr@VTerminalSession@terminal@business@host@@U?$default_delete@VTerminalSession@terminal@business@host@@@std@@@std@@@Z@
+.?AV<lambda_1>@?1??findWindowsTerminalSettingsPath@visible_mux_attach@terminal@business@host@@YA?AV?$optional@Vpath@filesystem@std@@@std@@PEAX@Z@
+.?AV<lambda_1>@?1??handleMuxControlRequest@TerminalManager@terminal@business@host@@AEAA?AUResponse@mux_control@3shared@@AEBURequest@738@@Z@
+.?AV<lambda_1>@?1??killUuycMuxSession@TerminalSession@terminal@business@host@@AEAAXXZ@
+.?AV<lambda_1>@?1??startReconnectWork@TerminalManager@terminal@business@host@@AEAAXIIPEAVTerminalSession@345@HH_NV?$time_point@Usteady_clock@chrono@std@@V?$duration@_JU?$ratio@$00$0DLJKMKAA@@std@@@23@@chrono@std@@@Z@
+.?AV<lambda_2>@?1??findSupportedWindowsTerminal@visible_mux_attach@terminal@business@host@@YA?AV?$optional@V?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@PEAX@Z@
+.?AV<lambda_2>@?1??startReconnectWork@TerminalManager@terminal@business@host@@AEAAXIIPEAVTerminalSession@345@HH_NV?$time_point@Usteady_clock@chrono@std@@V?$duration@_JU?$ratio@$00$0DLJKMKAA@@std@@@23@@chrono@std@@@Z@
+.?AVTerminalSessionChanged@gv_pb@@
+.gv_pb.TerminalSessionChangedH
+conpty_bridge.exe
+count_terminal_session
+create_uuyc_mux_config_directory_failed
+create_uuyc_mux_config_file_failed_
+create_uuyc_mux_config_uuid_failed
+CT_TERMINAL
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\terminal\terminal_manager.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\terminal\terminal_mux_control_server.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\terminal\terminal_output_delivery.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\terminal\terminal_session.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\terminal\visible_attach_ipc_server.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\terminal\visible_mux_attach.cpp
+flush_uuyc_mux_config_file_failed_
+impersonate_uuyc_mux_config_user_failed_
+Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json
+replace_uuyc_mux_config_file_failed_
+resolve_uuyc_mux_config_path_failed
+resolve_uuyc_mux_local_app_data_failed_
+struct shared::terminal::mux_control::Response __cdecl host::business::terminal::TerminalManager::handleMuxControlRequest(const struct shared::terminal::mux_control::Request &)
+terminal bridge result=failed operation=terminal_open stage=
+terminal bridge result=started operation=terminal_open session_id=
+terminal uuyc_mux clipboard result=failed operation=terminal_open stage=set_clipboard category=exit exit_code=
+terminal uuyc_mux clipboard result=failed operation=terminal_open stage=set_clipboard category=process started=
+terminal uuyc_mux clipboard result=success operation=terminal_open stage=set_clipboard enabled=
+terminal uuyc_mux query result=failed operation=terminal_open stage=has_session category=exit exit_code=
+terminal uuyc_mux query result=failed operation=terminal_open stage=has_session category=process started=
+terminal uuyc_mux ready result=started operation=terminal_open stage=initial_ready session_id=
+terminal uuyc_mux ready result=success operation=terminal_open stage=initial_ready session_id=
+terminal uuyc_mux ready result=success operation=terminal_open stage=visible_ready session_id=
+terminal uuyc_mux termination result=failed operation=terminal_close stage=kill_session mux_session=
+terminal uuyc_mux termination result=failed operation=terminal_close stage=verify_session_absent mux_session=
+terminal uuyc_mux termination result=started operation=terminal_close stage=kill_session mux_session=
+terminal uuyc_mux termination result=started operation=terminal_close stage=verify_session_absent mux_session=
+terminal uuyc_mux termination result=success operation=terminal_close stage=kill_session mux_session=
+terminal uuyc_mux termination result=success operation=terminal_close stage=verify_session_absent mux_session=
+terminal visible attach result=fallback reason=windows_terminal_config_unavailable fallback=powershell_or_cmd
+terminal visible attach result=fallback reason=windows_terminal_elevated_profile
+terminal_bridge_unavailable
+terminal_check_env result=failed reason=internal_exception request_id=
+terminal_check_env result=failed reason=worker_unavailable request_id=
+terminal_check_env_req
+terminal_check_env_resp
+terminal_check_env_response result=discarded reason=connection_inactive request_id=
+terminal_check_env_response result=discarded reason=main_thread_unavailable request_id=
+terminal_check_env_response result=failed reason=send_failed request_id=
+terminal_check_env_response result=failed reason=serialize_failed request_id=
+terminal_check_env_response result=sent request_id=
+terminal_close
+terminal_component_unavailable
+terminal_connection_generation result=registered handle=
+terminal_control_unavailable
+terminal_credential_check result=failed code=
+terminal_display_name_invalid
+terminal_error_response result=failed code=
+terminal_error_response result=sent response_code=
+terminal_mux_clipboard_policy_update_failed
+terminal_mux_control result=failed stage=accept server_name=
+terminal_mux_control result=failed stage=decode_request server_name=
+terminal_mux_control result=failed stage=encode_response server_name=
+terminal_mux_control result=failed stage=impersonate
+terminal_mux_control result=failed stage=listen code=
+terminal_mux_control result=failed stage=read_request server_name=
+terminal_mux_control result=failed stage=write_response server_name=
+terminal_mux_control result=started server_name=
+terminal_mux_control stage=accept_wait server_name=
+terminal_mux_control stage=accepted server_name=
+terminal_mux_control stage=handler_done server_name=
+terminal_mux_control stage=response_sent server_name=
+terminal_mux_session_unavailable
+terminal_not_supported_on_this_os
+terminal_open
+terminal_open result=discarded session_id=
+terminal_open result=failed session_id=
+terminal_open result=rejected reason=control_not_allowed
+terminal_open result=rejected session_id=
+terminal_open_cancelled
+terminal_open_failed
+terminal_open_in_progress
+terminal_open_pending
+terminal_open_response result=failed code=
+terminal_open_response result=sent response_code=
+terminal_open_timeout
+terminal_open_unavailable
+terminal_pb_message result=discarded reason=decode_failed bytes=
+terminal_pb_message result=discarded reason=invalid_envelope type=
+terminal_rename result=discarded stage=complete code=5 category=main_thread_unavailable request_id=
+terminal_rename result=failed stage=commit code=2 category=not_found request_id=
+terminal_rename result=failed stage=commit code=4 category=session_ended request_id=
+terminal_rename result=failed stage=commit code=5 category=stale request_id=
+terminal_rename result=failed stage=complete code=5 category=runtime request_id=
+terminal_rename result=failed stage=prepare code=5 category=target_unavailable request_id=
+terminal_rename result=failed stage=runtime code=5 category=
+terminal_rename result=failed stage=submit code=5 category=worker_unavailable request_id=
+terminal_rename result=rejected stage=begin code=
+terminal_rename result=rejected stage=decode code=1 category=invalid_utf8 request_id=
+terminal_rename result=rejected stage=validate code=1 category=session_id request_id=
+terminal_rename result=success stage=begin code=0 category=
+terminal_rename result=success stage=commit code=0 category=committed request_id=
+terminal_rename_response result=discarded stage=response code=
+terminal_rename_response result=failed stage=send code=
+terminal_rename_response result=failed stage=send code=1 category=delivery request_id=
+terminal_rename_response result=failed stage=serialize code=
+terminal_rename_response result=failed stage=serialize code=1 category=serialization request_id=
+terminal_rename_response result=sent stage=response code=
+terminal_rename_response result=sent stage=response code=1 category=pb request_id=
+terminal_rename_session_req
+terminal_rename_session_resp
+terminal_session_changed
+terminal_session_changed result=failed reason=send_failed handle=
+terminal_session_changed result=failed reason=serialize_failed
+terminal_session_limit_reached
+terminal_session_num
+terminal_session_termination result=failed request_session_id=
+terminal_unlock result=failed session_id=
+terminal_unlock result=success session_id=
+terminal_unlock_response result=failed session_id=
+terminal_unlock_response result=sent session_id=
+terminal_visible_attach_ipc result=failed stage=accept code=
+terminal_visible_attach_ipc result=failed stage=create_thread code=
+terminal_visible_attach_ipc result=failed stage=create_thread code=exception reason=unknown_exception
+terminal_visible_attach_ipc result=failed stage=duplicate_token code=
+terminal_visible_attach_ipc result=failed stage=generate_server_name code=utf8_conversion_failed
+terminal_visible_attach_ipc result=failed stage=generate_server_name code=uuid_generation_failed
+terminal_visible_attach_ipc result=failed stage=impersonate code=
+terminal_visible_attach_ipc result=failed stage=listen code=
+terminal_windows_terminal_lookup result=failed reason=execution_alias_unavailable code=
+terminal_windows_terminal_lookup result=failed reason=invalid_user_token
+terminal_windows_terminal_lookup result=failed reason=local_app_data_lookup_failed code=
+TerminalSessionChangedb
+uuyc_mux_exe_not_found
+uuyc_mux_rename_
+uuyc_mux_rename_prepare_environment_failed
+uuyc_mux_rename_prepare_user_token_failed
+uuyc_mux_rename_read_window_name_empty
+uuyc_mux_rename_verify_window_name_mismatch
+uuyc_mux_rename_window_utf8_conversion_failed
+uuyc_mux_session_name_unavailable
+uuyc-mux
+uuyc-mux.conf
+uuyc-mux.exe
+--uuyc-mux-config
+--uuyc-mux-session
+visible_terminal_unavailable
+write_uuyc_mux_config_file_failed_

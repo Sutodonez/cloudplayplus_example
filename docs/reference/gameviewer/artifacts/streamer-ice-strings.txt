@@ -1,0 +1,1781 @@
+ based on ICE RTT 
+ candidate: 
+ candidates
+ fec_resume_candidate_ms=
+ fec_suppress_candidate_ms=
+ gathering complete
+ gathering complete, but using continual gathering so not changing gathering state.
+ is not ready to use the remote candidate because the local or remote description is not set.
+ low-priority TURN ports
+ retries for STUN_ERROR_ALLOCATION_MISMATCH
+ signalCandidateFilterChanged is_empty_before=
+ turn: 
+!(opts & PacketSocketFactory::OPT_STUN)
+"T-Systems Enterprise Services GmbH1
+#capturing endpoint devices (counting all): 
+#rendering endpoint devices (counting all): 
+%*sUser Notice:
+'-', '=', '#' and '-' are not valid ice-char and thus not 
+, render device index: 
+, use_candidate=
+. Discarding TURN port.
+. Number of candidates created: 
+..\..\api\transport\stun.cc
+..\..\media\engine\webrtc_voice_engine.cc
+..\..\modules\audio_device\audio_device_buffer.cc
+..\..\modules\audio_device\audio_device_generic.cc
+..\..\modules\audio_device\audio_device_impl.cc
+..\..\modules\audio_device\win\audio_device_core_win.cc
+..\..\modules\audio_device\win\core_audio_utility_win.cc
+..\..\modules\audio_processing\vad\voice_activity_detector.cc
+..\..\p2p\base\basic_ice_controller.cc
+..\..\p2p\base\stun_port.cc
+..\..\p2p\base\stun_request.cc
+..\..\p2p\base\turn_port.cc
+..\..\p2p\base\turn_port.h
+..\..\p2p\base\wrapping_active_ice_controller.cc
+..\..\pc\ice_server_parsing.cc
+..\..\third_party\ffmpeg\libavcodec\h264_slice.c
+..\..\third_party\ffmpeg\libavutil\slicethread.c
+..\..\third_party\opus\src\silk\decode_indices.c
+..\..\third_party\opus\src\silk\encode_indices.c
+.?AV<lambda_0>@?0???0Connection@cricket@@IEAA@V?$WeakPtr@VPort@cricket@@@rtc@@_KAEBVCandidate@2@@Z@
+.?AV<lambda_0>@?0???0JsepTransportController@webrtc@@QEAA@PEAVThread@rtc@@PEAVPortAllocator@cricket@@PEAVAsyncDnsResolverFactoryInterface@2@UConfig@12@@Z@
+.?AV<lambda_0>@?0??MaybeObfuscateAddress@Port@cricket@@AEAA_NPEAVCandidate@3@Vstring_view@absl@@_N@Z@
+.?AV<lambda_10>@?0??AddAllocatedPort@BasicPortAllocatorSession@cricket@@AEAAXPEAVPort@3@PEAVAllocationSequence@3@@Z@
+.?AV<lambda_11>@?0??AddAllocatedPortForPunch@BasicPortAllocatorSession@cricket@@QEAAXPEAVPort@3@@Z@
+.?AV<lambda_15>@?0??CreateTurnPort@AllocationSequence@cricket@@AEAAXAEBURelayServerConfig@3@H@Z@
+.?AV<lambda_1>@?0???0JsepTransportController@webrtc@@QEAA@PEAVThread@rtc@@PEAVPortAllocator@cricket@@PEAVAsyncDnsResolverFactoryInterface@2@UConfig@12@@Z@
+.?AV<lambda_1>@?0???0QuicConnectionInternal@quic@@QEAA@PEAVIceTransportInternal@cricket@@_KPEAVQuicTransportInternal@4@PEAVThread@rtc@@W4SSLRole@7@V?$scoped_refptr@VRTCCertificate@rtc@@@7@@Z@
+.?AV<lambda_1>@?0??ShouldSendGoogPing@Connection@cricket@@AEAA_NPEBVStunMessage@3@@Z@
+.?AV<lambda_1>@?1??AddCandidate@?$PeerConnectionImpl@VControlledPeerConnection@pc@streamer@@@pc@streamer@@QEAA?AVerror_code@std@@AEBUCandidate@4@@Z@
+.?AV<lambda_1>@?1??AddCandidate@?$PeerConnectionImpl@VControllerPeerConnection@pc@streamer@@@pc@streamer@@QEAA?AVerror_code@std@@AEBUCandidate@4@@Z@
+.?AV<lambda_1>@?1??BatchProbeForAdapter@win@device@streamer@@YA?AV?$vector@UVideoCodecCapability@streamer@@V?$allocator@UVideoCodecCapability@streamer@@@std@@@std@@HAEBUGPUDevice@4@@Z@
+.?AV<lambda_1>@?1??ExecutePreflight@NativeUdpPreflightService@streamer@@AEAA?AW4NativeUdpPreflightState@3@XZ@
+.?AV<lambda_1>@?1??GetGraphicCardInfoFromWmi@windows_property_detail@device@streamer@@YA?AV?$vector@UGraphicDriverInfo@streamer@@V?$allocator@UGraphicDriverInfo@streamer@@@std@@@std@@XZ@
+.?AV<lambda_1>@?1??GetHwSchStatus@WindowsProperty@device@streamer@@SAHXZ@
+.?AV<lambda_1>@?1??StreamerDataChannelEventLoop@ControlledSession@streamer@@QEAA?AV?$awaitable@Verror_code@std@@Vany_io_executor@asio@@@asio@@V?$shared_ptr@U?$IceConnection@VControlledPeerConnection@pc@streamer@@@streamer@@@std@@@Z@
+.?AV<lambda_20>@?0??AddIceCandidate@PeerConnection@webrtc@@UEAAXV?$unique_ptr@VIceCandidateInterface@webrtc@@U?$default_delete@VIceCandidateInterface@webrtc@@@std@@@std@@V?$function@$$A6AXVRTCError@webrtc@@@Z@5@@Z@
+.?AV<lambda_2>@?0??CreateTurnClientSocket@TurnPort@cricket@@AEAA_NXZ@
+.?AV<lambda_2>@?1??BatchProbeForAdapter@win@device@streamer@@YA?AV?$vector@UVideoCodecCapability@streamer@@V?$allocator@UVideoCodecCapability@streamer@@@std@@@std@@HAEBUGPUDevice@4@@Z@
+.?AV<lambda_3>@?0??ResolveStunAddress@UDPPort@cricket@@AEAAXAEBVSocketAddress@rtc@@@Z@
+.?AV<lambda_3>@?0??ResolveTurnAddress@TurnPort@cricket@@AEAAXAEBVSocketAddress@rtc@@@Z@
+.?AV<lambda_3>@?1??BatchProbeForAdapter@win@device@streamer@@YA?AV?$vector@UVideoCodecCapability@streamer@@V?$allocator@UVideoCodecCapability@streamer@@@std@@@std@@HAEBUGPUDevice@4@@Z@
+.?AV<lambda_5>@?0??GetNetworks@BasicPortAllocatorSession@cricket@@AEAA?AV?$vector@PEBVNetwork@rtc@@V?$allocator@PEBVNetwork@rtc@@@std@@@std@@XZ@
+.?AV<lambda_6>@?0??GetNetworks@BasicPortAllocatorSession@cricket@@AEAA?AV?$vector@PEBVNetwork@rtc@@V?$allocator@PEBVNetwork@rtc@@@std@@@std@@XZ@
+.?AV<lambda_6>@?0??OnPortReady@P2PTransportChannel@cricket@@AEAAXPEAVPortAllocatorSession@3@PEAVPortInterface@3@_N@Z@
+.?AV<lambda_7>@?0??GetNetworks@BasicPortAllocatorSession@cricket@@AEAA?AV?$vector@PEBVNetwork@rtc@@V?$allocator@PEBVNetwork@rtc@@@std@@@std@@XZ@
+.?AV<lambda_8>@?0??DoAllocate@BasicPortAllocatorSession@cricket@@AEAAX_N@Z@
+.?AV<lambda_8>@?0??ResolveHostnameCandidate@P2PTransportChannel@cricket@@QEAAXAEBVCandidate@3@@Z@
+.?AVD3D9Device@MFX@@
+.?AVDXDevice@MFX@@
+.?AVDXGI1Device@MFX@@
+/relay:
+1{} adapter index {} device id {} adapterUID {} user mode driver version {}.{}.{}.{}
+2DigiCert SHA256 RSA4096 Timestamp Responder 2026 10
+2Starfield Services Root Certificate Authority - G20
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0 
+4http://crl3.digicert.com/DigiCertAssuredIDRootCA.crl0
+5http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C
+7http://cacerts.digicert.com/DigiCertAssuredIDRootCA.crt0E
+8DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1
+8DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA10
+8DigiCert Trusted G4 TimeStamping RSA4096 SHA256 2025 CA1
+8DigiCert Trusted G4 TimeStamping RSA4096 SHA256 2025 CA10
+: A new connection was created on an existing remote address. New remote candidate: 
+: Allocating a new socket after STUN_ERROR_ALLOCATION_MISMATCH, retry: 
+: Applying STUN_ATTR_NONCE attribute in try alternate error response.
+: Applying STUN_ATTR_REALM attribute in try alternate error response.
+: Discarding STUN indication due to unknown comprehension-required attribute
+: Discarding STUN response due to unknown comprehension-required attribute
+: Discarding TURN message from unknown address: 
+: Failed to send STUN ping  err=
+: Failed to send TURN message, error: 
+: Gathered candidate: 
+: Ice not completed yet for this channel as 
+: Ignoring STUN binding response message on shared socket.
+: Missing STUN_ATTR_ALTERNATE_SERVER attribute in try alternate error response
+: Missing STUN_ATTR_DATA attribute in data indication.
+: Missing STUN_ATTR_NONCE attribute in allocate unauthorized response.
+: Missing STUN_ATTR_REALM attribute in allocate unauthorized response.
+: Missing STUN_ATTR_TURN_LIFETIME attribute in allocate success response
+: Missing STUN_ATTR_TURN_LIFETIME attribute in refresh success response.
+: Missing STUN_ATTR_XOR_MAPPED_ADDRESS attribute in allocate success response
+: Missing STUN_ATTR_XOR_PEER_ADDRESS attribute in data indication.
+: Missing STUN_ATTR_XOR_RELAYED_ADDRESS attribute in allocate success response
+: Port completed gathering candidates.
+: Port encountered error while gathering candidates.
+: Received STUN error response, code=
+: Received STUN packet with invalid type (
+: Received STUN request with bad remote username 
+: Received TURN allocate error response, id=
+: Received TURN channel bind error response, id=
+: Received TURN channel data message for invalid channel, channel_id: 
+: Received TURN channel data message with incorrect length, len: 
+: Received TURN create permission error response, id=
+: Received TURN data indication with unknown peer address, addr: 
+: Received TURN message that was too short
+: Received TURN message while the TURN port is disconnected
+: Received TURN refresh error response, id=
+: Received invalid TURN data indication
+: Received non-STUN packet from unknown address: 
+: Received piggyback STUN ping response, id=
+: Received unexpected STUN message type: 
+: Redirecting from TURN server [
+: Sending STUN 
+: Sending STUN binding error: reason=
+: Sending STUN ping, id=
+: Starting STUN host lookup for 
+: Starting TURN host lookup for 
+: StunPort: stun host lookup received error 
+: TURN allocate request 
+: TURN allocate request sent, id=
+: TURN allocate requested successfully, id=
+: TURN channel bind request sent, id=
+: TURN channel bind requested successfully, id=
+: TURN channel bind timeout 
+: TURN create permission request sent, id=
+: TURN create permission timeout 
+: TURN host lookup received error 
+: TURN permission requested successfully, id=
+: TURN refresh request sent, id=
+: TURN refresh requested successfully, id=
+: TURN refresh timeout 
+: Trying to connect to TURN server via 
+: Updating local candidate type to prflx.
+: Updating local candidate type to srflx.
+: ice_transport receiving state changed to 
+: ice_transport writable state changed to 
+:<candidate-str>
+<Device not available>
+@pSlice=%-6d sliceType:%c idc:%d size:%-6d
+A device with a derived frame context cannot be used as the destination of a HW -> HW transfer.
+A device with a derived frame context cannot be used as the source of a HW -> HW transfer.
+A hardware frames or device context is required for hardware accelerated decoding.
+A non-intra slice in an IDR NAL unit.
+A remote candidate arrives with an unknown ufrag: 
+AMF returned output without pending frame metadata
+ASIdentifierChoice
+ASIdentifierChoice_canonize
+ASIdentifierChoice_is_canonical
+ASO/invalid stream, first_mb_in_slice: {}
+AUDCLNT_E_DEVICE_INVALIDATED
+AcquireLayersNals(), iCountNumLayers(%d) > MAX_LAYER_NUM_OF_FRAME(%d)!
+AcquireLayersNals(), num_of_nals(%d) > MAX_NAL_UNITS_IN_LAYER(%d) per (iDid= %d, qid= %d) settings!
+AcquireLayersNals(), num_of_slice(%d) > MAX_SLICES_NUM(%d) per (iDid= %d, qid= %d) settings!
+AcquireLayersNals(), pFuncList and pParametersetStrategy needed to be initialized first!
+AdaptFrameResolution returned false!
+AddIceCandidate failed because the session was shut down
+AddIceCandidate: Candidate cannot be used.
+AddIceCandidate: Candidate is null.
+AddIceCandidate: ICE candidates can't be added without any remote session description.
+AddIceCandidate: Not ready to use candidate.
+AddIceCandidate: PeerConnection is closed.
+AliceBlue
+All candidates gathered for 
+All candidates gathered for pooled session.
+All devices are disabled or removed
+Allocation can't be started without setting the TURN server credentials for the user.
+AllocationSequence: No STUN server configured, skipping.
+AllocationSequence: No relay server configured, skipping.
+AllocationSequence: Relay ports disabled, skipping.
+AllocationSequence: STUN ports disabled, skipping.
+AllocationSequence: UDPPort will be handling the STUN candidate generation.
+Asynchronously resolving ICE candidate hostname 
+Attempt to change a remote candidate. Existing remote candidate: 
+Attempt to create a PeerConnection without a PortAllocatorFactory
+Attempt to fetch voice channel from non-voice
+Attempt to use TURN to connect to port 
+Attempt to use TURN with a too long username 
+Audio device initialization failed
+Audio device initialization failed.
+AudioDeviceBuffer must be attached before streaming can start
+AudioDeviceBuffer::RequestPlayoutData
+AudioDeviceBuffer::ctor
+AudioDeviceBuffer::~dtor
+AudioDeviceBufferTimer
+AudioDeviceWindowsCore::AudioDeviceWindowsCore() AvRevertMmThreadCharacteristics() is OK
+AudioDeviceWindowsCore::AudioDeviceWindowsCore() AvSetMmThreadCharacteristicsA() is OK
+AudioDeviceWindowsCore::AudioDeviceWindowsCore() AvSetMmThreadPriority() is OK
+AudioDeviceWindowsCore::AudioDeviceWindowsCore() The Avrt DLL module is now loaded
+AudioDeviceWindowsCore::CoreAudioIsSupported() CoCreateInstance(MMDeviceEnumerator) failed (hr=
+AudioDeviceWindowsCore::CoreAudioIsSupported() CoCreateInstance(MMDeviceEnumerator) succeeded (hr=
+AudioDeviceWindowsCore::CoreAudioIsSupported() Failed to create the required COM object (hr=
+AudioDeviceWindowsCore::SetMicrophoneVolume(volume=
+AudioDeviceWindowsCore::~AudioDeviceWindowsCore() failed to free the loaded Avrt DLL module correctly
+AudioDeviceWindowsCore::~AudioDeviceWindowsCore() the Avrt DLL module is now unloaded
+BasicPortAllocatorSession::BasicPortAllocatorSession
+BasicPortAllocatorSession::~BasicPortAllocatorSession
+Buffer returned by get_buffer2() did not zero unused plane pointers
+CMS_CertificateChoices
+CMS_RevocationInfoChoice
+CM_Get_Device_ID_ListW
+CM_Get_Device_ID_List_SizeW
+CWelsH264SVCEncoder::EncodeFrame(), kiEncoderReturn %d
+CWelsH264SVCEncoder::ExtendLayerBuffer: pCountMbNumInSlice is NULL
+CWelsH264SVCEncoder::ExtendLayerBuffer: pFirstMbIdxOfSlice is NULL
+CWelsH264SVCEncoder::ExtendLayerBuffer: ppSlice is NULL
+CWelsH264SVCEncoder::InitSliceInLayer() pDqLayer->pCountMbNumInSlice is NULL
+CWelsH264SVCEncoder::InitSliceInLayer() pDqLayer->pFirstMbIdxOfSlice is NULL
+CWelsH264SVCEncoder::InitSliceInLayer() pDqLayer->ppSliceInLayer is NULL
+CWelsH264SVCEncoder::InitSliceThreadInfo: pSliceThreadInfo->pSliceBuffer[iIdx] is NULL
+CWelsH264SVCEncoder::ReallocateSliceList: pNewSliceList is NULL
+CWelsH264SVCEncoder::SliceLayerInfoUpdate: ReOrderSliceInLayer failed
+CWelsH264SVCEncoder::WelsCodeOnePicPartition: DynSliceRealloc not successful
+CWelsH264SVCEncoder::WelsCodeOnePicPartition: iSliceIdx(%d) over iMaxSliceNum(%d)
+Called with SDP without ice-ufrag and ice-pwd.
+Can't change candidate pool size after calling SetLocalDescription.
+Candidate has an unknown component: 
+Cannot gather candidates because ICE parameters are empty ufrag: 
+Cannot parse dependent slice w/out prior slice data
+Capture device index: 
+Changing IceConnectionState 
+Changing field mode (%d -> %d) between slices is not allowed
+Changing standardized IceConnectionState 
+Changing to ICE completed state because all transports are complete.
+Changing to ICE connected state because all transports are writable.
+Changing voice state, recv=
+Coded slice data partition A
+Coded slice data partition B
+Coded slice data partition C
+Coded slice of a non-IDR picture
+Comfort noise generator returned error code: 
+CompleteAuthToken returned: 
+Connection already exists for peer reflexive candidate: 
+Connection::OnConnectionRequestResponse - No MAPPED-ADDRESS or XOR-MAPPED-ADDRESS found in the stun response message
+Connection::OnConnectionRequestResponse - No STUN_ATTR_PRIORITY found in the stun response message
+CreateDevice
+CreateDeviceEnumerator
+CreateDeviceInternal: id={}, flow={}, role={}
+CreatePortAllocator called before network thread / manager initialized
+Cross-device link
+D3D11.4 fence not supported (ID3D11Device5 QI failed), using polling fallback
+D3D11.4 fence not supported (ID3D11DeviceContext4 QI failed), using polling fallback
+D3D11CreateDevice
+D3D11CreateDevice returned an instance without DirectX 11 support, level {:x} .Following initialization may fail. 
+D3D11CreateDevice returned: {} {:x} try to create again 
+D3D12CreateDevice
+DTLSv1_handle_timeout() return -1
+DXGI capture device changed, rebuilding preprocess queue: {} -> {}
+Decoder returned error code: 
+Default Communication endpoint device will be used
+Dependent slice layer id does not match prior slice
+Description contains invalid candidates.
+Device collection not valid
+Device configuration has changed => changing device selection...
+Device configuration has not changed => keeping selected device
+Device or resource busy
+Device type %s expected for hardware decoding, but got %s.
+DeviceAffinityMask
+DeviceCopy
+DeviceID
+DeviceIDH+
+DeviceLUID
+DeviceName
+DeviceRemoval
+DigiCert Assured ID Root CA0
+DigiCert Assured ID Root G20
+DigiCert Assured ID Root G30
+DigiCert Assured ID Root G30v0
+DigiCert Global Root G20
+DigiCert Global Root G30
+DigiCert Global Root G30v0
+DigiCert Inc1
+DigiCert TLS ECC P384 Root G50
+DigiCert TLS ECC P384 Root G50v0
+DigiCert TLS RSA4096 Root G50
+DigiCert Trusted Root G40
+DigiCert, Inc.1%0#
+DigiCert, Inc.1&0$
+DigiCert, Inc.1;09
+DigiCert, Inc.1A0?
+Disable candidates on link-local network interfaces.
+Discarding candidate because it doesn't match filter.
+Discarding candidate because port is already done gathering.
+DisplayConfigGetDeviceInfo
+Do not gather candidates on high-cost networks
+Dropping ICE candidate with hostname address (no AsyncResolverFactory)
+Dropping a remote candidate because its ufrag 
+Duplicate candidate: 
+Duplicate voice receiver SSRC: 
+Duplicate voice sender SSRC: 
+DynSlcJudgeSliceBoundaryStepBack: AddSliceBoundary: iCurMbIdx=%d, uiLen=%d, iSliceIdx=%d
+DynamicSliceBs
+E(IcE
+E:\gitlab-runner\builds\xyT_wxFs3\0\nrd\nrd-streamer\streamer\src\device\win\core_audio_utility.cpp
+Empty hostname in ICE URI: 
+EncodedSlicesInfo
+EnumDisplayDevicesW
+Error constructing the reference lists for the current slice.
+Error in stream, slice header fields must match for 
+Error processing ICE candidate
+Error resilience with slice threads is enabled. It is unsafe and unsupported and may crash. Use it at your own risk
+Error when logging device information
+Failed setup for format %s: hwaccel initialisation returned error.
+Failed to add bitstream or slice control buffer
+Failed to add device with role: {}
+Failed to apply configuration to PortAllocator.
+Failed to create Core Audio device enumerator on thread with ID 
+Failed to create IDirectXVideoDecoderService
+Failed to create TURN client socket
+Failed to create TURN client socket.
+Failed to create a collection of active devices
+Failed to create relay port with 
+Failed to get the device name
+Failed to get voice stats.
+Failed to open a device handle
+Failed to parse PPS id and SPS id from PPS slice.
+Failed to parse PPS id from slice of type: 
+Failed to parse SPS and VPS id from SPS slice.
+Failed to parse SPS id from SPS slice.
+Failed to parse VPS id from VPS slice.
+Failed to query d3d11 video device.
+Failed to read STUN response 
+Failed to resolve ICE candidate hostname 
+Failed to retrieve decoder device GUIDs
+Failed to set new audio device after 3 retries
+Failed to set parameters since the transaction_id doesn't match the last value returned from getParameters()
+Failed writing VP9 ref indices.
+First slice in a frame missing.
+Found no active devices
+FreeLibraryWhenCallbackReturns
+GetCommunicationsInputDeviceID
+GetCommunicationsOutputDeviceID
+GetDecoderBuffer (SliceControl) failed 
+GetDecoderBuffer returned an invalid buffer for desired size {}, actual size {}
+GetDefaultInputDeviceID
+GetDefaultOutputDeviceID
+GetDeviceCaps
+GetDeviceNamesInternal: flow={}
+GetDevicePeriod
+GetInputDeviceNames
+GetMultipleThreadIdc(), InitSliceSettings failed.
+GetOutputDeviceNames
+Google Trust Services LLC1
+HEVC_SLICES_PER_FRAME
+HW accel decode slice fail.
+HevcSlicesPerFrame
+IAudioCaptureClient::GetBuffer returned AUDCLNT_E_BUFFER_ERROR, hr = 0x
+IAudioClient::GetDevicePeriod failed: {}
+IAudioClient::GetService(IID_IAudioCaptureClient) failed: {}
+IAudioClient::GetService(IID_IAudioClock) failed: {}
+IAudioClient::GetService(IID_IAudioRenderClient) failed: {}
+IAudioClient::GetService(IID_IAudioSessionControl) failed: {}
+ICE candidate hostname 
+ICE pwd must be between 
+ICE pwd must contain only alphanumeric characters, '+', and '/'.
+ICE server parsing failed: Empty uri.
+ICE server parsing failed: IceServer has hostname field set, but URI does not contain an IP address.
+ICE server parsing failed: Invalid hostname format
+ICE server parsing failed: Invalid port
+ICE server parsing failed: Invalid transport parameter in ICE URI
+ICE server parsing failed: Invalid transport parameter key.
+ICE server parsing failed: Invalid url with long deprecated user@host syntax
+ICE server parsing failed: TURN server with empty username or password
+ICE server parsing failed: Transport parameter missing value.
+ICE server parsing failed: Transport parameter should always be udp or tcp.
+ICE server parsing failed: Unexpected service type
+ICE ufrag must be between 
+ICE ufrag must contain only alphanumeric characters, '+', and '/'.
+IDXGIAdapter::EnumOutputs returned , NOT_CURRENTLY_AVAILABLE. This may happen when running in session 0.
+IDXGIAdapter::EnumOutputs returned NOT_CURRENTLY_AVAILABLE. This may happen when running in session 0.
+IDXGIAdapter::EnumOutputs returned an unexpected result: {} 
+IDXGIDuplicateOutput does not return a same size as its IDXGIOutput1, size returned by IDXGIDuplicateOutput is {} x {}, size returned by IDXGIOutput1 is {} x {}
+IDXGIFactory1::EnumAdapters returned an unexpected error: {}
+IMMDevice::Activate(IAudioClient) failed: {}
+IMMDevice::Activate(IAudioClient2) failed: {}
+IMMDevice::Activate(IAudioClient3) failed: {}
+IMMDevice::OpenPropertyStore failed, hr = 0x
+IMMDeviceCollection::EnumAudioEndpoints failed: {}
+IMMDeviceCollection::GetCount failed: {}
+IMMDeviceCollection::Item failed: {}
+IMMDeviceEnumerator::GetDefaultAudioEndpoint failed: {}
+IMMDeviceEnumerator::GetDevice failed: {}
+IPAddressChoice
+IPropertyStore::GetValue returned no value, hr = 0x
+IPropertyStore::GetValue returned unexpected type, hr = 0x
+IPv6 candidates on Wi-Fi are disabled.
+IcEDH
+IcMlIcEhH
+Ignoring POC change between slices: %d -> %d
+Impossible slice segment.
+Independent slice segment missing.
+InitDqLayers(), InitSliceInLayer failed(%d)!
+InitDqLayers(), InitSlicePEncCtx failed(%d)!
+Initialize, device info:{}
+InitializeSecurityContext returned: 
+Insufficent data (%d) for header
+Inter slices in an IRAP frame.
+Invalid ICE configuration: 
+Invalid ICE parameters: 
+Invalid TCP candidate type.
+Invalid audio device
+Invalid candidate: 
+Invalid device index
+Invalid format returned by get_format() callback.
+Invalid host or service
+Invalid mix of IDR and non-IDR slices
+Invalid non-TCP candidate
+Invalid number of merging MVP candidates: %d.
+Invalid return from get_format(): %s not in possible list.
+Invalid service owner.
+Invalid setup for format %s: does not match the type of the provided device context.
+Invalid slice cx qp offset.
+Invalid slice segment address: %u.
+Invalid transport parameter in ICE URI: 
+Invalid value of delta_idx in slice header RPS: %d > %d.
+JsepTransport::SetRemoteIceParameters
+LUIDDeviceNodeMask
+License
+List of active devices is empty
+List of device names does not contain all active devices
+LoaderCtxVPL::BuildListOfCandidateLibs
+Main Audio Service
+MaxSliceI+
+Mhttp://crl3.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0S
+Mhttp://crl4.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0
+Missing ':' in ICE URI: 
+Missing STUN_ATTR_NONCE attribute in stale nonce error response.
+Missing STUN_ATTR_REALM attribute in stale nonce error response.
+Missing TURN server credentials.
+Montgomery Multiplication with scatter/gather for x86_64, CRYPTOGAMS by <appro@openssl.org>
+Multiple Choices
+NOTICEREF
+NVENC {} converter rejected registered input texture; candidate will be cleaned up by session
+NVENC {} input frame attachment failed; candidate will be cleaned up by session
+New remote candidate: 
+Nhttp://crl3.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crl0 
+No D3dDevice found.
+No decoder device for codec found
+No space left on device
+No such device
+No such device or address
+Not adapting down because VideoStreamAdapter returned 
+Not adapting up because VideoStreamAdapter returned 
+Not adding candidate because the JsepTransport doesn't exist. Ignore it.
+Not removing candidate because it does not have a transport name set: 
+Not removing candidate because the JsepTransport doesn't exist.
+NtDeviceIoControlFile
+NumEncodedSlice
+NumSliceA
+NumSliceH+
+NumSliceH9
+NumSliceNonCopliant
+Number of capture devices: 
+Number of render devices: 
+NvAPI_D3D11_CreateDevice
+NvAPI_D3D11_CreateDeviceAndSwapChain
+NvAPI_D3D11_CreateMultiGPUDevice
+NvAPI_D3D_RegisterDevice
+NvAPI_GPU_ClientIllumDevicesGetControl
+NvAPI_GPU_ClientIllumDevicesGetInfo
+NvAPI_GPU_ClientIllumDevicesSetControl
+NvAPI_GPU_GetLicensableFeatures
+NvAPI_GSync_EnumSyncDevices
+NvAPI_VIO_EnumDevices
+OCSP Service Locator
+OCSP_SERVICELOC
+OnCandidateErrorForPunch, do nothing
+OnTransportControllerCandidatesGathered: content name 
+OnTransportControllerCandidatesRemoved: empty content name in candidate 
+OpenH264 frame encoding failed, EncodeFrame returned 
+OpenOffice Impress
+Overread slice header by %d bits
+P2PTransportChannel::OnUnknownAddress - No STUN_ATTR_PRIORITY found in the stun request message
+P2PTransportChannel::P2PTransportChannel connect SignalCandidateFilterChanged this=
+PCIDevice
+PPS changed between slices
+PPS changed between slices.
+ParamValidation(), AdaptiveQuant(%d) is not supported yet for screen content, auto turned off
+ParamValidation(), BackgroundDetection(%d) is not supported yet for screen content, auto turned off
+ParamValidation(), screen change detection should be turned on, change bEnableSceneChangeDetect as true
+ParamValidationExt(), WARNING: GOM based RC do not support SM_RASTER_SLICE!
+ParamValidationExt(), current layer %d uiSliceMode (%d) settings may not fulfill MaxNalSize = %d
+ParamValidationExt(), invalid iSliceSize (%d) settings!should be larger than  MAX_MACROBLOCK_SIZE_IN_BYTE(%d)
+ParamValidationExt(), invalid uiSliceMbNum (%d) settings!
+ParamValidationExt(), invalid uiSliceMode (%d) settings!
+ParamValidationExt(), invalid uiSliceNum (%d) in SM_RASTER_SLICE settings!
+ParamValidationExt(), invalid uiSliceNum (%d) settings more than MAX(%d)!
+ParamValidationExt(), pSlice setting for SM_RASTER_SLICE now turn to SM_SINGLE_SLICE!
+ParamValidationExt(), slice mode = SM_SIZELIMITED_SLICE, uiSliceSizeConstraint = %d ,uiMaxNalsize = %d, will take uiMaxNalsize!
+PeerConnection initialized without a PortAllocator? This shouldn't happen if using PeerConnectionFactory.
+PeerConnection::RemoveIceCandidates
+Phttp://cacerts.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crt0
+Ping interval of backup candidate pairs is shorter than that of general candidate pairs when ICE is strongly connected
+Ping interval of candidate pairs is shorter when ICE is strongly connected than that when ICE is weakly connected
+Ping interval of stable and writable candidate pairs is shorter than that of general candidate pairs when ICE is strongly connected
+PlayoutDeviceName
+PlayoutDevices
+Policy Qualifier User Notice
+PortAllocator::PortAllocator() create end this=
+PortAllocator::PortAllocator() create this=
+PortAllocator::~PortAllocator() begin this=
+PortAllocator::~PortAllocator() end this=
+Possibly too many slices (%d >= %d), increase MAX_SLICES and recompile if there are artifacts
+PreprocessCurrentSlice()
+Previous slice segment missing
+ProcessCurrentSlice()
+Pruning candidate from old generation: 
+QCELP / PureVoice
+Qhttp://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_
+ReadyToUseRemoteCandidate: Invalid candidate. 
+ReallocateSliceList()::InitSliceBsBuffer()
+Received TURN CreatePermission error response, code=
+Received remote ICE parameters: ufrag=
+RecordingDeviceName
+RecordingDevices
+Recv() returned error: 
+Regather candidates on failed networks
+Relay
+ReleaseDecoderBuffer (SliceControl) failed 
+Remote peer requests ICE restart for 
+RemoveIceCandidates: Error when removing remote candidates: 
+RemoveIceCandidates: Failed to remove candidates. Requested 
+RemoveIceCandidates: ICE candidates can't be removed without any remote session description.
+RemoveIceCandidates: PeerConnection is closed.
+RemoveIceCandidates: candidates are empty.
+Removed remote candidate 
+RequestMemorySvc(), AcquireLayersNals failed(%d)!
+ResolveStunHostnameForFamily
+Resolved ICE candidate hostname 
+Resource device
+Response returned with status code {}
+Restart for default device, expected_device_id={} current_device_id={}
+Returning certificate
+Returning key pair
+SLICES_PER_FRAME
+SOFFICE.BIN
+SSliceThreading
+STUN BINDING error response
+STUN BINDING indication
+STUN BINDING request
+STUN BINDING response
+STUN binding request timed out.
+STUN binding response with no error code attribute.
+STUN host lookup received error.
+STUN server address is incompatible.
+SdpOfferAnswerHandler::AddIceCandidate
+SdpOfferAnswerHandler::RemoveIceCandidates
+Selected endpoint device is not active
+SendOffer: ice_connection is null
+Server returned 400 Bad Request
+Server returned 401 Unauthorized (authorization failed)
+Server returned 403 Forbidden (access denied)
+Server returned 404 Not Found
+Server returned 4XX Client Error, but not one of 40{0,1,3,4}
+Server returned 5XX Server Error reply
+Service Unavailable
+Service already exists.
+Service-0x
+Session description must have ice ufrag and pwd.
+Set ICE receiving timeout to 
+Set ICE ufrag: 
+Set STUN keepalive interval to 
+Set WebRTC-ExtraICEPing: Enabled
+Set continual_gathering_policy to 
+Set enable_ice_full_punch to 
+Set presume writable when fully relayed to 
+Set regather_on_failed_networks_interval to 
+Set skip_relay_to_non_relay_connections
+Set voice channel options. Current options: 
+Set-SliceConstraint(%d) too small for current resolution (MB# %d) under QP/BR!
+SetPlayoutDevice
+SetRecordingDevice
+Setting receive voice codecs.
+Setting remote voice description for 
+Setting the SRTP send key twice is currently unsupported.
+Setting voice channel options: 
+Signal connection received kCandidate type but candidate is empty
+Skip default-device restart, expected_device_id={} current_device_id={}
+Slice extension
+Slice extension for a depth view or a 3D-AVC texture view
+Slice groups not supported
+Slice info size larger than decoder buffer size.
+Slice overlaps with next at %d
+SliceArgumentValidationFixedSliceMode(), invalid uiSliceMbNum (%d) settings!,now turn to SM_SINGLE_SLICE type
+SliceArgumentValidationFixedSliceMode(), uiSliceNum exceed MAX_SLICES_NUM! So setting slice num eqaul to MAX_SLICES_NUM(%d)!
+SliceArgumentValidationFixedSliceMode(), uiSliceNum(%d) you set for SM_FIXEDSLCNUM_SLICE, now turn to SM_SINGLE_SLICE type as CountMbNum less than MIN_NUM_MB_PER_SLICE!
+SliceArgumentValidationFixedSliceMode(), uiSliceNum(%d) you set for SM_FIXEDSLCNUM_SLICE, now turn to SM_SINGLE_SLICE type!
+SliceArgumentValidationFixedSliceMode(), unsupported setting with Resolution and uiSliceNum (%d) combination  under RC on! Consider setting single slice with this resolution!
+SliceArgumentValidationFixedSliceMode(), unsupported setting with Resolution and uiSliceNum combination under RC on! So uiSliceNum is changed to %d!
+SliceGroH+
+SliceSizH+
+SlicesPerFrame
+Start getting ports with turn_port_prune_policy 
+Start to create d3d11 device context
+Start to set multi thread on the device.
+StartNewFrame(m_curr_slice_hdr.get())
+TCP candidates are disabled.
+TURN ALLOCATE error response
+TURN ALLOCATE request
+TURN ALLOCATE response
+TURN CHANNEL BIND error response
+TURN CHANNEL BIND request
+TURN CHANNEL BIND response
+TURN CREATE PERMISSION error response
+TURN CREATE PERMISSION request
+TURN CREATE PERMISSION response
+TURN DATA INDICATION
+TURN REFRESH error response
+TURN REFRESH request
+TURN REFRESH response
+TURN SEND INDICATION
+TURN allocate request timed out.
+TURN host lookup received error.
+The audio endpoint device does not support the specified stream format
+The audio endpoint device supports the specified stream format
+The frame buffer should never return an empty temporal until list when there is a decodable temporal unit.
+The hardware pixel format '%s' is not supported by the device type '%s'
+The returned format contains no extended information. The size is {} bytes
+The slice_qp %d is outside the valid range [%d, 51].
+Total number of devices: 
+Trying to change candidate pool size after pool was frozen.
+Trying to change continual gathering policy when gathering has already started!
+TurnPort connected to 
+Two slices reporting being the first in the same frame.
+USERNOTICE
+Unable to find collection index for default device
+Unable to set playout device.
+Unable to set recording device.
+Unexpected AsyncDnsResolver return
+Unknown slice type: %d.
+Unsupported candidate type.
+Use the CreateWindowsCoreAudioAudioDeviceModule() factory method instead for this option.
+UseCandidatesInRemoteDescription: Not ready to use candidate.
+VCMGenericEncoder::Encode
+VCMGenericEncoder::Release
+VideoReceiveStream2::OnEncodedFrame key frame info, returned frame type:
+VideoReceiver2::Decode key frame info, returned frame type:
+Voice Over
+VoiceChannel::SetLocalContent_w
+VoiceChannel::SetRemoteContent_w
+VoiceChannel::~VoiceChannel
+VolumeCallbacks returned an invalid level=
+WebRTC-ExtraICEPing
+WebRTC-ExtraICEPing/Not sending extra ping last_ping_sent_: 
+WebRTC-ExtraICEPing/Sending extra ping last_ping_sent_: 
+WebRTC-IceControllerFieldTrials
+WebRTC-IceFieldTrials
+WebRTC-PiggybackIceCheckAcknowledgement
+WebRTC-RemoteCandidatFilterPrflxType
+WebRTC-StunInterPacketDelay
+WebRTC-Turn-AllowSystemPorts
+WebRTC-UseActiveIceController
+WebRTC-UseTurnServerAsStunServer
+WebRTC.Audio.ReceiverDeviceDelayMs
+WebRTC.PeerConnection.AddIceCandidate
+WebRTC.PeerConnection.CandidatePairType_TCP
+WebRTC.PeerConnection.CandidatePairType_UDP
+WebRTC.PeerConnection.IceRegatheringReason
+WebRTC.PeerConnection.IceRestartState
+WebRTC.PeerConnection.ValidIceChars
+WebRTC.Stun.Integrity.ErrorResponse.BadRequest
+WebRTC.Stun.Integrity.ErrorResponse.ErrorOther
+WebRTC.Stun.Integrity.ErrorResponse.GlobalFailure
+WebRTC.Stun.Integrity.ErrorResponse.NoErrorAttribute
+WebRTC.Stun.Integrity.ErrorResponse.ServerError
+WebRTC.Stun.Integrity.ErrorResponse.StaleNonce
+WebRTC.Stun.Integrity.ErrorResponse.TryAlternate
+WebRTC.Stun.Integrity.ErrorResponse.Unauthorized
+WebRTC.Stun.Integrity.ErrorResponse.UnknownAttribute
+WebRTC.Stun.Integrity.Indication
+WebRTC.Stun.Integrity.Request
+WebRTC.Stun.Integrity.Response
+WebRtcVoiceEngine::ApplyOptions: 
+WebRtcVoiceEngine::Init
+WebRtcVoiceEngine::WebRtcVoiceEngine
+WebRtcVoiceEngine::~WebRtcVoiceEngine
+WebRtcVoiceMediaChannel::AddRecvStream
+WebRtcVoiceMediaChannel::AddSendStream
+WebRtcVoiceMediaChannel::GetStats
+WebRtcVoiceMediaChannel::InsertDtmf
+WebRtcVoiceMediaChannel::RemoveRecvStream
+WebRtcVoiceMediaChannel::RemoveSendStream
+WebRtcVoiceMediaChannel::SetDefaultRawAudioSink:
+WebRtcVoiceMediaChannel::SetMaxSendBitrate.
+WebRtcVoiceMediaChannel::SetPlayout
+WebRtcVoiceMediaChannel::SetRawAudioSink: ssrc:
+WebRtcVoiceMediaChannel::SetRecvParameters
+WebRtcVoiceMediaChannel::SetRecvParameters: 
+WebRtcVoiceMediaChannel::SetSend
+WebRtcVoiceMediaChannel::SetSendParameters
+WebRtcVoiceMediaChannel::SetSendParameters: 
+WebRtcVoiceMediaChannel::WebRtcVoiceMediaChannel
+WebRtcVoiceMediaChannel::~WebRtcVoiceMediaChannel
+WelsEncoderEncodeExt(), iLayerNum(%d) overflow(max:%d) at iDid= %d uiSliceMode= %d, iSliceCount= %d!
+WelsEncoderEncodeExt(), iSliceCount(%d) from GetCurrentSliceNum() is untrusted due stack/heap crupted!
+WelsEncoderEncodeExt(), multi-slice (mode %d) InitAllSlicesInThread() error!
+WelsEncoderEncodeExt(), multi-slice (mode %d) encoding error = %d!
+WelsEncoderEncodeExt(), multi-slice (mode %d) encoding error!
+WelsEncoderParamAdjust(), GetMultipleThreadIdc failed return %d.
+WelsEncoderParamAdjust(),iIndexD = %d,uiSliceMode (%d,%d),uiSliceNum(%d,%d)
+WelsInitEncoderExt(), DetermineTemporalSettings failed return %d (check in/out frame rate and temporal layer setting! -- in/out = 2^x, x <= temppral_layer_num)
+WelsInitEncoderExt(), GetMultipleThreadIdc failed return %d.
+WelsInitEncoderExt(), ParamValidationExt failed return %d.
+WelsInitEncoderExt(), RequestMemorySvc failed return %d.
+WelsUninitEncoderExt(), pthread_join(pThreadHandles%d) return %d..
+Windows Media Audio Voice
+Zero refs for a frame with P or B slices.
+[CAPT] device period        : 
+[CrossAdapterBridge] Init: dst D3D12CreateDevice failed: 0x{:x}
+[CrossAdapterBridge] Init: src D3D12CreateDevice failed: 0x{:x}
+[CrossAdapterBridge] Probe: dst D3D12CreateDevice failed: 0x{:x}
+[CrossAdapterBridge] Probe: src D3D12CreateDevice failed: 0x{:x}
+[CrossAdapterFenceInterop] ID3D11Device5::CreateFence failed: hr=0x{:x}
+[CrossAdapterFenceInterop] ID3D11Device5::OpenSharedFence(D3D12 fence) failed: hr=0x{:x}
+[CrossAdapterFenceInterop] ID3D12Device::CreateFence failed: hr=0x{:x}
+[CrossAdapterFenceInterop] ID3D12Device::CreateSharedHandle(fence) failed: hr=0x{:x}, handle={}
+[CrossAdapterFenceInterop] ID3D12Device::OpenSharedHandle(D3D11 fence) failed: hr=0x{:x}
+[CrossAdapterFenceInterop] ID3D12Fence::GetDevice failed: hr=0x{:x}
+[CrossAdapterTransferSync] {} failed: hr=0x{:x}, device_removed_reason=0x{:x}
+[DxgiExternalFrame] ID3D11Device1 query failed, handle={}, hr=0x{:08x}
+[DxgiFrameDelivery] cross-device strategy failed, src_adapter=0x{:016x}, dst_adapter=0x{:016x}, error={} ({}); falling back to staging
+[DxgiFrameDelivery] cross-device transfer still in flight, src_adapter=0x{:016x}, dst_adapter=0x{:016x}
+[DxgiFrameDelivery] same-device texture copy failed, adapter=0x{:016x}, src_format={}, dst_format={}, size={}x{}, dirty_rects={}, error={} ({})
+[DxgiFrameResource] shared handle creation returned null, adapter=0x{:016x}, nt_requested={}
+[FecOnTcp] Selected candidate pair changed: local=[
+[GpuFenceTransferSync] unavailable: D3D11.4 interfaces src_device5={}, src_context4={}, dst_device5={}, dst_context4={}
+[MT] CWelsConstrainedSizeSlicingEncodingTask ExecuteTask(), WriteSliceBs not successful: coding_idx %d, uiLocalSliceIdx %d, BufferSize %d, m_iSliceSize %d, iPayloadSize %d
+[MT] CWelsConstrainedSizeSlicingEncodingTask(), coding_idx %d, iPartitionId %d, m_iThreadIdx %d, iLocalSliceIdx %d, m_iSliceSize %d, ParamValidationExt(), invalid uiMaxNalSizeiEndMbInPartition %d, pCurDq->LastCodedMbIdxOfPartition[%d] %d
+[MT] CWelsLoadBalancingSlicingEncodingTask()FinishTask, coding_idx %d, um_iSliceIdx %d, uiSliceConsumeTime %d, m_iSliceSize %d, iFirstMbInSlice %d, count_num_mb_in_slice %d at time=%I64d
+[MT] CWelsLoadBalancingSlicingEncodingTask()InitTask for m_iSliceIdx %d at time=%I64d
+[MT] CWelsSliceEncodingTask ExecuteTask(), WriteSliceBs not successful: coding_idx %d, um_iSliceIdx %d
+[MT] CWelsSliceEncodingTask InitTask(), Cannot find available thread for m_iSliceIdx = %d
+[MT] CWelsSliceEncodingTask()FinishTask for m_iSliceIdx %d, unlock thread %d
+[MT] CWelsSliceEncodingTask()InitTask for m_iSliceIdx %d, lock thread %d
+[NativeUdpPreflight] CancelIoEx: ok={}, error={}; retain context until service destruction
+[NativeUdpPreflight] WSARecvFrom returned error={}
+[NetworkProbeLoop] get echo server returned HTTP status {}
+[NetworkProbeLoop] push network state returned HTTP status {}
+[REND] device period        : 
+[Rc] Frame timestamp = %lld, skip one frame due to preprocessing return (temporal layer settings or else)
+[StagingCrossDelivery] destination relay frame has no texture, dst_adapter=0x{:016x}
+[StagingCrossDelivery] failed to acquire destination relay frame, dst_adapter=0x{:016x}, format={}, size={}x{}
+[StagingCrossDelivery] failed to map destination relay texture for write, adapter=0x{:016x}
+[StagingCrossDelivery] unsupported relay format {} for cross-device copy
+[agc] VolumeCallbacks returned an invalid level=
+[codec-detector-child {}={} ({}) adapter={} device={}] malformed result: {}
+[codec-detector-child {}={} ({}) adapter={} device={}] {}
+[h:{}] received switch network notification, try to switch network, switched transport: {}, attempt_switch_relay_type: {}
+[session:{}]  [i:{}]can not found ice connection , drop this answer 
+[session:{}] EnumDisplayDevice failed :{} {}
+[session:{}] StartAudioCapture: ice connection {} not found
+[session:{}] SwitchIceNetwork 
+[session:{}] UpdateIceConnectionConfig 
+[session:{}] [a:{}] [i:{}] collect {} turn/stun server force relay {} urls [{}]
+[session:{}] [a:{}] [i:{}] collect {} turn/stun server force relay:{} urls [{}]
+[session:{}] [a:{}] [i:{}] create ice connection failed error_code {}
+[session:{}] [a:{}] signal emit control return error or size < 2, ec: {}, msg size:{} 
+[session:{}] [i:{}]  ice connection not allow to switch network manually now. ice state: {}
+[session:{}] [i:{}] can not find ice connection in NewControl
+[session:{}] [i:{}] can not found ice connection, drop this offer 
+[session:{}] [i:{}] ice connection closed
+[session:{}] [i:{}] ice connection not found
+[session:{}] [ice:{}]  QosStatsUpload cancelled
+[session:{}] [ice:{}]  [a:{}] [i:{}] OnIceConnectionReceivingChange : {}
+[session:{}] [ice:{}]  add video track error :{} 
+[session:{}] [ice:{}]  cancel stats upload 
+[session:{}] [ice:{}]  first frame sender_media_status rtp_timestamp={} std_time_diff={}
+[session:{}] [ice:{}]  get connection stats cancelled
+[session:{}] [ice:{}]  start stats upload loop
+[session:{}] [ice:{}]  start streamer data channel event listener
+[session:{}] [ice:{}]  stats upload loop finish
+[session:{}] [ice:{}] AutoQualityCheckLoop cancelled
+[session:{}] [ice:{}] CRITICAL: {} ice tasks did not exit within 10s, leak ice: [{}]
+[session:{}] [ice:{}] FAILED to collect system memory info
+[session:{}] [ice:{}] GPU[{}]: {} - dedicated: {} MB used / {} MB total
+[session:{}] [ice:{}] QosStatsLoop send media inbound stats failed, size {} > 512KB limit
+[session:{}] [ice:{}] StreamerDataChannelEventLoop cancelled
+[session:{}] [ice:{}] StreamerDataChannelEventLoop, AsyncWaitStreamerData failed, err:{}
+[session:{}] [ice:{}] StreamerDataChannelEventLoop, failed to parse json: {}
+[session:{}] [ice:{}] [a:{}] [i:{}]  add ice candidate {}
+[session:{}] [ice:{}] [a:{}] [i:{}]  controller control success
+[session:{}] [ice:{}] [a:{}] [i:{}]  receive new candidate current candidate count {}
+[session:{}] [ice:{}] [a:{}] [i:{}] 12s countdown cancel
+[session:{}] [ice:{}] [a:{}] [i:{}] 12s countdown peer connection state is connected
+[session:{}] [ice:{}] [a:{}] [i:{}] 12s countdown peer peer connection state is not connected
+[session:{}] [ice:{}] [a:{}] [i:{}] Failed to create candidate :{},{}
+[session:{}] [ice:{}] [a:{}] [i:{}] On Add Track from remote :{}
+[session:{}] [ice:{}] [a:{}] [i:{}] On Track remove :{}
+[session:{}] [ice:{}] [a:{}] [i:{}] OnConnectionChange :{}
+[session:{}] [ice:{}] [a:{}] [i:{}] OnIceCandidateError address:{}  port:{} url:{}  error_code:{} error_ms:{}
+[session:{}] [ice:{}] [a:{}] [i:{}] OnIceConnectionChange :{}
+[session:{}] [ice:{}] [a:{}] [i:{}] OnIceGatheringChange state  : {}
+[session:{}] [ice:{}] [a:{}] [i:{}] OnIceSelectedCandidatePairChanged : {} local: {}, remote: {}
+[session:{}] [ice:{}] [a:{}] [i:{}] OnPunchStoppedByFirewall
+[session:{}] [ice:{}] [a:{}] [i:{}] OnStandardizedIceConnectionChange :{}
+[session:{}] [ice:{}] [a:{}] [i:{}] QosStatsLoop  send media inbound stats: {}
+[session:{}] [ice:{}] [a:{}] [i:{}] SetAudioSenderBitRate audio_sender_min_bps: {} open:{}
+[session:{}] [ice:{}] [a:{}] [i:{}] SetConfig failed, peer connection not connected
+[session:{}] [ice:{}] [a:{}] [i:{}] add candidate failed error_code:{}
+[session:{}] [ice:{}] [a:{}] [i:{}] add ice candidate error :{} detail:{}
+[session:{}] [ice:{}] [a:{}] [i:{}] already closed, skip countdown
+[session:{}] [ice:{}] [a:{}] [i:{}] answer desc to string failed
+[session:{}] [ice:{}] [a:{}] [i:{}] candidate collect ended or canceled
+[session:{}] [ice:{}] [a:{}] [i:{}] candidate collect finished
+[session:{}] [ice:{}] [a:{}] [i:{}] candidate has no value, skip
+[session:{}] [ice:{}] [a:{}] [i:{}] candidate to string error {}
+[session:{}] [ice:{}] [a:{}] [i:{}] close peer connection 
+[session:{}] [ice:{}] [a:{}] [i:{}] create answer failed
+[session:{}] [ice:{}] [a:{}] [i:{}] create answer failed 
+[session:{}] [ice:{}] [a:{}] [i:{}] create offer failed 
+[session:{}] [ice:{}] [a:{}] [i:{}] create session desc error : {}, {}
+[session:{}] [ice:{}] [a:{}] [i:{}] disconnected
+[session:{}] [ice:{}] [a:{}] [i:{}] drop this candidate because no sdp {}
+[session:{}] [ice:{}] [a:{}] [i:{}] failed set config when restart ice
+[session:{}] [ice:{}] [a:{}] [i:{}] failed to create offer error_code {}
+[session:{}] [ice:{}] [a:{}] [i:{}] failed to send candidate 
+[session:{}] [ice:{}] [a:{}] [i:{}] failed to set audio sender bitrate
+[session:{}] [ice:{}] [a:{}] [i:{}] failed to set {} sender bitrate 
+[session:{}] [ice:{}] [a:{}] [i:{}] finish clear ice connection 
+[session:{}] [ice:{}] [a:{}] [i:{}] generate new candidate current generate count {}
+[session:{}] [ice:{}] [a:{}] [i:{}] have empty offer
+[session:{}] [ice:{}] [a:{}] [i:{}] ice connection closed during CreateAnswer, drop answer
+[session:{}] [ice:{}] [a:{}] [i:{}] ice connection closed during CreateOffer, skip send offer
+[session:{}] [ice:{}] [a:{}] [i:{}] ice connection set remote answer failed error_code {}
+[session:{}] [ice:{}] [a:{}] [i:{}] new candidate from sdp_mid:{} sdp_mline_index:{} type:{} address:{}
+[session:{}] [ice:{}] [a:{}] [i:{}] offer desc to string failed
+[session:{}] [ice:{}] [a:{}] [i:{}] peer connection SetRemoteAnswer failed wrong state
+[session:{}] [ice:{}] [a:{}] [i:{}] peer connection SetRemoteOffer failed wrong state
+[session:{}] [ice:{}] [a:{}] [i:{}] peer connection dtls already connected
+[session:{}] [ice:{}] [a:{}] [i:{}] peer connection state change: {} ec: {} 
+[session:{}] [ice:{}] [a:{}] [i:{}] receive binary data channel 
+[session:{}] [ice:{}] [a:{}] [i:{}] receive control data channel 
+[session:{}] [ice:{}] [a:{}] [i:{}] receive file data channel 
+[session:{}] [ice:{}] [a:{}] [i:{}] receive restart ice
+[session:{}] [ice:{}] [a:{}] [i:{}] receive restart ice 
+[session:{}] [ice:{}] [a:{}] [i:{}] receive streamer data channel 
+[session:{}] [ice:{}] [a:{}] [i:{}] receive text data channel 
+[session:{}] [ice:{}] [a:{}] [i:{}] received offer restart_ice: {}
+[session:{}] [ice:{}] [a:{}] [i:{}] release control ice connection for countdown 12s
+[session:{}] [ice:{}] [a:{}] [i:{}] released control
+[session:{}] [ice:{}] [a:{}] [i:{}] send answer restart_ice: {}
+[session:{}] [ice:{}] [a:{}] [i:{}] send offer succeed wait for answer
+[session:{}] [ice:{}] [a:{}] [i:{}] send offer to remote failed error_code {}
+[session:{}] [ice:{}] [a:{}] [i:{}] sender answer to remote failed
+[session:{}] [ice:{}] [a:{}] [i:{}] set audio capture error peer connect not connected
+[session:{}] [ice:{}] [a:{}] [i:{}] set audio playout error peer connect not connected
+[session:{}] [ice:{}] [a:{}] [i:{}] set local {} desc error restart_ice:{} type:{} message:{}
+[session:{}] [ice:{}] [a:{}] [i:{}] set remote answer desc error: {}
+[session:{}] [ice:{}] [a:{}] [i:{}] set remote answer desc success 
+[session:{}] [ice:{}] [a:{}] [i:{}] set remote offer desc error {}
+[session:{}] [ice:{}] [a:{}] [i:{}] set remote offer failed
+[session:{}] [ice:{}] [a:{}] [i:{}] set remote offer success
+[session:{}] [ice:{}] [a:{}] [i:{}] signal connection release control
+[session:{}] [ice:{}] [a:{}] [i:{}] signaling state change : {}
+[session:{}] [ice:{}] [a:{}] [i:{}] start 12s countdown 
+[session:{}] [ice:{}] [a:{}] [i:{}] start disconnect 
+[session:{}] [ice:{}] [a:{}] [i:{}] start disconnect ice connection
+[session:{}] [ice:{}] [a:{}] [i:{}] unknown video track index {}
+[session:{}] [ice:{}] [a:{}] [i:{}] video_sender_min_bps: {} active:{}
+[session:{}] [ice:{}] [a:{}] [i:{}] {}
+[session:{}] [ice:{}] [i:{}] CRITICAL: ice tasks did not exit, destroy ice timed out
+[session:{}] [ice:{}] [i:{}] collect media inbound stats
+[session:{}] [ice:{}] [i:{}] collect media outbound stats
+[session:{}] [ice:{}] [i:{}] failed to create peer connection {}
+[session:{}] [ice:{}] [i:{}] finish disconnect peer connection
+[session:{}] [ice:{}] [i:{}] ice connection closed during CreateOffer, skip restart offer
+[session:{}] [ice:{}] [i:{}] ice connection closed during SetRemoteOffer, skip background loops
+[session:{}] [ice:{}] [i:{}] proxy enabled but port allocator unavailable
+[session:{}] [ice:{}] [i:{}] report ice connection stats when peer connection close
+[session:{}] [ice:{}] [i:{}] report json {}
+[session:{}] [ice:{}] [i:{}] start disconnect peer connection
+[session:{}] [ice:{}] [i:{}] stop audio/video capture when peer connection close
+[session:{}] [ice:{}] [i:{}] stop audio/video render when peer connection close
+[session:{}] [ice:{}] add audio track error :{}
+[session:{}] [ice:{}] add candidate failed because of type {}
+[session:{}] [ice:{}] add task type {} size {}
+[session:{}] [ice:{}] attempted_auto_switch_cnt: {}
+[session:{}] [ice:{}] auto frame quality switch current:{}, new:{}
+[session:{}] [ice:{}] auto quality loop finished
+[session:{}] [ice:{}] auto quality loop, peer connection is closed 
+[session:{}] [ice:{}] auto quality loop, peer connection is erased
+[session:{}] [ice:{}] auto quality loop, video track index: {}  media_stat->video_track_index:{}, probe or lower limit moving average not found
+[session:{}] [ice:{}] binary data channel create error :{}
+[session:{}] [ice:{}] can not found ice connection 
+[session:{}] [ice:{}] cancel auto quality loop 
+[session:{}] [ice:{}] cancel ice task: type={}
+[session:{}] [ice:{}] candidate is empty
+[session:{}] [ice:{}] capture type {} decoder max resolution is 0
+[session:{}] [ice:{}] collected GPU memory info for {} adapters
+[session:{}] [ice:{}] control data channel create error :{}
+[session:{}] [ice:{}] data channel {} send data failed
+[session:{}] [ice:{}] display infos changed 
+[session:{}] [ice:{}] failed to video AddTransceiver {}
+[session:{}] [ice:{}] file data channel create error :{}
+[session:{}] [ice:{}] finish streamer data channel event listener
+[session:{}] [ice:{}] first frame receive_media_status rtp_timestamp={} std_time_diff={} pre_config_miss={} first_present_timestamp={}
+[session:{}] [ice:{}] get connection stats error, no peer connection or stats collector 
+[session:{}] [ice:{}] get connection stats failed, no peer connection or stats collector
+[session:{}] [ice:{}] get streamer data error, no peer connection or stats collector 
+[session:{}] [ice:{}] get video source error invalid video index {}
+[session:{}] [ice:{}] get video source error peer connect not connected
+[session:{}] [ice:{}] ice connection is not exist
+[session:{}] [ice:{}] ice connection not found
+[session:{}] [ice:{}] ice tasks stopped: total={}, aborted={}
+[session:{}] [ice:{}] invalid control_result auto switch parameters, use default value
+[session:{}] [ice:{}] invalid param quality:{} highest_quality:{} startup_quality:{}
+[session:{}] [ice:{}] invalid param quality:{} max_custom_bitrate:{}
+[session:{}] [ice:{}] is closed can not start audio render
+[session:{}] [ice:{}] is closed can not start video render
+[session:{}] [ice:{}] is closed no need stop audio capture
+[session:{}] [ice:{}] is closed no need stop audio render
+[session:{}] [ice:{}] is closed no need to stop audio render
+[session:{}] [ice:{}] is closed no need to stop video render
+[session:{}] [ice:{}] media inbound stats: {}
+[session:{}] [ice:{}] nat traversal info : {}
+[session:{}] [ice:{}] not valid can not get connection stats
+[session:{}] [ice:{}] on add new {} track_id :{} track_index:{}
+[session:{}] [ice:{}] on remove track kind {}  track_id {}  track_index {}
+[session:{}] [ice:{}] peer connection closed
+[session:{}] [ice:{}] peer connection create error type :{}  msg: {}
+[session:{}] [ice:{}] peer connection disconnected
+[session:{}] [ice:{}] peer connection exchanging candidate
+[session:{}] [ice:{}] peer connection have answer
+[session:{}] [ice:{}] peer connection have been connected
+[session:{}] [ice:{}] peer connection have offer
+[session:{}] [ice:{}] peer connection ice connecting
+[session:{}] [ice:{}] peer connection ice error
+[session:{}] [ice:{}] peer connection ice have been connected
+[session:{}] [ice:{}] sdp is empty
+[session:{}] [ice:{}] send candidates finish
+[session:{}] [ice:{}] send {} data buffer failed ice id is not valid
+[session:{}] [ice:{}] set soac failed because of type {}
+[session:{}] [ice:{}] start auto quality loop max_match_quality={} startup_match_quality={}
+[session:{}] [ice:{}] start send candidates
+[session:{}] [ice:{}] streamer data channel create error :{}
+[session:{}] [ice:{}] system memory updated: total: {} MB, used: {} MB, available: {} MB, usage_percentage: {}%
+[session:{}] [ice:{}] text data channel create error :{}
+[session:{}] [ice:{}] unknown video index {}
+[session:{}] [ice:{}] upload jank info:{}
+[session:{}] [ice:{}] video track {}  current quality {} probe_bps {} > next level avg bps {} try to upgrade to quality {}, platform_type={}
+[session:{}] [ice:{}] video track {} apply render mode {}
+[session:{}] [ice:{}] video track {} current quality {} packet lower_limit_bps {} < min bps {}  try to lower quality level
+[session:{}] [ice:{}] video track {} frame is jank {}ms{}
+[session:{}] [ice:{}] video track {} init failed, rolling back state
+[session:{}] [ice:{}] video track {} jank attribution cause:{} interval(present/capture/encode/pacer/receive_start/receive_finish/decode):[{}/{}/{}/{}/{}/{}/{}]ms score(capture/encode/transport/decode/render):[{}/{}/{}/{}/{}]ms
+[session:{}] [ice:{}] video track {} render mode {} unchanged, skip update
+[session:{}] [ice:{}] video track {} renderer binding cannot change while running: window={} -> {}, session={} -> {}, ice={} -> {}, track={} -> {}
+[session:{}] [ice:{}] video track {} rendering stopped, drop this frame
+[session:{}] [ice:{}] video track {} start render finish
+[session:{}] [ice:{}] video track {} start render in renderer thread
+[session:{}] [ice:{}] video track {} stop render
+[session:{}] [ice:{}] video track {} stop video renderer timeout
+[session:{}] [ice:{}] video track {} try to stop video renderer
+[session:{}] [ice:{}] video track {} video renderer stopped
+[session:{}] [ice:{}] video track {} window handle is null
+[session:{}] [ice:{}] video_track_index:{} quality {} SetBitRate fps={} w*h={}*{} startup_match_quality={} min_bps={} max_bps={} start_bps={} max_probe_bps={} adaptive_bitrate={}, platform_type={}
+[session:{}] [ice:{}] {} event is not json obj drop this event
+[session:{}] [ice:{}] {} payload is malformed, drop this event
+[session:{}] [ice:{}] {} received data success
+[session:{}] [ice:{}]peer connection create error type :{}  msg: {}
+[session:{}] can not find  mumu gpu adapter vendor {}  device {}
+[session:{}] clear all ice connections 
+[session:{}] current device {} support nt shared handle {}
+[session:{}] current ice handle {} is not empty but try to connect a new ice connection 
+[session:{}] current msg not contain ice id drop this message
+[session:{}] drop the soac event {} because of ice_id {} not in current ice connections
+[session:{}] drop the soac event {} because of uuid {} no in current ice connections
+[session:{}] end disconnect success remain {} ice_connections
+[session:{}] failed to create IceConnection
+[session:{}] find the mumu gpu vendor {} device {}
+[session:{}] ice connection count {}
+[session:{}] ice connection does not exist, returning kPeerConnectionFailed
+[session:{}] ice connection is not exist 
+[session:{}] ice:{} send signal app data size:{}
+[session:{}] ice_finish_msg {}
+[session:{}] is invalid when the SwitchIceNetwork is called
+[session:{}] is invalid when the UpdateIceConnectionConfig is called
+[session:{}] no selected_candidate_pair found
+[session:{}] remain {} ice connections 
+[session:{}] start clear {} ice connections
+[session:{}] start mumu capture: {}x{} vendor:{} device:{} nt_handle :{}, rotation:{}, fps:{} pid:{}  index:{}
+[session:{}][a:{}][i:{}] failed to find ice connection
+[session:{}][i:{}] has_success_manual_switched_relay
+[session:{}][ice:{}] SetBitRate video track index {} quality={} min_bps={} max_bps={} start_bps={} max_probe_bps={} adaptive_bitrate={} fps={} w*h={}*{} platform_type={}
+[session:{}][ice:{}] StartAudioCapture failed, peer connection is null
+[session:{}][ice:{}] StartAudioRender failed, peer connection is null
+[session:{}][ice:{}] audio capture device not permitted, target:{}
+[session:{}][ice:{}] audio capture start {} permission_token:{}
+[session:{}][ice:{}] audio render start, target:{}
+[session:{}][ice:{}] audio render switch to kAudioRender_Microphone
+[session:{}][ice:{}] audio render switch to kAudioRender_Speaker
+[session:{}][ice:{}] cancel {} auto frame quality task
+[session:{}][ice:{}] filter_network_monitor loss rate is too high, try to switch to relay, prefer udp
+[session:{}][ice:{}] filter_network_monitor loss rate is too high, try to switch to tls relay
+[session:{}][ice:{}] max_bitrate_limit applied, limit={} bps
+[session:{}][ice:{}] new sender media info video track index {} capture impl {} encoder impl {}
+[session:{}][ice:{}] sender media info change {}
+[session:{}][ice:{}] stop audio capture
+[session:{}][ice:{}] stop video capture {}
+[session:{}][ice:{}] unknown video source index: {}
+[session:{}][ice:{}] unknown video track index {}
+[session:{}][ice:{}] unknown video track index {} in video renderers
+[session:{}][ice:{}] video source failed to create capture, track_index:{}
+[session:{}][ice:{}] video track index {} StopVideoCapture
+[session:{}][ice:{}] video track {} create new video renderer
+[session:{}][ice:{}] video track {} peer connection already close
+[session:{}][ice:{}]unknown video source index {}
+[session:{}][ice:{}]unknown video track index {}
+[session:{}][ice:{}]video capture video track {} capture type {} source id {}  quality match :{} request: {} max_match_quality: {}  start_up_quality:{}
+[session:{}][ice:{}]video source {} is not binding any capture try to bind a new capture
+[session:{}][ice:{}]video track {} changed bind new capture type from {} to {} source_id from {} to {} 
+\Device\Afd\Wepoll
+] to TURN server [
+_OPENSSL_isservice
+`udt returning'
+a new candidate pair created from an unknown remote address
+abstract-ice-candidate
+adapter {} has no CUDA device, trying next adapter
+add candidate failed
+ambiguous host or service
+amd amf encoder returned EOF while encoding is active
+amf candidate selected config {} path {}
+assertion failed: lag > 0 || signalType != TYPE_VOICED
+assertion failed: psEncC->indices.NLSFInterpCoef_Q2 == 4 || ( psEncC->useInterpolatedNLSFs && !psEncC->first_frame_after_reset && psEncC->nb_subfr == MAX_NB_SUBFR )
+assertion failed: psEncC->useInterpolatedNLSFs == 1 || psEncC->indices.NLSFInterpCoef_Q2 == ( 1 << 2 )
+audio device buffer is nullptr
+audio device mix_format: {}
+audio device output num channel: {}
+audio device remove {}
+audio service type
+audio_device_
+audio_service_type
+bad data returned by callback
+batch probe: {} {} ({}) adapter {} device {}
+batch probe: {} {} ({}) adapter {} returned {} results
+batch probe: {} {} adapter {} device {} failed (timed_out={}, exit={})
+batch probe: {} {} adapter {} device {} output missing BATCH_DONE, discarding
+batch probe: {} {} adapter {} device {} timeout
+best lcoal stun can group nat type: 
+best local stun can group:
+best remote stun can group nat type: 
+best remote stun can group:
+best_local_candidate_group
+best_remote_candidate_group
+best_turn_port != nullptr
+can not find display device name {} index {}
+can not find display device name {} screen_id {}
+candidate
+candidate has address of zero
+candidate has port below 1024, but not 80 or 443
+candidate has port of 80 or 443 with private IP address
+candidate pair state changed
+candidate to sdp failed
+candidate-pair
+candidateType
+candidate_type
+candidates != nullptr
+capi_get_provname, returned name=%s, type=%d
+changing width %d -> %d / height %d -> %d on slice %d
+cms_get0_certificate_choices
+cms_get0_revocation_choices
+connection_ice_id
+context_count && h->slice_ctx[context_count - 1].mb_y < h->mb_height
+create candidate failed
+create d3d11 device error {} {:x}
+cross device link
+ctlEnumerateDevices
+ctlEnumerateMuxDevices
+ctlGetDeviceProperties
+ctlGetZeDevice
+cuD3D11GetDevice
+current default audio device support channel:{} volume_control:{} 48khz 16bit :{}
+current device had been removed 0x{:x}
+current device not support sharing texture
+current device selection is invalid => unable to initialize
+d.usernotice
+decode_slice_header error
+decoder bitstream buffer is too small for start code and slice payload
+decoder {} adapter:{} device:{} codec:{} chroma_sampling:{} bit_depth:{} resolution:{}x{} support:{}
+default audio device change :{} {}
+device
+device index is out of range [0,
+device or resource busy
+device {} adapter {} amf {} supported 
+device {} adapter {} nvenc {} supported 
+device {} adapter {} qsv {} supported 
+device-lost present
+device_capability
+device_id
+device_index= {} => device_id: {}
+device_model
+device_platform
+directory services (X.500)
+directory services - algorithms
+dx11 no support video device
+ePropDevice_DeviceID
+ePropDevice_DeviceIDStr
+ePropDevice_MediaAdapterType
+ePropExtDev_DeviceID
+ePropExtDev_DeviceLUID
+ePropExtDev_DeviceName
+ePropExtDev_LUIDDeviceNodeMask
+ePropExtDev_PCIDevice
+ePropMain_License
+ePropSpecial_DeviceCopy
+echoReturnLoss
+echoReturnLossEnhancement
+enum display devices error:{} screen id {}
+failed to EnumDisplayDevicesW {} screen_id {}
+failed to EnumDisplayDevicesW {} screen_id {} on init dxgi controller
+failed to EnumDisplayDevicesW {} {}
+failed to GetVideoDevice
+failed to bind oneVPL session to D3D11 device on adapter {}: status {}
+failed to create dx11  device 2{}, {:x} {}
+failed to create dx11  device {}, {:x} {}
+failed to create relay frame for cross gpu copy
+failed to get cudaD3D11GetDevice function address
+failed to get device context
+failed to init d3d11 device
+failed to init d3d11 device on dxgi duplicator
+failed to initialize the capturing enpoint device
+failed to initialize the rendering enpoint device
+failed to pre-initialize d3d11 renderer device
+failed to release swap-chain buffers: 0x{:x} {}; renderer device must be reselected
+fatal error on GetStunCandidateGroupPairPriority, unknown stun can group pair
+find one usable duplicator {}x{} fps {} hdr {} format {} color_encoding {} rotation {}  desktop_rect size{}x{} vendor {} device id {}
+first_mb_in_slice overflow
+force_relay
+forced_relay
+found {} dx11 adapter with device id {}, current index: {} AdapterUID: {}
+function: %s (return)
+gathering
+generate candidate failed
+get relay failed
+get relay timeout
+googCandidatePair
+h264 acquire failed return error
+h264_slice_header_init() failed
+http://ocsp.digicert.com0A
+http://ocsp.digicert.com0C
+http://ocsp.digicert.com0\
+http://ocsp.digicert.com0]
+http://www.digicert.com/CPS0
+iCEDraw text
+ice candidate failed
+ice connection failed
+ice restart, reset punch_thread
+ice-controller-request-recheck
+ice-lite
+ice-options
+ice-pwd
+ice-ufrag
+iceLocalUsernameFragment
+iceRole
+iceServers
+iceState
+ice_connecting_time
+ice_connection_timeout
+ice_finished_log
+ice_full_punch
+ice_id
+ice_network_type
+ice_streaming_time
+id-cmc-dataReturn
+id-qt-unotice
+id-smime-spq-ets-sqt-unotice
+index={} => device_id:{}
+invalid random_device value
+invalid rice order: %i blocksize %i
+ipAddressChoice
+k (Certification Services)1503
+kcp i think this is a surprice
+local stun can: 
+local-candidate
+localCandidateId
+local_relay_protocol
+local_stun_candidate_groups
+localcandidate
+lookup returned nothing
+malformed host or service
+manual_switch_relay_enabled
+mb_type %d in %c slice too large at %d %d
+mfx enc failed to query params {} on device {:x}
+mfxDeviceDescription
+mfxExtendedDeviceId
+mfxExtendedDeviceId.DeviceLUID
+needs-ice-restart flag cleared for transport 
+needs-ice-restart flag set for transport 
+new candidate pairs created from a new local candidate
+new candidate pairs created from a new remote candidate
+no accept addr or service specified
+no candidate group pair found, either side maybe none NAT, skip punching
+no certificates returned
+no hostname or service specified
+no matching choice type
+no slice header for current picture, dropping frame
+no space on device
+no such device
+no such device or address
+nonce not returned
+noticeNumbers
+notice_section
+noticenos
+noticeref
+num_slice_groups_minus1 == {}
+nvdec init success use {} adapterUID {} device id {} to decode {}x{} {} {}bit
+nvenc all initialization candidates failed: {}
+occur ice restart, skip this nat traversal round
+old session cipher not returned
+old session compression algorithm not returned
+oneVPL returned output without pending frame metadata
+pCountMbNumInSlice
+pFirstMbIdxOfSlice
+pSliceBuffer
+pSliceSeg->pOverallMbMap
+peer did not return a certificate
+physicalDeliveryOfficeName
+pitch_based_vad_.VoicingProbability( features_, &chunkwise_voice_probabilities_[0]) >= 0
+postOfficeBox
+ppSliceInLayer
+pps:%u sps:%u %s slice_groups:%d ref:%u/%u %s qp:%d/%d/%d/%d %s %s %s %s
+prflx
+publicExponent:
+publisher_relay_isp
+qsv {} HEVC initialization rejected LowPower, trying next input candidate
+qsv {} failed to set d3d11 device: {}
+qsv {} input allocation returned no usable surface
+qsv {} path device busy; retrying EncodeFrameAsync
+qsv {} path returned warning {} with a valid sync point; accepting output
+receive candidate failed
+relay
+relay-protocol
+relayProtocol
+relay_cap
+relay_ins_type
+relayed
+remote candidate generation maybe changed
+remote stun can: 
+remote-candidate
+remoteCandidateId
+remote_relay_protocol
+remote_stun_candidate.address:
+remote_stun_candidate_groups
+remote_stun_candidate_select_delta
+remotecandidate
+renderer input texture is unavailable during device selection
+restart_ice
+restart_ice: {}, ice_transport_type: {}, ice_id: {}
+returning {} decoder capabilities from cache
+returning {} encoder capabilities from cache
+rgba 32 pixel frame not convert to yuv p010 maybe just used for device check
+rgba 32 pixel frame not convert to yuv p410 maybe just used for device check
+sSliceBs.pBs
+saudio device add {}
+sdsiCertificate
+secure device signature
+selected candidate pair destroyed
+selectedCandidatePairChanges
+selectedCandidatePairId
+selected_candidate_pair_changes
+send candidate type: 
+send_candidates
+send_ping_on_nomination_ice_controlled
+send_ping_on_selected_ice_controlling
+send_ping_on_switch_ice_controlling
+serviceLocator
+set the number of slices, used in parallelized encoding
+skip_relay_to_non_relay_connections
+sl == h->slice_ctx
+slice
+slice type %d too large at %d
+slice:%d %c mb:%d %c%s%s frame:%d poc:%d/%d ref:%d/%d qp:%d loop:%d:%d:%d weight:%d%s %s
+slice_count
+slice_flags
+slices
+srflx
+standalone_vad_->GetActivity(&chunkwise_voice_probabilities_[0], chunkwise_voice_probabilities_.size()) >= 0
+start to disconnect SignalCandidateFilterChanged, this=
+state: exchanging candidate
+state: ice connected
+state: ice connecting
+state: ice disconnected
+stop_gather_on_strongly_connected
+streamer::AudioDeviceModuleImpl::ActiveAudioLayer
+streamer::AudioDeviceModuleImpl::AttachAudioBuffer
+streamer::AudioDeviceModuleImpl::AudioDeviceModuleImpl
+streamer::AudioDeviceModuleImpl::BuiltInAECIsAvailable
+streamer::AudioDeviceModuleImpl::BuiltInAGCIsAvailable
+streamer::AudioDeviceModuleImpl::BuiltInNSIsAvailable
+streamer::AudioDeviceModuleImpl::Create
+streamer::AudioDeviceModuleImpl::CreatePlatformSpecificObjects
+streamer::AudioDeviceModuleImpl::EnableBuiltInAEC
+streamer::AudioDeviceModuleImpl::EnableBuiltInAGC
+streamer::AudioDeviceModuleImpl::EnableBuiltInNS
+streamer::AudioDeviceModuleImpl::Init
+streamer::AudioDeviceModuleImpl::InitMicrophone
+streamer::AudioDeviceModuleImpl::InitPlayout
+streamer::AudioDeviceModuleImpl::InitRecording
+streamer::AudioDeviceModuleImpl::InitSpeaker
+streamer::AudioDeviceModuleImpl::MicrophoneIsInitialized
+streamer::AudioDeviceModuleImpl::MicrophoneMute
+streamer::AudioDeviceModuleImpl::MicrophoneMuteIsAvailable
+streamer::AudioDeviceModuleImpl::MicrophoneVolume
+streamer::AudioDeviceModuleImpl::MicrophoneVolumeIsAvailable
+streamer::AudioDeviceModuleImpl::Playing
+streamer::AudioDeviceModuleImpl::PlayoutDeviceName
+streamer::AudioDeviceModuleImpl::PlayoutDevices
+streamer::AudioDeviceModuleImpl::PlayoutIsAvailable
+streamer::AudioDeviceModuleImpl::PlayoutIsInitialized
+streamer::AudioDeviceModuleImpl::Recording
+streamer::AudioDeviceModuleImpl::RecordingDeviceName
+streamer::AudioDeviceModuleImpl::RecordingDevices
+streamer::AudioDeviceModuleImpl::RecordingIsAvailable
+streamer::AudioDeviceModuleImpl::RecordingIsInitialized
+streamer::AudioDeviceModuleImpl::RegisterAudioCallback
+streamer::AudioDeviceModuleImpl::RestartPlayoutInternally
+streamer::AudioDeviceModuleImpl::RestartRecordingInternally
+streamer::AudioDeviceModuleImpl::SetMicrophoneMute
+streamer::AudioDeviceModuleImpl::SetMicrophoneVolume
+streamer::AudioDeviceModuleImpl::SetPlayoutDevice
+streamer::AudioDeviceModuleImpl::SetPlayoutSampleRate
+streamer::AudioDeviceModuleImpl::SetRecordingDevice
+streamer::AudioDeviceModuleImpl::SetRecordingSampleRate
+streamer::AudioDeviceModuleImpl::SetSpeakerMute
+streamer::AudioDeviceModuleImpl::SetSpeakerVolume
+streamer::AudioDeviceModuleImpl::SetStereoPlayout
+streamer::AudioDeviceModuleImpl::SetStereoRecording
+streamer::AudioDeviceModuleImpl::SpeakerIsInitialized
+streamer::AudioDeviceModuleImpl::SpeakerMute
+streamer::AudioDeviceModuleImpl::SpeakerMuteIsAvailable
+streamer::AudioDeviceModuleImpl::SpeakerVolume
+streamer::AudioDeviceModuleImpl::SpeakerVolumeIsAvailable
+streamer::AudioDeviceModuleImpl::StartPlayout
+streamer::AudioDeviceModuleImpl::StartRecording
+streamer::AudioDeviceModuleImpl::StereoPlayout
+streamer::AudioDeviceModuleImpl::StereoPlayoutIsAvailable
+streamer::AudioDeviceModuleImpl::StereoRecording
+streamer::AudioDeviceModuleImpl::StereoRecordingIsAvailable
+streamer::AudioDeviceModuleImpl::StopPlayout
+streamer::AudioDeviceModuleImpl::StopRecording
+streamer::AudioDeviceModuleImpl::Terminate
+streamer::AudioDeviceModuleImpl::~AudioDeviceModuleImpl
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::ActiveAudioLayer
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::AttachAudioBuffer
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::AudioDeviceTemplate
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::BuiltInAECIsAvailable
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::BuiltInAGCIsAvailable
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::BuiltInNSIsAvailable
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::EnableBuiltInAEC
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::EnableBuiltInAGC
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::EnableBuiltInNS
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::Init
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::InitMicrophone
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::InitPlayout
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::InitRecording
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::InitSpeaker
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::Initialized
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::MaxMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::MaxSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::MicrophoneIsInitialized
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::MicrophoneMute
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::MicrophoneMuteIsAvailable
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::MicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::MicrophoneVolumeIsAvailable
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::MinMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::MinSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::Playing
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::PlayoutDevices
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::PlayoutIsAvailable
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::PlayoutIsInitialized
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::RecordingDevices
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::RecordingIsAvailable
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::RecordingIsInitialized
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::SetMicrophoneMute
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::SetMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::SetPlayoutDevice
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::SetRecordingDevice
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::SetSpeakerMute
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::SetSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::SetStereoPlayout
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::SetStereoRecording
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::SpeakerIsInitialized
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::SpeakerMute
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::SpeakerMuteIsAvailable
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::SpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::SpeakerVolumeIsAvailable
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::StartPlayout
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::StartRecording
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::StereoPlayout
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::StereoPlayoutIsAvailable
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::StereoRecording
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::StereoRecordingIsAvailable
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::StopPlayout
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::StopRecording
+streamer::AudioDeviceTemplate<class streamer::AudioDeviceInputDummy,class streamer::AudioDeviceOutputDummy>::Terminate
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::ActiveAudioLayer
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::AttachAudioBuffer
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::AudioDeviceTemplate
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::BuiltInAECIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::BuiltInAGCIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::BuiltInNSIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::EnableBuiltInAEC
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::EnableBuiltInAGC
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::EnableBuiltInNS
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::Init
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::InitMicrophone
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::InitPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::InitRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::InitSpeaker
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::Initialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MaxMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MaxSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MicrophoneIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MicrophoneMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MicrophoneMuteIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MicrophoneVolumeIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MinMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MinSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::Playing
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::PlayoutDevices
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::PlayoutIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::PlayoutIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::RecordingDevices
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::RecordingIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::RecordingIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetMicrophoneMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetPlayoutDevice
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetRecordingDevice
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetSpeakerMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetStereoPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetStereoRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SpeakerIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SpeakerMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SpeakerMuteIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SpeakerVolumeIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StartPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StartRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StereoPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StereoPlayoutIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StereoRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StereoRecordingIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StopPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StopRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::Terminate
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::ActiveAudioLayer
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::AttachAudioBuffer
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::AudioDeviceTemplate
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::BuiltInAECIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::BuiltInAGCIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::BuiltInNSIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::EnableBuiltInAEC
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::EnableBuiltInAGC
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::EnableBuiltInNS
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::Init
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::InitMicrophone
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::InitPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::InitRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::InitSpeaker
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::Initialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::MaxMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::MaxSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::MicrophoneIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::MicrophoneMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::MicrophoneMuteIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::MicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::MicrophoneVolumeIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::MinMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::MinSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::Playing
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::PlayoutDevices
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::PlayoutIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::PlayoutIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::RecordingDevices
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::RecordingIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::RecordingIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SetMicrophoneMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SetMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SetPlayoutDevice
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SetRecordingDevice
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SetSpeakerMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SetSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SetStereoPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SetStereoRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SpeakerIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SpeakerMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SpeakerMuteIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SpeakerVolumeIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::StartPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::StartRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::StereoPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::StereoPlayoutIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::StereoRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::StereoRecordingIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::StopPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::StopRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::DesktopAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::Terminate
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::ActiveAudioLayer
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::AttachAudioBuffer
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::AudioDeviceTemplate
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::BuiltInAECIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::BuiltInAGCIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::BuiltInNSIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::EnableBuiltInAEC
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::EnableBuiltInAGC
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::EnableBuiltInNS
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::Init
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::InitMicrophone
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::InitPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::InitRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::InitSpeaker
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::Initialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MaxMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MaxSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MicrophoneIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MicrophoneMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MicrophoneMuteIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MicrophoneVolumeIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MinMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MinSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::Playing
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::PlayoutDevices
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::PlayoutIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::PlayoutIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::RecordingDevices
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::RecordingIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::RecordingIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetMicrophoneMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetPlayoutDevice
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetRecordingDevice
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetSpeakerMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetStereoPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetStereoRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SpeakerIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SpeakerMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SpeakerMuteIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SpeakerVolumeIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StartPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StartRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StereoPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StereoPlayoutIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StereoRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StereoRecordingIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StopPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StopRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::VirtualMicrophoneRenderer>::Terminate
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::ActiveAudioLayer
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::AttachAudioBuffer
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::AudioDeviceTemplate
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::BuiltInAECIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::BuiltInAGCIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::BuiltInNSIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::EnableBuiltInAEC
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::EnableBuiltInAGC
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::EnableBuiltInNS
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::Init
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::InitMicrophone
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::InitPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::InitRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::InitSpeaker
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::Initialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::MaxMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::MaxSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::MicrophoneIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::MicrophoneMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::MicrophoneMuteIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::MicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::MicrophoneVolumeIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::MinMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::MinSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::Playing
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::PlayoutDevices
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::PlayoutIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::PlayoutIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::RecordingDevices
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::RecordingIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::RecordingIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SetMicrophoneMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SetMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SetPlayoutDevice
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SetRecordingDevice
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SetSpeakerMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SetSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SetStereoPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SetStereoRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SpeakerIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SpeakerMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SpeakerMuteIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::SpeakerVolumeIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::StartPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::StartRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::StereoPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::StereoPlayoutIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::StereoRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::StereoRecordingIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::StopPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::StopRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MicrophoneAudioCapturer,class streamer::renderer::audio::WasapiRenderer>::Terminate
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::ActiveAudioLayer
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::AttachAudioBuffer
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::AudioDeviceTemplate
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::BuiltInAECIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::BuiltInAGCIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::BuiltInNSIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::EnableBuiltInAEC
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::EnableBuiltInAGC
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::EnableBuiltInNS
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::Init
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::InitMicrophone
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::InitPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::InitRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::InitSpeaker
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::Initialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MaxMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MaxSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MicrophoneIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MicrophoneMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MicrophoneMuteIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MicrophoneVolumeIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MinMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::MinSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::Playing
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::PlayoutDevices
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::PlayoutIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::PlayoutIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::RecordingDevices
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::RecordingIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::RecordingIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetMicrophoneMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetPlayoutDevice
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetRecordingDevice
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetSpeakerMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetStereoPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SetStereoRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SpeakerIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SpeakerMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SpeakerMuteIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::SpeakerVolumeIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StartPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StartRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StereoPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StereoPlayoutIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StereoRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StereoRecordingIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StopPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::StopRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::VirtualMicrophoneRenderer>::Terminate
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::ActiveAudioLayer
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::AttachAudioBuffer
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::AudioDeviceTemplate
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::BuiltInAECIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::BuiltInAGCIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::BuiltInNSIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::EnableBuiltInAEC
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::EnableBuiltInAGC
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::EnableBuiltInNS
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::Init
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::InitMicrophone
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::InitPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::InitRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::InitSpeaker
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::Initialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::MaxMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::MaxSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::MicrophoneIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::MicrophoneMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::MicrophoneMuteIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::MicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::MicrophoneVolumeIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::MinMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::MinSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::Playing
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::PlayoutDevices
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::PlayoutIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::PlayoutIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::RecordingDevices
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::RecordingIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::RecordingIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::SetMicrophoneMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::SetMicrophoneVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::SetPlayoutDevice
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::SetRecordingDevice
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::SetSpeakerMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::SetSpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::SetStereoPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::SetStereoRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::SpeakerIsInitialized
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::SpeakerMute
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::SpeakerMuteIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::SpeakerVolume
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::SpeakerVolumeIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::StartPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::StartRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::StereoPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::StereoPlayoutIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::StereoRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::StereoRecordingIsAvailable
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::StopPlayout
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::StopRecording
+streamer::AudioDeviceTemplate<class streamer::capture::audio::MuMuAudioCapture,class streamer::renderer::audio::WasapiRenderer>::Terminate
+streamer::CoreAudioBase::DeviceName
+streamer::CoreAudioBase::SetDeviceInternal
+streamer::CoreAudioBase::SwitchDeviceIfNeeded
+streamer::capture::audio::DesktopAudioCapturer::DeviceName
+streamer::capture::audio::DesktopAudioCapturer::SetDevice
+streamer::capture::audio::MicrophoneAudioCapturer::DeviceName
+streamer::capture::audio::MicrophoneAudioCapturer::SetDevice
+streamer::capture::audio::MuMuAudioCapture::DeviceName
+streamer::capture::audio::MuMuAudioCapture::NumDevices
+streamer::capture::audio::MuMuAudioCapture::SetDevice
+streamer::renderer::audio::VirtualMicrophoneRenderer::DeviceName
+streamer::renderer::audio::VirtualMicrophoneRenderer::NumDevices
+streamer::renderer::audio::VirtualMicrophoneRenderer::SetDevice
+streamer::renderer::audio::WasapiRenderer::DeviceName
+streamer::renderer::audio::WasapiRenderer::SetDevice
+stun:
+stuns
+subscriber_relay_isp
+surface_ice_candidates_on_ice_transport_type_changed is ineffective since we do not gather continually.
+swap-chain returned a null back buffer after resize to {}x{}
+textNotice
+too many slice_header_extension_data_bytes
+turns
+turns:
+unexpected return(%d) from EncodeFrameInternal()!
+unique device identifier: device_id={},role={}
+unknown cipher returned
+unknown ice role, skip punching
+unset cur_pic_ptr on slice %d
+update mumu setting : {}x{} vendor:{} device:{} nt_handle :{}, rotation:{}, fps:{} pid:{}  index:{} chroma_sampling:{} codec_type:{}
+userNotice
+user_device_id
+value.sdsicert
+vc_delay_ice_answer_ms
+vc_delay_ice_connected_ms
+vc_delay_ice_offer_ms
+vc_delay_ice_set_ans_ms
+vc_delay_ice_set_off_ms
+vc_delay_ice_set_offer_ms
+vc_delay_ice_start_ms
+vendor {} device id {} adapter id {}
+viceH+
+video connect ICE timing create_pc={}, ice_start={}, ice_offer={}, ice_set_off={}, ice_answer={}, ice_set_answer={}, ice_connected={}
+video connect ICE timing create_pc={}, ice_start={}, ice_offer={}, ice_set_offer={}, ice_answer={} , ice_set_ans={}, ice_connected={}
+voice_info_by_receiver_ssrc_.count(receiver_info.ssrc()) == 0
+voice_info_by_sender_ssrc_.count(sender_info.ssrc()) == 0
+wYIcE
+whoami_geo_query service status={}
+wmavoice
+wrong cipher returned
+www.digicert.com1 0
+www.digicert.com1!0
+www.digicert.com1$0"
+{} display deice name {} != {} 
+{} has {} gpu devices
+~AudioDeviceModuleImpl

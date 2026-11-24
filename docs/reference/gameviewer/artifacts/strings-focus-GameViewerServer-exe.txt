@@ -1,0 +1,1907 @@
+        "feature": "device_gamepad",
+        "feature": "device_keyboard",
+        "feature": "device_lock",
+        "feature": "device_microphone",
+        "feature": "device_mouse",
+        "feature": "device_reboot",
+        "feature": "device_shutdown",
+        "feature": "device_task_manager",
+        "feature": "mouse_cursor",
+        "feature": "simulate_mouse",
+        "feature": "smart_mouse",
+        "feature": "virtual_mouse",
+        "feature": "voice_setting",
+    Signature Algorithm: 
+   Signature Algorithm: %s
+   Signature: %s
+ --uuyc-mux-attach-existing
+ --uuyc-mux-config 
+ --uuyc-mux-session 
+ -> device:
+ Can't back up over more bytes than were returned by the last call to Next().
+ NetEase Corporation. All rights reserved.
+ candidate_count=
+ candidate_type=
+ category=terminate code=
+ code=401 reason=device_locked
+ code=401 reason=device_not_logged_in
+ code=503 error=terminal_open_timeout
+ coordinate_type=
+ cursor_hidden=
+ destination=
+ deviceName:
+ device_count:
+ device_id:
+ device_id=
+ device_id_empty:
+ device_id_present=
+ device_name:
+ device_present=
+ device_string:
+ empty=
+ has_remote_device=
+ leave_on_with_mouse=
+ mouse_data=
+ mux_session=
+ native_height=
+ native_hotspot_x=
+ native_hotspot_y=
+ native_size_valid=
+ native_width=
+ new_device_present=
+ protocol="%ssignature";
+ reason=device_initialization_failed
+ return_value=
+ snapshot_empty:
+ system cursor for controlled mouse in privacy, ok=
+ terminate_code=
+ terminated=
+ user_device_id_present=
+ virtual_mouse_device=
+ virtual_path_indices:
+ | Get-NetAdapterPowerManagement | Where-Object { $_.AllowComputerToTurnOffDevice -ne 'Unsupported' }; $Adapter.AllowComputerToTurnOffDevice = 'Enabled'; $Adapter | Set-NetAdapterPowerManagement
+ | Select-Object -First 1 -ExpandProperty PnPDeviceID; Get-CimInstance -ClassName MSNdis_DeviceWakeOnMagicPacketOnly -Namespace root/wmi | Where-Object { $_.InstanceName -Match [regex]::escape($PnPDeviceID) } | Set-CimInstance -Property @{EnableWakeOnMagicPacketOnly=$true}
+ | Select-Object -First 1 -ExpandProperty PnPDeviceID; Get-CimInstance -ClassName MSPower_DeviceWakeEnable -Namespace root/wmi | Where-Object { $_.InstanceName -Match [regex]::escape($PnPDeviceID) } | Set-CimInstance -Property @{Enable=$True}
+ } | Select-Object -First 1 -ExpandProperty PnPDeviceID; Get-CimInstance -ClassName MSNdis_DeviceWakeOnMagicPacketOnly -Namespace root/wmi | Where-Object { $_.InstanceName -Match [regex]::escape($PnPDeviceID) } | Select-Object -ExpandProperty EnableWakeOnMagicPacketOnly
+" was listed twice.
+#FF_VIRTUAL_MOUSE_DEVICE_INIT_VERION
+#NetEase (Hangzhou) Network Co., Ltd0
+#NetEase (Hangzhou) Network Co., Ltd1,0*
+$0rpc $1($4.$2) returns ($5.$3)
+$PnPDeviceID = 
+$PnPDeviceID = Get-NetAdapter -Physical | Where-Object { $_.PhysicalMediaType -eq '802.3'
+$PnPDeviceID = Get-NetAdapter -Physical | Where-Object { $_.PhysicalMediaType -eq '802.3' 
+%*s<EMPTY>
+%*sSignature : 
+%*sUser Notice:
+%ViGEmBus.DeviceDesc%=ViGEmBus_Device, Nefarius\ViGEmBus\Gen1
+(Empty suboption?)
+(terminated by 
+, device_id=
+, return status not-run
+, sentry_version=7, sentry_client=sentry.native/0.5.0
+, turn_on=
+--candidate-type
+--uuyc-mux-config
+--uuyc-mux-session
+.?AV<lambda_1>@?1???0ApplicationManager@host@@QEAA@AEAVIActiveWindowObserver@foundation@@AEAVIRuntimeContext@4@AEAVIControlledConnection@4@AEAVIProductContext@4@AEAVISystemServices@4@UCallbacks@ActiveWindowStat@2@@Z@
+.?AV<lambda_1>@?1???0DisplayLayout@host@@QEAA@AEAVITaskRunner@thread_runtime@utils@@AEAVIConnectionAutoLockService@session_auth@business@2@AEAVCloudDisplayLimiter@video@82@AEAVPrivateScreenSettingManager@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z@
+.?AV<lambda_1>@?1???0VideoModule@video@business@host@@QEAA@AEAUBusinessContext@foundation@@AEAVBusinessModules@6@V?$shared_ptr@VAutoLockSettingManager@host@@@std@@V?$shared_ptr@VIConnectionAutoLockService@session_auth@business@host@@@9@_N@Z@
+.?AV<lambda_1>@?1???R0?1??handleManualLoginByMumuToken@ControlledSession@foundation@@AEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z@QEBA@W4DeviceInitResult@3@H@Z@
+.?AV<lambda_1>@?1???R0?1??handleManualLoginByQrCode@ControlledSession@foundation@@AEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0@Z@QEBA@W4DeviceInitResult@3@H@Z@
+.?AV<lambda_1>@?1???R0?1??handleManualLoginBySms@ControlledSession@foundation@@AEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@00@Z@QEBA@W4DeviceInitResult@3@H@Z@
+.?AV<lambda_1>@?1???R0?1??handleManualLoginByUUAccToken@ControlledSession@foundation@@AEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z@QEBA@W4DeviceInitResult@3@H@Z@
+.?AV<lambda_1>@?1???R0?1??handlePbCheckEnvReq@TerminalManager@terminal@business@host@@AEAAXUPbRequestContext@2345@@Z@QEAA@XZ@
+.?AV<lambda_1>@?1???R0?1??scheduleAutoStartDeviceInitRetry@ControlledSession@foundation@@AEAAXXZ@QEBA@XZ@
+.?AV<lambda_1>@?1???R<lambda_2>@?1??initDevice@DeviceInitializer@host@@AEAAXAEBV?$function@$$A6AXW4InitDeviceResult@host@@H@Z@std@@@Z@QEAA@AEBUInitDeviceResponse@business_api@shared@@@Z@
+.?AV<lambda_1>@?1???R<lambda_2>@?1??startReconnectWork@TerminalManager@terminal@business@host@@AEAAXIIPEAVTerminalSession@456@HH_NV?$time_point@Usteady_clock@chrono@std@@V?$duration@_JU?$ratio@$00$0DLJKMKAA@@std@@@23@@chrono@std@@@Z@QEAA@XZ@
+.?AV<lambda_1>@?1???R<lambda_3>@?2???R<lambda_7>@?DF@??handleFrameOpen@TerminalManager@terminal@business@host@@AEAAXIAEBUFrame@5shared@@_N1@Z@QEAA@XZ@QEBA@H@Z@
+.?AV<lambda_1>@?1???R<lambda_7>@?DF@??handleFrameOpen@TerminalManager@terminal@business@host@@AEAAXIAEBUFrame@4shared@@_N1@Z@QEAA@XZ@
+.?AV<lambda_1>@?1??bindDiskToDevice@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUBindDiskToDeviceResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??bootCheck@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??byRecommandation@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0V?$function@$$A6AXAEBUByRecommandationResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??cancelCloudDeviceBootFailedInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCancelCloudDeviceBootFailedInfoResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??cancelCloudDevicePersistenceConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUPersistenceConfig@34@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??cancelCloudDeviceScheduleShutdownConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUScheduleShutdownRequestConfig@34@AEBV?$function@$$A6AXAEBUCancelScheduleShutdownConfigResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??cancelPinDeviceApp@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AX$$QEAUPinApplicationResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??cancelQueueUpCloudDevice@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCancelQueueUpCloudDeviceResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??cancelRemoteAssist@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??cancelShareDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??cleanRoomByDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??clearRemoteAssistRecentSavedDevices@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??connectMyDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@_NAEBV?$function@$$A6AXAEBURoomResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??connectOtherDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUConnectOtherDeviceResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??createCloudPc@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBIAEBV?$function@$$A6AXAEBUCreateCloudPcResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??createGuestRoom@NrdDevice@business_api@shared@@QEAAX_JAEBV?$function@$$A6AXAEBURoomResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??createRoom@NrdDevice@business_api@shared@@QEAAX_JAEBV?$function@$$A6AXAEBURoomResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??deleteCloudPc@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUDeleteCloudPcResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??deleteDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@_NAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??deleteRemoteAssistSavedDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??destroyTerminalSessionAsync@?A0x0f61e48f@terminal@business@host@@YAXV?$unique_ptr@VTerminalSession@terminal@business@host@@U?$default_delete@VTerminalSession@terminal@business@host@@@std@@@std@@@Z@
+.?AV<lambda_1>@?1??doApplicationAction@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0HAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??doPinDeviceApp@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@00AEBV?$function@$$A6AX$$QEAUPinApplicationResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??ensureDeviceInitialized@ControlledSession@foundation@@AEAAX_NV?$function@$$A6AXW4DeviceInitResult@foundation@@H@Z@std@@@Z@
+.?AV<lambda_1>@?1??findWindowsTerminalSettingsPath@visible_mux_attach@terminal@business@host@@YA?AV?$optional@Vpath@filesystem@std@@@std@@PEAX@Z@
+.?AV<lambda_1>@?1??getAppCenterTicket@NrdCloudDevice@business_api@shared@@QEAAXAEBUAppCenterTicketRequestConfig@34@AEBV?$function@$$A6AXAEBUGetAppCenterTicketResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??getRouterInfo@NrdDevice@business_api@shared@@QEAAXAEBUUUBoxData@34@AEBV?$function@$$A6AXAEBURouterPluginInfo@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??getRouterWolSupport@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBURouterWolSupportInfo@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??getStreamingConfiguration@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$function@$$A6AXAEBUGetStreamingConfigurationResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??handleAutoStartDeviceInitRequest@ControlledSession@foundation@@AEAAXXZ@
+.?AV<lambda_1>@?1??handleMuxControlRequest@TerminalManager@terminal@business@host@@AEAA?AUResponse@mux_control@3shared@@AEBURequest@738@@Z@
+.?AV<lambda_1>@?1??handlePbCheckEnvReq@TerminalManager@terminal@business@host@@AEAAXUPbRequestContext@2345@@Z@
+.?AV<lambda_1>@?1??handlePbRenameSessionReq@TerminalManager@terminal@business@host@@AEAAXUPbRequestContext@2345@IV?$basic_string_view@DU?$char_traits@D@std@@@std@@@Z@
+.?AV<lambda_1>@?1??handleQuickLaunchScanRequest@AppsModule@apps@business@host@@AEAAXAEBVRequestHeader@gv_pb@@@Z@
+.?AV<lambda_1>@?1??handleRetryDeviceInitRequest@ControlledSession@foundation@@AEAAXXZ@
+.?AV<lambda_1>@?1??handleUnlockRequest@TerminalManager@terminal@business@host@@AEAAXIIAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z@
+.?AV<lambda_1>@?1??initCloudPc@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUInitCloudPcResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??initDevice@NrdDevice@business_api@shared@@QEAAXAEBUInitDeviceInfo@34@AEBV?$function@$$A6AXAEBUInitDeviceResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??killUuycMuxSession@TerminalSession@terminal@business@host@@AEAAXXZ@
+.?AV<lambda_1>@?1??lookupUuboxByUdp@@YA?AV?$optional@UUUBoxData@business_api@shared@@@std@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@3@@Z@
+.?AV<lambda_1>@?1??pluginNotifyMyDevice@NrdPlugin@business_api@shared@@QEAAXAEBUPluginNotifyMyDeviceRequestConfig@34@AEBV?$function@$$A6AXAEBUPluginNotifyMyDeviceResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??postRemoteAssistFavoriteSavedDevices@NrdDevice@business_api@shared@@QEAAXAEBV?$vector@URemoteAssistFavoriteUpsertItem@business_api@shared@@V?$allocator@URemoteAssistFavoriteUpsertItem@business_api@shared@@@std@@@std@@_NAEBV?$function@$$A6AXAEBURemoteAssistFavoriteUpsertResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??prepareUuycMuxConfig@?A0xcf1946dc@terminal@business@host@@YA_NPEAX_NAEAV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@AEAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@7@@Z@
+.?AV<lambda_1>@?1??queryActivatedAppsConfigure@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryActivatedAppsConfigureResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryAllDeviceList@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryDeviceListResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryCloudDeviceBootInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryCloudDeviceBootInfoResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryCloudDeviceCostInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryCloudDeviceCostInfoResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryCloudDeviceInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryCloudDeviceInfoResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryCloudDevicePersistenceConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUPersistenceConfig@34@AEBV?$function@$$A6AXAEBUQueryCloudDevicePersistenceConfigResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryCloudDeviceQueueUpInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUQueryCloudDeviceQueueUpInfoResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryCloudDeviceRootLaunchAppInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEAUQueryCloudDeviceRootLaunchAppInfoResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryCloudDeviceScheduleShutdownConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUScheduleShutdownRequestConfig@34@AEBV?$function@$$A6AXAEBUQueryScheduleShutdownConfigResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryCloudDisks@NrdCloudDevice@business_api@shared@@QEAAXAEBUQueryCloudDisksRequest@34@AEBV?$function@$$A6AXAEBUQueryCloudDisksResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryCloudPcDeviceList@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryCloudPcDeviceListResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryCloudPcDeviceListRaw@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryCloudPcFeatures@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryCloudPcFeaturesResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryCloudPcGoods@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryCloudPcGoodsResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryCloudPcNetworkSpeed@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryCloudPcNetworkSpeedResponse@business_api@shared@@@Z@std@@_N@Z@
+.?AV<lambda_1>@?1??queryControlledDeviceList@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryDeviceListResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryDeviceAppList@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@HAEBV?$function@$$A6AX$$QEAUQueryDeviceAppListResponse@business_api@shared@@@Z@6@_N@Z@
+.?AV<lambda_1>@?1??queryDeviceDetail@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryDeviceDetailResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryDeviceInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryDeviceInfoResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryDevicePinAppList@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@HAEBV?$function@$$A6AX$$QEAUQueryDeviceAppListResponse@business_api@shared@@@Z@6@_N@Z@
+.?AV<lambda_1>@?1??queryDevicePreferences@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryDevicePreferencesResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryDeviceShareInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUShareDeviceResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryIpInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEAUQueryIpInfoResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryJoinRoomByConfirm@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUConnectOtherDeviceResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryNotifyUploadLog@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryRelativeMouseReportBytes@?A0x80ed80e2@input@support@@YA?AV?$optional@G@std@@PEB_W@Z@
+.?AV<lambda_1>@?1??queryRemoteAssistSavedDevices@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBURemoteAssistSavedDeviceListResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryRemoteControlMode@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryControlModeResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryWhiteList@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUHttpResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryWhiteListUrl@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUHttpResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queueUpConfirmCloudDevice@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueueUpConfirmCloudDeviceResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??refetchCreateRoom@NrdDevice@business_api@shared@@QEAAX_JAEBV?$function@$$A6AXAEBURoomResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??refetchRoomToken@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUConnectOtherDeviceResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??refreshShareDeviceId@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUShareDeviceResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??renameCloudDisk@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBURenameCloudDiskBizResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??renameDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBURenameDeviceResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??renameUuycMuxWindow@terminal_session_runtime@terminal@business@host@@YA_NAEBUUuycMuxRenameTarget@2345@V?$basic_string_view@DU?$char_traits@D@std@@@std@@AEAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@8@@Z@
+.?AV<lambda_1>@?1??renderCursorToNativeBgra@CursorShapeHelper@input@business@host@@CA_NPEAUHICON__@@HHAEAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEA_N@Z@
+.?AV<lambda_1>@?1??reportDeviceAppStatus@NrdDevice@business_api@shared@@QEAAXAEBUReportDeviceAppStatusRequest@34@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??reportDeviceUpdatePrepare@NrdBusinessEntry@business_api@shared@@QEAAXXZ@
+.?AV<lambda_1>@?1??reportLanInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@00PEBUUUBoxData@34@AEBV?$function@$$A6AXAEBULanInfoResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??resetCloudDisk@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUResetCloudDiskBizResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??scanQuickLaunchItems@ApplicationManager@host@@QEAAXV?$function@$$A6AX_NV?$vector@UQuickLaunchScanItem@host@@V?$allocator@UQuickLaunchScanItem@host@@@std@@@std@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??scheduleAutoStartDeviceInitRetry@ControlledSession@foundation@@AEAAXXZ@
+.?AV<lambda_1>@?1??scheduleMuxControlRetry@TerminalManager@terminal@business@host@@AEAAXI_K@Z@
+.?AV<lambda_1>@?1??searchUdpBroadcast@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV23@@Z@
+.?AV<lambda_1>@?1??searchUdpH3c@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV23@@Z@
+.?AV<lambda_1>@?1??sendNotifyDeviceReboot@NrdBusinessEntry@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??sendWakingDevice@NrdBusinessEntry@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUWakeDeviceResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??setSupportRemoteBoot@NrdDevice@business_api@shared@@QEAAX_NAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??shareDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUShareDeviceResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??ssdpDiscover@@YA?AV?$vector@URouterInfo@@V?$allocator@URouterInfo@@@std@@@std@@H@Z@
+.?AV<lambda_1>@?1??startCloudDeviceScheduleShutdownConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUScheduleShutdownRequestConfig@34@AEBV?$function@$$A6AXAEBUStartScheduleShutdownConfigResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??startReconnectWork@TerminalManager@terminal@business@host@@AEAAXIIPEAVTerminalSession@345@HH_NV?$time_point@Usteady_clock@chrono@std@@V?$duration@_JU?$ratio@$00$0DLJKMKAA@@std@@@23@@chrono@std@@@Z@
+.?AV<lambda_1>@?1??turnOffCloudPc@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUTurnOffCloudPcResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??turnOnCloudPc@NrdCloudDevice@business_api@shared@@QEAAXAEBUTurnOnConfig@34@AEBV?$function@$$A6AXAEBUTurnOnCloudPcResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??updateCloudDevicePersistenceConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUPersistenceConfig@34@AEBV?$function@$$A6AXAEBUUpdateCloudDevicePersistenceConfigResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??updateCloudDeviceScheduleShutdownConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUScheduleShutdownRequestConfig@34@AEBV?$function@$$A6AXAEBUUpdateScheduleShutdownConfigResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??updateDevicePinAppList@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$vector@UDeviceAppId@business_api@shared@@V?$allocator@UDeviceAppId@business_api@shared@@@std@@@6@AEBV?$function@$$A6AX$$QEAUQueryDeviceAppListResponse@business_api@shared@@@Z@6@_N@Z@
+.?AV<lambda_1>@?1??updateDeviceToolOrder@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$vector@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$allocator@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@@6@AEBV?$function@$$A6AXAEBUUpdateDeviceToolOrderResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??uploadActivatedApps@NrdCloudDevice@business_api@shared@@QEAAXAEBUActivatedAppInfoList@34@AEBV?$function@$$A6AXAEBUUploadActivatedAppsResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??uploadCloudPcNetworkSpeedResult@NrdCloudDevice@business_api@shared@@QEAAXAEBUCloudPcNetworkSpeedResult@34@AEBV?$function@$$A6AXAEBUUploadCloudPcNetworkSpeedResultResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??uploadSign2@NrdDevice@business_api@shared@@QEAAX_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@1110AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??uploadWallpaper@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??verifyCatalogSignature@?A0x45601677@platform@@YA?AW4AuthenticodeError@3@AEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@Z@
+.?AV<lambda_1>@?1??writeUuycMuxConfig@?A0xcf1946dc@terminal@business@host@@YA_NAEBVpath@filesystem@std@@_NAEAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@8@@Z@
+.?AV<lambda_1>@?2???$makeVoidSignalCallback@VTerminalManager@terminal@business@host@@P81234@EAAXXZ@detail@utils@@YA?AV?$function@$$A6AXPEBX@Z@std@@PEAVTerminalManager@terminal@business@host@@P85678@EAAXXZ@Z@
+.?AV<lambda_1>@?2??startPluginCheckTimer@PluginManager@plugin_runtime@shared@@AEAAXXZ@
+.?AV<lambda_1>@?4??processDeviceInitCompleted@ControlledSession@foundation@@AEAAXW4DeviceInitResult@3@@Z@
+.?AV<lambda_1>@?7???R0?1??handlePbRenameSessionReq@TerminalManager@terminal@business@host@@AEAAXUPbRequestContext@2345@IV?$basic_string_view@DU?$char_traits@D@std@@@std@@@Z@QEAA@XZ@
+.?AV<lambda_1>@?7???R0?1??initDevice@DeviceInitializer@host@@AEAAXAEBV?$function@$$A6AXW4InitDeviceResult@host@@H@Z@std@@@Z@QEBA@AEBUInitDeviceResponse@business_api@shared@@@Z@
+.?AV<lambda_1>@?7??ensureInitialized@DeviceInitializer@host@@QEAAX_NV?$function@$$A6AXW4InitDeviceResult@host@@H@Z@std@@@Z@
+.?AV<lambda_2>@?1??findSupportedWindowsTerminal@visible_mux_attach@terminal@business@host@@YA?AV?$optional@V?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@PEAX@Z@
+.?AV<lambda_2>@?1??open@TerminalSession@terminal@business@host@@QEAA_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$basic_string_view@DU?$char_traits@D@std@@@7@HHK_N2V?$time_point@Usteady_clock@chrono@std@@V?$duration@_JU?$ratio@$00$0DLJKMKAA@@std@@@23@@chrono@7@AEBVTaskHandle@thread_runtime@utils@@AEAV67@2@Z@
+.?AV<lambda_2>@?1??renderCursorToNativeBgra@CursorShapeHelper@input@business@host@@CA_NPEAUHICON__@@HHAEAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEA_N@Z@
+.?AV<lambda_2>@?1??startReconnectWork@TerminalManager@terminal@business@host@@AEAAXIIPEAVTerminalSession@345@HH_NV?$time_point@Usteady_clock@chrono@std@@V?$duration@_JU?$ratio@$00$0DLJKMKAA@@std@@@23@@chrono@std@@@Z@
+.?AV<lambda_2>@?1??verifyCatalogSignature@?A0x45601677@platform@@YA?AW4AuthenticodeError@3@AEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@Z@
+.?AV<lambda_2>@?2???R<lambda_7>@?DF@??handleFrameOpen@TerminalManager@terminal@business@host@@AEAAXIAEBUFrame@4shared@@_N1@Z@QEAA@XZ@
+.?AV<lambda_2_>@?0???0KeyboardMouseRunner@host@@QEAA@PEAVIInputContext@foundation@@AEAVITaskRunner@thread_runtime@utils@@1_NAEAVIInputInjector@input@support@@V?$function@$$A6AXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryConfigureResponse@business_api@shared@@@Z@2@@Z@std@@@Z@
+.?AV<lambda_2_>@?0???0TerminalManager@terminal@business@host@@QEAA@AEAUBusinessContext@foundation@@AEAVISessionUnlockService@session_auth@34@@Z@
+.?AV<lambda_3>@?1??handleFrameOpen@TerminalManager@terminal@business@host@@AEAAXIAEBUFrame@3shared@@_N1@Z@
+.?AV<lambda_3>@?1??renderCursorToNativeBgra@CursorShapeHelper@input@business@host@@CA_NPEAUHICON__@@HHAEAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEA_N@Z@
+.?AV<lambda_3>@?1??reportPageView@reporting@shared@@YAXV?$basic_string_view@DU?$char_traits@D@std@@@std@@VReportFields@23@_N@Z@
+.?AV<lambda_3>@?2???R<lambda_7>@?DF@??handleFrameOpen@TerminalManager@terminal@business@host@@AEAAXIAEBUFrame@4shared@@_N1@Z@QEAA@XZ@
+.?AV<lambda_4>@?1???R<lambda_7>@?DF@??handleFrameOpen@TerminalManager@terminal@business@host@@AEAAXIAEBUFrame@4shared@@_N1@Z@QEAA@XZ@
+.?AV<lambda_6>@?DF@??handleFrameOpen@TerminalManager@terminal@business@host@@AEAAXIAEBUFrame@3shared@@_N1@Z@
+.?AV<lambda_7>@?DF@??handleFrameOpen@TerminalManager@terminal@business@host@@AEAAXIAEBUFrame@3shared@@_N1@Z@
+.?AV?$AlgorithmImpl@V?$ConcretePolicyHolder@VEmpty@CryptoPP@@V?$CFB_EncryptionTemplate@V?$AbstractPolicyHolder@VCFB_CipherAbstractPolicy@CryptoPP@@VCFB_ModePolicy@2@@CryptoPP@@@2@VCFB_CipherAbstractPolicy@2@@CryptoPP@@V?$CipherModeFinalTemplate_CipherHolder@V?$BlockCipherFinal@$0A@VEnc@?$MDC@VSHA1@CryptoPP@@@CryptoPP@@@CryptoPP@@V?$ConcretePolicyHolder@VEmpty@CryptoPP@@V?$CFB_EncryptionTemplate@V?$AbstractPolicyHolder@VCFB_CipherAbstractPolicy@CryptoPP@@VCFB_ModePolicy@2@@CryptoPP@@@2@VCFB_CipherAbstractPolicy@2@@2@@2@@CryptoPP@@
+.?AV?$AlgorithmImpl@V?$DL_SignerBase@UEC2NPoint@CryptoPP@@@CryptoPP@@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@2@@CryptoPP@@
+.?AV?$AlgorithmImpl@V?$DL_SignerBase@UECPPoint@CryptoPP@@@CryptoPP@@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@2@@CryptoPP@@
+.?AV?$AlgorithmImpl@V?$DL_VerifierBase@UEC2NPoint@CryptoPP@@@CryptoPP@@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@2@@CryptoPP@@
+.?AV?$AlgorithmImpl@V?$DL_VerifierBase@UECPPoint@CryptoPP@@@CryptoPP@@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@2@@CryptoPP@@
+.?AV?$AutoSignaling@V?$InputRejecting@VBufferedTransformation@CryptoPP@@@CryptoPP@@@CryptoPP@@
+.?AV?$AutoSignaling@VBufferedTransformation@CryptoPP@@@CryptoPP@@
+.?AV?$CipherModeFinalTemplate_CipherHolder@V?$BlockCipherFinal@$0A@VEnc@?$MDC@VSHA1@CryptoPP@@@CryptoPP@@@CryptoPP@@V?$ConcretePolicyHolder@VEmpty@CryptoPP@@V?$CFB_EncryptionTemplate@V?$AbstractPolicyHolder@VCFB_CipherAbstractPolicy@CryptoPP@@VCFB_ModePolicy@2@@CryptoPP@@@2@VCFB_CipherAbstractPolicy@2@@2@@CryptoPP@@
+.?AV?$CipherModeFinalTemplate_ExternalCipher@V?$ConcretePolicyHolder@VEmpty@CryptoPP@@V?$AdditiveCipherTemplate@V?$AbstractPolicyHolder@UAdditiveCipherAbstractPolicy@CryptoPP@@VCTR_ModePolicy@2@@CryptoPP@@@2@UAdditiveCipherAbstractPolicy@2@@CryptoPP@@@CryptoPP@@
+.?AV?$ConcretePolicyHolder@VEmpty@CryptoPP@@V?$AdditiveCipherTemplate@V?$AbstractPolicyHolder@UAdditiveCipherAbstractPolicy@CryptoPP@@VCTR_ModePolicy@2@@CryptoPP@@@2@UAdditiveCipherAbstractPolicy@2@@CryptoPP@@
+.?AV?$ConcretePolicyHolder@VEmpty@CryptoPP@@V?$CFB_EncryptionTemplate@V?$AbstractPolicyHolder@VCFB_CipherAbstractPolicy@CryptoPP@@VCFB_ModePolicy@2@@CryptoPP@@@2@VCFB_CipherAbstractPolicy@2@@CryptoPP@@
+.?AV?$DL_ElgamalLikeSignatureAlgorithm@UEC2NPoint@CryptoPP@@@CryptoPP@@
+.?AV?$DL_ElgamalLikeSignatureAlgorithm@UECPPoint@CryptoPP@@@CryptoPP@@
+.?AV?$DL_ElgamalLikeSignatureAlgorithm@VInteger@CryptoPP@@@CryptoPP@@
+.?AV?$DL_ObjectImpl@V?$DL_SignerBase@UEC2NPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_EC@VEC2N@CryptoPP@@@CryptoPP@@U?$ECDSA@VEC2N@CryptoPP@@VSHA256@2@@2@@2@@CryptoPP@@
+.?AV?$DL_ObjectImpl@V?$DL_SignerBase@UECPPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_EC@VECP@CryptoPP@@@CryptoPP@@U?$ECDSA@VECP@CryptoPP@@VSHA256@2@@2@@2@@CryptoPP@@
+.?AV?$DL_ObjectImpl@V?$DL_SignerBase@VInteger@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DSA2@VSHA1@CryptoPP@@@CryptoPP@@UDL_Keys_DSA@2@V?$DL_Algorithm_GDSA@VInteger@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA1@2@@2@V?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_GFP@VDL_GroupParameters_DSA@CryptoPP@@@CryptoPP@@V?$DSA2@VSHA1@CryptoPP@@@2@@2@@CryptoPP@@
+.?AV?$DL_ObjectImpl@V?$DL_VerifierBase@UEC2NPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PublicKey_EC@VEC2N@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_ObjectImpl@V?$DL_VerifierBase@UECPPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PublicKey_EC@VECP@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_ObjectImpl@V?$DL_VerifierBase@VInteger@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DSA2@VSHA1@CryptoPP@@@CryptoPP@@UDL_Keys_DSA@2@V?$DL_Algorithm_GDSA@VInteger@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA1@2@@2@V?$DL_PublicKey_GFP@VDL_GroupParameters_DSA@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_ObjectImplBase@V?$DL_SignerBase@UEC2NPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_EC@VEC2N@CryptoPP@@@CryptoPP@@U?$ECDSA@VEC2N@CryptoPP@@VSHA256@2@@2@@2@@CryptoPP@@
+.?AV?$DL_ObjectImplBase@V?$DL_SignerBase@UECPPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_EC@VECP@CryptoPP@@@CryptoPP@@U?$ECDSA@VECP@CryptoPP@@VSHA256@2@@2@@2@@CryptoPP@@
+.?AV?$DL_ObjectImplBase@V?$DL_SignerBase@VInteger@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DSA2@VSHA1@CryptoPP@@@CryptoPP@@UDL_Keys_DSA@2@V?$DL_Algorithm_GDSA@VInteger@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA1@2@@2@V?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_GFP@VDL_GroupParameters_DSA@CryptoPP@@@CryptoPP@@V?$DSA2@VSHA1@CryptoPP@@@2@@2@@CryptoPP@@
+.?AV?$DL_ObjectImplBase@V?$DL_VerifierBase@UEC2NPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PublicKey_EC@VEC2N@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_ObjectImplBase@V?$DL_VerifierBase@UECPPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PublicKey_EC@VECP@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_ObjectImplBase@V?$DL_VerifierBase@VInteger@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DSA2@VSHA1@CryptoPP@@@CryptoPP@@UDL_Keys_DSA@2@V?$DL_Algorithm_GDSA@VInteger@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA1@2@@2@V?$DL_PublicKey_GFP@VDL_GroupParameters_DSA@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_EC@VEC2N@CryptoPP@@@CryptoPP@@U?$ECDSA@VEC2N@CryptoPP@@VSHA256@2@@2@@CryptoPP@@
+.?AV?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_EC@VECP@CryptoPP@@@CryptoPP@@U?$ECDSA@VECP@CryptoPP@@VSHA256@2@@2@@CryptoPP@@
+.?AV?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_GFP@VDL_GroupParameters_DSA@CryptoPP@@@CryptoPP@@V?$DSA2@VSHA1@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignatureSchemeBase@VPK_Signer@CryptoPP@@V?$DL_PrivateKey@UEC2NPoint@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignatureSchemeBase@VPK_Signer@CryptoPP@@V?$DL_PrivateKey@UECPPoint@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignatureSchemeBase@VPK_Signer@CryptoPP@@V?$DL_PrivateKey@VInteger@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignatureSchemeBase@VPK_Verifier@CryptoPP@@V?$DL_PublicKey@UEC2NPoint@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignatureSchemeBase@VPK_Verifier@CryptoPP@@V?$DL_PublicKey@UECPPoint@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignatureSchemeBase@VPK_Verifier@CryptoPP@@V?$DL_PublicKey@VInteger@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignerImpl@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@CryptoPP@@@CryptoPP@@
+.?AV?$DL_SignerImpl@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@CryptoPP@@@CryptoPP@@
+.?AV?$DL_SignerImpl@U?$DL_SignatureSchemeOptions@V?$DSA2@VSHA1@CryptoPP@@@CryptoPP@@UDL_Keys_DSA@2@V?$DL_Algorithm_GDSA@VInteger@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA1@2@@CryptoPP@@@CryptoPP@@
+.?AV?$DL_VerifierImpl@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@CryptoPP@@@CryptoPP@@
+.?AV?$DL_VerifierImpl@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@CryptoPP@@@CryptoPP@@
+.?AV?$DL_VerifierImpl@U?$DL_SignatureSchemeOptions@V?$DSA2@VSHA1@CryptoPP@@@CryptoPP@@UDL_Keys_DSA@2@V?$DL_Algorithm_GDSA@VInteger@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA1@2@@CryptoPP@@@CryptoPP@@
+.?AV?$TF_Base@VRandomizedTrapdoorFunctionInverse@CryptoPP@@VPK_SignatureMessageEncodingMethod@2@@CryptoPP@@
+.?AV?$TF_Base@VTrapdoorFunction@CryptoPP@@VPK_SignatureMessageEncodingMethod@2@@CryptoPP@@
+.?AV?$TF_ObjectImpl@VTF_SignerBase@CryptoPP@@U?$TF_SignatureSchemeOptions@V?$TF_SS@URSA@CryptoPP@@UPKCS1v15@2@VSHA1@2@H@CryptoPP@@URSA@2@VPKCS1v15_SignatureMessageEncodingMethod@2@VSHA1@2@@2@VInvertibleRSAFunction@2@@CryptoPP@@
+.?AV?$TF_ObjectImpl@VTF_VerifierBase@CryptoPP@@U?$TF_SignatureSchemeOptions@V?$TF_SS@URSA@CryptoPP@@UPKCS1v15@2@VSHA1@2@H@CryptoPP@@URSA@2@VPKCS1v15_SignatureMessageEncodingMethod@2@VSHA1@2@@2@VRSAFunction@2@@CryptoPP@@
+.?AV?$TF_ObjectImplBase@VTF_SignerBase@CryptoPP@@U?$TF_SignatureSchemeOptions@V?$TF_SS@URSA@CryptoPP@@UPKCS1v15@2@VSHA1@2@H@CryptoPP@@URSA@2@VPKCS1v15_SignatureMessageEncodingMethod@2@VSHA1@2@@2@VInvertibleRSAFunction@2@@CryptoPP@@
+.?AV?$TF_ObjectImplBase@VTF_VerifierBase@CryptoPP@@U?$TF_SignatureSchemeOptions@V?$TF_SS@URSA@CryptoPP@@UPKCS1v15@2@VSHA1@2@H@CryptoPP@@URSA@2@VPKCS1v15_SignatureMessageEncodingMethod@2@VSHA1@2@@2@VRSAFunction@2@@CryptoPP@@
+.?AV?$TF_SignatureSchemeBase@VPK_Signer@CryptoPP@@V?$TF_Base@VRandomizedTrapdoorFunctionInverse@CryptoPP@@VPK_SignatureMessageEncodingMethod@2@@2@@CryptoPP@@
+.?AV?$TF_SignatureSchemeBase@VPK_Verifier@CryptoPP@@V?$TF_Base@VTrapdoorFunction@CryptoPP@@VPK_SignatureMessageEncodingMethod@2@@2@@CryptoPP@@
+.?AV?$TF_SignerImpl@U?$TF_SignatureSchemeOptions@V?$TF_SS@URSA@CryptoPP@@UPKCS1v15@2@VSHA1@2@H@CryptoPP@@URSA@2@VPKCS1v15_SignatureMessageEncodingMethod@2@VSHA1@2@@CryptoPP@@@CryptoPP@@
+.?AV?$TF_VerifierImpl@U?$TF_SignatureSchemeOptions@V?$TF_SS@URSA@CryptoPP@@UPKCS1v15@2@VSHA1@2@H@CryptoPP@@URSA@2@VPKCS1v15_SignatureMessageEncodingMethod@2@VSHA1@2@@CryptoPP@@@CryptoPP@@
+.?AV?$WeakCallback@V<lambda_1>@?1???R1?1???R1?4??onEventConnectStateChanged@KeyboardMouseRunner@host@@QEAAXAEA_N@Z@QEBA@XZ@QEBA@AEBUQueryConfigureResponse@business_api@shared@@@Z@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_1>@?1???R1?1??getRemoteDeiviceId@RemoteAssistCode@host@@AEAAXV?$function@$$A6AXXZ@std@@@Z@QEBA@AEBUShareDeviceResponse@business_api@shared@@@Z@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_1>@?1???R1?1??queryCloudDevicePinAppList@CloudDeviceAppManager@host@@QEAAXXZ@QEBA@$$QEAUQueryDeviceAppListResponse@business_api@shared@@@Z@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_1>@?1???R1?1??queryCloudDeviceRootLaunchAppInfo@CloudDeviceAppManager@host@@QEAAXXZ@QEBA@AEAUQueryCloudDeviceRootLaunchAppInfoResponse@business_api@shared@@@Z@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_1>@?1???R1?4??onEventConnectStateChanged@KeyboardMouseRunner@host@@QEAAXAEA_N@Z@QEBA@XZ@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_1>@?1???R<lambda_2>@?4??onEventConnectStateChanged@KeyboardMouseRunner@host@@QEAAXAEA_N@Z@QEBA@AEBUQueryConfigureResponse@business_api@shared@@@Z@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_1>@?1??getRemoteDeiviceId@RemoteAssistCode@host@@AEAAXV?$function@$$A6AXXZ@std@@@Z@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_1>@?1??handleControllerPayload@CloudDeviceModule@cloud_device@business@host@@AEAA_NHV?$basic_string_view@DU?$char_traits@D@std@@@std@@@Z@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_1>@?1??notifyServiceQuit@ServiceMonitor@foundation@@AEAAXPEBD@Z@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_1>@?1??onServiceQuit@SvrApplication@@AEAAXXZ@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_1>@?1??queryCloudDevicePinAppList@CloudDeviceAppManager@host@@QEAAXXZ@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_1>@?1??queryCloudDeviceRootLaunchAppInfo@CloudDeviceAppManager@host@@QEAAXXZ@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_1>@?1??startControlledMouseStreamerObservation@CursorArbitrator@input@business@host@@AEAAXXZ@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_1>@?4??onEventConnectStateChanged@KeyboardMouseRunner@host@@QEAAXAEA_N@Z@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_1>@?4??processQueryPinAppListError@CloudDeviceAppManager@host@@AEAAXAEBUQueryDeviceAppListResponse@business_api@shared@@@Z@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_2>@?1??initDevice@DeviceInitializer@host@@AEAAXAEBV?$function@$$A6AXW4InitDeviceResult@host@@H@Z@std@@@Z@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_2>@?4??onEventConnectStateChanged@KeyboardMouseRunner@host@@QEAAXAEA_N@Z@@detail@thread_runtime@utils@@
+.?AV?$_Associated_state@UResponse@mux_control@terminal@shared@@@std@@
+.?AV?$_Func_base@UResponse@mux_control@terminal@shared@@AEBURequest@234@@std@@
+.?AV?$_Func_base@X$$QEAUQueryDeviceAppListResponse@business_api@shared@@@std@@
+.?AV?$_Func_base@XAEAUQueryCloudDeviceRootLaunchAppInfoResponse@business_api@shared@@@std@@
+.?AV?$_Func_base@XAEBUInitDeviceResponse@business_api@shared@@@std@@
+.?AV?$_Func_base@XAEBUShareDeviceResponse@business_api@shared@@@std@@
+.?AV?$_Func_base@XPEAVIMuMuRomService@host@@@std@@
+.?AV?$_Func_base@XW4DeviceInitResult@foundation@@H@std@@
+.?AV?$_Func_base@XW4InitDeviceResult@host@@H@std@@
+.?AV?$_Func_base@X_NV?$map@V?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@UDeviceAppInfo@host@@U?$less@V?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@UDeviceAppInfo@host@@@std@@@2@@std@@@std@@
+.?AV?$_Func_base@X_NV?$vector@UQuickLaunchScanItem@host@@V?$allocator@UQuickLaunchScanItem@host@@@std@@@std@@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1???0ApplicationManager@host@@QEAA@AEAVIActiveWindowObserver@foundation@@AEAVIRuntimeContext@5@AEAVIControlledConnection@5@AEAVIProductContext@5@AEAVISystemServices@5@UCallbacks@ActiveWindowStat@3@@Z@XAEAVTimer@utils@@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1???0DisplayLayout@host@@QEAA@AEAVITaskRunner@thread_runtime@utils@@AEAVIConnectionAutoLockService@session_auth@business@3@AEAVCloudDisplayLimiter@video@93@AEAVPrivateScreenSettingManager@3@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z@XAEAVTimer@6@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1???0VideoModule@video@business@host@@QEAA@AEAUBusinessContext@foundation@@AEAVBusinessModules@7@V?$shared_ptr@VAutoLockSettingManager@host@@@std@@V?$shared_ptr@VIConnectionAutoLockService@session_auth@business@host@@@std@@_N@Z@X_N@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1???R1?1??handleManualLoginByMumuToken@ControlledSession@foundation@@AEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z@QEBA@W4DeviceInitResult@4@H@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1???R1?1??handleManualLoginByQrCode@ControlledSession@foundation@@AEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0@Z@QEBA@W4DeviceInitResult@4@H@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1???R1?1??handleManualLoginBySms@ControlledSession@foundation@@AEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@00@Z@QEBA@W4DeviceInitResult@4@H@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1???R1?1??handleManualLoginByUUAccToken@ControlledSession@foundation@@AEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z@QEBA@W4DeviceInitResult@4@H@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1???R1?1??handlePbCheckEnvReq@TerminalManager@terminal@business@host@@AEAAXUPbRequestContext@3456@@Z@QEAA@XZ@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1???R1?1??scheduleAutoLoginRetryIfNeeded@ControlledSession@foundation@@AEAAX_N@Z@QEBA@XZ@XW4DeviceInitResult@4@H@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1???R1?1??scheduleAutoStartDeviceInitRetry@ControlledSession@foundation@@AEAAXXZ@QEBA@XZ@XW4DeviceInitResult@4@H@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1???R<lambda_2>@?1??initDevice@DeviceInitializer@host@@AEAAXAEBV?$function@$$A6AXW4InitDeviceResult@host@@H@Z@std@@@Z@QEAA@AEBUInitDeviceResponse@business_api@shared@@@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1???R<lambda_2>@?1??startReconnectWork@TerminalManager@terminal@business@host@@AEAAXIIPEAVTerminalSession@567@HH_NV?$time_point@Usteady_clock@chrono@std@@V?$duration@_JU?$ratio@$00$0DLJKMKAA@@std@@@23@@chrono@std@@@Z@QEAA@XZ@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1???R<lambda_3>@?2???R<lambda_7>@?DF@??handleFrameOpen@TerminalManager@terminal@business@host@@AEAAXIAEBUFrame@6shared@@_N1@Z@QEAA@XZ@QEBA@H@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1???R<lambda_7>@?DF@??handleFrameOpen@TerminalManager@terminal@business@host@@AEAAXIAEBUFrame@5shared@@_N1@Z@QEAA@XZ@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??bindDiskToDevice@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUBindDiskToDeviceResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??bootCheck@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??byRecommandation@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0V?$function@$$A6AXAEBUByRecommandationResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??cancelCloudDeviceBootFailedInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCancelCloudDeviceBootFailedInfoResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??cancelCloudDevicePersistenceConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUPersistenceConfig@45@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??cancelCloudDeviceScheduleShutdownConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUScheduleShutdownRequestConfig@45@AEBV?$function@$$A6AXAEBUCancelScheduleShutdownConfigResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??cancelPinDeviceApp@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AX$$QEAUPinApplicationResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??cancelQueueUpCloudDevice@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCancelQueueUpCloudDeviceResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??cancelRemoteAssist@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??cancelShareDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??cleanRoomByDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??clearRemoteAssistRecentSavedDevices@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??composeMumuAndApps@ServerBusinessComposer@?A0xe661e708@business@host@@AEAAXXZ@XPEAVIMuMuRomService@6@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??connectMyDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@_NAEBV?$function@$$A6AXAEBURoomResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??connectOtherDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUConnectOtherDeviceResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??createCloudPc@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBIAEBV?$function@$$A6AXAEBUCreateCloudPcResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??createGuestRoom@NrdDevice@business_api@shared@@QEAAX_JAEBV?$function@$$A6AXAEBURoomResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??createRoom@NrdDevice@business_api@shared@@QEAAX_JAEBV?$function@$$A6AXAEBURoomResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??deleteCloudPc@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUDeleteCloudPcResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??deleteDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@_NAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??deleteRemoteAssistSavedDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??destroyTerminalSessionAsync@?A0x0f61e48f@terminal@business@host@@YAXV?$unique_ptr@VTerminalSession@terminal@business@host@@U?$default_delete@VTerminalSession@terminal@business@host@@@std@@@std@@@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??doApplicationAction@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0HAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??doPinDeviceApp@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@00AEBV?$function@$$A6AX$$QEAUPinApplicationResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??ensureDeviceInitialized@ControlledSession@foundation@@AEAAX_NV?$function@$$A6AXW4DeviceInitResult@foundation@@H@Z@std@@@Z@XW4InitDeviceResult@host@@H@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??findWindowsTerminalSettingsPath@visible_mux_attach@terminal@business@host@@YA?AV?$optional@Vpath@filesystem@std@@@std@@PEAX@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??getAppCenterTicket@NrdCloudDevice@business_api@shared@@QEAAXAEBUAppCenterTicketRequestConfig@45@AEBV?$function@$$A6AXAEBUGetAppCenterTicketResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??getRouterInfo@NrdDevice@business_api@shared@@QEAAXAEBUUUBoxData@45@AEBV?$function@$$A6AXAEBURouterPluginInfo@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??getRouterWolSupport@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBURouterWolSupportInfo@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??getStreamingConfiguration@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$function@$$A6AXAEBUGetStreamingConfigurationResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??handleAutoLoginRequest@ControlledSession@foundation@@AEAAXXZ@XW4DeviceInitResult@4@H@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??handleAutoStartDeviceInitRequest@ControlledSession@foundation@@AEAAXXZ@XW4DeviceInitResult@4@H@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??handleManualLoginByMumuToken@ControlledSession@foundation@@AEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z@XW4DeviceInitResult@4@H@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??handleManualLoginByQrCode@ControlledSession@foundation@@AEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0@Z@XW4DeviceInitResult@4@H@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??handleManualLoginBySms@ControlledSession@foundation@@AEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@00@Z@XW4DeviceInitResult@4@H@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??handleManualLoginByUUAccToken@ControlledSession@foundation@@AEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z@XW4DeviceInitResult@4@H@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??handleMuxControlRequest@TerminalManager@terminal@business@host@@AEAA?AUResponse@mux_control@4shared@@AEBURequest@849@@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??handlePbCheckEnvReq@TerminalManager@terminal@business@host@@AEAAXUPbRequestContext@3456@@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??handlePbRenameSessionReq@TerminalManager@terminal@business@host@@AEAAXUPbRequestContext@3456@IV?$basic_string_view@DU?$char_traits@D@std@@@std@@@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??handleQuickLaunchScanRequest@AppsModule@apps@business@host@@AEAAXAEBVRequestHeader@gv_pb@@@Z@X_NV?$vector@UQuickLaunchScanItem@host@@V?$allocator@UQuickLaunchScanItem@host@@@std@@@std@@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??handleRetryDeviceInitRequest@ControlledSession@foundation@@AEAAXXZ@XW4DeviceInitResult@4@H@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??handleUnlockRequest@TerminalManager@terminal@business@host@@AEAAXIIAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z@XAEAVTimer@utils@@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??initCloudPc@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUInitCloudPcResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??initDevice@NrdDevice@business_api@shared@@QEAAXAEBUInitDeviceInfo@45@AEBV?$function@$$A6AXAEBUInitDeviceResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??killUuycMuxSession@TerminalSession@terminal@business@host@@AEAAXXZ@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??lookupUuboxByUdp@@YA?AV?$optional@UUUBoxData@business_api@shared@@@std@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@4@@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??pluginNotifyMyDevice@NrdPlugin@business_api@shared@@QEAAXAEBUPluginNotifyMyDeviceRequestConfig@45@AEBV?$function@$$A6AXAEBUPluginNotifyMyDeviceResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??postRemoteAssistFavoriteSavedDevices@NrdDevice@business_api@shared@@QEAAXAEBV?$vector@URemoteAssistFavoriteUpsertItem@business_api@shared@@V?$allocator@URemoteAssistFavoriteUpsertItem@business_api@shared@@@std@@@std@@_NAEBV?$function@$$A6AXAEBURemoteAssistFavoriteUpsertResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??prepareUuycMuxConfig@?A0xcf1946dc@terminal@business@host@@YA_NPEAX_NAEAV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@AEAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@8@@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryActivatedAppsConfigure@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryActivatedAppsConfigureResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryAllDeviceList@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryDeviceListResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudDeviceBootInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryCloudDeviceBootInfoResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudDeviceCostInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryCloudDeviceCostInfoResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudDeviceInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryCloudDeviceInfoResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudDevicePersistenceConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUPersistenceConfig@45@AEBV?$function@$$A6AXAEBUQueryCloudDevicePersistenceConfigResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudDeviceQueueUpInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUQueryCloudDeviceQueueUpInfoResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudDeviceRootLaunchAppInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEAUQueryCloudDeviceRootLaunchAppInfoResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudDeviceScheduleShutdownConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUScheduleShutdownRequestConfig@45@AEBV?$function@$$A6AXAEBUQueryScheduleShutdownConfigResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudDisks@NrdCloudDevice@business_api@shared@@QEAAXAEBUQueryCloudDisksRequest@45@AEBV?$function@$$A6AXAEBUQueryCloudDisksResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudPcDeviceList@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryCloudPcDeviceListResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudPcDeviceListRaw@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudPcFeatures@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryCloudPcFeaturesResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudPcGoods@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryCloudPcGoodsResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudPcNetworkSpeed@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryCloudPcNetworkSpeedResponse@business_api@shared@@@Z@std@@_N@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryControlledDeviceList@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryDeviceListResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryDeviceAppList@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@HAEBV?$function@$$A6AX$$QEAUQueryDeviceAppListResponse@business_api@shared@@@Z@7@_N@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryDeviceDetail@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryDeviceDetailResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryDeviceInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryDeviceInfoResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryDevicePinAppList@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@HAEBV?$function@$$A6AX$$QEAUQueryDeviceAppListResponse@business_api@shared@@@Z@7@_N@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryDevicePreferences@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryDevicePreferencesResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryDeviceShareInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUShareDeviceResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryIpInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEAUQueryIpInfoResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryJoinRoomByConfirm@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUConnectOtherDeviceResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryNotifyUploadLog@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryRelativeMouseReportBytes@?A0x80ed80e2@input@support@@YA?AV?$optional@G@std@@PEB_W@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryRemoteAssistSavedDevices@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBURemoteAssistSavedDeviceListResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryRemoteControlMode@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryControlModeResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryWhiteList@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUHttpResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryWhiteListUrl@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUHttpResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queueUpConfirmCloudDevice@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueueUpConfirmCloudDeviceResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??refetchCreateRoom@NrdDevice@business_api@shared@@QEAAX_JAEBV?$function@$$A6AXAEBURoomResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??refetchRoomToken@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUConnectOtherDeviceResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??refreshShareDeviceId@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUShareDeviceResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??renameCloudDisk@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBURenameCloudDiskBizResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??renameDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBURenameDeviceResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??renameUuycMuxWindow@terminal_session_runtime@terminal@business@host@@YA_NAEBUUuycMuxRenameTarget@3456@V?$basic_string_view@DU?$char_traits@D@std@@@std@@AEAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@9@@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??renderCursorToNativeBgra@CursorShapeHelper@input@business@host@@CA_NPEAUHICON__@@HHAEAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEA_N@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??reportDeviceAppStatus@NrdDevice@business_api@shared@@QEAAXAEBUReportDeviceAppStatusRequest@45@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??reportDeviceUpdatePrepare@NrdBusinessEntry@business_api@shared@@QEAAXXZ@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??reportLanInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@00PEBUUUBoxData@45@AEBV?$function@$$A6AXAEBULanInfoResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??resetCloudDisk@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUResetCloudDiskBizResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??scanQuickLaunchItems@ApplicationManager@host@@QEAAXV?$function@$$A6AX_NV?$vector@UQuickLaunchScanItem@host@@V?$allocator@UQuickLaunchScanItem@host@@@std@@@std@@@Z@std@@@Z@X_NV?$map@V?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@UDeviceAppInfo@host@@U?$less@V?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@UDeviceAppInfo@host@@@std@@@2@@6@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??scheduleAutoStartDeviceInitRetry@ControlledSession@foundation@@AEAAXXZ@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??scheduleMuxControlRetry@TerminalManager@terminal@business@host@@AEAAXI_K@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??searchUdpBroadcast@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV34@@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??searchUdpH3c@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV34@@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??sendNotifyDeviceReboot@NrdBusinessEntry@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??sendWakingDevice@NrdBusinessEntry@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUWakeDeviceResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??setSupportRemoteBoot@NrdDevice@business_api@shared@@QEAAX_NAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??shareDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUShareDeviceResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??ssdpDiscover@@YA?AV?$vector@URouterInfo@@V?$allocator@URouterInfo@@@std@@@std@@H@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??startCloudDeviceScheduleShutdownConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUScheduleShutdownRequestConfig@45@AEBV?$function@$$A6AXAEBUStartScheduleShutdownConfigResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??startReconnectWork@TerminalManager@terminal@business@host@@AEAAXIIPEAVTerminalSession@456@HH_NV?$time_point@Usteady_clock@chrono@std@@V?$duration@_JU?$ratio@$00$0DLJKMKAA@@std@@@23@@chrono@std@@@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??turnOffCloudPc@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUTurnOffCloudPcResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??turnOnCloudPc@NrdCloudDevice@business_api@shared@@QEAAXAEBUTurnOnConfig@45@AEBV?$function@$$A6AXAEBUTurnOnCloudPcResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??updateCloudDevicePersistenceConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUPersistenceConfig@45@AEBV?$function@$$A6AXAEBUUpdateCloudDevicePersistenceConfigResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??updateCloudDeviceScheduleShutdownConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUScheduleShutdownRequestConfig@45@AEBV?$function@$$A6AXAEBUUpdateScheduleShutdownConfigResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??updateDevicePinAppList@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$vector@UDeviceAppId@business_api@shared@@V?$allocator@UDeviceAppId@business_api@shared@@@std@@@7@AEBV?$function@$$A6AX$$QEAUQueryDeviceAppListResponse@business_api@shared@@@Z@7@_N@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??updateDeviceToolOrder@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$vector@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$allocator@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@@7@AEBV?$function@$$A6AXAEBUUpdateDeviceToolOrderResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??uploadActivatedApps@NrdCloudDevice@business_api@shared@@QEAAXAEBUActivatedAppInfoList@45@AEBV?$function@$$A6AXAEBUUploadActivatedAppsResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??uploadCloudPcNetworkSpeedResult@NrdCloudDevice@business_api@shared@@QEAAXAEBUCloudPcNetworkSpeedResult@45@AEBV?$function@$$A6AXAEBUUploadCloudPcNetworkSpeedResultResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??uploadSign2@NrdDevice@business_api@shared@@QEAAX_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@1110AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??uploadWallpaper@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??verifyCatalogSignature@?A0x45601677@platform@@YA?AW4AuthenticodeError@4@AEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??writeUuycMuxConfig@?A0xcf1946dc@terminal@business@host@@YA_NAEBVpath@filesystem@std@@_NAEAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@9@@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?2???$makeVoidSignalCallback@VTerminalManager@terminal@business@host@@P81234@EAAXXZ@detail@utils@@YA?AV?$function@$$A6AXPEBX@Z@std@@PEAVTerminalManager@terminal@business@host@@P86789@EAAXXZ@Z@XPEBX@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?2??startPluginCheckTimer@PluginManager@plugin_runtime@shared@@AEAAXXZ@XAEAVTimer@utils@@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?4??processDeviceInitCompleted@ControlledSession@foundation@@AEAAXW4DeviceInitResult@4@@Z@X_N@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?7???R1?1??handlePbRenameSessionReq@TerminalManager@terminal@business@host@@AEAAXUPbRequestContext@3456@IV?$basic_string_view@DU?$char_traits@D@std@@@std@@@Z@QEAA@XZ@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?7???R1?1??initDevice@DeviceInitializer@host@@AEAAXAEBV?$function@$$A6AXW4InitDeviceResult@host@@H@Z@std@@@Z@QEBA@AEBUInitDeviceResponse@business_api@shared@@@Z@XW4InitDeviceResult@4@H@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?7??ensureInitialized@DeviceInitializer@host@@QEAAX_NV?$function@$$A6AXW4InitDeviceResult@host@@H@Z@std@@@Z@XW4InitDeviceResult@4@H@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_2>@?1??findSupportedWindowsTerminal@visible_mux_attach@terminal@business@host@@YA?AV?$optional@V?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@PEAX@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_2>@?1??open@TerminalSession@terminal@business@host@@QEAA_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$basic_string_view@DU?$char_traits@D@std@@@8@HHK_N2V?$time_point@Usteady_clock@chrono@std@@V?$duration@_JU?$ratio@$00$0DLJKMKAA@@std@@@23@@chrono@8@AEBVTaskHandle@thread_runtime@utils@@AEAV78@2@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_2>@?1??renderCursorToNativeBgra@CursorShapeHelper@input@business@host@@CA_NPEAUHICON__@@HHAEAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEA_N@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_2>@?1??startReconnectWork@TerminalManager@terminal@business@host@@AEAAXIIPEAVTerminalSession@456@HH_NV?$time_point@Usteady_clock@chrono@std@@V?$duration@_JU?$ratio@$00$0DLJKMKAA@@std@@@23@@chrono@std@@@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_2>@?1??verifyCatalogSignature@?A0x45601677@platform@@YA?AW4AuthenticodeError@4@AEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_2>@?2???R<lambda_7>@?DF@??handleFrameOpen@TerminalManager@terminal@business@host@@AEAAXIAEBUFrame@5shared@@_N1@Z@QEAA@XZ@_NIAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_2_>@?0???0KeyboardMouseRunner@host@@QEAA@PEAVIInputContext@foundation@@AEAVITaskRunner@thread_runtime@utils@@1_NAEAVIInputInjector@input@support@@V?$function@$$A6AXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryConfigureResponse@business_api@shared@@@Z@2@@Z@std@@@Z@XAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryConfigureResponse@business_api@shared@@@Z@std@@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_2_>@?0???0TerminalManager@terminal@business@host@@QEAA@AEAUBusinessContext@foundation@@AEAVISessionUnlockService@session_auth@45@@Z@UResponse@mux_control@3shared@@AEBURequest@mux_control@3shared@@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_3>@?1??handleFrameOpen@TerminalManager@terminal@business@host@@AEAAXIAEBUFrame@4shared@@_N1@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_3>@?1??renderCursorToNativeBgra@CursorShapeHelper@input@business@host@@CA_NPEAUHICON__@@HHAEAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEA_N@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_3>@?1??reportPageView@reporting@shared@@YAXV?$basic_string_view@DU?$char_traits@D@std@@@std@@VReportFields@34@_N@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_3>@?2???R<lambda_7>@?DF@??handleFrameOpen@TerminalManager@terminal@business@host@@AEAAXIAEBUFrame@5shared@@_N1@Z@QEAA@XZ@XH@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_4>@?1???R<lambda_7>@?DF@??handleFrameOpen@TerminalManager@terminal@business@host@@AEAAXIAEBUFrame@5shared@@_N1@Z@QEAA@XZ@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_6>@?DF@??handleFrameOpen@TerminalManager@terminal@business@host@@AEAAXIAEBUFrame@4shared@@_N1@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_7>@?DF@??handleFrameOpen@TerminalManager@terminal@business@host@@AEAAXIAEBUFrame@4shared@@_N1@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_1>@?1???R1?1???R1?4??onEventConnectStateChanged@KeyboardMouseRunner@host@@QEAAXAEA_N@Z@QEBA@XZ@QEBA@AEBUQueryConfigureResponse@business_api@shared@@@Z@@detail@thread_runtime@utils@@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_1>@?1???R1?1??getRemoteDeiviceId@RemoteAssistCode@host@@AEAAXV?$function@$$A6AXXZ@std@@@Z@QEBA@AEBUShareDeviceResponse@business_api@shared@@@Z@@detail@thread_runtime@utils@@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_1>@?1???R1?1??queryCloudDevicePinAppList@CloudDeviceAppManager@host@@QEAAXXZ@QEBA@$$QEAUQueryDeviceAppListResponse@business_api@shared@@@Z@@detail@thread_runtime@utils@@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_1>@?1???R1?1??queryCloudDeviceRootLaunchAppInfo@CloudDeviceAppManager@host@@QEAAXXZ@QEBA@AEAUQueryCloudDeviceRootLaunchAppInfoResponse@business_api@shared@@@Z@@detail@thread_runtime@utils@@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_1>@?1???R1?4??onEventConnectStateChanged@KeyboardMouseRunner@host@@QEAAXAEA_N@Z@QEBA@XZ@@detail@thread_runtime@utils@@XAEBUQueryConfigureResponse@business_api@shared@@@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_1>@?1???R<lambda_2>@?4??onEventConnectStateChanged@KeyboardMouseRunner@host@@QEAAXAEA_N@Z@QEBA@AEBUQueryConfigureResponse@business_api@shared@@@Z@@detail@thread_runtime@utils@@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_1>@?1??getRemoteDeiviceId@RemoteAssistCode@host@@AEAAXV?$function@$$A6AXXZ@std@@@Z@@detail@thread_runtime@utils@@XAEBUShareDeviceResponse@business_api@shared@@@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_1>@?1??handleControllerPayload@CloudDeviceModule@cloud_device@business@host@@AEAA_NHV?$basic_string_view@DU?$char_traits@D@std@@@std@@@Z@@detail@thread_runtime@utils@@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_1>@?1??notifyServiceQuit@ServiceMonitor@foundation@@AEAAXPEBD@Z@@detail@thread_runtime@utils@@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_1>@?1??onServiceQuit@SvrApplication@@AEAAXXZ@@detail@thread_runtime@utils@@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_1>@?1??queryCloudDevicePinAppList@CloudDeviceAppManager@host@@QEAAXXZ@@detail@thread_runtime@utils@@X$$QEAUQueryDeviceAppListResponse@business_api@shared@@@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_1>@?1??queryCloudDeviceRootLaunchAppInfo@CloudDeviceAppManager@host@@QEAAXXZ@@detail@thread_runtime@utils@@XAEAUQueryCloudDeviceRootLaunchAppInfoResponse@business_api@shared@@@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_1>@?1??startControlledMouseStreamerObservation@CursorArbitrator@input@business@host@@AEAAXXZ@@detail@thread_runtime@utils@@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_1>@?4??onEventConnectStateChanged@KeyboardMouseRunner@host@@QEAAXAEA_N@Z@@detail@thread_runtime@utils@@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_1>@?4??processQueryPinAppListError@CloudDeviceAppManager@host@@AEAAXAEBUQueryDeviceAppListResponse@business_api@shared@@@Z@@detail@thread_runtime@utils@@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_2>@?1??ensureLegacyHistoryLoaded@ApplicationManager@host@@QEAAXV?$function@$$A6AX_N@Z@std@@@Z@@detail@thread_runtime@utils@@X$$QEAUQueryDeviceAppListResponse@business_api@shared@@@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_2>@?1??initDevice@DeviceInitializer@host@@AEAAXAEBV?$function@$$A6AXW4InitDeviceResult@host@@H@Z@std@@@Z@@detail@thread_runtime@utils@@XAEBUInitDeviceResponse@business_api@shared@@@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_2>@?4??onEventConnectStateChanged@KeyboardMouseRunner@host@@QEAAXAEA_N@Z@@detail@thread_runtime@utils@@XAEBUQueryConfigureResponse@business_api@shared@@@std@@
+.?AV?$_Ref_count@VAttempt@VisibleAttachIpcServer@terminal@business@host@@@std@@
+.?AV?$_Ref_count_obj2@UOpenWork@TerminalManager@terminal@business@host@@@std@@
+.?AV?$_Ref_count_obj2@UReconnectWork@TerminalManager@terminal@business@host@@@std@@
+.?AV?$_Ref_count_obj2@URuntimeCleanupState@?A0x0f61e48f@terminal@business@host@@@std@@
+.?AV?$_Ref_count_obj2@V?$promise@UResponse@mux_control@terminal@shared@@@std@@@std@@
+.?AV?$_Ref_count_obj2@VConnectionAutoLockService@session_auth@business@host@@@std@@
+.?AV?$_Ref_count_obj2@VTerminalMuxControlServer@terminal@business@host@@@std@@
+.?AV?$_Ref_count_obj2@VVisibleAttachIpcServer@terminal@business@host@@@std@@
+.?AVCloudDeviceModule@cloud_device@business@host@@
+.?AVConcatenatingInputStream@io@protobuf@google@@
+.?AVConnectionAutoLockService@session_auth@business@host@@
+.?AVDL_SignatureMessageEncodingMethod_DSA@CryptoPP@@
+.?AVDeterministicSignatureAlgorithm@CryptoPP@@
+.?AVEclockcpuExc@Iex_3_2@@
+.?AVEemptyExc@Iex_3_2@@
+.?AVEhostunreachExc@Iex_3_2@@
+.?AVEmpty@CryptoPP@@
+.?AVEnotemptyExc@Iex_3_2@@
+.?AVEunatchExc@Iex_3_2@@
+.?AVIConnectionAutoLockService@session_auth@business@host@@
+.?AVILocalServerServices@foundation@@
+.?AVIMuMuRomService@host@@
+.?AVIRoomServices@foundation@@
+.?AVIServiceMonitor@foundation@@
+.?AVISessionUnlockService@session_auth@business@host@@
+.?AVIStreamingServices@foundation@@
+.?AVISystemServices@foundation@@
+.?AVImeCandidateHider@host@@
+.?AVInvalidDataFormat@CryptoPP@@
+.?AVInvalidDerivedKeyLength@CryptoPP@@
+.?AVInvalidKeyLength@PK_SignatureScheme@CryptoPP@@
+.?AVKeyTooShort@PK_SignatureScheme@CryptoPP@@
+.?AVLaunchCloudPcApp@gv_pb@@
+.?AVLocalServerServices@ServerFoundations@foundation@@
+.?AVLogicExc@Iex_3_2@@
+.?AVPKCS1v15_SignatureMessageEncodingMethod@CryptoPP@@
+.?AVPK_DeterministicSignatureMessageEncodingMethod@CryptoPP@@
+.?AVPK_SignatureMessageEncodingMethod@CryptoPP@@
+.?AVPK_SignatureScheme@CryptoPP@@
+.?AVQuickLaunchAppIconRequest@gv_pb@@
+.?AVQuickLaunchAppIconResponse@gv_pb@@
+.?AVQuickLaunchAppItem@gv_pb@@
+.?AVQuickLaunchScanRequest@gv_pb@@
+.?AVQuickLaunchScanResponse@gv_pb@@
+.?AVServiceDescriptorProto@protobuf@google@@
+.?AVServiceMonitor@foundation@@
+.?AVServiceOptions@protobuf@google@@
+.?AVSignatureVerificationFailed@SignatureVerificationFilter@CryptoPP@@
+.?AVSignatureVerificationFilter@CryptoPP@@
+.?AVSystemServices@foundation@@
+.?AVTerminalModule@terminal@business@host@@
+.?AVTerminalSessionChanged@gv_pb@@
+.?AVVirtualMouseSwitchRequest@gv_pb@@
+.?AVVirtualMouseSwitchResponse@gv_pb@@
+.P8TerminalManager@terminal@business@host@@EAAXXZ
+.google.protobuf.ServiceOptions"
+.gv_pb.LaunchCloudPcAppH
+.gv_pb.QuickLaunchAppItem",
+.gv_pb.QuickLaunchScanRequestH
+.gv_pb.QuickLaunchScanResponseH
+.gv_pb.TerminalSessionChangedH
+.sentry-native
+/api/system/deviceinfo
+/api/system/deviceinfoex
+/api/v1/app/%s/of/device/%s/action
+/api/v1/app/%s/of/device/%s/pin
+/api/v1/app/cpc_device/preinstall/configure
+/api/v1/app/list/of/cpc_device
+/api/v1/app/list/of/cpc_device/activated_apps
+/api/v1/app/list/of/current_device/status
+/api/v1/app/list/of/device
+/api/v1/app/pin/of/cpc_device
+/api/v1/app/pin/of/cpc_device/%s/by_recommendation
+/api/v1/app/pin/of/device
+/api/v1/cloud_pc/devices/%s/bind
+/api/v1/device
+/api/v1/device/%s
+/api/v1/device/%s/detail
+/api/v1/device/%s/preferences
+/api/v1/device/%s/preferences/tools
+/api/v1/device/%s/reboot
+/api/v1/device/%s/screensaver
+/api/v1/device/%s/screensaver/custom
+/api/v1/device/%s/screensaver/detail
+/api/v1/device/%s/unbind
+/api/v1/device/%s/wake_on_lan/req
+/api/v1/device/cloud_pc/%s
+/api/v1/device/cloud_pc/%s/cost_info
+/api/v1/device/cloud_pc/list
+/api/v1/device/controllable
+/api/v1/device/groups/of/my
+/api/v1/device/list
+/api/v1/device/router_wol_support
+/api/v1/device/set_support_wol
+/api/v1/device/share/%s/unbind
+/api/v1/device/share/cancel
+/api/v1/device/share/info
+/api/v1/device/share/info/refresh_id
+/api/v1/device/share/saved
+/api/v1/device/update/prepare
+/api/v1/device/uu_router_info
+/api/v1/device/wallpaper
+/api/v1/device/windows/init
+/api/v1/room/clear/by_device/
+/api/v1/room/join/by_device
+/api/v1/room/notify/user_device/upload_log
+/minidump/?sentry_client=sentry.native/0.5.0&sentry_key=
+2 .gv_pb.QuickLaunchAppIconRequestH
+2 .gv_pb.VirtualMouseSwitchRequestH
+2 2 2 2!2!2"2"2"2#2#2$2$2%2%2%2&2&2'2'2'2(2(2)2)2)2*2*2+2+2,2,2,2-2-2.2.2.2/2/202020212122222223232424252525262627272728282929292:2:2;2;2;2<2<2=2=2=2>2>2?2?2?2@2@2A2A2A2B2B2C2C2C2D2D2E2E2E2F2F2G2G2G2H2H2I2I2I2J2J2K2K2K2L2L2M2M2M2N2N2O2O2O2P2P2Q2Q2Q2R2R2S2S2S2T2T2U2U2U2V2V2W2W2W2X2X2Y2Y2Y2Z2Z2[2[2[2\2\2]2]2]2^2^2_2_2_2`2`2a2a2a2b2b2b2c2c2d2d2d2e2e2f2f2f2g2g2h2h2h2i2i2j2j2j2k2k2k2l2l2m2m2m2n2n2o2o2o2p2p2q2q2q2r2r2s2s2s2t2t2t2u2u2v2v2v2w2w2x2x2x2y2y2y2z2z2{2{2{2|2|2}2}2}2~2~2
+2!.gv_pb.QuickLaunchAppIconResponseH
+2!.gv_pb.VirtualMouseSwitchResponseH
+2'.google.protobuf.ServiceDescriptorProto
+2DigiCert SHA256 RSA4096 Timestamp Responder 2026 10
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0 
+4http://crl3.digicert.com/DigiCertAssuredIDRootCA.crl0
+5http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C
+7http://cacerts.digicert.com/DigiCertAssuredIDRootCA.crt0E
+8DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1
+8DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA10
+8DigiCert Trusted G4 TimeStamping RSA4096 SHA256 2025 CA1
+8DigiCert Trusted G4 TimeStamping RSA4096 SHA256 2025 CA10
+; -------------- ViGEmBus driver install sections
+; 1. Redistributions of source code must retain the above copyright notice, this
+; 2. Redistributions in binary form must reproduce the above copyright notice,
+; BSD 3-Clause License
+; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+;--- ViGEmBus_Device Coinstaller installation ------
+;-------------- Service installation
+;sdPCtn
+<EMPTY>
+<empty>
+?_Random_device@std@@YAIXZ
+@0IcExD
+AFIlluminator
+ASIdentifierChoice
+ASIdentifierChoice_canonize
+ASIdentifierChoice_is_canonical
+Accept: application/sdp
+AddReg=ViGEmBus_Device_CoInstaller_AddReg
+AddService = ViGEmBus,%SPSVCINST_ASSOCSERVICE%, ViGEmBus_Service_Inst
+An authentication function returned an error
+Authorization: %s4-HMAC-SHA256 Credential=%s/%s, SignedHeaders=%s, Signature=%s
+BN_mod_lshift_quick
+Bearing of destination
+CHECK failed: ((lhs_donated_array[0] & 0x1u) == 0) == ((rhs_donated_array[0] & 0x1u) == 0): 
+CHECK failed: (count) <= (last_returned_size_): 
+CHECK failed: (last_returned_size_) > (0): 
+CHECK failed: field->cpp_type() == cpp_type || (field->cpp_type() == FieldDescriptor::CPPTYPE_ENUM && cpp_type == FieldDescriptor::CPPTYPE_INT32): 
+CMS_CertificateChoices
+CMS_OriginatorIdentifierOrKey
+CMS_OriginatorInfo
+CMS_OriginatorPublicKey
+CMS_RevocationInfoChoice
+CM_Get_Device_IDW
+CM_Get_Device_Interface_ListW
+CM_Get_Device_Interface_List_SizeW
+CM_Get_Device_Interface_PropertyW
+CPPTYPE_BOOL
+CPPTYPE_DOUBLE
+CPPTYPE_ENUM
+CPPTYPE_FLOAT
+CPPTYPE_INT32
+CPPTYPE_INT64
+CPPTYPE_MESSAGE
+CPPTYPE_STRING
+CPPTYPE_UINT32
+CPPTYPE_UINT64
+CT_QUICKLAUNCH
+CT_TERMINAL
+Cannot find frame buffer slice "
+Cannot pause RTP
+Cannot write a 0 size RTP packet.
+CatalogFile=ViGEmBus.cat
+CloseServiceHandle
+CloudDeviceAppManager::launchApp
+Component %d is mapped twice.
+Content-Type: %ssignature;
+Content-Type: application/sdp
+ControlService
+CopyFiles=ViGEmBus_Device_CoInstaller_CopyFiles
+Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc.
+Copyright Notice
+CopyrightNotice
+Could not set TCP_NODELAY: %s
+Ctrl/Provision WAP Termination
+CurrentService
+CustDeviceType
+D$ sdPC
+D$(sdPCH
+D$0sdPCH
+D$ptype
+D9yptYI;
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\client\crash_report_database_win.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\client\crashpad_client_win.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\client\prune_crash_reports.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\client\settings.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\third_party\mini_chromium\mini_chromium\base\rand_util.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\file\directory_reader_win.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\file\file_io.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\file\file_io_win.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\file\file_reader.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\file\file_writer.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\file\filesystem_win.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\win\critical_section_with_debug_info.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\win\initial_client_data.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\win\process_info.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\win\registration_protocol_win.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\win\scoped_handle.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\win\scoped_local_alloc.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\win\scoped_process_suspend.cc
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\apps\quick_launch_app_cache_store.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\cloud_device\cloud_device_app_manager.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\cloud_device\cloud_device_module.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\input\keyboard_mouse_runner.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\input\mouse\cursor_arbitrator.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\input\mouse\cursor_capture_module.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\input\mouse\cursor_shape_helper.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\input\mouse\cursor_state_sender.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\input\mouse\virtual_mouse_switch_setting_manager.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\port_mapping\port_mapping_service.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\session_auth\connection_auto_lock_service.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\terminal\terminal_manager.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\terminal\terminal_mux_control_server.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\terminal\terminal_output_delivery.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\terminal\terminal_session.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\terminal\visible_attach_ipc_server.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\terminal\visible_mux_attach.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\video\display\features\privacy_screen\ime_candidate_window_hider.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\foundation\session\controlled_session_services.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\foundation\session\device_initializer.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\foundation\system\service_monitor.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\support\display\virtual_display_device.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\support\geometry\coordinate_converter.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\shared\business\business_api\nrd_cloud_device.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\shared\business\business_api\nrd_device.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\shared\business\business_api\service_util.cpp
+DE TERMINAL
+DIGEST-MD5 handshake failure (empty challenge message)
+DL_ElgamalLikeSignatureAlgorithm: this signature scheme does not support message recovery
+DL_VerifierBase: signature length is not valid.
+DeleteService
+Denominator
+DestinationCity
+DestinationCityCode
+DestinationDST
+Device settings description
+DeviceInfo
+DeviceInfoEx
+DeviceIoControl
+DeviceIoControl success retries:
+DeviceSettingDescription
+DeviceWakeEnable is not enabled
+DigiCert Assured ID Root CA0
+DigiCert Inc1
+DigiCert Trusted Root G40
+DigiCert, Inc.1;09
+DigiCert, Inc.1A0?
+Digital Signature
+DiskName = "Nefarius ViGEmBus Installation Disk"
+DisplayConfigGetDeviceInfo
+DisplayConfigGetDeviceInfo friendly name failed res:
+DisplayConfigGetDeviceInfo name failed res:
+DisplayConfigGetDeviceInfo scale failed res:
+DisplayConfigSetDeviceInfo
+DisplayName    = %ViGEmBus.SVCDESC%
+Distance to destination
+EC_KEY_set_public_key_affine_coordinates
+EC_POINT_get_Jprojective_coordinates_GFp
+EC_POINT_get_affine_coordinates
+EC_POINT_get_affine_coordinates_GF2m
+EC_POINT_get_affine_coordinates_GFp
+EC_POINT_set_Jprojective_coordinates_GFp
+EC_POINT_set_affine_coordinates
+EC_POINT_set_affine_coordinates_GF2m
+EC_POINT_set_affine_coordinates_GFp
+EC_POINT_set_compressed_coordinates
+EC_POINT_set_compressed_coordinates_GF2m
+EC_POINT_set_compressed_coordinates_GFp
+Empty JPEG image (DNL not supported)
+Empty SOT marker detected: Psot=%d.
+Empty directory path
+Empty input file
+Empty reply from server
+EnumDisplayDevicesW
+EnumDisplaySetting failed, device_index=
+Error reading SPCod SPCoc element, Invalid cblkw/cblkh combination
+Error with FTYP signature Box size
+Error with JP Signature : bad magic number
+Error with JP signature Box size
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+Exception during signature verification: 
+Exec mouse move, But max_rect empty
+Exec mouse move, But screen empty
+Extension factory's GetPrototype() returned nullptr; extension: 
+FF_VIRTUAL_MOUSE_DEVICE_UNKNOWN
+Failed to create device enumerator
+Failed to create empty mux object
+Failed to create mux object from file
+Failed to get default audio device
+Failed to parse UDP JSON response
+Failed to parse UDP broadcast response
+Failed to query DeviceWakeEnable. Treat it as enabled.
+Failed to query DeviceWakeOnMagicPacketOnly. Treat it as enabled.
+Failed writing RTP data
+Failure writing output to destination
+Files with optimize_for = LITE_RUNTIME cannot define services unless you set both options cc_generic_services and java_generic_services to false.
+FlashDevice
+Forbidden
+Found pending candidate for reuse and CURLOPT_PIPEWAIT is set
+Frame buffer slice name cannot be an empty string.
+GSSAPI handshake failure (empty challenge message)
+GSSAPI handshake failure (empty security message)
+GameViewerService
+GameViewerService.exe
+GetDeviceCaps
+GetExtendedTcpTable
+GetNativeSystemInfo
+Got an RTP Receive with a CSeq of %ld
+HidD_FreePreparsedData
+HidD_GetFeature
+HidD_GetHidGuid
+HidD_GetPreparsedData
+HiddenWindow
+ICC or token signature
+INVALID_CPPTYPE
+IPAddressChoice
+Image attribute name cannot be an empty string.
+Image channel name cannot be an empty string.
+Image coordinates above INT_MAX are not supported
+ImeCandidateHider
+ImpersonateLoggedOnUser
+Index out-of-bounds (field is empty).
+Interlace handling should be turned on when using png_read_image
+International Organizations
+Invalid base pointer, please set a proper sample count slice.
+Invalid color type/bit depth combination in IHDR
+Invalid signature
+Invalid wire type for CPPTYPE_INT32: 
+Invalid wire type for CPPTYPE_INT64: 
+Invalid wire type for CPPTYPE_MESSAGE: 
+Invalid wire type for CPPTYPE_UINT32: 
+Invalid wire type for CPPTYPE_UINT64: 
+JSON combination key item is not an object
+Key type: 1=AT_KEYEXCHANGE (default), 2=AT_SIGNATURE
+KmdfService =  ViGEmBus, ViGEmBus_wdfsect
+LZWDecode: Strip %u not terminated with EOI code
+Latitude of destination
+LaunchCloudPcApp
+LeaveOnWithMouse
+Level coordinate (
+Longitude of destination
+MAN: "ssdp:discover"
+Malformed JP2 file format: first box must be JPEG 2000 signature box
+Mhttp://crl3.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0S
+Mhttp://crl4.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0
+Microsoft/Windows Terminal/settings.json
+Missing or empty channel list in header
+MuMuManager get_player_instance returned non-zero exit code:
+MuMuNxDevice.exe
+Multiple Choices
+NOTICEREF
+NTLM handshake failure (empty type-2 message)
+Named color devicelink
+Need destination address
+Nefarius\ViGEmBus\Gen1
+NetEase
+NetEase (Hangzhou) Network Co., Ltd
+NetEase.uuyc
+Netease
+Nhttp://crl3.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crl0 
+No decoded area parameters, set the decoded area to the whole image
+No frame buffer specified as pixel data destination.
+No frame buffer was specified as the pixel data destination for image file "
+No signature found
+Not empty
+OCSP Service Locator
+OCSP_SERVICELOC
+OCSP_SIGNATURE
+OpenServiceW
+Originating Program
+OriginatingProgram
+P P P P P P P P P!P!P!P!P!P!P!P!P"P"P"P"P"P"P"P"P#P#P#P#P#P#P#P#P$P$P$P$P$P$P$P%P%P%P%P%P%P%P%P&P&P&P&P&P&P&P&P'P'P'P'P'P'P'P'P(P(P(P(P(P(P(P(P)P)P)P)P)P*P*P*P*P+P+P+P+P,P,P,P,P-P-P-P-P.P.P.P.P/P/P/P/P0P0P0P0P1P1P1P1P2P2P2P2P2P3P3P3P3P4P4P4P4P5P5P5P5P6P6P6P6P7P7P7P7P7P8P8P8P8P9P9P9P9P:P:P:P:P;P;P;P;P;P<P<P<P<P=P=P=P=P>P>P>P>P>P?P?P?P?P@P@P@P@PAPAPAPAPAPBPBPBPBPCPCPCPCPCPDPDPDPDPEPEPEPEPEPFPFPFPFPGPGPGPGPGPHPHPHPHPIPIPIPIPIPJPJPJPJPKPKPKPKPKPLPLPLPLPMPMPMPMPMPNPNPNPNPNPOPOPOPOPPPPPPPPPPPQPQPQPQPQPRPRPRPRPSPSPSPSPSPTPTPTPTPTPUPUPUPUPVPVPVPVPVPWPWPWPWPWPXPXPXPXPXPYPYPYPYPYPZPZPZPZPZP[P[P[P[P\P\P\P\P\P]P]P]P]P]P^P^P^P^P^P_P_P_P_P_P`P`P`P`P`PaPaPaPaPaPbPbPbPbPbPcPcPcPcPcPdPdPdPdPdPePePePePePfPfPfPfPfPgPgPgPgPgPhPhPhPhPhPiPiPiPiPiPiPjPjPjPjPjPkPkPkPkPkPlPlPlPlPlPmPmPmPmPmPnPnPnPnPnPnPoPoPoPoPoPpPpPpPpPpPqPqPqPqPqPrPrPrPrPrPrPsPsPsPsPsPtPtPtPtPtPtPuPuPuPuPuPvPvPvPvPvPwPwPwPwPwPwPxPxPxPxPxPyPyPyPyPyPyPzPzPzPzPzP{P{P{P{P{P{P|P|P|P|P|P}P}P}P}P}P}P~P~P~P~P~P
+P P!P"P#P$P%P&P'P(P)P*P+P,P-P.P/P0P1P2P3P4P5P6P7P8P9P:P;P<P=P>P?P@PAPBPCPDPEPFPGPHPIPJPKPLPMPNPOPPPQPRPSPTPUPVPWPXPYPZP[P\P]P^P_P`PaPbPcPdPePfPgPhPiPjPkPlPmPnPoPpPqPrPsPtPuPvPwPxPyPzP{P|P}P~P
+P P"P$P&P(P*P,P.P0P2P4P6P9P;P=P?PAPCPEPGPJPLPNPPPRPTPWPYP[P]P_PaPdPfPhPjPlPoPqPsPuPxPzP|P~P
+P@P0P2P
+PICT file contains unrecognized quicktime data.
+PKCS7_add_signature
+PKCS7_signatureVerify
+PK_MessageEncodingMethod: this signature scheme does not support message recovery
+PK_Signer: key too short for this signature scheme
+Packages/Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe/LocalState/settings.json
+Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json
+PanasonicExifVersion
+Phttp://cacerts.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crt0
+Pinhole
+PixarLog compression can't handle bits depth/data format combination (depth: %hu)
+Policy Qualifier User Notice
+PublicElement
+PublicExponent
+QUIC connection error
+Qhttp://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_
+QueryDosDeviceW
+QueryServiceStatusEx
+Quick pixel copy from image file "
+QuickLaunchAppIconRequest
+QuickLaunchAppIconResponse
+QuickLaunchAppItem
+QuickLaunchScanRequest"j
+QuickLaunchScanResponse
+QuickTake
+QuickTake 100
+QuickTake 150
+Quicktake
+Quote command returned error
+Reached an unintended state: CPPTYPE_MESSAGE
+Reference Service
+Reference for bearing of destination
+Reference for distance to destination
+Reference for latitude of destination
+Reference for longitude of destination
+ReferenceService
+Root\GameViewerIddDriver
+SCT_set1_signature
+SCT_set_signature_nid
+SEC_E_NO_IMPERSONATION
+SEC_I_SIGNATURE_NEEDED
+SOFTWARE\Microsoft\Windows\CurrentVersion\PrecisionTouchPad\LegacyDevices
+SOFTWARE\Netease\GameViewerSetup
+SPNEGO handshake failure (empty challenge message)
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ST: urn:schemas-upnp-org:device:InternetGatewayDevice:1
+SYSTEM\CurrentControlSet\Control\Terminal Server
+Sdk::DeleteItem() dropped: item_type/item_id must not be empty
+Sdk::SetItem() dropped: item_type/item_id must not be empty
+Sdk::SetItem() dropped: properties must be a non-empty json object
+SeImpersonatePrivilege
+SendInput
+Server returned nothing (no headers, no data)
+Server.CloudPC
+Server.Terminal
+Service Not Exist
+Service Quit
+Service Unavailable
+Service-0x
+ServiceBinary  = %12%\ViGEmBus.sys
+ServiceDescriptorProto
+ServiceLog
+ServiceMonitor failed with exception: 
+ServiceMonitor failed with unknown exception
+ServiceOptions
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+Services
+SetConsoleOutputCP
+SetupDiCreateDeviceInfoList
+SetupDiCreateDeviceInfoW
+SetupDiDestroyDeviceInfoList
+SetupDiEnumDeviceInfo
+SetupDiEnumDeviceInterfaces
+SetupDiGetDeviceInstallParamsW
+SetupDiGetDeviceInterfaceDetailA
+SetupDiGetDeviceInterfaceDetailW
+SetupDiGetDevicePropertyW
+SetupDiGetDeviceRegistryPropertyW
+SetupDiSetDeviceRegistryPropertyW
+Signaling end of chunked upload after trailers.
+Signaling end of chunked upload via terminating chunk.
+Signature
+Signature Algorithm
+Signature mismatch. Expected: 
+Signature="$WINDOWS NT$"
+SignatureVerificationFilterFlags
+Software\Netease\GameViewer
+Software\Netease\GameViewerServer
+StartAudioCapture returns 
+StartAudioRender returns 
+StartType      = 1               ; SERVICE_SYSTEM_START
+StopAudioCapture returns 
+TCP-ACCEPT
+TIFFWriteDirectoryTagShortPerSample
+TS_RESP_verify_signature
+Terminal.MuxControl
+TerminalCheckEnvironment::probeUuycMuxVersion
+TerminalSessionChangedb
+TerminateProcess
+TerminateThread
+Terminating PackBitsDecode due to lack of data.
+Terminator
+The minimum x coordinate of the image's data window is not a multiple of the x subsampling factor of the "
+The minimum y coordinate of the image's data window is not a multiple of the y subsampling factor of the "
+The requested URL returned error: %d
+The signature box must be the first box in the file.
+The type of sample count slice should be UINT.
+Tile X coordinates are not supported
+Tile Y coordinates are not supported
+Time to reinit device
+Too many bytes for PNG signature
+Too many device coordinates '%d'
+Translated coordinates: out_x=
+UDP Broadcast
+UDP H3C
+USERNOTICE
+UU Remote Terminal - 
+Unexpected data block y coordinate.
+Unexpected tile x coordinate.
+Unexpected tile x level number coordinate.
+Unexpected tile y coordinate.
+Unexpected tile y level number coordinate.
+Unsupported device class '0x%x'
+UpdateDriverForPlugAndPlayDevicesW
+UpdateIceConnectionConfig for lite_punch, result=
+UpdateIceConnectionConfig result=
+VerifierFilter: digital signature not valid
+ViGEmBus
+ViGEmBus.DeviceDesc = "Nefarius Virtual Gamepad Emulation Bus"
+ViGEmBus.SVCDESC = "Nefarius Virtual Gamepad Emulation Service"
+ViGEmBus.inf
+ViGEmBus.sys
+ViGEmBus.sys = 1,,
+ViGEmBus_Device_CoInstaller_CopyFiles = 11
+ViGEmSdk driver destroy.
+ViGEmSdk init end
+ViGEmSdk init start
+ViGEmSdk::connect(), index=
+ViGEmSdk::connectInternal(), index=
+ViGEmSdk::disconnect(), index=
+ViGEmSdk::disconnectAll()
+ViGEmSdk::disconnectInternal(), index=
+ViGEmSdk::init()
+VirtualMouseSwitchRequest
+VirtualMouseSwitchResponse
+Virtual_Mouse_Device
+WB_RGGBLevelsTungsten
+WinDeviceType
+X-Param-device-id
+X509v3 Issuer Alternative Name
+X509v3 Subject Alternative Name
+[DestinationDirs]
+[Engine] device_count result=failed code=%lu
+[Engine] device_create result=failed stage=create_info code=%lu
+[Engine] device_create result=failed stage=create_list code=%lu
+[Engine] device_create result=failed stage=register code=%lu
+[Engine] device_create result=failed stage=set_hardware_id code=%lu
+[Engine] device_enumerate result=failed code=%lu
+[Engine] device_reenumerate result=failed stage=locate_root code=%lu
+[Engine] device_reenumerate result=failed stage=reenumerate code=%lu
+[Engine] device_remove result=%hs count=%u
+[Engine] device_remove result=degraded method=dif_remove fallback=subtree code=%lu
+[Engine] device_remove result=reboot_required reason=root_pending
+[Engine] device_remove result=skipped reason=not_found
+[Engine] device_remove result=success method=dif_remove
+[Engine] device_remove result=success method=subtree_cleanup
+[Engine] device_remove stage=matched
+[Engine] device_restart result=failed reason=not_found
+[Engine] device_restart result=failed stage=enumerate code=%lu
+[Engine] device_restart stage=matched
+[Engine] device_state_change result=failed state=%lu code=%lu
+[Engine] device_subtree_remove result=failed code=%lu
+[Engine] device_subtree_remove result=reboot_required reason=vetoed veto_type=%d
+[Engine] device_subtree_remove result=success child_count=%u
+[Engine] driver_cleanup result=failed reason=empty_service_name
+[Engine] driver_cleanup result=skipped reason=protected_system_service
+[Engine] service_remove result=%hs
+[Engine] service_remove result=degraded stage=query_status code=%lu
+[Engine] service_remove result=degraded stage=stop code=%lu
+[Engine] service_remove result=failed stage=delete code=%lu
+[Engine] service_remove result=failed stage=open_manager code=%lu
+[Engine] service_remove result=failed stage=open_service code=%lu
+[Engine] service_remove result=reboot_required reason=marked_for_delete
+[Engine] service_remove result=skipped reason=not_found
+[Engine] service_remove result=skipped reason=protected_system_service
+[InputDiag] side=server stage=mouse_inject event=
+[InputDiag] side=server stage=mouse_route event=
+[InputDiag] side=server stage=raw_control vigem_handled=0 keyboard_handled=1
+[InputDiag] side=server stage=raw_control vigem_handled=1 keyboard_handled=0
+[InputDiag] side=server stage=vhid_activate result=failed reason=mouse_neutral_partial
+[Nevaudio/kServer][CfgQuery] result=empty_response
+[ViGEmBus_Device.NT.CoInstallers]
+[ViGEmBus_Device.NT.Services]
+[ViGEmBus_Device.NT.Wdf]
+[ViGEmBus_Device.NT]
+[ViGEmBus_Device_CoInstaller_AddReg]
+[ViGEmBus_Device_CoInstaller_CopyFiles]
+[ViGEmBus_Service_Inst]
+[ViGEmBus_wdfsect]
+[ViGEmDriver] cannot resolve inf path
+[ViGEmDriver] device absent -> install
+[ViGEmDriver] ensureReady device_count:
+[ViGEmDriver] ensureReady final device_count:
+[ViGEmDriver] install failed
+[ViGEmDriver] installDriver result=
+[ViGEmDriver] multi-instance detected, reinstall
+[ViGEmDriver] removeDriver result=
+[ViGEmDriver] repair inf CreateFile failed error:
+[ViGEmDriver] repair inf WriteFile failed error:
+[ViGEmDriver] repair inf success bytesWritten:
+[ViGEmDriver] server/arm uninstall, device_count_after_remove:
+[VirtualDisplayDriver] restartDevice result=
+\Device\Mup\
+\drivers\GameViewerIddDriver\GameViewerIddDriver.dll
+\drivers\GameViewerIddDriver\GameViewerIddDriver.inf
+\drivers\ViGEmBus\ViGEmBus.inf
+_OPENSSL_isservice
+__device_id
+__int64 __cdecl crashpad::internal::NativeWriteFile(void *,const void *,unsigned __int64)
+__std_terminate
+_crt_at_quick_exit
+_invalid_parameter_noinfo_noreturn
+a#a(a.a4a:a?aEaKaQaWa]abahanataza
+active_user_execution result=failed stage=impersonate session_id=
+aliceblue
+allow_wake_up_this_device
+ambiguous host or service
+app_key decode result is empty
+app_list_entry result=dropped reason=target_path_empty source=copy
+app_list_entry result=dropped reason=target_path_empty source=replace
+application/pkcs7-signature
+application/x-pkcs7-signature
+application_manager_start result=skipped reason=already_started current_device_present=
+application_manager_start stage=start device_present=
+attempting to parse an empty input; check that your input string or stream contains the expected JSON
+auto __cdecl host::CloudDeviceAppManager::queryCloudDevicePinAppList::<lambda_1>::operator ()(struct shared::business_api::QueryDeviceAppListResponse &&) const
+auto __cdecl host::CloudDeviceAppManager::queryCloudDeviceRootLaunchAppInfo::<lambda_1>::operator ()(struct shared::business_api::QueryCloudDeviceRootLaunchAppInfoResponse &) const
+auto __cdecl host::DeviceInitializer::initDevice::<lambda_2>::operator ()(const struct shared::business_api::InitDeviceResponse &)
+auto __cdecl host::KeyboardMouseRunner::onEventConnectStateChanged::<lambda_1>::()::<lambda_1>::operator ()(const struct shared::business_api::QueryConfigureResponse &) const
+auto __cdecl host::KeyboardMouseRunner::onEventConnectStateChanged::<lambda_2>::operator ()(const struct shared::business_api::QueryConfigureResponse &) const
+auto __cdecl host::RemoteAssistCode::getRemoteDeiviceId::<lambda_1>::operator ()(const struct shared::business_api::ShareDeviceResponse &) const
+auto __cdecl host::business::terminal::TerminalManager::handleFrameOpen::<lambda_7>::()::<lambda_3>::operator ()(int) const
+auto __cdecl host::business::terminal::TerminalManager::handlePbCheckEnvReq::<lambda_1>::operator ()(void)
+auto __cdecl host::business::terminal::TerminalManager::handlePbRenameSessionReq::<lambda_1>::operator ()(void)
+auto_login_device_initialization result=
+auto_login_request result=received device_initialized=
+auto_logon_thread_stop result=failed stage=terminate code=
+bad signature
+bool __cdecl host::business::cloud_device::CloudDeviceModule::handleControllerPayload(int,class std::basic_string_view<char,struct std::char_traits<char> >)
+boot_trigger_device_id
+candidate_type
+candidates size: 
+capi_get_provname, returned name=%s, type=%d
+cc_generic_services
+cli_mux
+cloud_api_parse result=failed operation=create_device reason=invalid_json
+cloud_api_parse result=failed operation=query_device_info reason=invalid_json
+cloud_api_parse result=failed operation=query_device_list reason=invalid_json
+cloud_api_parse result=failed operation=turn_off reason=invalid_json
+cloud_api_parse result=failed operation=turn_on reason=invalid_json
+cloud_device_app_args result=failed reason=invalid_item
+cloud_device_app_args result=failed reason=invalid_json
+cloud_device_app_args result=failed reason=invalid_type
+cloud_device_app_args result=failed reason=invalid_value
+cloud_device_app_icon result=failed reason=app_not_found
+cloud_device_app_launch result=failed reason=app_id_missing
+cloud_device_app_launch result=failed reason=app_not_found
+cloud_device_app_launch result=failed reason=launcher_error
+cloud_device_app_launch result=failed reason=target_missing
+cloud_device_app_launch result=success elevated=
+cloud_device_app_launch stage=normal_mode
+cloud_device_app_list action=refresh
+cloud_device_app_list result=failed code=
+cloud_device_app_list result=failed reason=retry_limit attempt=
+cloud_device_app_list result=success count=
+cloud_device_app_list stage=retry attempt=
+cloud_device_app_list stage=retry_scheduled delay_seconds=
+cloud_device_args result=failed reason=invalid_item
+cloud_device_args result=failed reason=invalid_json
+cloud_device_args result=failed reason=invalid_type
+cloud_device_args result=failed reason=invalid_value
+cloud_device_limit result=degraded operation=resolution_check reason=config_unavailable fallback=unlimited
+cloud_device_limit result=degraded operation=screen_list reason=config_unavailable fallback=unlimited
+cloud_device_limit result=degraded operation=streamer_config reason=config_unavailable fallback=unlimited
+cloud_device_limit result=degraded operation=virtual_resolution_list reason=config_unavailable fallback=unlimited
+cloud_device_push result=failed reason=exception
+cloud_device_registry_update result=failed reason=keys_missing
+cloud_device_root_app result=failed code=
+cloud_device_root_app stage=query
+cloud_disk_bind_parse result=fallback reason=invalid_value fallback=empty
+cms_get0_certificate_choices
+cms_get0_revocation_choices
+code_ is empty, cannot verify.
+com.netease.uuremote
+combination_keys_press
+combination_keys_release
+compatibility_detect result=native_windows
+conpty_bridge.exe
+controlMode is empty, cannot set control mode. connect_type: 
+controlled device_id is empty
+controlled_mouse_capture_unavailable
+controlled_mouse_cursor_observation result=unavailable action=sent
+controlled_mouse_observation result=available reason=previous_streamer_callback
+controlled_mouse_observation result=available reason=streamer_callback
+controlled_mouse_observation result=cancelled reason=schedule_failed
+controlled_mouse_observation result=kept reason=
+controlled_mouse_observation result=kept reason=privacy_screen
+controlled_mouse_observation result=started epoch=
+controller_device_id
+controller_user_entitlement result=failed reason=empty_features
+coordinate_conversion result=failed reason=desktop_bounds_unavailable
+coordinate_conversion result=failed reason=target_bounds_unavailable
+coordinate_x_scale
+coordinate_y_scale
+coordinates out of range
+count_terminal_session
+countersignature
+cp_fixed_alloc set, but cp_matrice missing
+cpc_device_app_list_changed
+cpc_device_cost_info
+cpc_platform_device_info
+cpuid probe failed: vendor is 'Microsoft Hv' but leaf 0x40000001 did not return the Hv#1 signature
+crash server did not respond, self-terminating
+crash server failed to launch, self-terminating
+crash_attachment result=skipped reason=empty_path
+crash_capture result=rejected reason=empty_message
+crash_capture_tag result=skipped reason=empty_key
+crash_extra result=skipped reason=empty_key
+crash_tag result=skipped reason=empty_key
+create_uuyc_mux_config_directory_failed
+create_uuyc_mux_config_file_failed_
+create_uuyc_mux_config_uuid_failed
+current_device
+current_device_id
+current_device_in_same_network
+cursor_event source=streamer hidden=
+cursor_high_resolution result=nullptr stage=resolve_path reason=empty_cursor_path cursor_id=
+cursor_poll controlled_mouse_capture=
+d.originatorKey
+d.usernotice
+desktop_devices
+destinationIndicator
+device
+device app action parse failed reason=invalid_payload
+device reboot
+deviceId
+deviceIdH
+deviceId_v2
+deviceOpenHandle getDevicePath got empty device path
+deviceOpenHandle success retries:
+device_absent
+device_app_list
+device_application
+device_binded
+device_binding
+device_gamepad
+device_id
+device_id is empty
+device_id:
+device_info_changed
+device_info_response_parse result=failed reason=invalid_json
+device_init result=started
+device_init result=success
+device_init_state changed_from=
+device_init_state result=failed reason=missing_identifier
+device_initialization result=
+device_keyboard
+device_locked
+device_mouse
+device_name
+device_name:
+device_not_logged_in
+device_preferences
+device_preferences_response_parse result=failed reason=invalid_json
+device_rH+
+device_request result=failed reason=token_expired
+device_response_parse result=failed reason=invalid_json
+device_string
+device_tool_order_query_api result=failed http_code=
+device_tool_order_query_api result=success http_code=
+device_tool_order_response_parse result=failed reason=invalid_json
+device_tool_order_update_api result=failed http_code=
+device_tool_order_update_api result=success http_code=
+device_uH+
+device_unbind
+device_unbind ignored, controlled session handler is not bound
+device_update_prepare result=failed http_code=
+device_update_prepare result=success http_code=
+device_uuid_load result=missing action=create
+device_uuid_load result=success source=generated action=created persisted=true
+device_uuid_load result=success source=persistent action=reused
+device_uuid_read result=missing action=create
+device_uuid_read result=success source=generated action=created persisted=false
+device_uuid_read result=success source=persistent action=reused
+device_uuid_reset result=success
+devicelink
+devices
+digest_sspi: MakeSignature failed, error 0x%08lx
+digitalSignature
+directory services (X.500)
+directory services - algorithms
+display device open result=failed code=
+display device path lookup result=failed stage=allocate code=
+display device path lookup result=failed stage=copy code=
+display device path lookup result=failed stage=enumerate code=
+display device path lookup result=failed stage=get_class code=
+display device path lookup result=failed stage=query_detail code=
+display device path lookup result=failed stage=query_size code=
+display_settings_restore result=resolved match=legacy_device saved_screen_id=
+drag_drop_paste result=failed reason=coordinate_conversion
+draw_overlay result=hidden reason=session_lock window_count=
+draw_overlay result=hide_skipped reason=already_hidden window_count=
+draw_overlay result=restore_skipped reason=not_session_hidden enabled=
+drivers\UMDF\GameViewerIddDriver.dll
+ec_GF2m_simple_point_get_affine_coordinates
+ec_GF2m_simple_point_set_affine_coordinates
+ec_GF2m_simple_set_compressed_coordinates
+ec_GFp_nistp224_point_get_affine_coordinates
+ec_GFp_nistp256_point_get_affine_coordinates
+ec_GFp_nistp521_point_get_affine_coordinates
+ec_GFp_simple_blind_coordinates
+ec_GFp_simple_point_get_affine_coordinates
+ec_GFp_simple_point_set_affine_coordinates
+ec_GFp_simple_set_compressed_coordinates
+empty file structure
+empty fps array
+empty quality array
+empty_data
+empty_features
+enable AllowComputerToTurnOffDevice
+enum display devices error:
+error: index is empty
+exe path is empty
+extension_path_empty
+feature_config_default result=failed reason=empty_embedded_config
+feature_config_update result=rejected reason=empty_payload
+feature_query result=unsupported reason=config_empty role=
+ff_virtual_mouse_device
+file_rate_limit result=synced direction=download feature_key=file_transport candidate_type=
+file_receive_directory result=failed stage=create_empty
+file_send result=skipped reason=name_empty
+file_send_complete result=failed whole_task=
+file_send_complete result=success whole_task=
+first provider can't be empty
+flush_uuyc_mux_config_file_failed_
+ftp_client_metadata_path result=rejected reason=empty_task_id
+ftp_server_metadata_path result=rejected reason=empty_task_id
+gamepad_device_count
+github:getsentry/sentry-native
+google.protobuf.Empty
+google.protobuf.ServiceOptions
+group2pkparameters failure
+gv_pb.ConnectOptions.device_id
+gv_pb.LaunchCloudPcApp.args
+gv_pb.LaunchCloudPcApp.cpc_app_id
+gv_pb.LaunchCloudPcApp.dapp_id
+gv_pb.LaunchCloudPcApp.name
+gv_pb.LaunchCloudPcApp.target_path
+gv_pb.QuickLaunchAppIconRequest.app_key
+gv_pb.QuickLaunchAppIconResponse.app_key
+gv_pb.QuickLaunchAppIconResponse.error_message
+gv_pb.QuickLaunchAppItem.app_id
+gv_pb.QuickLaunchAppItem.app_key
+gv_pb.QuickLaunchAppItem.icon_url
+gv_pb.QuickLaunchAppItem.name
+gv_pb.QuickLaunchAppItem.target_path
+gv_pb.QuickLaunchScanResponse.error_message
+haproxy protocol not support with SSL encryption in place (QUIC?)
+healthd_token_init result=failed reason=empty_token
+hidden
+host_directory_empty
+host_path_empty
+http://ocsp.digicert.com0A
+http://ocsp.digicert.com0C
+http://ocsp.digicert.com0\
+http://ocsp.digicert.com0]
+http://www.digicert.com/CPS0
+http_manager_init result=failed stage=callback_dispatcher reason=empty
+http_request result=rejected reason=empty_url
+http_request_config result=rejected reason=empty_url
+https://api-dcdn.nrd.nie.163.com
+https://api-event.nrd.nie.163.com/api/v1/event/report/batch
+https://api-ipv4.nrd.nie.163.com/api/v1/device/wake_on_lan/info
+https://api.nrd.nie.163.com
+https://api.nrd.nie.163.com/
+https://api.nrd.nie.163.com/api/v1/cloud_pc/boot_info/%s
+https://api.nrd.nie.163.com/api/v1/cloud_pc/queue/%s/ticket
+https://api.nrd.nie.163.com/api/v1/user/ticket/for/plugin
+https://cf56b89184bf48f988f05813bee25cef@sentry.netease.com/69
+https://fcount-api-regtest.webapp.163.com
+https://fcount-api.webapp.163.com
+hypervisor present bit set but cpuid.0x40000000 returned no vendor; confirmed unknown virtualization
+i2o_SCT_signature
+ice config update requested mode=
+ice config update result=failed reason=invalid_state streamer_present=
+id-alg-noSignature
+id-cmc-dataReturn
+id-qt-unotice
+id-smime-aa-signatureType
+id-smime-mod-ets-eSignature-88
+id-smime-mod-ets-eSignature-97
+id-smime-spq-ets-sqt-unotice
+illegal empty extension
+impersonate_uuyc_mux_config_user_failed_
+importPlayer
+input_backend_activation result=failed current=send_input requested=vhid reason=mouse_neutral_partial residue=
+input_device
+input_driver_report event=key_mouse_new_driver_install result=sent keymouse_driver_install_result=
+input_driver_report event=key_mouse_new_driver_load result=sent keymouse_driver_load_result=
+input_driver_report event=key_mouse_new_driver_repair result=sent keymouse_driver_repair_result=
+input_driver_report event=mouse_new_driver_connect result=sent mouse_driver_connect_result=
+input_driver_touchpad_policy result=degraded reason=unexpected_leave_on_with_mouse value=
+input_driver_touchpad_policy result=degraded stage=impersonate code=
+input_driver_touchpad_policy result=success leave_on_with_mouse=
+input_driver_touchpad_policy result=success leave_on_with_mouse=missing
+installPath is empty
+international-organizations
+international_connect
+internationaliSDNNumber
+invalid index. device_name:
+invalid message, target device is null
+invalid signature
+invalid string: forbidden character after backslash
+invalid terminal session id
+invalid tile coordinates
+invertPoly
+ioctl callback returned error %d
+ipAddressChoice
+ipc_client_connect result=rejected reason=empty_server_name
+ipc_client_signature result=failed code=
+ipc_client_signature result=skipped reason=test_environment
+ipc_client_signature result=success
+ipc_device_initialized_notify result=queued initialized=
+ipc_socket_read result=failed reason=empty_completion
+isDeviceInited
+is_cloudpc
+is_empty
+java_generic_services
+jpeg_start_decompress() returned image_width = %u, expected %u
+jpeg_start_decompress() returned max_h_samp_factor = %d and max_v_samp_factor = %d, expected %hhu and %hhu
+key_mouse_new_driver_install
+key_mouse_new_driver_load
+key_mouse_new_driver_repair
+keyboard mouse runner is null, cannot execute drag-drop paste
+keymouse_driver_install_result
+keymouse_driver_load_result
+keymouse_driver_repair_result
+login_request result=rejected type=sms reason=empty_credential
+lookup returned nothing
+malformed host or service
+mhjI8CO1KOdaOmAE3SBrIab3NqNp0MPku6eSLwf57BFrj1peOciJKcpBhxzuUrNl
+middle
+missing my_binded_device
+missing_nul_terminator
+mobile_devices
+modify target. device_name
+monitorDevicePath
+monitorFriendlyDeviceName
+monitor_device_name
+monitor_device_name is empty
+monitor_device_path
+monitor_settings_query result=failed device_index=
+mouse_click
+mouse_driver_connect_result
+mouse_mode
+mouse_move_absolute
+mouse_move_relative
+mouse_move_variety_relative
+mouse_new_driver_connect
+mouse_prH+
+mouse_press
+mouse_reH+
+mouse_release
+mouse_scroll
+mouse_switch_request
+mouse_switch_response
+mouse_whH+
+mousetype
+mumu rom service is null
+my_binded_device
+my_binded_devices
+native
+no accept addr or service specified
+no hostname or service specified
+no matching choice type
+no matching signature
+no signatures on data
+nonce not returned
+not an ICC profile, invalid signature
+not in unattended access mode
+noticeNumbers
+notice_section
+noticenos
+noticeref
+nrd_device_id
+numerator (point), denominator (point)
+o2i_SCT_signature
+open IDD device handle
+optionalSignature
+originator
+originatorInfo
+originatorSignatureValue
+out-of-date sRGB profile with no signature
+p p!p"p#p$p%p&p'p(p)p*p+p,p-p.p/p0p1p2p3p4p5p6p7p8p9p:p;p<p=p>p?p@pApBpCpDpEpFpGpHpIpJpKpLpMpNpOpPpQpRpSpTpUpVpWpXpYpZp[p\p]p^p_p`papbpcpdpepfpgphpipjpkplpmpnpopppqprpsptpupvpwpxpypzp{p|p}p~p
+p@p0p2p
+parallels software international inc.
+params is empty
+path_empty
+personalSignature
+php_generic_services
+physicalDeliveryOfficeName
+pinholeFocalLength
+pkcs7 add signature error
+plugin_cleanup result=failed target=empty_unzip_directory reason=exception error=
+plugin_cleanup result=failed target=empty_unzip_directory reason=filesystem_error
+plugin_cleanup result=success target=empty_unzip_directory
+plugin_install result=rejected reason=unsafe_destination
+plugin_move result=suspicious reason=destination_outside_root
+plugin_signature result=failed code=
+plugin_update result=rejected reason=unsafe_backup_destination
+plugin_update result=rejected reason=unsafe_destination
+plugin_verification result=failed stage=signature
+png_do_quantize returned rowbytes=0
+point coordinates blind failure
+postOfficeBox
+powershell -WindowStyle Hidden -NoProfile -Command "
+price_per_hour
+privacy_preview_image result=failed reason=file_empty
+privacy_screen history hit. device_id:
+publicExponent:
+publisher_device_id
+py_generic_services
+quick_launch_app_icon_req
+quick_launch_app_icon_rsp
+quick_launch_cache_load result=failed reason=open_failed path_chars=
+quick_launch_cache_load result=failed reason=parse_error path_chars=
+quick_launch_cache_load result=failed scope=
+quick_launch_cache_save result=failed scope=
+quick_launch_cache_save result=failed stage=create_directory code=
+quick_launch_cache_save result=failed stage=open_temp path_chars=
+quick_launch_cache_save result=failed stage=rename code=
+quick_launch_cache_save result=skipped scope=
+quick_launch_icon_lookup result=failed reason=app_list_unavailable app_key=
+quick_launch_icon_lookup result=not_found app_key=
+quick_launch_icon_read result=failed app_key=
+quick_launch_icon_read result=success app_key=
+quick_launch_icon_rsp result=failed reason=app_manager_unavailable request_id=
+quick_launch_icon_rsp result=failed reason=icon_unavailable request_id=
+quick_launch_icon_rsp result=failed reason=send_failed request_id=
+quick_launch_scan result=failed reason=app_list_unavailable
+quick_launch_scan result=failed reason=manager_not_started
+quick_launch_scan result=partial reason=shortcut_paths_unavailable
+quick_launch_scan result=success empty=
+quick_launch_scan stage=white_list_refresh_triggered
+quick_launch_scan_item result=partial reason=whitelist_app_id_missing app_name=
+quick_launch_scan_item result=skipped reason=key_source_empty app_type=
+quick_launch_scan_req
+quick_launch_scan_req result=rejected reason=module_unavailable app_manager_available=
+quick_launch_scan_req stage=start request_id=
+quick_launch_scan_rsp
+quick_launch_scan_rsp result=failed reason=scan_failed request_id=
+quick_launch_scan_rsp result=failed reason=send_failed request_id=
+quick_launch_scan_rsp result=success request_id=
+quicklaunch launch cache load unknown exception, scope=
+quicklaunch launch cache loaded, scope=
+quicklaunch launch cache save unknown exception, scope=
+quicklaunch launch cache saved, scope=
+quicklaunch launch cache skip app during save(unknown), scope=
+quicklaunch_launch_cache_v1_
+quicktake_100_load_raw()
+r2i_certpol
+read device_id from data file:
+read function returned funny value
+record's candidates size: 
+relay_connection
+remote_assist_candidate result=selected version=
+remote_assist_id_query result=failed code=0 reason=empty_connection_id id_present=0 duration_ms=
+remote_assist_room result=ready remote_device_present=
+remote_device_id
+replace_uuyc_mux_config_file_failed_
+reporting_context result=incomplete field=device_id
+reporting_event result=rejected reason=empty_name
+reporting_field result=dropped reason=empty_key
+reporting_page_view result=rejected reason=empty_name
+reporting_raw_json result=rejected reason=empty_name
+resolve_uuyc_mux_config_path_failed
+resolve_uuyc_mux_local_app_data_failed_
+response_security_check result=failed reason=signature_invalid
+response_security_check result=failed reason=signature_missing
+restore entry. device_name:
+room lost, notify with empty remote_device_id
+room not ready, notify with empty remote_device_id
+router_model_discovery result=found method=ssdp
+router_model_discovery result=found method=udp_broadcast
+router_model_discovery result=found method=udp_multicast
+router_model_discovery result=not_found method=ssdp
+router_model_discovery result=not_found method=udp_broadcast
+router_model_discovery result=started method=ssdp
+rsaSignature
+runtime_product_identity result=fallback target=main stage=signature reason=verification_failed artifact=
+schannel: CertFindExtension() returned no extension.
+schannel: CertGetNameString() returned certificate name information of unexpected size
+schannel: CertGetNameString() returned no certificate name information
+schannel: CryptDecodeObjectEx() returned no alternate name information.
+schannel: Empty DNS name.
+schannel: recv returned CURLE_RECV_ERROR
+schannel: recv returned error %d
+sct invalid signature
+sdk init returning (async)
+sdsiCertificate
+sections is empty
+secure device signature
+seek callback returned error %d
+select/poll returned error
+send_text_message is empty
+send_text_message is empty, cannot send start download and install response
+send_text_message is empty, cannot send update plugin setting response
+send_text_message_ is empty, cannot notify plugin
+send_text_message_ is empty, cannot notify plugin enable
+sentry.native
+sentry.native/0.5.0
+sentry_close() called, but options was empty
+service
+service $0 {
+service missing in parameters and hostname
+service too long in hostname
+serviceLocator
+set -g expose-mux-environment off
+set TCP_NODELAY failed
+set-environment -g UUYC_IN_MUX 1
+shared::business_api::NrdDevice::createGuestRoom
+shared::business_api::NrdDevice::createRoom
+shared::business_api::NrdDevice::refetchCreateRoom
+shortcut_scan result=skipped reason=empty_root root_index=
+shortcut_scan result=skipped reason=empty_shortcut_name root_index=
+signaling_list
+signatur
+signaturH
+signature
+signature failure
+signatureAlgorithm
+simulation_mouse_switch
+skip display layout for terminal connection
+skip start mute setting manager, empty device_id
+smbios probe failed: data area is empty
+sni_required_signaling_list
+special_game_mouse
+ssl command section empty
+ssl section empty
+stopAudioRender returns 
+stream_capability_candidate section=display index=
+stream_capability_candidate section=frame_quality index=
+streamer_cursor_capture result=forced_off reason=no_pointing_device
+streamer_message_serialize result=failed reason=empty_output
+struct shared::terminal::mux_control::Response __cdecl host::business::terminal::TerminalManager::handleMuxControlRequest(const struct shared::terminal::mux_control::Request &)
+target_device
+tcp_distoratio[%d]=%f should be strictly greater than tcp_distoratio[%d]=%f
+tcp_numlayers when cp_fixed_alloc set should not exceed %d
+tcp_rates[%d]=%f (corrected as %f) should be strictly lesser than tcp_rates[%d]=%f
+tcp_rates[%d]=%f (corrected as %f) should be strictly lesser than tcp_rates[%d]=%f (corrected as %f)
+tcp_rates[%d]=%f should be strictly lesser than tcp_rates[%d]=%f
+tcp_rates[%d]=%f should be strictly lesser than tcp_rates[%d]=%f (corrected as %f)
+teletexTerminalIdentifier
+terminal access authorization result=granted source=environment_check handle=
+terminal bridge result=failed operation=terminal_open stage=
+terminal bridge result=started operation=terminal_open session_id=
+terminal child process result=failed operation=
+terminal close result=deferred session_id=
+terminal close result=requested session_id=
+terminal connect options received, skip video capture side effects
+terminal credential verification result=success
+terminal detach result=deferred session_id=
+terminal detach result=success session_id=
+terminal frame decode result=failed bytes=
+terminal mux cleanup result=failed reason=server_exe_dir_unavailable
+terminal mux cleanup result=failed reason=terminate_failed
+terminal mux cleanup result=success
+terminal mux control result=deferred reason=active_session_unavailable
+terminal mux control result=deferred session_id=
+terminal mux control result=failed stage=start session_id=
+terminal mux control result=started stage=server_startup session_id=
+terminal mux control retry result=failed session_id=
+terminal natural exit cleanup result=failed session_id=
+terminal natural exit result=completed session_id=
+terminal natural exit result=deferred session_id=
+terminal natural exit result=discarded session_id=
+terminal open decision=allow session_id=
+terminal open detected exited session session_id=
+terminal open result=rejected session_id=
+terminal open result=success session_id=
+terminal output delivery result=failed stage=exit_encode session_id=
+terminal output delivery result=failed stage=exit_send session_id=
+terminal output delivery result=failed stage=open_response session_id=
+terminal output delivery result=failed stage=startup_output session_id=
+terminal output delivery result=failed stage=stdout_encode session_id=
+terminal output delivery result=failed stage=stdout_send session_id=
+terminal session allocation result=assigned session_id=
+terminal session already exists
+terminal session cleanup result=fallback reason=worker_unavailable
+terminal session list result=success request_session_id=
+terminal session not found
+terminal session reconciliation result=mismatch has_user_name=
+terminal session resolution result=success source=active_console
+terminal session termination result=deferred session_id=
+terminal session termination result=deferred target_session_id=
+terminal session termination result=success request_session_id=
+terminal signal result=sent session_id=
+terminal unlock credential=not_applicable session_id=
+terminal unlock credential=verified session_id=
+terminal unlock result=started session_id=
+terminal uuyc_mux clipboard result=failed operation=terminal_open stage=set_clipboard category=exit exit_code=
+terminal uuyc_mux clipboard result=failed operation=terminal_open stage=set_clipboard category=process started=
+terminal uuyc_mux clipboard result=success operation=terminal_open stage=set_clipboard enabled=
+terminal uuyc_mux query result=failed operation=terminal_open stage=has_session category=exit exit_code=
+terminal uuyc_mux query result=failed operation=terminal_open stage=has_session category=process started=
+terminal uuyc_mux ready result=started operation=terminal_open stage=initial_ready session_id=
+terminal uuyc_mux ready result=success operation=terminal_open stage=initial_ready session_id=
+terminal uuyc_mux ready result=success operation=terminal_open stage=visible_ready session_id=
+terminal uuyc_mux rename result=failed operation=rename_window_title stage=
+terminal uuyc_mux rename result=failed operation=rename_window_title stage=prepare category=environment code=
+terminal uuyc_mux rename result=failed operation=rename_window_title stage=prepare category=user_token code=unavailable
+terminal uuyc_mux rename result=failed operation=rename_window_title stage=rename_window category=utf8_conversion
+terminal uuyc_mux rename result=failed operation=rename_window_title stage=verify_window_name category=output_mismatch
+terminal uuyc_mux termination result=failed operation=terminal_close stage=kill_session mux_session=
+terminal uuyc_mux termination result=failed operation=terminal_close stage=verify_session_absent mux_session=
+terminal uuyc_mux termination result=skipped session_id=
+terminal uuyc_mux termination result=started operation=terminal_close stage=kill_session mux_session=
+terminal uuyc_mux termination result=started operation=terminal_close stage=verify_session_absent mux_session=
+terminal uuyc_mux termination result=success operation=terminal_close stage=kill_session mux_session=
+terminal uuyc_mux termination result=success operation=terminal_close stage=verify_session_absent mux_session=
+terminal visible attach cleanup result=complete stage=cleanup session_id=
+terminal visible attach cleanup result=failed stage=send_cancel session_id=
+terminal visible attach result=closed stage=monitor candidate=
+terminal visible attach result=failed stage=monitor_protocol candidate=
+terminal visible attach result=fallback reason=windows_terminal_config_unavailable fallback=powershell_or_cmd
+terminal visible attach result=fallback reason=windows_terminal_elevated_profile
+terminal visible attach result=fallback stage=assign_job candidate=
+terminal visible attach result=fallback stage=build_command candidate=
+terminal visible attach result=fallback stage=create_monitor candidate=
+terminal visible attach result=fallback stage=create_process candidate=
+terminal visible attach result=fallback stage=register_attempt candidate=
+terminal visible attach result=fallback stage=resume candidate=
+terminal visible attach result=fallback stage=wait_ready candidate=
+terminal visible attach result=ready stage=ready candidate=
+terminal visible attach result=started stage=create_process candidate=
+terminal_bridge_unavailable
+terminal_check_env result=failed reason=internal_exception request_id=
+terminal_check_env result=failed reason=worker_unavailable request_id=
+terminal_check_env_req
+terminal_check_env_resp
+terminal_check_env_response result=discarded reason=connection_inactive request_id=
+terminal_check_env_response result=discarded reason=main_thread_unavailable request_id=
+terminal_check_env_response result=failed reason=send_failed request_id=
+terminal_check_env_response result=failed reason=serialize_failed request_id=
+terminal_check_env_response result=sent request_id=
+terminal_close
+terminal_component_unavailable
+terminal_connection_generation result=registered handle=
+terminal_control_unavailable
+terminal_credential_check result=failed code=
+terminal_display_name_invalid
+terminal_error_response result=failed code=
+terminal_error_response result=sent response_code=
+terminal_mux_clipboard_policy_update_failed
+terminal_mux_control result=failed stage=accept server_name=
+terminal_mux_control result=failed stage=decode_request server_name=
+terminal_mux_control result=failed stage=encode_response server_name=
+terminal_mux_control result=failed stage=impersonate
+terminal_mux_control result=failed stage=listen code=
+terminal_mux_control result=failed stage=read_request server_name=
+terminal_mux_control result=failed stage=write_response server_name=
+terminal_mux_control result=started server_name=
+terminal_mux_control stage=accept_wait server_name=
+terminal_mux_control stage=accepted server_name=
+terminal_mux_control stage=handler_done server_name=
+terminal_mux_control stage=response_sent server_name=
+terminal_mux_session_unavailable
+terminal_not_supported_on_this_os
+terminal_open
+terminal_open result=discarded session_id=
+terminal_open result=failed session_id=
+terminal_open result=rejected reason=control_not_allowed
+terminal_open result=rejected session_id=
+terminal_open_cancelled
+terminal_open_failed
+terminal_open_in_progress
+terminal_open_pending
+terminal_open_response result=failed code=
+terminal_open_response result=sent response_code=
+terminal_open_timeout
+terminal_open_unavailable
+terminal_pb_message result=discarded reason=decode_failed bytes=
+terminal_pb_message result=discarded reason=invalid_envelope type=
+terminal_rename result=discarded stage=complete code=5 category=main_thread_unavailable request_id=
+terminal_rename result=failed stage=commit code=2 category=not_found request_id=
+terminal_rename result=failed stage=commit code=4 category=session_ended request_id=
+terminal_rename result=failed stage=commit code=5 category=stale request_id=
+terminal_rename result=failed stage=complete code=5 category=runtime request_id=
+terminal_rename result=failed stage=prepare code=5 category=target_unavailable request_id=
+terminal_rename result=failed stage=runtime code=5 category=
+terminal_rename result=failed stage=submit code=5 category=worker_unavailable request_id=
+terminal_rename result=rejected stage=begin code=
+terminal_rename result=rejected stage=decode code=1 category=invalid_utf8 request_id=
+terminal_rename result=rejected stage=validate code=1 category=session_id request_id=
+terminal_rename result=success stage=begin code=0 category=
+terminal_rename result=success stage=commit code=0 category=committed request_id=
+terminal_rename_response result=discarded stage=response code=
+terminal_rename_response result=failed stage=send code=
+terminal_rename_response result=failed stage=send code=1 category=delivery request_id=
+terminal_rename_response result=failed stage=serialize code=
+terminal_rename_response result=failed stage=serialize code=1 category=serialization request_id=
+terminal_rename_response result=sent stage=response code=
+terminal_rename_response result=sent stage=response code=1 category=pb request_id=
+terminal_rename_session_req
+terminal_rename_session_resp
+terminal_session_changed
+terminal_session_changed result=failed reason=send_failed handle=
+terminal_session_changed result=failed reason=serialize_failed
+terminal_session_limit_reached
+terminal_session_num
+terminal_session_termination result=failed request_session_id=
+terminal_unlock result=failed session_id=
+terminal_unlock result=success session_id=
+terminal_unlock_response result=failed session_id=
+terminal_unlock_response result=sent session_id=
+terminal_visible_attach_ipc result=failed stage=accept code=
+terminal_visible_attach_ipc result=failed stage=create_thread code=
+terminal_visible_attach_ipc result=failed stage=create_thread code=exception reason=unknown_exception
+terminal_visible_attach_ipc result=failed stage=duplicate_token code=
+terminal_visible_attach_ipc result=failed stage=generate_server_name code=utf8_conversion_failed
+terminal_visible_attach_ipc result=failed stage=generate_server_name code=uuid_generation_failed
+terminal_visible_attach_ipc result=failed stage=impersonate code=
+terminal_visible_attach_ipc result=failed stage=listen code=
+terminal_windows_terminal_lookup result=failed reason=execution_alias_unavailable code=
+terminal_windows_terminal_lookup result=failed reason=invalid_user_token
+terminal_windows_terminal_lookup result=failed reason=local_app_data_lookup_failed code=
+terminate
+textNotice
+the ioctl callback returned %d
+touchpad_candidate name=
+touchpad_detection result=unknown reason=incomplete_device_information candidate_count=
+traditional upgrade url, md5, or version is empty
+trigger_cpc_device_app_list_refresh
+trigger_device_app_action
+tv_devices
+udp_ip
+udp_portA
+udp_portf
+unexpected DeviceLink ICC profile class
+unexpected zlib return
+unexpected zlib return code
+uninstallStr empty.
+unknown signature algorithm
+unrecognized signature nid
+unsupported signature type
+used_price
+userNotice
+user_device_id
+user_id_ is empty, cannot set config.
+user_id_ is empty, maybe is login with guest? cannot restore history config.
+uuyc-mux
+uuyc-mux.conf
+uuyc-mux.exe
+uuyc-terminal
+uuyc-terminal-control-
+uuyc-terminal-visible-
+uuyc_log_upload
+uuyc_mux_exe_not_found
+uuyc_mux_rename_
+uuyc_mux_rename_prepare_environment_failed
+uuyc_mux_rename_prepare_user_token_failed
+uuyc_mux_rename_read_window_name_empty
+uuyc_mux_rename_verify_window_name_mismatch
+uuyc_mux_rename_window_utf8_conversion_failed
+uuyc_mux_session_name_unavailable
+uuycinput
+value.sdsicert
+verification_code_rng result=degraded reason=secure_seed_unavailable fallback=random_device
+vhid_report_layout result=failed reason=relative_mouse_collection_unavailable action=close
+vhid_report_layout result=failed stage=driver_device code=
+vhid_report_layout result=failed stage=locate_device code=
+viewGdiDeviceName
+vigemClient connected.
+vigemClient created.
+vigem_alloc() failed
+vigem_connect() failed: 
+vigem_control_data result=failed reason=exception bytes=
+vigem_driver result=degraded reason=sdk_warning
+vigem_driver result=failed reason=sdk_error
+vigem_driver result=unsupported reason=below_win10
+vigem_driver result=unsupported reason=wine_compatibility_layer
+vigem_driver_inf result=failed reason=unexpected_target
+vigem_initialize result=skipped reason=already_initialized
+vigem_initialize result=skipped reason=wine_compatibility_layer
+vigem_target_add result=failed reason=driver_not_ready
+vigem_target_add result=skipped reason=already_connected
+vigem_target_add() succeeded, index=
+vigem_target_remove() succeeded, index=
+vigem_target_x360_register_notification() succeeded, index=
+vigem_update result=degraded reason=target_missing fallback=auto_connect
+vigem_update result=dropped reason=driver_not_ready
+vigembus driver failed to add target(index=%d)
+vigembus driver failed to register target(index=%d) notification: %s
+vigembus driver not ready
+virtual display do not restore display setting deviceName:
+virtual mouse app config result=ignored reason=invalid_input_mode mode=
+virtual mouse app matched policy=
+virtual mouse app not matched policy=
+virtual mouse mode notification result=sent
+virtual mouse state policy=
+virtual_mouse_setting result=updated enabled=
+virtual_mouse_switch
+visible_fallback_candidate
+visible_terminal_unavailable
+void __cdecl SvrApplication::onServiceQuit(void)
+void __cdecl foundation::ServiceMonitor::notifyServiceQuit(const char *)
+void __cdecl host::CloudDeviceAppManager::processQueryPinAppListError(const struct shared::business_api::QueryDeviceAppListResponse &)
+void __cdecl host::KeyboardMouseRunner::onEventConnectStateChanged(bool &)
+void __cdecl host::business::input::CursorArbitrator::startControlledMouseStreamerObservation(void)
+void __cdecl host::business::terminal::TerminalManager::handleFrameOpen(unsigned int,const struct shared::terminal::Frame &,bool,bool)
+void __cdecl host::business::terminal::TerminalManager::handleFrameOpen::<lambda_7>::operator ()(void)
+void __cdecl host::business::terminal::TerminalManager::scheduleMuxControlRetry(unsigned int,unsigned __int64)
+void __cdecl host::business::terminal::TerminalManager::startReconnectWork(unsigned int,unsigned int,class host::business::terminal::TerminalSession *,int,int,bool,class std::chrono::time_point<struct std::chrono::steady_clock,class std::chrono::duration<__int64,struct std::ratio<1,1000000000> > >)
+void __cdecl host::business::terminal::TerminalManager::startReconnectWork::<lambda_2>::operator ()(void)
+wallpaper check skipped: system wallpaper path is empty
+wallpaper check skipped: upload token is empty
+wetpe_ime not install use SendInput
+white_list_parse result=partial reason=empty
+window_name is empty
+windows-terminal
+windows_terminal
+wol_device_info result=updated network_fields_present=
+write device_id and init_timestamp to data file
+write_uuyc_mux_config_file_failed_
+wrong signature length
+www.digicert.com1!0
+www.digicert.com1$0"
+zip_extract result=failed stage=create_destination
+zip_extract result=failed stage=normalize_destination
+zip_extract result=failed stage=validate_entry reason=outside_destination entry_name_bytes=
+|$@IcE
+} | Get-NetAdapterPowerManagement | Select-Object -ExpandProperty AllowComputerToTurnOffDevice
+} | Get-NetAdapterPowerManagement | Where-Object { $_.AllowComputerToTurnOffDevice -ne 'Unsupported' }; $Adapter | Set-NetAdapterAdvancedProperty -RegistryKeyword 'S5WakeOnLan' -RegistryValue 1; $Adapter | Set-NetAdapterAdvancedProperty -RegistryKeyword 'EnablePME' -RegistryValue 1; $Adapter | Set-NetAdapterPowerManagement -WakeOnMagicPacket Enabled; $Adapter | Set-NetAdapterPowerManagement -WakeOnPattern Enabled
+} | Select-Object -First 1 -ExpandProperty PnPDeviceID; Get-CimInstance -ClassName MSPower_DeviceWakeEnable -Namespace root/wmi | Where-Object { $_.InstanceName -Match [regex]::escape($PnPDeviceID) } | Select-Object -ExpandProperty Enable
