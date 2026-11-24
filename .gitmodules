@@ -1,18 +1,3 @@
-[submodule "plugins/flutter_gamecontroller"]
-	path = plugins/flutter_gamecontroller
-	url = https://github.com/zhuhaichao518/flutter_gamecontroller
-[submodule "plugins/fullscreen_window"]
-	path = plugins/fullscreen_window
-	url = https://github.com/zhuhaichao518/fullscreen_window
-[submodule "plugins/hardware_simulator"]
-	path = plugins/hardware_simulator
-	url = https://github.com/zhuhaichao518/hardware_simulator
-[submodule "plugins/flutter-webrtc/dart-webrtc"]
-	path = plugins/flutter-webrtc/dart-webrtc
-	url = https://github.com/zhuhaichao518/dart-webrtc
-[submodule "plugins/native_textfield_tv"]
-	path = plugins/native_textfield_tv
-	url = https://github.com/zhuhaichao518/native_textfield_tv.git
 [submodule "vendor/cloudplayplus"]
 	path = vendor/cloudplayplus
 	url = https://github.com/zhuhaichao518/cloudplayplus_stone.git

@@ -1,58 +1,42 @@
-# cloudplayplus
+# cloudplayplus_plus (cppp)
 
-CloudPlayPlus (https://www.cloudplayplus.com, currently only available in mainland China) is a remote desktop software designed to provide users with a seamless and smooth experience for playing remote games. Currently, it achieves 2K resolution at 60 FPS with a latency of just 40ms (from company to home) using a customized version of libWebRTC for online game streaming from my macbook to Windows machine (NVDIA RTX 3070Ti).
+CloudPlayPlus Plus — enhancement fork of [CloudPlayPlus](https://www.cloudplayplus.com) with untouched upstream CPP tracked as a git submodule.
 
-However, there are still many exciting features under development, including H.265 hardware encoding and support for various hardware decoding solutions(currently only NVDIA graphic card with encoding unit is supported). CloudPlayPlus aims to continuously enhance performance and user experience in remote gaming.
+## Layout
 
-## Repository layout (cppp)
+| Path | Role |
+|------|------|
+| `vendor/cloudplayplus` | Vanilla CPP pin ([cloudplayplus_stone](https://github.com/zhuhaichao518/cloudplayplus_stone)) |
+| `plugins/` | cppp-owned plugins only |
+| `patches/` | Replayable diffs applied onto the pin |
+| `docs/` | Layout, handoff, GameViewer REA reservation |
+| `scripts/` | Init, bump, apply-patches, build |
 
-This fork (**cloudplayplus_plus** / **cppp**) keeps untouched upstream CloudPlayPlus (**CPP**) as a git submodule at `vendor/cloudplayplus` (pinned to https://github.com/zhuhaichao518/cloudplayplus_stone). Primary development stays at the repo root.
+Details: [docs/layout.md](docs/layout.md).
 
-- Clone with submodules: `git clone --recurse-submodules <url>`
-- Or after a plain clone: `scripts/submodule-init.sh`
-- Bump the CPP pin later with `scripts/bump-upstream.sh` (optional SHA)
-- Full notes: [docs/layout.md](docs/layout.md) (Phase 1 = submodule scaffold only; root Flutter tree unchanged until Phase 2)
+## Clone
 
-## Getting Started
-You can build and run it as a simple flutter project (such as, flutter build windows). Before build you need to run flutter pub get in sub plugin folders to sync the whole project.
+```bash
+git clone --recurse-submodules https://github.com/Sutodonez/cloudplayplus_plus.git
+cd cloudplayplus_plus
+# or:
+scripts/submodule-init.sh
+```
 
-Run this project on Windows or MacOS as host, and you will be able to control the host on another client, or from https://www.cloudplayplus.com/web/. You need to register a account first.
+## Build
 
-# Some Additional Develop Material
-# WebRTC
-We use custom build of WebRTC for cloudplayplus. The main purpose is add hardware_acceleration support in WebRTC windows and some GPU texture support. We have added/modified some interfaces and you can check the difference from flutter-webrtc in this project and official [flutter-webrtc](https://github.com/flutter-webrtc/flutter-webrtc).
+Primary build/dev target is the submodule (path deps into `vendor/` preferred over a full-tree overlay):
 
-# Linux
-Personally I use steam deck to develop this project. Here is the list of commands to make flutter runnable on steam deck:
-steamdeck flutter:
-sudo pacman-key --init
-sudo pacman-key --populate archlinux
-sudo steamos-readonly disable 
-sudo pacman-key --populate holo 
-sudo pacman -S base-devel cmake ninja glibc linux-api-headers gtk3 pango glib2 sysprof harfbuzz freetype2 libpng util-linux fribidi cairo lzo pixman gdk-pixbuf2 libcloudproviders atk at-spi2-atk dbus at-spi2-core libx11 xorgproto
+```bash
+scripts/build.sh linux     # or windows|macos|web|apk|ios
+# equivalent:
+cd vendor/cloudplayplus && flutter pub get && flutter run
+```
 
-To login to github desktop:
-sudo pacman -S kwalletmanager
-sudo pacman -S kwallet
+Bump upstream later with `scripts/bump-upstream.sh` (optional SHA), then replay `patches/`.
 
-sudo pacman -S tpm2-tss for secure_storage.
+## Constraints
 
-chrome debug:
-set chrome path to 
-var/lib/flatpak/app/com.google.Chrome/current/active/export/bin/com.google.Chrome
-if using flatpak
-
-# MacOS debug WebRTCFramework:
-copy the framework and dysm to flutter-webrtc/macos
-use xcode to build
-
-first time:
-modify pod
-pod install in cloudplayplus/macos
-
-# Web Debug
-## use local server:
-flutter run -d chrome --web-browser-flag "--disable-web-security"
-
-rtc build:
-python3 run.py build macos_arm64
+- Do not copy NetEase (网易) binaries or decompiled bodies.
+- Keep CPP changes replayable onto future pins.
+- `docs/reference/gameviewer/` is reserved for REA notes; bulky dumps go under `artifacts/`.
