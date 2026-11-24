@@ -11,18 +11,27 @@ env:
   FLUTTER_STORAGE_BASE_URL: https://storage.flutter-io.cn
   PUB_HOSTED_URL: https://pub.flutter-io.cn
   PUB_CACHE: ${{ github.workspace }}/.pub-cache
+  APP_DIR: vendor/cloudplayplus
 
 jobs:
   linux_build:
     name: Linux - Desktop
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: vendor/cloudplayplus
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
 
+      - name: Apply cppp patches
+        working-directory: .
+        run: scripts/apply-patches.sh
+
       - name: Install system dependencies (Linux desktop)
+        working-directory: .
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -54,16 +63,16 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.PUB_CACHE }}
-          key: pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-${{ hashFiles('pubspec.lock') }}
+          key: pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-${{ hashFiles('vendor/cloudplayplus/pubspec.yaml') }}
           restore-keys: |
             pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-
             pub-${{ runner.os }}-
 
-      - name: Get dependencies (root + plugins)
+      - name: Get dependencies (vendor + plugins)
         shell: bash
         run: |
           set -euo pipefail
-          echo "Resolving root dependencies..."
+          echo "Resolving vendor app dependencies..."
           flutter pub get
           echo "Resolving plugin dependencies..."
           while IFS= read -r -d '' pubspec; do
@@ -79,16 +88,23 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: linux-bundle
-          path: build/linux/x64/release/bundle
+          path: vendor/cloudplayplus/build/linux/x64/release/bundle
 
   web_build:
     name: Web
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: vendor/cloudplayplus
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Apply cppp patches
+        working-directory: .
+        run: scripts/apply-patches.sh
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -109,18 +125,16 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.PUB_CACHE }}
-          key: pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-${{ hashFiles('pubspec.lock') }}
+          key: pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-${{ hashFiles('vendor/cloudplayplus/pubspec.yaml') }}
           restore-keys: |
             pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-
             pub-${{ runner.os }}-
 
-      - name: Get dependencies (root + plugins)
+      - name: Get dependencies (vendor + plugins)
         shell: bash
         run: |
           set -euo pipefail
-          echo "Resolving root dependencies..."
           flutter pub get
-          echo "Resolving plugin dependencies..."
           while IFS= read -r -d '' pubspec; do
             plugin_dir=$(dirname "$pubspec")
             echo "  -> $plugin_dir"
@@ -128,23 +142,29 @@ jobs:
           done < <(find "plugins" -maxdepth 2 -name pubspec.yaml -print0 || true)
 
       - name: Build Web (CanvasKit)
-        run: |
-          flutter build web --release
+        run: flutter build web --release
 
       - name: Upload artifact - Web
         uses: actions/upload-artifact@v4
         with:
           name: web-build
-          path: build/web
+          path: vendor/cloudplayplus/build/web
 
   android_build:
     name: Android - APK
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: vendor/cloudplayplus
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Apply cppp patches
+        working-directory: .
+        run: scripts/apply-patches.sh
 
       - name: Setup Java (Android)
         uses: actions/setup-java@v4
@@ -171,18 +191,16 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.PUB_CACHE }}
-          key: pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-${{ hashFiles('pubspec.lock') }}
+          key: pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-${{ hashFiles('vendor/cloudplayplus/pubspec.yaml') }}
           restore-keys: |
             pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-
             pub-${{ runner.os }}-
 
-      - name: Get dependencies (root + plugins)
+      - name: Get dependencies (vendor + plugins)
         shell: bash
         run: |
           set -euo pipefail
-          echo "Resolving root dependencies..."
           flutter pub get
-          echo "Resolving plugin dependencies..."
           while IFS= read -r -d '' pubspec; do
             plugin_dir=$(dirname "$pubspec")
             echo "  -> $plugin_dir"
@@ -190,6 +208,7 @@ jobs:
           done < <(find "plugins" -maxdepth 2 -name pubspec.yaml -print0 || true)
 
       - name: Accept Android SDK licenses (best-effort)
+        working-directory: .
         run: |
           set -e
           if [ -n "${ANDROID_SDK_ROOT:-}" ] && [ -x "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" ]; then
@@ -201,25 +220,33 @@ jobs:
           fi
 
       - name: Build Android APK (skip dependency validation)
-        run: |
-          flutter build apk --release --android-skip-build-dependency-validation
+        run: flutter build apk --release --android-skip-build-dependency-validation
 
       - name: Upload artifact - Android APK
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: vendor/cloudplayplus/build/app/outputs/flutter-apk/app-release.apk
 
   windows_build:
     name: Windows - Desktop
     runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: vendor/cloudplayplus
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
 
+      - name: Apply cppp patches
+        working-directory: .
+        shell: bash
+        run: scripts/apply-patches.sh
+
       - name: Install Ninja (required by CMake)
+        working-directory: .
         run: choco install ninja -y
 
       - name: Setup Flutter
@@ -243,18 +270,16 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.PUB_CACHE }}
-          key: pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-${{ hashFiles('pubspec.lock') }}
+          key: pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-${{ hashFiles('vendor/cloudplayplus/pubspec.yaml') }}
           restore-keys: |
             pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-
             pub-${{ runner.os }}-
 
-      - name: Get dependencies (root + plugins)
+      - name: Get dependencies (vendor + plugins)
         shell: bash
         run: |
           set -euo pipefail
-          echo "Resolving root dependencies..."
           flutter pub get
-          echo "Resolving plugin dependencies..."
           while IFS= read -r -d '' pubspec; do
             plugin_dir=$(dirname "$pubspec")
             echo "  -> $plugin_dir"
@@ -269,7 +294,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-bundle
-          path: build/windows/x64/runner/Release
+          path: vendor/cloudplayplus/build/windows/x64/runner/Release
 
   macos_build:
     name: macOS - Desktop
@@ -277,11 +302,18 @@ jobs:
     env:
       CODE_SIGNING_ALLOWED: "NO"
       CODE_SIGNING_REQUIRED: "NO"
+    defaults:
+      run:
+        working-directory: vendor/cloudplayplus
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Apply cppp patches
+        working-directory: .
+        run: scripts/apply-patches.sh
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -299,24 +331,23 @@ jobs:
         run: flutter config --enable-macos-desktop
 
       - name: Accept Xcode license
+        working-directory: .
         run: sudo xcodebuild -license accept -allowProvisioningUpdates
 
       - name: Cache Pub
         uses: actions/cache@v4
         with:
           path: ${{ env.PUB_CACHE }}
-          key: pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-${{ hashFiles('pubspec.lock') }}
+          key: pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-${{ hashFiles('vendor/cloudplayplus/pubspec.yaml') }}
           restore-keys: |
             pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-
             pub-${{ runner.os }}-
 
-      - name: Get dependencies (root + plugins)
+      - name: Get dependencies (vendor + plugins)
         shell: bash
         run: |
           set -euo pipefail
-          echo "Resolving root dependencies..."
           flutter pub get
-          echo "Resolving plugin dependencies..."
           while IFS= read -r -d '' pubspec; do
             plugin_dir=$(dirname "$pubspec")
             echo "  -> $plugin_dir"
@@ -327,23 +358,29 @@ jobs:
         env:
           CODE_SIGNING_ALLOWED: "NO"
           CODE_SIGNING_REQUIRED: "NO"
-        run: |
-          flutter build macos
+        run: flutter build macos
 
       - name: Upload artifact - macOS app
         uses: actions/upload-artifact@v4
         with:
           name: macos-app
-          path: build/macos/Build/Products/Release/CloudPlayPlus.app
+          path: vendor/cloudplayplus/build/macos/Build/Products/Release/CloudPlayPlus.app
 
   ios_build:
     name: iOS - App
     runs-on: macos-14
+    defaults:
+      run:
+        working-directory: vendor/cloudplayplus
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Apply cppp patches
+        working-directory: .
+        run: scripts/apply-patches.sh
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -361,24 +398,23 @@ jobs:
         run: flutter config --enable-ios
 
       - name: Accept Xcode license
+        working-directory: .
         run: sudo xcodebuild -license accept
 
       - name: Cache Pub
         uses: actions/cache@v4
         with:
           path: ${{ env.PUB_CACHE }}
-          key: pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-${{ hashFiles('pubspec.lock') }}
+          key: pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-${{ hashFiles('vendor/cloudplayplus/pubspec.yaml') }}
           restore-keys: |
             pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-
             pub-${{ runner.os }}-
 
-      - name: Get dependencies (root + plugins)
+      - name: Get dependencies (vendor + plugins)
         shell: bash
         run: |
           set -euo pipefail
-          echo "Resolving root dependencies..."
           flutter pub get
-          echo "Resolving plugin dependencies..."
           while IFS= read -r -d '' pubspec; do
             plugin_dir=$(dirname "$pubspec")
             echo "  -> $plugin_dir"
@@ -386,12 +422,10 @@ jobs:
           done < <(find "plugins" -maxdepth 2 -name pubspec.yaml -print0 || true)
 
       - name: Build iOS (no code sign)
-        run: |
-          flutter build ios --no-codesign
+        run: flutter build ios --no-codesign
 
       - name: Upload artifact - iOS app (unsigned .app)
         uses: actions/upload-artifact@v4
         with:
           name: ios-app
-          path: build/ios/iphoneos/Runner.app
-
+          path: vendor/cloudplayplus/build/ios/iphoneos/Runner.app

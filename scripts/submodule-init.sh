@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Initialize and sync all git submodules for this repo (cppp).
-# Includes vendor/cloudplayplus (untouched CPP pin) and existing plugin submodules.
+# Initialize and sync git submodules for this repo (cppp).
+# Primary pin: vendor/cloudplayplus (untouched CPP). Nested plugin submodules
+# live inside that pin.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
