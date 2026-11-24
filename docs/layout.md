@@ -10,8 +10,9 @@ This repository is **cloudplayplus_plus** (**cppp**): the primary development su
 | `plugins/` | **cppp-owned** plugins only (not a copy of upstream plugins) |
 | `patches/` | Replayable patch series applied onto the vendor pin |
 | `docs/handoff/` | Portable enhancement handoff docs |
-| `docs/reference/gameviewer/` | Reserved for GameViewer REA notes (no NetEase binaries) |
-| `artifacts/` | Local bulky dumps (gitignored contents) |
+| `docs/reference/gameviewer/` | GameViewer RE notes (`01`–`12`, `99`) + README index (no NetEase binaries) |
+| `docs/reference/gameviewer/artifacts/` | Curated RE text dumps (JSON/txt/c/js) committed for cross-agent use |
+| `artifacts/` | Local scratch bulky dumps only (gitignored contents; not the RE pack) |
 | `scripts/` | Submodule init, upstream bump, patch apply, build helpers |
 | `overlay/` | Optional; prefer path deps into `vendor/` instead of a full-tree overlay |
 
@@ -67,9 +68,17 @@ To register that plugin with the CPP app, add a replayable patch under `patches/
 1. **Phase 1:** Submodule + init/bump scripts + layout doc (root Flutter tree still present).
 2. **Phase 2 (current):** Root thinned to cppp-only; build against `vendor/cloudplayplus`; duplicate vanilla sources removed from root.
 
+## Docs
+
+| Path | Role |
+|------|------|
+| [`docs/reference/gameviewer/`](./reference/gameviewer/) | GameViewer / UU远程 capability & design reference. Start at its [README index](./reference/gameviewer/README.md). Notes at tree root; dumps under `artifacts/`. **Not** product code. |
+| `docs/handoff/` | Enhancement handoff set (present on some branches) |
+
 ## Rules of thumb
 
 - Do not commit ad-hoc edits inside `vendor/` without regenerating patches.
 - Do not copy NetEase (网易) binaries into this tree.
+- Do not copy NetEase decompiled bodies from `docs/reference/gameviewer/artifacts/` into product / plugin / vendor code — reference for design only.
 - Hole punching remains the highest-priority enhancement track; changes must stay replayable onto future upstream pins.
 - Open feature PRs (#1–#3/#4) still target the pre-thin history; rebase/retarget them onto this layout separately.

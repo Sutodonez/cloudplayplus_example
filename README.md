@@ -2,14 +2,18 @@
 
 CloudPlayPlus Plus — enhancement fork of [CloudPlayPlus](https://www.cloudplayplus.com) with untouched upstream CPP tracked as a git submodule.
 
-## Layout
+## Layout (worker index)
 
 | Path | Role |
 |------|------|
 | `vendor/cloudplayplus` | Vanilla CPP pin ([cloudplayplus_stone](https://github.com/zhuhaichao518/cloudplayplus_stone)) |
 | `plugins/` | cppp-owned plugins only |
 | `patches/` | Replayable diffs applied onto the pin |
-| `docs/` | Layout, handoff, GameViewer REA reservation |
+| `docs/layout.md` | Full layout rules |
+| `docs/handoff/` | Portable enhancement handoff docs |
+| [`docs/reference/gameviewer/`](docs/reference/gameviewer/) | **GameViewer / UU远程 RE pack** — notes + curated dumps (start at [README](docs/reference/gameviewer/README.md)) |
+| `docs/reference/gameviewer/artifacts/` | Curated RE text dumps (not NetEase binaries) |
+| `artifacts/` | Local scratch dumps only (gitignored) |
 | `scripts/` | Init, bump, apply-patches, build |
 
 Details: [docs/layout.md](docs/layout.md).
@@ -37,6 +41,6 @@ Bump upstream later with `scripts/bump-upstream.sh` (optional SHA), then replay 
 
 ## Constraints
 
-- Do not copy NetEase (网易) binaries or decompiled bodies.
+- Do not copy NetEase (网易) binaries or decompiled bodies into product / plugin / vendor code.
 - Keep CPP changes replayable onto future pins.
-- `docs/reference/gameviewer/` is reserved for REA notes; bulky dumps go under `artifacts/`.
+- Cross-agent GameViewer RE exchange path: `docs/reference/gameviewer/` (notes) + `docs/reference/gameviewer/artifacts/` (dumps). Do not confuse with root `artifacts/` (local scratch).

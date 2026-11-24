@@ -1,0 +1,249 @@
+[
+  {
+    "n": "queryRelativeMouseReportBytes",
+    "enc": "a",
+    "off": 32078291,
+    "va": 5400790995,
+    "s": "queryRelativeMouseReportBytes@?A0x80ed80e2@input@support@@YA?AV?$optional@G@std@@PEB_W@Z@"
+  },
+  {
+    "n": "queryRelativeMouseReportBytes",
+    "enc": "a",
+    "off": 32386858,
+    "va": 5401099562,
+    "s": "queryRelativeMouseReportBytes@?A0x80ed80e2@input@support@@YA?AV?$optional@G@std@@PEB_W@Z@X$$V@std@@"
+  },
+  {
+    "n": "vhid_report_layout",
+    "enc": "a",
+    "off": 25070320,
+    "va": 5393782512,
+    "s": "vhid_report_layout result=failed stage=interface_instance code="
+  },
+  {
+    "n": "vhid_report_layout",
+    "enc": "a",
+    "off": 25070424,
+    "va": 5393782616,
+    "s": "vhid_report_layout result=failed stage=locate_device code="
+  },
+  {
+    "n": "vhid_report_layout",
+    "enc": "a",
+    "off": 25070496,
+    "va": 5393782688,
+    "s": "vhid_report_layout result=failed stage=open_collection code="
+  },
+  {
+    "n": "vhid_report_layout",
+    "enc": "a",
+    "off": 25070576,
+    "va": 5393782768,
+    "s": "vhid_report_layout result=failed stage=preparsed_data code="
+  },
+  {
+    "n": "vhid_report_layout",
+    "enc": "a",
+    "off": 25070648,
+    "va": 5393782840,
+    "s": "vhid_report_layout result=failed stage=input_caps code="
+  },
+  {
+    "n": "vhid_report_layout",
+    "enc": "a",
+    "off": 25070720,
+    "va": 5393782912,
+    "s": "vhid_report_layout result=failed stage=input_values code="
+  },
+  {
+    "n": "virtual_mouse_setting",
+    "enc": "a",
+    "off": 24017200,
+    "va": 5392729392,
+    "s": "virtual_mouse_setting result=updated enabled="
+  },
+  {
+    "n": "VirtualMouseSwitchRequest",
+    "enc": "a",
+    "off": 24844576,
+    "va": 5393556768,
+    "s": "VirtualMouseSwitchRequestH"
+  },
+  {
+    "n": "VirtualMouseSwitchRequest",
+    "enc": "a",
+    "off": 24866725,
+    "va": 5393578917,
+    "s": "VirtualMouseSwitchRequest"
+  },
+  {
+    "n": "VirtualMouseSwitchRequest",
+    "enc": "a",
+    "off": 32062212,
+    "va": 5400774916,
+    "s": "VirtualMouseSwitchRequest@gv_pb@@"
+  },
+  {
+    "n": "VirtualMouseSwitchResponse",
+    "enc": "a",
+    "off": 24846330,
+    "va": 5393558522,
+    "s": "VirtualMouseSwitchResponseH"
+  },
+  {
+    "n": "VirtualMouseSwitchResponse",
+    "enc": "a",
+    "off": 24866770,
+    "va": 5393578962,
+    "s": "VirtualMouseSwitchResponse"
+  },
+  {
+    "n": "VirtualMouseSwitchResponse",
+    "enc": "a",
+    "off": 32062276,
+    "va": 5400774980,
+    "s": "VirtualMouseSwitchResponse@gv_pb@@"
+  },
+  {
+    "n": "ff_virtual_mouse",
+    "enc": "a",
+    "off": 24838663,
+    "va": 5393550855,
+    "s": "ff_virtual_mouse_device"
+  },
+  {
+    "n": "input_backend_transition",
+    "enc": "a",
+    "off": 25072704,
+    "va": 5393784896,
+    "s": "input_backend_transition from=send_input to=vhid reason=probe_available"
+  },
+  {
+    "n": "input_backend_transition",
+    "enc": "a",
+    "off": 25072928,
+    "va": 5393785120,
+    "s": "input_backend_transition from=vhid to=send_input reason=release_all_failed"
+  },
+  {
+    "n": "input_backend_transition",
+    "enc": "a",
+    "off": 25074584,
+    "va": 5393786776,
+    "s": "input_backend_transition from=vhid to=send_input reason="
+  },
+  {
+    "n": "mouse_route",
+    "enc": "a",
+    "off": 24031726,
+    "va": 5392743918,
+    "s": "mouse_route event="
+  },
+  {
+    "n": "--uuyc-mux-session",
+    "enc": "u16",
+    "off": 24092042,
+    "va": 5392804234
+  },
+  {
+    "n": "--uuyc-mux-session",
+    "enc": "u16",
+    "off": 24106216,
+    "va": 5392818408
+  },
+  {
+    "n": "--uuyc-mux-config",
+    "enc": "u16",
+    "off": 24092098,
+    "va": 5392804290
+  },
+  {
+    "n": "--uuyc-mux-config",
+    "enc": "u16",
+    "off": 24106264,
+    "va": 5392818456
+  },
+  {
+    "n": "CreateProcessW",
+    "enc": "a",
+    "off": 33642074,
+    "va": 5402765402,
+    "s": "CreateProcessW"
+  },
+  {
+    "n": "CreateProcessAsUserW",
+    "enc": "a",
+    "off": 33643964,
+    "va": 5402767292,
+    "s": "CreateProcessAsUserW"
+  },
+  {
+    "n": "conpty_bridge.exe",
+    "enc": "u16",
+    "off": 24086680,
+    "va": 5392798872
+  },
+  {
+    "n": "terminal bridge result",
+    "enc": "a",
+    "off": 24088128,
+    "va": 5392800320,
+    "s": "terminal bridge result=failed operation=terminal_open stage="
+  },
+  {
+    "n": "terminal bridge result",
+    "enc": "a",
+    "off": 24092320,
+    "va": 5392804512,
+    "s": "terminal bridge result=started operation=terminal_open session_id="
+  },
+  {
+    "n": "terminal open",
+    "enc": "a",
+    "off": 24057920,
+    "va": 5392770112,
+    "s": "terminal open result=success session_id="
+  },
+  {
+    "n": "terminal open",
+    "enc": "a",
+    "off": 24062760,
+    "va": 5392774952,
+    "s": "terminal open result=rejected session_id="
+  },
+  {
+    "n": "terminal open",
+    "enc": "a",
+    "off": 24063104,
+    "va": 5392775296,
+    "s": "terminal open decision=allow session_id="
+  },
+  {
+    "n": "terminal open",
+    "enc": "a",
+    "off": 24063192,
+    "va": 5392775384,
+    "s": "terminal open detected exited session session_id="
+  },
+  {
+    "n": "handleMuxControlRequest",
+    "enc": "a",
+    "off": 24055362,
+    "va": 5392767554,
+    "s": "handleMuxControlRequest(const struct shared::terminal::mux_control::Request &)"
+  },
+  {
+    "n": "handleMuxControlRequest",
+    "enc": "a",
+    "off": 32004051,
+    "va": 5400716755,
+    "s": "handleMuxControlRequest@TerminalManager@terminal@business@host@@AEAA?AUResponse@mux_control@3shared@@AEBURequest@738@@Z@"
+  },
+  {
+    "n": "handleMuxControlRequest",
+    "enc": "a",
+    "off": 32292410,
+    "va": 5401005114,
+    "s": "handleMuxControlRequest@TerminalManager@terminal@business@host@@AEAA?AUResponse@mux_control@4shared@@AEBURequest@849@@Z@X$$V@std@@"
+  }
+]

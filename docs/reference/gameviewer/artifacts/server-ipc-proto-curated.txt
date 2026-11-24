@@ -1,0 +1,39 @@
+.?AVConcatenatingInputStream@io@protobuf@google@@
+.?AVServiceDescriptorProto@protobuf@google@@
+.?AVServiceOptions@protobuf@google@@
+.google.protobuf.ServiceOptions"
+.gv_pb.LaunchCloudPcAppH
+.gv_pb.QuickLaunchAppItem",
+.gv_pb.QuickLaunchScanRequestH
+.gv_pb.QuickLaunchScanResponseH
+.gv_pb.TerminalSessionChangedH
+2 .gv_pb.QuickLaunchAppIconRequestH
+2 .gv_pb.VirtualMouseSwitchRequestH
+2!.gv_pb.QuickLaunchAppIconResponseH
+2!.gv_pb.VirtualMouseSwitchResponseH
+2'.google.protobuf.ServiceDescriptorProto
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\server_core\business\terminal\visible_attach_ipc_server.cpp
+Found pending candidate for reuse and CURLOPT_PIPEWAIT is set
+google.protobuf.Empty
+google.protobuf.ServiceOptions
+gv_pb.ConnectOptions.device_id
+gv_pb.LaunchCloudPcApp.args
+gv_pb.LaunchCloudPcApp.cpc_app_id
+gv_pb.LaunchCloudPcApp.dapp_id
+gv_pb.LaunchCloudPcApp.name
+gv_pb.LaunchCloudPcApp.target_path
+gv_pb.QuickLaunchAppIconRequest.app_key
+gv_pb.QuickLaunchAppIconResponse.app_key
+gv_pb.QuickLaunchAppIconResponse.error_message
+gv_pb.QuickLaunchAppItem.app_id
+gv_pb.QuickLaunchAppItem.app_key
+gv_pb.QuickLaunchAppItem.icon_url
+gv_pb.QuickLaunchAppItem.name
+gv_pb.QuickLaunchAppItem.target_path
+gv_pb.QuickLaunchScanResponse.error_message
+ipc_client_connect result=rejected reason=empty_server_name
+ipc_client_signature result=failed code=
+ipc_client_signature result=skipped reason=test_environment
+ipc_client_signature result=success
+ipc_device_initialized_notify result=queued initialized=
+ipc_socket_read result=failed reason=empty_completion

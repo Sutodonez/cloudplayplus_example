@@ -1,0 +1,88 @@
+ proxy not applied to signaling
+..\..\pc\ice_server_parsing.cc
+.?AV<lambda_19>@?0??Initialize@SdpOfferAnswerHandler@webrtc@@AEAAXAEBURTCConfiguration@PeerConnectionInterface@3@AEAUPeerConnectionDependencies@3@PEAVConnectionContext@3@@Z@
+.?AV<lambda_1>@?1??AddCandidate@?$PeerConnectionImpl@VControlledPeerConnection@pc@streamer@@@pc@streamer@@QEAA?AVerror_code@std@@AEBUCandidate@4@@Z@
+.?AV<lambda_1>@?1??AddCandidate@?$PeerConnectionImpl@VControllerPeerConnection@pc@streamer@@@pc@streamer@@QEAA?AVerror_code@std@@AEBUCandidate@4@@Z@
+.?AV<lambda_1>@?1??CreateLocalDescriptionObserver@?$PeerConnectionImpl@VControlledPeerConnection@pc@streamer@@@pc@streamer@@IEAA?AV?$scoped_refptr@VLocalDescriptionObserver@pc@streamer@@@rtc@@W4LocalDescriptionType@34@_N@Z@
+.?AV<lambda_1>@?1??CreateLocalDescriptionObserver@?$PeerConnectionImpl@VControllerPeerConnection@pc@streamer@@@pc@streamer@@IEAA?AV?$scoped_refptr@VLocalDescriptionObserver@pc@streamer@@@rtc@@W4LocalDescriptionType@34@_N@Z@
+.?AV<lambda_1>@?1??StreamerDataChannelEventLoop@ControlledSession@streamer@@QEAA?AV?$awaitable@Verror_code@std@@Vany_io_executor@asio@@@asio@@V?$shared_ptr@U?$IceConnection@VControlledPeerConnection@pc@streamer@@@streamer@@@std@@@Z@
+.?AV<lambda_20>@?0??AddIceCandidate@PeerConnection@webrtc@@UEAAXV?$unique_ptr@VIceCandidateInterface@webrtc@@U?$default_delete@VIceCandidateInterface@webrtc@@@std@@@std@@V?$function@$$A6AXVRTCError@webrtc@@@Z@5@@Z@
+.?AV<lambda_40>@?0??InitializeRtcpCallback@PeerConnection@webrtc@@AEAA?AV?$function@$$A6AXAEBVCopyOnWriteBuffer@rtc@@_J@Z@std@@XZ@
+.?AV<lambda_43>@?0??Initialize@PeerConnection@webrtc@@AEAA?AVRTCError@3@AEBURTCConfiguration@PeerConnectionInterface@3@UPeerConnectionDependencies@3@@Z@
+.?AV<lambda_4>@?0???0SdpOfferAnswerHandler@webrtc@@AEAA@PEAVPeerConnectionSdpMethods@2@PEAVConnectionContext@2@@Z@
+.?AV<lambda_4>@?0??Initialize@PeerConnection@webrtc@@AEAA?AVRTCError@3@AEBURTCConfiguration@PeerConnectionInterface@3@UPeerConnectionDependencies@3@@Z@
+.?AV<lambda_5>@?0??InitializeTransportController_n@PeerConnection@webrtc@@AEAAPEAVJsepTransportController@3@AEBURTCConfiguration@PeerConnectionInterface@3@AEBUPeerConnectionDependencies@3@@Z@
+: ice_transport receiving state changed to 
+: ice_transport writable state changed to 
+AddIceCandidate: PeerConnection is closed.
+Attempt to create a PeerConnection without a PortAllocatorFactory
+Attempt to create a PeerConnection without an observer
+Called in wrong signalingState: 
+ControlledCallback.OnPeerConnectionState
+ControllerCallback.OnPeerConnectionState
+CreateOffer called when PeerConnection is closed.
+ICE server parsing failed: IceServer has hostname field set, but URI does not contain an IP address.
+PeerConnection cannot create an answer in a state other than have-remote-offer or have-local-pranswer.
+PeerConnection constructed with legacy SDP semantics!
+PeerConnection initialization failed
+PeerConnection initialized without a PeerConnectionObserver
+PeerConnection initialized without a PortAllocator? This shouldn't happen if using PeerConnectionFactory.
+PeerConnection is closed.
+PeerConnection::AddStream
+PeerConnection::AddTrack
+PeerConnection::Close
+PeerConnection::CreateDataChannel
+PeerConnection::CreateSender
+PeerConnection::GetStats
+PeerConnection::GetStats (legacy)
+PeerConnection::GetTransportStatsByNames
+PeerConnection::Initialize
+PeerConnection::PeerConnection() create this=
+PeerConnection::RemoveIceCandidates
+PeerConnection::RemoveStream
+PeerConnection::ReportTransportStats
+PeerConnection::SetConfiguration
+PeerConnection::~PeerConnection
+PeerConnection::~PeerConnection() begin this=
+PeerConnection::~PeerConnection() end this=
+PeerConnection::~PeerConnection() port_allocator_=
+PeerConnection::~PeerConnection() trace 1 this=
+PeerConnection::~PeerConnection() trace begin
+PeerConnection::~PeerConnection() trace end
+PeerConnectionFactory::CreatePeerConnectionOrError() create allocator=
+RemoveIceCandidates: PeerConnection is closed.
+SdpOfferAnswerHandler::ChangeSignalingState
+SetConfiguration: PeerConnection is closed.
+SetLocalDescription called when PeerConnection is closed.
+WebRTC.PeerConnection.AddIceCandidate
+WebRTC.PeerConnection.BundlePolicy
+WebRTC.PeerConnection.BundleUsage
+WebRTC.PeerConnection.CandidatePairType_TCP
+WebRTC.PeerConnection.CandidatePairType_UDP
+WebRTC.PeerConnection.DtlsHandshakeError
+WebRTC.PeerConnection.IPMetrics
+WebRTC.PeerConnection.IceRegatheringReason
+WebRTC.PeerConnection.IceRestartState
+WebRTC.PeerConnection.Mid.Size
+WebRTC.PeerConnection.ProvisionalAnswer
+WebRTC.PeerConnection.Simulcast.ApplyLocalDescription
+WebRTC.PeerConnection.Simulcast.ApplyRemoteDescription
+WebRTC.PeerConnection.Simulcast.Disabled
+WebRTC.PeerConnection.Simulcast.NumberOfSendEncodings
+WebRTC.PeerConnection.SrtcpUnprotectError
+WebRTC.PeerConnection.SrtpCryptoSuite.Audio
+WebRTC.PeerConnection.SrtpCryptoSuite.Data
+WebRTC.PeerConnection.SrtpCryptoSuite.Video
+WebRTC.PeerConnection.SrtpUnprotectError
+WebRTC.PeerConnection.SslCipherSuite.Audio
+WebRTC.PeerConnection.SslCipherSuite.Data
+WebRTC.PeerConnection.SslCipherSuite.Video
+WebRTC.PeerConnection.UsagePattern
+WebRTC.PeerConnection.ValidIceChars
+[session:{}] [ice:{}] [a:{}] [i:{}] signaling state change : {}
+[session:{}] ice connection does not exist, returning kPeerConnectionFailed
+event_streamer_signaling_connect
+iceServers
+restart_ice: {}, ice_transport_type: {}, ice_id: {}
+signaling_domain_map
+surface_ice_candidates_on_ice_transport_type_changed is ineffective since we do not gather continually.

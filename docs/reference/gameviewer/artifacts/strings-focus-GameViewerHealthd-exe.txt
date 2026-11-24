@@ -1,0 +1,697 @@
+    Signature Algorithm: 
+   Signature Algorithm: %s
+   Signature: %s
+ protocol="%ssignature";
+ terminate_code=
+ terminated=
+#NetEase (Hangzhou) Network Co., Ltd0
+#NetEase (Hangzhou) Network Co., Ltd1,0*
+%*s<EMPTY>
+%*sSignature : 
+%*sUser Notice:
+(Empty suboption?)
+(terminated by 
+, sentry_version=7, sentry_client=sentry.native/0.5.0
+.?AV<lambda_1>@?1??bindDiskToDevice@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUBindDiskToDeviceResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??bootCheck@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??byRecommandation@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0V?$function@$$A6AXAEBUByRecommandationResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??cancelCloudDeviceBootFailedInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCancelCloudDeviceBootFailedInfoResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??cancelCloudDevicePersistenceConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUPersistenceConfig@34@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??cancelCloudDeviceScheduleShutdownConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUScheduleShutdownRequestConfig@34@AEBV?$function@$$A6AXAEBUCancelScheduleShutdownConfigResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??cancelPinDeviceApp@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AX$$QEAUPinApplicationResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??cancelQueueUpCloudDevice@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCancelQueueUpCloudDeviceResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??cancelRemoteAssist@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??cancelShareDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??cleanRoomByDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??clearRemoteAssistRecentSavedDevices@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??connectMyDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@_NAEBV?$function@$$A6AXAEBURoomResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??connectOtherDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUConnectOtherDeviceResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??createCloudPc@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBIAEBV?$function@$$A6AXAEBUCreateCloudPcResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??createGuestRoom@NrdDevice@business_api@shared@@QEAAX_JAEBV?$function@$$A6AXAEBURoomResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??createRoom@NrdDevice@business_api@shared@@QEAAX_JAEBV?$function@$$A6AXAEBURoomResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??deleteCloudPc@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUDeleteCloudPcResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??deleteDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@_NAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??deleteRemoteAssistSavedDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??doApplicationAction@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0HAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??doPinDeviceApp@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@00AEBV?$function@$$A6AX$$QEAUPinApplicationResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??getAppCenterTicket@NrdCloudDevice@business_api@shared@@QEAAXAEBUAppCenterTicketRequestConfig@34@AEBV?$function@$$A6AXAEBUGetAppCenterTicketResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??getRouterInfo@NrdDevice@business_api@shared@@QEAAXAEBUUUBoxData@34@AEBV?$function@$$A6AXAEBURouterPluginInfo@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??getRouterWolSupport@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBURouterWolSupportInfo@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??getStreamingConfiguration@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$function@$$A6AXAEBUGetStreamingConfigurationResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??initCloudPc@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUInitCloudPcResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??initDevice@NrdDevice@business_api@shared@@QEAAXAEBUInitDeviceInfo@34@AEBV?$function@$$A6AXAEBUInitDeviceResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??pluginNotifyMyDevice@NrdPlugin@business_api@shared@@QEAAXAEBUPluginNotifyMyDeviceRequestConfig@34@AEBV?$function@$$A6AXAEBUPluginNotifyMyDeviceResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??postRemoteAssistFavoriteSavedDevices@NrdDevice@business_api@shared@@QEAAXAEBV?$vector@URemoteAssistFavoriteUpsertItem@business_api@shared@@V?$allocator@URemoteAssistFavoriteUpsertItem@business_api@shared@@@std@@@std@@_NAEBV?$function@$$A6AXAEBURemoteAssistFavoriteUpsertResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryActivatedAppsConfigure@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryActivatedAppsConfigureResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryAllDeviceList@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryDeviceListResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryCloudDeviceBootInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryCloudDeviceBootInfoResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryCloudDeviceCostInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryCloudDeviceCostInfoResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryCloudDeviceInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryCloudDeviceInfoResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryCloudDevicePersistenceConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUPersistenceConfig@34@AEBV?$function@$$A6AXAEBUQueryCloudDevicePersistenceConfigResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryCloudDeviceQueueUpInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUQueryCloudDeviceQueueUpInfoResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryCloudDeviceRootLaunchAppInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEAUQueryCloudDeviceRootLaunchAppInfoResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryCloudDeviceScheduleShutdownConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUScheduleShutdownRequestConfig@34@AEBV?$function@$$A6AXAEBUQueryScheduleShutdownConfigResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryCloudDisks@NrdCloudDevice@business_api@shared@@QEAAXAEBUQueryCloudDisksRequest@34@AEBV?$function@$$A6AXAEBUQueryCloudDisksResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryCloudPcDeviceList@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryCloudPcDeviceListResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryCloudPcDeviceListRaw@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryCloudPcFeatures@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryCloudPcFeaturesResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryCloudPcGoods@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryCloudPcGoodsResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryCloudPcNetworkSpeed@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryCloudPcNetworkSpeedResponse@business_api@shared@@@Z@std@@_N@Z@
+.?AV<lambda_1>@?1??queryControlledDeviceList@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryDeviceListResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryDeviceAppList@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@HAEBV?$function@$$A6AX$$QEAUQueryDeviceAppListResponse@business_api@shared@@@Z@6@_N@Z@
+.?AV<lambda_1>@?1??queryDeviceDetail@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryDeviceDetailResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryDeviceInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryDeviceInfoResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryDevicePinAppList@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@HAEBV?$function@$$A6AX$$QEAUQueryDeviceAppListResponse@business_api@shared@@@Z@6@_N@Z@
+.?AV<lambda_1>@?1??queryDevicePreferences@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryDevicePreferencesResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryDeviceShareInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUShareDeviceResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryIpInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEAUQueryIpInfoResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryJoinRoomByConfirm@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUConnectOtherDeviceResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryNotifyUploadLog@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryRemoteAssistSavedDevices@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBURemoteAssistSavedDeviceListResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryRemoteControlMode@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryControlModeResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??queryWhiteList@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUHttpResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queryWhiteListUrl@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUHttpResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??queueUpConfirmCloudDevice@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueueUpConfirmCloudDeviceResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??refetchCreateRoom@NrdDevice@business_api@shared@@QEAAX_JAEBV?$function@$$A6AXAEBURoomResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??refetchRoomToken@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUConnectOtherDeviceResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??refreshShareDeviceId@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUShareDeviceResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??renameCloudDisk@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBURenameCloudDiskBizResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??renameDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBURenameDeviceResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??reportDeviceAppStatus@NrdDevice@business_api@shared@@QEAAXAEBUReportDeviceAppStatusRequest@34@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??reportDeviceUpdatePrepare@NrdBusinessEntry@business_api@shared@@QEAAXXZ@
+.?AV<lambda_1>@?1??reportLanInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@00PEBUUUBoxData@34@AEBV?$function@$$A6AXAEBULanInfoResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??resetCloudDisk@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUResetCloudDiskBizResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??sendNotifyDeviceReboot@NrdBusinessEntry@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??sendWakingDevice@NrdBusinessEntry@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUWakeDeviceResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??setSupportRemoteBoot@NrdDevice@business_api@shared@@QEAAX_NAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??shareDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUShareDeviceResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??startCloudDeviceScheduleShutdownConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUScheduleShutdownRequestConfig@34@AEBV?$function@$$A6AXAEBUStartScheduleShutdownConfigResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??turnOffCloudPc@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUTurnOffCloudPcResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??turnOnCloudPc@NrdCloudDevice@business_api@shared@@QEAAXAEBUTurnOnConfig@34@AEBV?$function@$$A6AXAEBUTurnOnCloudPcResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??updateCloudDevicePersistenceConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUPersistenceConfig@34@AEBV?$function@$$A6AXAEBUUpdateCloudDevicePersistenceConfigResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??updateCloudDeviceScheduleShutdownConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUScheduleShutdownRequestConfig@34@AEBV?$function@$$A6AXAEBUUpdateScheduleShutdownConfigResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??updateDevicePinAppList@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$vector@UDeviceAppId@business_api@shared@@V?$allocator@UDeviceAppId@business_api@shared@@@std@@@6@AEBV?$function@$$A6AX$$QEAUQueryDeviceAppListResponse@business_api@shared@@@Z@6@_N@Z@
+.?AV<lambda_1>@?1??updateDeviceToolOrder@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$vector@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$allocator@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@@6@AEBV?$function@$$A6AXAEBUUpdateDeviceToolOrderResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??uploadActivatedApps@NrdCloudDevice@business_api@shared@@QEAAXAEBUActivatedAppInfoList@34@AEBV?$function@$$A6AXAEBUUploadActivatedAppsResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??uploadCloudPcNetworkSpeedResult@NrdCloudDevice@business_api@shared@@QEAAXAEBUCloudPcNetworkSpeedResult@34@AEBV?$function@$$A6AXAEBUUploadCloudPcNetworkSpeedResultResponse@business_api@shared@@@Z@std@@@Z@
+.?AV<lambda_1>@?1??uploadSign2@NrdDevice@business_api@shared@@QEAAX_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@1110AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??uploadWallpaper@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@6@@Z@
+.?AV<lambda_1>@?1??verifyCatalogSignature@?A0x45601677@platform@@YA?AW4AuthenticodeError@3@AEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@Z@
+.?AV<lambda_2>@?1??verifyCatalogSignature@?A0x45601677@platform@@YA?AW4AuthenticodeError@3@AEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@Z@
+.?AV<lambda_3>@?1??reportPageView@reporting@shared@@YAXV?$basic_string_view@DU?$char_traits@D@std@@@std@@VReportFields@23@_N@Z@
+.?AV?$AlgorithmImpl@V?$ConcretePolicyHolder@VEmpty@CryptoPP@@V?$CFB_EncryptionTemplate@V?$AbstractPolicyHolder@VCFB_CipherAbstractPolicy@CryptoPP@@VCFB_ModePolicy@2@@CryptoPP@@@2@VCFB_CipherAbstractPolicy@2@@CryptoPP@@V?$CipherModeFinalTemplate_CipherHolder@V?$BlockCipherFinal@$0A@VEnc@?$MDC@VSHA1@CryptoPP@@@CryptoPP@@@CryptoPP@@V?$ConcretePolicyHolder@VEmpty@CryptoPP@@V?$CFB_EncryptionTemplate@V?$AbstractPolicyHolder@VCFB_CipherAbstractPolicy@CryptoPP@@VCFB_ModePolicy@2@@CryptoPP@@@2@VCFB_CipherAbstractPolicy@2@@2@@2@@CryptoPP@@
+.?AV?$AlgorithmImpl@V?$DL_SignerBase@UEC2NPoint@CryptoPP@@@CryptoPP@@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@2@@CryptoPP@@
+.?AV?$AlgorithmImpl@V?$DL_SignerBase@UECPPoint@CryptoPP@@@CryptoPP@@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@2@@CryptoPP@@
+.?AV?$AlgorithmImpl@V?$DL_VerifierBase@UEC2NPoint@CryptoPP@@@CryptoPP@@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@2@@CryptoPP@@
+.?AV?$AlgorithmImpl@V?$DL_VerifierBase@UECPPoint@CryptoPP@@@CryptoPP@@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@2@@CryptoPP@@
+.?AV?$AutoSignaling@V?$InputRejecting@VBufferedTransformation@CryptoPP@@@CryptoPP@@@CryptoPP@@
+.?AV?$AutoSignaling@VBufferedTransformation@CryptoPP@@@CryptoPP@@
+.?AV?$CipherModeFinalTemplate_CipherHolder@V?$BlockCipherFinal@$0A@VEnc@?$MDC@VSHA1@CryptoPP@@@CryptoPP@@@CryptoPP@@V?$ConcretePolicyHolder@VEmpty@CryptoPP@@V?$CFB_EncryptionTemplate@V?$AbstractPolicyHolder@VCFB_CipherAbstractPolicy@CryptoPP@@VCFB_ModePolicy@2@@CryptoPP@@@2@VCFB_CipherAbstractPolicy@2@@2@@CryptoPP@@
+.?AV?$CipherModeFinalTemplate_ExternalCipher@V?$ConcretePolicyHolder@VEmpty@CryptoPP@@V?$AdditiveCipherTemplate@V?$AbstractPolicyHolder@UAdditiveCipherAbstractPolicy@CryptoPP@@VCTR_ModePolicy@2@@CryptoPP@@@2@UAdditiveCipherAbstractPolicy@2@@CryptoPP@@@CryptoPP@@
+.?AV?$ConcretePolicyHolder@VEmpty@CryptoPP@@V?$AdditiveCipherTemplate@V?$AbstractPolicyHolder@UAdditiveCipherAbstractPolicy@CryptoPP@@VCTR_ModePolicy@2@@CryptoPP@@@2@UAdditiveCipherAbstractPolicy@2@@CryptoPP@@
+.?AV?$ConcretePolicyHolder@VEmpty@CryptoPP@@V?$CFB_EncryptionTemplate@V?$AbstractPolicyHolder@VCFB_CipherAbstractPolicy@CryptoPP@@VCFB_ModePolicy@2@@CryptoPP@@@2@VCFB_CipherAbstractPolicy@2@@CryptoPP@@
+.?AV?$DL_ElgamalLikeSignatureAlgorithm@UEC2NPoint@CryptoPP@@@CryptoPP@@
+.?AV?$DL_ElgamalLikeSignatureAlgorithm@UECPPoint@CryptoPP@@@CryptoPP@@
+.?AV?$DL_ElgamalLikeSignatureAlgorithm@VInteger@CryptoPP@@@CryptoPP@@
+.?AV?$DL_ObjectImpl@V?$DL_SignerBase@UEC2NPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_EC@VEC2N@CryptoPP@@@CryptoPP@@U?$ECDSA@VEC2N@CryptoPP@@VSHA256@2@@2@@2@@CryptoPP@@
+.?AV?$DL_ObjectImpl@V?$DL_SignerBase@UECPPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_EC@VECP@CryptoPP@@@CryptoPP@@U?$ECDSA@VECP@CryptoPP@@VSHA256@2@@2@@2@@CryptoPP@@
+.?AV?$DL_ObjectImpl@V?$DL_SignerBase@VInteger@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DSA2@VSHA1@CryptoPP@@@CryptoPP@@UDL_Keys_DSA@2@V?$DL_Algorithm_GDSA@VInteger@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA1@2@@2@V?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_GFP@VDL_GroupParameters_DSA@CryptoPP@@@CryptoPP@@V?$DSA2@VSHA1@CryptoPP@@@2@@2@@CryptoPP@@
+.?AV?$DL_ObjectImpl@V?$DL_VerifierBase@UEC2NPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PublicKey_EC@VEC2N@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_ObjectImpl@V?$DL_VerifierBase@UECPPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PublicKey_EC@VECP@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_ObjectImpl@V?$DL_VerifierBase@VInteger@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DSA2@VSHA1@CryptoPP@@@CryptoPP@@UDL_Keys_DSA@2@V?$DL_Algorithm_GDSA@VInteger@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA1@2@@2@V?$DL_PublicKey_GFP@VDL_GroupParameters_DSA@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_ObjectImplBase@V?$DL_SignerBase@UEC2NPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_EC@VEC2N@CryptoPP@@@CryptoPP@@U?$ECDSA@VEC2N@CryptoPP@@VSHA256@2@@2@@2@@CryptoPP@@
+.?AV?$DL_ObjectImplBase@V?$DL_SignerBase@UECPPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_EC@VECP@CryptoPP@@@CryptoPP@@U?$ECDSA@VECP@CryptoPP@@VSHA256@2@@2@@2@@CryptoPP@@
+.?AV?$DL_ObjectImplBase@V?$DL_SignerBase@VInteger@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DSA2@VSHA1@CryptoPP@@@CryptoPP@@UDL_Keys_DSA@2@V?$DL_Algorithm_GDSA@VInteger@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA1@2@@2@V?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_GFP@VDL_GroupParameters_DSA@CryptoPP@@@CryptoPP@@V?$DSA2@VSHA1@CryptoPP@@@2@@2@@CryptoPP@@
+.?AV?$DL_ObjectImplBase@V?$DL_VerifierBase@UEC2NPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PublicKey_EC@VEC2N@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_ObjectImplBase@V?$DL_VerifierBase@UECPPoint@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@2@V?$DL_PublicKey_EC@VECP@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_ObjectImplBase@V?$DL_VerifierBase@VInteger@CryptoPP@@@CryptoPP@@U?$DL_SignatureSchemeOptions@V?$DSA2@VSHA1@CryptoPP@@@CryptoPP@@UDL_Keys_DSA@2@V?$DL_Algorithm_GDSA@VInteger@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA1@2@@2@V?$DL_PublicKey_GFP@VDL_GroupParameters_DSA@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_EC@VEC2N@CryptoPP@@@CryptoPP@@U?$ECDSA@VEC2N@CryptoPP@@VSHA256@2@@2@@CryptoPP@@
+.?AV?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_EC@VECP@CryptoPP@@@CryptoPP@@U?$ECDSA@VECP@CryptoPP@@VSHA256@2@@2@@CryptoPP@@
+.?AV?$DL_PrivateKey_WithSignaturePairwiseConsistencyTest@V?$DL_PrivateKey_GFP@VDL_GroupParameters_DSA@CryptoPP@@@CryptoPP@@V?$DSA2@VSHA1@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignatureSchemeBase@VPK_Signer@CryptoPP@@V?$DL_PrivateKey@UEC2NPoint@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignatureSchemeBase@VPK_Signer@CryptoPP@@V?$DL_PrivateKey@UECPPoint@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignatureSchemeBase@VPK_Signer@CryptoPP@@V?$DL_PrivateKey@VInteger@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignatureSchemeBase@VPK_Verifier@CryptoPP@@V?$DL_PublicKey@UEC2NPoint@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignatureSchemeBase@VPK_Verifier@CryptoPP@@V?$DL_PublicKey@UECPPoint@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignatureSchemeBase@VPK_Verifier@CryptoPP@@V?$DL_PublicKey@VInteger@CryptoPP@@@2@@CryptoPP@@
+.?AV?$DL_SignerImpl@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@CryptoPP@@@CryptoPP@@
+.?AV?$DL_SignerImpl@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@CryptoPP@@@CryptoPP@@
+.?AV?$DL_SignerImpl@U?$DL_SignatureSchemeOptions@V?$DSA2@VSHA1@CryptoPP@@@CryptoPP@@UDL_Keys_DSA@2@V?$DL_Algorithm_GDSA@VInteger@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA1@2@@CryptoPP@@@CryptoPP@@
+.?AV?$DL_VerifierImpl@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VEC2N@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VEC2N@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@CryptoPP@@@CryptoPP@@
+.?AV?$DL_VerifierImpl@U?$DL_SignatureSchemeOptions@V?$DL_SS@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@CryptoPP@@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@H@CryptoPP@@U?$DL_Keys_ECDSA@VECP@CryptoPP@@@2@V?$DL_Algorithm_ECDSA@VECP@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA256@2@@CryptoPP@@@CryptoPP@@
+.?AV?$DL_VerifierImpl@U?$DL_SignatureSchemeOptions@V?$DSA2@VSHA1@CryptoPP@@@CryptoPP@@UDL_Keys_DSA@2@V?$DL_Algorithm_GDSA@VInteger@CryptoPP@@@2@VDL_SignatureMessageEncodingMethod_DSA@2@VSHA1@2@@CryptoPP@@@CryptoPP@@
+.?AV?$TF_Base@VRandomizedTrapdoorFunctionInverse@CryptoPP@@VPK_SignatureMessageEncodingMethod@2@@CryptoPP@@
+.?AV?$TF_Base@VTrapdoorFunction@CryptoPP@@VPK_SignatureMessageEncodingMethod@2@@CryptoPP@@
+.?AV?$TF_ObjectImpl@VTF_SignerBase@CryptoPP@@U?$TF_SignatureSchemeOptions@V?$TF_SS@URSA@CryptoPP@@UPKCS1v15@2@VSHA1@2@H@CryptoPP@@URSA@2@VPKCS1v15_SignatureMessageEncodingMethod@2@VSHA1@2@@2@VInvertibleRSAFunction@2@@CryptoPP@@
+.?AV?$TF_ObjectImpl@VTF_VerifierBase@CryptoPP@@U?$TF_SignatureSchemeOptions@V?$TF_SS@URSA@CryptoPP@@UPKCS1v15@2@VSHA1@2@H@CryptoPP@@URSA@2@VPKCS1v15_SignatureMessageEncodingMethod@2@VSHA1@2@@2@VRSAFunction@2@@CryptoPP@@
+.?AV?$TF_ObjectImplBase@VTF_SignerBase@CryptoPP@@U?$TF_SignatureSchemeOptions@V?$TF_SS@URSA@CryptoPP@@UPKCS1v15@2@VSHA1@2@H@CryptoPP@@URSA@2@VPKCS1v15_SignatureMessageEncodingMethod@2@VSHA1@2@@2@VInvertibleRSAFunction@2@@CryptoPP@@
+.?AV?$TF_ObjectImplBase@VTF_VerifierBase@CryptoPP@@U?$TF_SignatureSchemeOptions@V?$TF_SS@URSA@CryptoPP@@UPKCS1v15@2@VSHA1@2@H@CryptoPP@@URSA@2@VPKCS1v15_SignatureMessageEncodingMethod@2@VSHA1@2@@2@VRSAFunction@2@@CryptoPP@@
+.?AV?$TF_SignatureSchemeBase@VPK_Signer@CryptoPP@@V?$TF_Base@VRandomizedTrapdoorFunctionInverse@CryptoPP@@VPK_SignatureMessageEncodingMethod@2@@2@@CryptoPP@@
+.?AV?$TF_SignatureSchemeBase@VPK_Verifier@CryptoPP@@V?$TF_Base@VTrapdoorFunction@CryptoPP@@VPK_SignatureMessageEncodingMethod@2@@2@@CryptoPP@@
+.?AV?$TF_SignerImpl@U?$TF_SignatureSchemeOptions@V?$TF_SS@URSA@CryptoPP@@UPKCS1v15@2@VSHA1@2@H@CryptoPP@@URSA@2@VPKCS1v15_SignatureMessageEncodingMethod@2@VSHA1@2@@CryptoPP@@@CryptoPP@@
+.?AV?$TF_VerifierImpl@U?$TF_SignatureSchemeOptions@V?$TF_SS@URSA@CryptoPP@@UPKCS1v15@2@VSHA1@2@H@CryptoPP@@URSA@2@VPKCS1v15_SignatureMessageEncodingMethod@2@VSHA1@2@@CryptoPP@@@CryptoPP@@
+.?AV?$WeakCallback@V<lambda_1>@?7??run@ServiceMonitorRunner@@QEAAXXZ@@detail@thread_runtime@utils@@
+.?AV?$WeakCallback@V<lambda_2>@?9??run@ServiceMonitorRunner@@QEAAXXZ@@detail@thread_runtime@utils@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??bindDiskToDevice@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUBindDiskToDeviceResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??bootCheck@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??byRecommandation@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0V?$function@$$A6AXAEBUByRecommandationResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??cancelCloudDeviceBootFailedInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCancelCloudDeviceBootFailedInfoResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??cancelCloudDevicePersistenceConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUPersistenceConfig@45@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??cancelCloudDeviceScheduleShutdownConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUScheduleShutdownRequestConfig@45@AEBV?$function@$$A6AXAEBUCancelScheduleShutdownConfigResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??cancelPinDeviceApp@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AX$$QEAUPinApplicationResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??cancelQueueUpCloudDevice@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCancelQueueUpCloudDeviceResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??cancelRemoteAssist@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??cancelShareDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??cleanRoomByDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??clearRemoteAssistRecentSavedDevices@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??connectMyDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@_NAEBV?$function@$$A6AXAEBURoomResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??connectOtherDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUConnectOtherDeviceResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??createCloudPc@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBIAEBV?$function@$$A6AXAEBUCreateCloudPcResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??createGuestRoom@NrdDevice@business_api@shared@@QEAAX_JAEBV?$function@$$A6AXAEBURoomResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??createRoom@NrdDevice@business_api@shared@@QEAAX_JAEBV?$function@$$A6AXAEBURoomResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??deleteCloudPc@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUDeleteCloudPcResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??deleteDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@_NAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??deleteRemoteAssistSavedDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??doApplicationAction@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0HAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??doPinDeviceApp@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@00AEBV?$function@$$A6AX$$QEAUPinApplicationResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??getAppCenterTicket@NrdCloudDevice@business_api@shared@@QEAAXAEBUAppCenterTicketRequestConfig@45@AEBV?$function@$$A6AXAEBUGetAppCenterTicketResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??getRouterInfo@NrdDevice@business_api@shared@@QEAAXAEBUUUBoxData@45@AEBV?$function@$$A6AXAEBURouterPluginInfo@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??getRouterWolSupport@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBURouterWolSupportInfo@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??getStreamingConfiguration@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$function@$$A6AXAEBUGetStreamingConfigurationResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??initCloudPc@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUInitCloudPcResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??initDevice@NrdDevice@business_api@shared@@QEAAXAEBUInitDeviceInfo@45@AEBV?$function@$$A6AXAEBUInitDeviceResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??pluginNotifyMyDevice@NrdPlugin@business_api@shared@@QEAAXAEBUPluginNotifyMyDeviceRequestConfig@45@AEBV?$function@$$A6AXAEBUPluginNotifyMyDeviceResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??postRemoteAssistFavoriteSavedDevices@NrdDevice@business_api@shared@@QEAAXAEBV?$vector@URemoteAssistFavoriteUpsertItem@business_api@shared@@V?$allocator@URemoteAssistFavoriteUpsertItem@business_api@shared@@@std@@@std@@_NAEBV?$function@$$A6AXAEBURemoteAssistFavoriteUpsertResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryActivatedAppsConfigure@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryActivatedAppsConfigureResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryAllDeviceList@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryDeviceListResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudDeviceBootInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryCloudDeviceBootInfoResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudDeviceCostInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryCloudDeviceCostInfoResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudDeviceInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryCloudDeviceInfoResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudDevicePersistenceConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUPersistenceConfig@45@AEBV?$function@$$A6AXAEBUQueryCloudDevicePersistenceConfigResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudDeviceQueueUpInfo@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUQueryCloudDeviceQueueUpInfoResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudDeviceRootLaunchAppInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEAUQueryCloudDeviceRootLaunchAppInfoResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudDeviceScheduleShutdownConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUScheduleShutdownRequestConfig@45@AEBV?$function@$$A6AXAEBUQueryScheduleShutdownConfigResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudDisks@NrdCloudDevice@business_api@shared@@QEAAXAEBUQueryCloudDisksRequest@45@AEBV?$function@$$A6AXAEBUQueryCloudDisksResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudPcDeviceList@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryCloudPcDeviceListResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudPcDeviceListRaw@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudPcFeatures@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryCloudPcFeaturesResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudPcGoods@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryCloudPcGoodsResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryCloudPcNetworkSpeed@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryCloudPcNetworkSpeedResponse@business_api@shared@@@Z@std@@_N@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryControlledDeviceList@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUQueryDeviceListResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryDeviceAppList@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@HAEBV?$function@$$A6AX$$QEAUQueryDeviceAppListResponse@business_api@shared@@@Z@7@_N@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryDeviceDetail@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryDeviceDetailResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryDeviceInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryDeviceInfoResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryDevicePinAppList@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@HAEBV?$function@$$A6AX$$QEAUQueryDeviceAppListResponse@business_api@shared@@@Z@7@_N@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryDevicePreferences@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryDevicePreferencesResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryDeviceShareInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUShareDeviceResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryIpInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEAUQueryIpInfoResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryJoinRoomByConfirm@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBUConnectOtherDeviceResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryNotifyUploadLog@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryRemoteAssistSavedDevices@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBURemoteAssistSavedDeviceListResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryRemoteControlMode@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueryControlModeResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryWhiteList@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUHttpResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queryWhiteListUrl@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUHttpResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??queueUpConfirmCloudDevice@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUQueueUpConfirmCloudDeviceResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??refetchCreateRoom@NrdDevice@business_api@shared@@QEAAX_JAEBV?$function@$$A6AXAEBURoomResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??refetchRoomToken@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUConnectOtherDeviceResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??refreshShareDeviceId@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUShareDeviceResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??renameCloudDisk@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBURenameCloudDiskBizResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??renameDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0AEBV?$function@$$A6AXAEBURenameDeviceResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??reportDeviceAppStatus@NrdDevice@business_api@shared@@QEAAXAEBUReportDeviceAppStatusRequest@45@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??reportDeviceUpdatePrepare@NrdBusinessEntry@business_api@shared@@QEAAXXZ@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??reportLanInfo@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@00PEBUUUBoxData@45@AEBV?$function@$$A6AXAEBULanInfoResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??resetCloudDisk@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUResetCloudDiskBizResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??sendNotifyDeviceReboot@NrdBusinessEntry@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??sendWakingDevice@NrdBusinessEntry@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUWakeDeviceResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??setSupportRemoteBoot@NrdDevice@business_api@shared@@QEAAX_NAEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??shareDevice@NrdDevice@business_api@shared@@QEAAXAEBV?$function@$$A6AXAEBUShareDeviceResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??startCloudDeviceScheduleShutdownConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUScheduleShutdownRequestConfig@45@AEBV?$function@$$A6AXAEBUStartScheduleShutdownConfigResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??turnOffCloudPc@NrdCloudDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUTurnOffCloudPcResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??turnOnCloudPc@NrdCloudDevice@business_api@shared@@QEAAXAEBUTurnOnConfig@45@AEBV?$function@$$A6AXAEBUTurnOnCloudPcResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??updateCloudDevicePersistenceConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUPersistenceConfig@45@AEBV?$function@$$A6AXAEBUUpdateCloudDevicePersistenceConfigResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??updateCloudDeviceScheduleShutdownConfig@NrdCloudDevice@business_api@shared@@QEAAXAEBUScheduleShutdownRequestConfig@45@AEBV?$function@$$A6AXAEBUUpdateScheduleShutdownConfigResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??updateDevicePinAppList@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$vector@UDeviceAppId@business_api@shared@@V?$allocator@UDeviceAppId@business_api@shared@@@std@@@7@AEBV?$function@$$A6AX$$QEAUQueryDeviceAppListResponse@business_api@shared@@@Z@7@_N@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??updateDeviceToolOrder@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$vector@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$allocator@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@@7@AEBV?$function@$$A6AXAEBUUpdateDeviceToolOrderResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??uploadActivatedApps@NrdCloudDevice@business_api@shared@@QEAAXAEBUActivatedAppInfoList@45@AEBV?$function@$$A6AXAEBUUploadActivatedAppsResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??uploadCloudPcNetworkSpeedResult@NrdCloudDevice@business_api@shared@@QEAAXAEBUCloudPcNetworkSpeedResult@45@AEBV?$function@$$A6AXAEBUUploadCloudPcNetworkSpeedResultResponse@business_api@shared@@@Z@std@@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??uploadSign2@NrdDevice@business_api@shared@@QEAAX_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@1110AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??uploadWallpaper@NrdDevice@business_api@shared@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$function@$$A6AXAEBUCommonResponse@business_api@shared@@@Z@7@@Z@XAEBUNrdHttpResponse@45@@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??verifyCatalogSignature@?A0x45601677@platform@@YA?AW4AuthenticodeError@4@AEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_2>@?1??verifyCatalogSignature@?A0x45601677@platform@@YA?AW4AuthenticodeError@4@AEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V<lambda_3>@?1??reportPageView@reporting@shared@@YAXV?$basic_string_view@DU?$char_traits@D@std@@@std@@VReportFields@34@_N@Z@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_1>@?7??run@ServiceMonitorRunner@@QEAAXXZ@@detail@thread_runtime@utils@@X$$V@std@@
+.?AV?$_Func_impl_no_alloc@V?$WeakCallback@V<lambda_2>@?9??run@ServiceMonitorRunner@@QEAAXXZ@@detail@thread_runtime@utils@@X$$V@std@@
+.?AVDL_SignatureMessageEncodingMethod_DSA@CryptoPP@@
+.?AVDeterministicSignatureAlgorithm@CryptoPP@@
+.?AVEmpty@CryptoPP@@
+.?AVInvalidDataFormat@CryptoPP@@
+.?AVInvalidDerivedKeyLength@CryptoPP@@
+.?AVInvalidKeyLength@PK_SignatureScheme@CryptoPP@@
+.?AVKeyTooShort@PK_SignatureScheme@CryptoPP@@
+.?AVPKCS1v15_SignatureMessageEncodingMethod@CryptoPP@@
+.?AVPK_DeterministicSignatureMessageEncodingMethod@CryptoPP@@
+.?AVPK_SignatureMessageEncodingMethod@CryptoPP@@
+.?AVPK_SignatureScheme@CryptoPP@@
+.?AVSignatureVerificationFailed@SignatureVerificationFilter@CryptoPP@@
+.?AVSignatureVerificationFilter@CryptoPP@@
+.sentry-native
+/api/v1/app/%s/of/device/%s/action
+/api/v1/app/%s/of/device/%s/pin
+/api/v1/app/cpc_device/preinstall/configure
+/api/v1/app/list/of/cpc_device
+/api/v1/app/list/of/cpc_device/activated_apps
+/api/v1/app/list/of/current_device/status
+/api/v1/app/list/of/device
+/api/v1/app/pin/of/cpc_device
+/api/v1/app/pin/of/cpc_device/%s/by_recommendation
+/api/v1/app/pin/of/device
+/api/v1/cloud_pc/devices/%s/bind
+/api/v1/device
+/api/v1/device/%s
+/api/v1/device/%s/detail
+/api/v1/device/%s/preferences
+/api/v1/device/%s/preferences/tools
+/api/v1/device/%s/reboot
+/api/v1/device/%s/screensaver
+/api/v1/device/%s/screensaver/custom
+/api/v1/device/%s/screensaver/detail
+/api/v1/device/%s/unbind
+/api/v1/device/%s/wake_on_lan/req
+/api/v1/device/cloud_pc/%s
+/api/v1/device/cloud_pc/%s/cost_info
+/api/v1/device/cloud_pc/list
+/api/v1/device/controllable
+/api/v1/device/groups/of/my
+/api/v1/device/list
+/api/v1/device/router_wol_support
+/api/v1/device/set_support_wol
+/api/v1/device/share/%s/unbind
+/api/v1/device/share/cancel
+/api/v1/device/share/info
+/api/v1/device/share/info/refresh_id
+/api/v1/device/share/saved
+/api/v1/device/update/prepare
+/api/v1/device/uu_router_info
+/api/v1/device/wallpaper
+/api/v1/device/windows/init
+/api/v1/room/clear/by_device/
+/api/v1/room/join/by_device
+/api/v1/room/notify/user_device/upload_log
+/minidump/?sentry_client=sentry.native/0.5.0&sentry_key=
+2DigiCert SHA256 RSA4096 Timestamp Responder 2026 10
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0 
+4http://crl3.digicert.com/DigiCertAssuredIDRootCA.crl0
+5http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C
+7http://cacerts.digicert.com/DigiCertAssuredIDRootCA.crt0E
+8DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1
+8DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA10
+8DigiCert Trusted G4 TimeStamping RSA4096 SHA256 2025 CA1
+8DigiCert Trusted G4 TimeStamping RSA4096 SHA256 2025 CA10
+;sdPCtn
+<EMPTY>
+<empty>
+?_Random_device@std@@YAIXZ
+ASIdentifierChoice
+ASIdentifierChoice_canonize
+ASIdentifierChoice_is_canonical
+Accept: application/sdp
+An authentication function returned an error
+Authorization: %s4-HMAC-SHA256 Credential=%s/%s, SignedHeaders=%s, Signature=%s
+BN_mod_lshift_quick
+CMS_CertificateChoices
+CMS_OriginatorIdentifierOrKey
+CMS_OriginatorInfo
+CMS_OriginatorPublicKey
+CMS_RevocationInfoChoice
+Cannot pause RTP
+Cannot write a 0 size RTP packet.
+CloseServiceHandle
+Content-Type: %ssignature;
+Content-Type: application/sdp
+Copyright (C) NetEase Corporation. All rights reserved.
+Could not set TCP_NODELAY: %s
+Ctrl/Provision WAP Termination
+CurrentService
+D$ sdPC
+D$(sdPCH
+D$0sdPCH
+D$ptype
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\client\crash_report_database_win.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\client\crashpad_client_win.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\client\prune_crash_reports.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\client\settings.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\third_party\mini_chromium\mini_chromium\base\rand_util.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\file\directory_reader_win.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\file\file_io.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\file\file_io_win.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\file\file_reader.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\file\file_writer.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\file\filesystem_win.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\win\critical_section_with_debug_info.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\win\initial_client_data.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\win\process_info.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\win\registration_protocol_win.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\win\scoped_handle.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\win\scoped_local_alloc.cc
+D:\nrd-windows-client-gitlab\work\1131\396452\source\vcpkg\buildtrees\sentry-native\src\y-native-0-bf71db22ea.clean\external\crashpad\util\win\scoped_process_suspend.cc
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\apps\healthd\service_monitor_runner.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\shared\business\business_api\nrd_cloud_device.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\shared\business\business_api\nrd_device.cpp
+D:\nrd-windows-client-gitlab\work\1131\408844\source\src\shared\business\business_api\service_util.cpp
+DE TERMINAL
+DIGEST-MD5 handshake failure (empty challenge message)
+DL_ElgamalLikeSignatureAlgorithm: this signature scheme does not support message recovery
+DL_VerifierBase: signature length is not valid.
+DeviceIoControl
+DigiCert Assured ID Root CA0
+DigiCert Inc1
+DigiCert Trusted Root G40
+DigiCert, Inc.1;09
+DigiCert, Inc.1A0?
+Digital Signature
+EC_KEY_set_public_key_affine_coordinates
+EC_POINT_get_Jprojective_coordinates_GFp
+EC_POINT_get_affine_coordinates
+EC_POINT_get_affine_coordinates_GF2m
+EC_POINT_get_affine_coordinates_GFp
+EC_POINT_set_Jprojective_coordinates_GFp
+EC_POINT_set_affine_coordinates
+EC_POINT_set_affine_coordinates_GF2m
+EC_POINT_set_affine_coordinates_GFp
+EC_POINT_set_compressed_coordinates
+EC_POINT_set_compressed_coordinates_GF2m
+EC_POINT_set_compressed_coordinates_GFp
+Empty directory path
+Empty reply from server
+EnumDisplayDevicesW
+Failed writing RTP data
+Failure writing output to destination
+Found pending candidate for reuse and CURLOPT_PIPEWAIT is set
+GSSAPI handshake failure (empty challenge message)
+GSSAPI handshake failure (empty security message)
+GameViewerService
+GameViewerService.exe
+GetNativeSystemInfo
+Got an RTP Receive with a CSeq of %ld
+ICC or token signature
+IPAddressChoice
+ImpersonateLoggedOnUser
+International Organizations
+Invalid signature
+Key type: 1=AT_KEYEXCHANGE (default), 2=AT_SIGNATURE
+Mhttp://crl3.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0S
+Mhttp://crl4.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0
+NOTICEREF
+NTLM handshake failure (empty type-2 message)
+Need destination address
+NetEase
+NetEase.uuyc
+Netease
+Nhttp://crl3.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crl0 
+No signature found
+Not empty
+OCSP Service Locator
+OCSP_SERVICELOC
+OCSP_SIGNATURE
+PKCS7_add_signature
+PKCS7_signatureVerify
+PK_MessageEncodingMethod: this signature scheme does not support message recovery
+PK_Signer: key too short for this signature scheme
+Phttp://cacerts.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crt0
+Policy Qualifier User Notice
+PublicElement
+PublicExponent
+QUIC connection error
+Qhttp://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_
+QueryDosDeviceW
+Quote command returned error
+SCT_set1_signature
+SCT_set_signature_nid
+SEC_E_NO_IMPERSONATION
+SEC_I_SIGNATURE_NEEDED
+SOFTWARE\Netease\GameViewerSetup
+SPNEGO handshake failure (empty challenge message)
+SYSTEM\CurrentControlSet\Control\Terminal Server
+Sdk::DeleteItem() dropped: item_type/item_id must not be empty
+Sdk::SetItem() dropped: item_type/item_id must not be empty
+Sdk::SetItem() dropped: properties must be a non-empty json object
+SendInput
+Server returned nothing (no headers, no data)
+Service-0x
+Services
+Signaling end of chunked upload after trailers.
+Signaling end of chunked upload via terminating chunk.
+Signature
+Signature Algorithm
+SignatureVerificationFilterFlags
+Software\Netease\GameViewer
+TCP-ACCEPT
+TS_RESP_verify_signature
+TerminateProcess
+Terminator
+The requested URL returned error: %d
+USERNOTICE
+VerifierFilter: digital signature not valid
+WinDeviceType
+X-Param-device-id
+X509v3 Issuer Alternative Name
+X509v3 Subject Alternative Name
+\Device\Mup\
+_OPENSSL_isservice
+__device_id
+__int64 __cdecl crashpad::internal::NativeWriteFile(void *,const void *,unsigned __int64)
+__std_terminate
+_crt_at_quick_exit
+_invalid_parameter_noinfo_noreturn
+active_user_execution result=failed stage=impersonate session_id=
+ambiguous host or service
+app_key decode result is empty
+application/pkcs7-signature
+application/x-pkcs7-signature
+attempting to parse an empty input; check that your input string or stream contains the expected JSON
+bad signature
+boot_trigger_device_id
+capi_get_provname, returned name=%s, type=%d
+cloud_api_parse result=failed operation=create_device reason=invalid_json
+cloud_api_parse result=failed operation=query_device_info reason=invalid_json
+cloud_api_parse result=failed operation=query_device_list reason=invalid_json
+cloud_api_parse result=failed operation=turn_off reason=invalid_json
+cloud_api_parse result=failed operation=turn_on reason=invalid_json
+cloud_disk_bind_parse result=fallback reason=invalid_value fallback=empty
+cms_get0_certificate_choices
+cms_get0_revocation_choices
+com.netease.uuremote
+coordinates out of range
+countersignature
+cpc_device_cost_info
+cpc_platform_device_info
+cpuid probe failed: vendor is 'Microsoft Hv' but leaf 0x40000001 did not return the Hv#1 signature
+crash server did not respond, self-terminating
+crash server failed to launch, self-terminating
+crash_attachment result=skipped reason=empty_path
+crash_capture result=rejected reason=empty_message
+crash_capture_tag result=skipped reason=empty_key
+crash_extra result=skipped reason=empty_key
+crash_tag result=skipped reason=empty_key
+current_device
+current_device_id
+current_device_in_same_network
+d.originatorKey
+d.usernotice
+desktop_devices
+destinationIndicator
+device
+deviceId
+deviceIdH
+deviceId_v2
+device_absent
+device_app_list
+device_binding
+device_id
+device_info_response_parse result=failed reason=invalid_json
+device_name
+device_preferences
+device_preferences_response_parse result=failed reason=invalid_json
+device_request result=failed reason=token_expired
+device_response_parse result=failed reason=invalid_json
+device_tool_order_query_api result=failed http_code=
+device_tool_order_query_api result=success http_code=
+device_tool_order_response_parse result=failed reason=invalid_json
+device_tool_order_update_api result=failed http_code=
+device_tool_order_update_api result=success http_code=
+device_update_prepare result=failed http_code=
+device_update_prepare result=success http_code=
+device_uuid_load result=missing action=create
+device_uuid_load result=success source=generated action=created persisted=true
+device_uuid_load result=success source=persistent action=reused
+device_uuid_read result=missing action=create
+device_uuid_read result=success source=generated action=created persisted=false
+device_uuid_read result=success source=persistent action=reused
+device_uuid_reset result=success
+devices
+digest_sspi: MakeSignature failed, error 0x%08lx
+digitalSignature
+directory services (X.500)
+directory services - algorithms
+ec_GF2m_simple_point_get_affine_coordinates
+ec_GF2m_simple_point_set_affine_coordinates
+ec_GF2m_simple_set_compressed_coordinates
+ec_GFp_nistp224_point_get_affine_coordinates
+ec_GFp_nistp256_point_get_affine_coordinates
+ec_GFp_nistp521_point_get_affine_coordinates
+ec_GFp_simple_blind_coordinates
+ec_GFp_simple_point_get_affine_coordinates
+ec_GFp_simple_point_set_affine_coordinates
+ec_GFp_simple_set_compressed_coordinates
+empty file structure
+empty fps array
+empty quality array
+exe path is empty
+extension_path_empty
+first provider can't be empty
+github:getsentry/sentry-native
+group2pkparameters failure
+haproxy protocol not support with SSL encryption in place (QUIC?)
+host_directory_empty
+host_path_empty
+http://ocsp.digicert.com0A
+http://ocsp.digicert.com0C
+http://ocsp.digicert.com0\
+http://ocsp.digicert.com0]
+http://www.digicert.com/CPS0
+http_manager_init result=failed stage=callback_dispatcher reason=empty
+http_request result=rejected reason=empty_url
+http_request_config result=rejected reason=empty_url
+https://api-dcdn.nrd.nie.163.com
+https://api-event.nrd.nie.163.com/api/v1/event/report/batch
+https://api-ipv4.nrd.nie.163.com/api/v1/device/wake_on_lan/info
+https://api.nrd.nie.163.com
+https://api.nrd.nie.163.com/
+https://api.nrd.nie.163.com/api/v1/cloud_pc/boot_info/%s
+https://api.nrd.nie.163.com/api/v1/cloud_pc/queue/%s/ticket
+https://api.nrd.nie.163.com/api/v1/user/ticket/for/plugin
+https://cf56b89184bf48f988f05813bee25cef@sentry.netease.com/69
+https://fcount-api-regtest.webapp.163.com
+https://fcount-api.webapp.163.com
+hypervisor present bit set but cpuid.0x40000000 returned no vendor; confirmed unknown virtualization
+i2o_SCT_signature
+id-alg-noSignature
+id-cmc-dataReturn
+id-qt-unotice
+id-smime-aa-signatureType
+id-smime-mod-ets-eSignature-88
+id-smime-mod-ets-eSignature-97
+id-smime-spq-ets-sqt-unotice
+illegal empty extension
+international-organizations
+international_connect
+internationaliSDNNumber
+invalid string: forbidden character after backslash
+ioctl callback returned error %d
+ipAddressChoice
+lookup returned nothing
+malformed host or service
+mhjI8CO1KOdaOmAE3SBrIab3NqNp0MPku6eSLwf57BFrj1peOciJKcpBhxzuUrNl
+missing my_binded_device
+missing_nul_terminator
+mobile_devices
+my_binded_device
+my_binded_devices
+native
+no accept addr or service specified
+no hostname or service specified
+no matching choice type
+no matching signature
+no signatures on data
+nonce not returned
+noticeNumbers
+notice_section
+noticenos
+noticeref
+nrd_device_id
+o2i_SCT_signature
+optionalSignature
+originator
+originatorInfo
+originatorSignatureValue
+parallels software international inc.
+params is empty
+personalSignature
+physicalDeliveryOfficeName
+pkcs7 add signature error
+point coordinates blind failure
+postOfficeBox
+powershell -WindowStyle Hidden -NoProfile -Command "
+price_per_hour
+publicExponent:
+publisher_device_id
+r2i_certpol
+read device_id from data file:
+read function returned funny value
+reporting_context result=incomplete field=device_id
+reporting_event result=rejected reason=empty_name
+reporting_field result=dropped reason=empty_key
+reporting_page_view result=rejected reason=empty_name
+reporting_raw_json result=rejected reason=empty_name
+response_security_check result=failed reason=signature_invalid
+response_security_check result=failed reason=signature_missing
+rsaSignature
+runtime_product_identity result=fallback target=main stage=signature reason=verification_failed artifact=
+schannel: CertFindExtension() returned no extension.
+schannel: CertGetNameString() returned certificate name information of unexpected size
+schannel: CertGetNameString() returned no certificate name information
+schannel: CryptDecodeObjectEx() returned no alternate name information.
+schannel: Empty DNS name.
+schannel: recv returned CURLE_RECV_ERROR
+schannel: recv returned error %d
+sct invalid signature
+sdk init returning (async)
+sdsiCertificate
+secure device signature
+seek callback returned error %d
+select/poll returned error
+sentry.native
+sentry.native/0.5.0
+sentry_close() called, but options was empty
+server_terminate result=failed reason=health_timeout code=
+server_terminate result=success reason=health_timeout
+service
+service missing in parameters and hostname
+service too long in hostname
+serviceLocator
+service_monitor result=failed reason=exception error=
+service_monitor result=failed reason=unknown_exception
+service_monitor result=stopped reason=event_unavailable code=
+service_monitor result=stopped reason=service_event
+shared::business_api::NrdDevice::createGuestRoom
+shared::business_api::NrdDevice::createRoom
+shared::business_api::NrdDevice::refetchCreateRoom
+signaling_list
+signature
+signature failure
+signatureAlgorithm
+smbios probe failed: data area is empty
+sni_required_signaling_list
+ssl command section empty
+ssl section empty
+teletexTerminalIdentifier
+terminate
+textNotice
+the ioctl callback returned %d
+tv_devices
+udp_ip
+udp_portA
+udp_portf
+unknown signature algorithm
+unrecognized signature nid
+unsupported signature type
+used_price
+userNotice
+user_device_id
+value.sdsicert
+void __cdecl ServiceMonitorRunner::run(void)
+write device_id and init_timestamp to data file
+wrong signature length
+www.digicert.com1!0
+www.digicert.com1$0"

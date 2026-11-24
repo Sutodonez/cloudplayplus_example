@@ -1,0 +1,31 @@
+C:\__w\1\s\bin\x64\Release\conpty.pdb
+C:\__w\1\s\src\winconpty\winconpty.cpp
+ConPTY Interface Library
+ConptyClearPseudoConsole
+ConptyClosePseudoConsole
+ConptyCreatePseudoConsole
+ConptyCreatePseudoConsoleAsUser
+ConptyPackPseudoConsole
+ConptyReleasePseudoConsole
+ConptyReparentPseudoConsole
+ConptyResizePseudoConsole
+ConptyShowHidePseudoConsole
+Microsoft Time-Stamp Service
+Microsoft Time-Stamp Service0
+OpenConsole.exe
+ReturnHr
+ReturnNt
+TerminateProcess
+Windows Terminal
+\Device\ConDrv\Server
+`udt returning'
+conpty.dll
+cross device link
+destination address required
+device or resource busy
+directory not empty
+no space on device
+no such device
+no such device or address
+terminate
+winconptydll

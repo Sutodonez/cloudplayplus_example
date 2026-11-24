@@ -1,0 +1,32 @@
+# Your HSTS cache. https://curl.se/docs/hsts.html
+# Your alt-svc cache. https://curl.se/docs/alt-svc.html
+# https://curl.se/docs/http-cookies.html
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0 
+4http://crl3.digicert.com/DigiCertAssuredIDRootCA.crl0
+5http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C
+7http://cacerts.digicert.com/DigiCertAssuredIDRootCA.crt0E
+Mhttp://crl3.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0S
+Mhttp://crl4.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0
+Nhttp://crl3.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crl0 
+Phttp://cacerts.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crt0
+Qhttp://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_
+com.netease.uuremote
+http://
+http://ocsp.digicert.com0A
+http://ocsp.digicert.com0C
+http://ocsp.digicert.com0\
+http://ocsp.digicert.com0]
+http://www.digicert.com/CPS0
+https://api-dcdn.nrd.nie.163.com
+https://api-event.nrd.nie.163.com/api/v1/event/report/batch
+https://api-ipv4.nrd.nie.163.com/api/v1/device/wake_on_lan/info
+https://api.nrd.nie.163.com
+https://api.nrd.nie.163.com/
+https://api.nrd.nie.163.com/api/v1/cloud_pc/boot_info/%s
+https://api.nrd.nie.163.com/api/v1/cloud_pc/queue/%s/ticket
+https://api.nrd.nie.163.com/api/v1/user/ticket/for/plugin
+https://cf56b89184bf48f988f05813bee25cef@sentry.netease.com/69
+https://fcount-api-regtest.webapp.163.com
+https://fcount-api.webapp.163.com
+https://fcount-api.webapp.easebar.com

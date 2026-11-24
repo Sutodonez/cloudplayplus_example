@@ -1,0 +1,167 @@
+{
+  "imageBase": "0x140000000",
+  "sections": [
+    {
+      "name": ".text",
+      "vsize": 23748377,
+      "va": 4096,
+      "raw": 1024,
+      "rawsize": 23748608
+    },
+    {
+      "name": ".rdata",
+      "vsize": 7687409,
+      "va": 23752704,
+      "raw": 23749632,
+      "rawsize": 7687680
+    },
+    {
+      "name": ".data",
+      "vsize": 1452016,
+      "va": 31440896,
+      "raw": 31437312,
+      "rawsize": 1044992
+    },
+    {
+      "name": ".pdata",
+      "vsize": 1124436,
+      "va": 32894976,
+      "raw": 32482304,
+      "rawsize": 1124864
+    },
+    {
+      "name": ".idata",
+      "vsize": 65529,
+      "va": 34021376,
+      "raw": 33607168,
+      "rawsize": 65536
+    },
+    {
+      "name": ".tls",
+      "vsize": 1955,
+      "va": 34086912,
+      "raw": 33672704,
+      "rawsize": 2048
+    },
+    {
+      "name": "CPADinfo",
+      "vsize": 323,
+      "va": 34091008,
+      "raw": 33674752,
+      "rawsize": 512
+    },
+    {
+      "name": ".00cfg",
+      "vsize": 373,
+      "va": 34095104,
+      "raw": 33675264,
+      "rawsize": 512
+    },
+    {
+      "name": ".rsrc",
+      "vsize": 166420,
+      "va": 34099200,
+      "raw": 33675776,
+      "rawsize": 166912
+    },
+    {
+      "name": ".reloc",
+      "vsize": 179177,
+      "va": 34267136,
+      "raw": 33842688,
+      "rawsize": 179200
+    }
+  ],
+  "mapped": [
+    {
+      "value": "virtual_mouse_switch",
+      "enc": "utf16le",
+      "offset": "0x16e7850",
+      "va": "0x1416e8450"
+    },
+    {
+      "value": "virtual_mouse_switch",
+      "enc": "ascii",
+      "offset": "0x16e78ea",
+      "va": "0x1416e84ea"
+    },
+    {
+      "value": "uuycinput",
+      "enc": "utf16le",
+      "offset": "0x16e7a80",
+      "va": "0x1416e8680"
+    },
+    {
+      "value": "KeyboardMouseRunner::",
+      "enc": "ascii",
+      "offset": "0x16eab63",
+      "va": "0x1416eb763"
+    },
+    {
+      "value": "SendInput",
+      "enc": "ascii",
+      "offset": "0x16eb46a",
+      "va": "0x1416ec06a"
+    },
+    {
+      "value": "handleMuxControlRequest",
+      "enc": "ascii",
+      "offset": "0x16f0e42",
+      "va": "0x1416f1a42"
+    },
+    {
+      "value": "conpty_bridge",
+      "enc": "utf16le",
+      "offset": "0x16f8898",
+      "va": "0x1416f9498"
+    },
+    {
+      "value": "--uuyc-mux-session",
+      "enc": "utf16le",
+      "offset": "0x16f9d8a",
+      "va": "0x1416fa98a"
+    },
+    {
+      "value": "Terminal.MuxControl",
+      "enc": "ascii",
+      "offset": "0x16fa940",
+      "va": "0x1416fb540"
+    },
+    {
+      "value": "VirtualMouseSwitch",
+      "enc": "ascii",
+      "offset": "0x17b1920",
+      "va": "0x1417b2520"
+    },
+    {
+      "value": "input_backend_activation",
+      "enc": "ascii",
+      "offset": "0x17e91c0",
+      "va": "0x1417e9dc0"
+    },
+    {
+      "value": "vhid_activate",
+      "enc": "ascii",
+      "offset": "0x17e925e",
+      "va": "0x1417e9e5e"
+    },
+    {
+      "value": "queryRelativeMouseReportBytes",
+      "enc": "ascii",
+      "offset": "0x1e979d3",
+      "va": "0x141e987d3"
+    },
+    {
+      "value": "TerminalMuxControl",
+      "enc": "ascii",
+      "offset": "0x1ecba37",
+      "va": "0x141ecc837"
+    },
+    {
+      "value": "CreateNamedPipeW",
+      "enc": "ascii",
+      "offset": "0x201577c",
+      "va": "0x14207a97c"
+    }
+  ]
+}

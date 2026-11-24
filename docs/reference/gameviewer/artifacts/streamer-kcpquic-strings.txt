@@ -1,0 +1,157 @@
+ KcpWriteLog=
+ OnQuicChannelClosed
+ dkcp fec gen find error 
+ kcp mss=
+ kcp_version=
+ mix_kcp=
+ quic_enabled=
+ test_mix_kcp1=
+ test_mix_kcp2=
+ test_quic_enable1=
+ test_quic_enable2=
+ when on stream reset, may reset to quickly
+"common_fields":{"protocol_type":["QUIC"],"time_format":"relative","reference_time":0,"group_id":
+, enable_mix_kcp=
+, kcp_sn_bitmask: 0b
+, kcp_version=
+, may be reset too quickly
+, start_kcp_sn: 
+, start_kcp_sn=
+->Start kcp local=
+..\..\media\sctp\dckcp_fec_generator.cc
+..\..\media\sctp\dckcp_fec_receiver.cc
+..\..\media\sctp\dckcp_transport.cc
+..\..\p2p\base\quic_base.h
+..\..\p2p\base\quic_client_connection.cc
+..\..\p2p\base\quic_connection_internal.cc
+..\..\p2p\base\quic_server_connection.cc
+..\..\p2p\base\quic_tls_context.cc
+..\..\p2p\base\quic_tls_session.cc
+..\..\p2p\base\quic_transport.cc
+..\..\pc\quic_data_channel.cc
+..\..\pc\quic_transport.cc
+.?AV<lambda_0>@?0???0DcKcpTransport@webrtc@@QEAA@PEAVThread@rtc@@PEAVPacketTransportInternal@4@PEAVClock@2@V?$function@$$A6A_NH@Z@std@@PEAVTaskQueueFactory@2@@Z@
+.?AV<lambda_0>@?0??TryToRecoverPackets@DcKcpFecReceiver@webrtc@@IEAA_NI@Z@
+.?AV<lambda_1>@?0???0DcKcpTransport@webrtc@@QEAA@PEAVThread@rtc@@PEAVPacketTransportInternal@4@PEAVClock@2@V?$function@$$A6A_NH@Z@std@@PEAVTaskQueueFactory@2@@Z@
+.?AV<lambda_1>@?0???0QuicConnectionInternal@quic@@QEAA@PEAVIceTransportInternal@cricket@@_KPEAVQuicTransportInternal@4@PEAVThread@rtc@@W4SSLRole@7@V?$scoped_refptr@VRTCCertificate@rtc@@@7@@Z@
+.?AV<lambda_1>@?0???R<lambda_4>@?0??Start@DcKcpTransport@webrtc@@QEAA_NHHH_NE@Z@QEBA?A?<auto>@@XZ@
+.?AV<lambda_2>@?0???R<lambda_4>@?0??Start@DcKcpTransport@webrtc@@QEAA_NHHH_NE@Z@QEBA?A?<auto>@@XZ@
+.?AV<lambda_2>@?0??GetOrCreateOutputStreamInfo@QuicConnectionInternal@quic@@QEAAPEAVQuicOutputStream@3@_J0@Z@
+.?AV<lambda_4>@?0??RecvStreamData@QuicConnectionInternal@quic@@QEAAHI_JV?$span@$$CBE$0?0@std@@@Z@
+: OnWritableState() called in state QuicTransportState::kClosed.
+: OnWritableState() called in state QuicTransportState::kFailed.
+: set_quic_state from:
+ADPCM IMA QuickTime
+Apple QuickDraw
+BN_mod_lshift_quick
+Could not decode version and CID from QUIC packet header: 
+Created QuicDataChannel for label: 
+DcKcpFecGenerator, SetFecParam change_fec_network_state loss_ratio_=
+DcKcpFecGenerator::UpdateNetWorkInfo ignored invalid loss_ratio=
+DcKcpTransport
+DcKcpTransport::SendPacket
+DisconnectQuicDataChannel called when sctp_transport_ is NULL.
+E:\gitlab-runner\builds\xyT_wxFs3\0\nrd\nrd-streamer\streamer\vcpkg\buildtrees\ngtcp2\src\v1.10.0-836da92cf1.clean\crypto\quictls\quictls.c
+Fail to SetupQuicDataChannelTransport_n for mid: 
+Failed to allocate QUIC SID
+Failed to allocate QUIC sid, closing channel.
+Failed to find kcp_sn 
+Failed to initialize the QUIC data channel due to invalid DataChannelInit.
+I%08llu 0x%s %s remote transport_parameters grease_quic_bit=%d
+KcpRsFecWorker
+OnQuicChannelClosed, sid: 
+OpenSSL 1.1.1w+quic  11 Sep 2023
+QuicClientConnection: created new connection
+QuicTransport
+QuicTransport[
+QuickTime 8BPS video
+QuickTime Animation (RLE) video
+QuickTime Graphics (SMC)
+QuickTime video (RPZA)
+SSL_process_quic_post_handshake
+SSL_provide_quic_data
+SetQuicSid sid:
+Setting up quic data channel transport for mid=
+Skipping QUIC negotiation: DTLS not active for mid=
+close quic connection
+create kcp transport 
+dc_msg_bytes_proto_kcp_recv
+dc_msg_bytes_proto_kcp_sent
+dc_pro_kcp_resend_valid_recv
+dc_pro_kcp_rsfec_recv_bytes
+dc_pro_kcp_rsfec_send_bytes
+dc_pro_kcp_rsfec_valid_recv
+dc_pro_kcp_valid_recv
+delayRecordKcpNum
+fail to create or get quic stream for sid: 
+final_quic_transport_params
+grease_quic_bit
+input psh from fec dup: sn=%lu ts=%lu una=%lu kcp->ts=%lu kcp->una=%lu
+input psh from fec: sn=%lu ts=%lu una=%lu kcp->ts=%lu kcp->una=%lu
+kcp FEC recovered packet SN mismatch: 
+kcp fec generator need decrease fast ack << need_decrease_fast_ack_after=
+kcp fec ikcp_encode_fec_data failed, buff_len=
+kcp fec ikcp_encode_fec_data failed, ret=
+kcp fec ikcp_packet_bzero_change_info_for_dup_and_send failed, buff_len=
+kcp fec recv parase fec error use_len=
+kcp fec task_queue_factory_=
+kcp i think this is a surprice
+kcp ikcp_parse_recover_info failed ret=
+kcp resend sn= %lu xmit=%lu segment->fastack=%lu
+kcp resend sn= %lu xmit=%lu wait=%ld rto=%lu una=%lu segment->fastack=%lu
+kcp_sn=
+missing quic transport parameters extension
+ngtcp2_crypto_quictls_configure_client_context failed
+ngtcp2_crypto_quictls_configure_server_context failed
+protocolKcpBytesReceived
+protocolKcpBytesSent
+protocolKcpFecValid
+protocolKcpRecvValid
+protocolKcpResendValid
+protocolKcpRsfecBytesReceived
+protocolKcpRsfecBytesSent
+quic Data channel transport is not available for data channels, mid=
+quic client handshake connecting
+quic client init done
+quic client init failed
+quic client on write failed
+quic connection aborted
+quic connection aborted !
+quic connection closed
+quic disabled, create sctp data channel
+quic enabled, create quic data channel
+quic handshake completed
+quic hp
+quic iv
+quic key
+quic ku
+quic server handshake connecting
+quic server init done
+quic server on read failed
+quic set local certificate done
+quic stream closed, 
+quic_change_cipher_state
+quic_get_message
+quic_set_encryption_secrets
+quicv2 hp
+quicv2 iv
+quicv2 key
+quicv2 ku
+ready to RemoveQuicDataStream for sid: 
+release kcp transport 
+release kcp transport end
+set_quic_state connected
+ssl\ssl_quic.c
+ssl\statem\statem_quic.c
+start_kcp_sn=
+tls_construct_ctos_quic_transport_params
+tls_construct_ctos_quic_transport_params_draft
+tls_construct_stoc_quic_transport_params
+tls_construct_stoc_quic_transport_params_draft
+tls_parse_ctos_quic_transport_params
+tls_parse_ctos_quic_transport_params_draft
+tls_parse_stoc_quic_transport_params
+tls_parse_stoc_quic_transport_params_draft
+windows cpu not support avx2 or bmi2 cannot use kcp
+x-uuremote-mix-kcp
+x-uuremote-quic

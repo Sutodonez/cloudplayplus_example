@@ -1,0 +1,163 @@
+[
+    {
+        "Name":  "aria2c.exe",
+        "Bytes":  6173776,
+        "FileVersion":  null,
+        "Product":  null,
+        "Role":  "Downloader helper"
+    },
+    {
+        "Name":  "cleanup_utils.exe",
+        "Bytes":  10599416,
+        "FileVersion":  null,
+        "Product":  null,
+        "Role":  "Cleanup utility"
+    },
+    {
+        "Name":  "conpty.dll",
+        "Bytes":  109880,
+        "FileVersion":  "1.24.2605.12001",
+        "Product":  "Windows Terminal",
+        "Role":  "Windows Terminal ConPTY library"
+    },
+    {
+        "Name":  "conpty_bridge.exe",
+        "Bytes":  6556664,
+        "FileVersion":  null,
+        "Product":  null,
+        "Role":  "Bridge to ConPTY / uuyc-mux"
+    },
+    {
+        "Name":  "crashpad_handler.exe",
+        "Bytes":  2390520,
+        "FileVersion":  null,
+        "Product":  null,
+        "Role":  "Crash reporting"
+    },
+    {
+        "Name":  "GameViewer.exe",
+        "Bytes":  78224376,
+        "FileVersion":  "4.48.1.5606",
+        "Product":  "网易UU远程",
+        "Role":  "Controller UI (Qt + WebView2)"
+    },
+    {
+        "Name":  "GameViewerHealthd.exe",
+        "Bytes":  11334648,
+        "FileVersion":  "4.48.1.5606",
+        "Product":  "UU Remote",
+        "Role":  "Health/watchdog + cloud API helpers"
+    },
+    {
+        "Name":  "GameViewerLauncher.exe",
+        "Bytes":  10354680,
+        "FileVersion":  "4.48.1.5606",
+        "Product":  "网易UU远程",
+        "Role":  "Launcher / bootstrap"
+    },
+    {
+        "Name":  "GameViewerServer.exe",
+        "Bytes":  34032632,
+        "FileVersion":  "4.48.1.5606",
+        "Product":  "网易UU远程服务",
+        "Role":  "Host/server core (session, input, display, features)"
+    },
+    {
+        "Name":  "GameViewerService.exe",
+        "Bytes":  8470520,
+        "FileVersion":  "4.46.0.4716",
+        "Product":  "网易UU远程服务",
+        "Role":  "Windows service wrapper"
+    },
+    {
+        "Name":  "MicrosoftEdgeWebview2Setup.exe",
+        "Bytes":  1636320,
+        "FileVersion":  "1.3.195.45",
+        "Product":  "Microsoft Edge Update",
+        "Role":  "runtime/support"
+    },
+    {
+        "Name":  "nemu-api.dll",
+        "Bytes":  10529784,
+        "FileVersion":  null,
+        "Product":  null,
+        "Role":  "NetEase emulator (NEMU) integration API"
+    },
+    {
+        "Name":  "Nevaudiosdk.dll",
+        "Bytes":  1707000,
+        "FileVersion":  "1.0.0.1",
+        "Product":  "NetEase Virtual Audio Adapter",
+        "Role":  "Virtual/remote audio SDK"
+    },
+    {
+        "Name":  "nrd_renderer_ipc.dll",
+        "Bytes":  185336,
+        "FileVersion":  "1.1.4.1",
+        "Product":  "GameViewer",
+        "Role":  "NRD renderer IPC"
+    },
+    {
+        "Name":  "OpenConsole.exe",
+        "Bytes":  1066296,
+        "FileVersion":  "1.24.2605.12001",
+        "Product":  "Windows Terminal",
+        "Role":  "Console PTY host (Windows Terminal)"
+    },
+    {
+        "Name":  "PsExec64.exe",
+        "Bytes":  833472,
+        "FileVersion":  "2.43",
+        "Product":  "Sysinternals PsExec",
+        "Role":  "Sysinternals PsExec (privilege/session helper)"
+    },
+    {
+        "Name":  "remote-nemu-api.dll",
+        "Bytes":  4939256,
+        "FileVersion":  null,
+        "Product":  null,
+        "Role":  "Remote NEMU API"
+    },
+    {
+        "Name":  "streamer.dll",
+        "Bytes":  20443128,
+        "FileVersion":  null,
+        "Product":  null,
+        "Role":  "Media/P2P stack (WebRTC + KCP/QUIC extensions)"
+    },
+    {
+        "Name":  "StreamerCodecDetector.exe",
+        "Bytes":  3901944,
+        "FileVersion":  null,
+        "Product":  null,
+        "Role":  "GPU codec capability probe"
+    },
+    {
+        "Name":  "Uninstall.exe",
+        "Bytes":  456456,
+        "FileVersion":  null,
+        "Product":  null,
+        "Role":  "Uninstaller"
+    },
+    {
+        "Name":  "Upgrade.exe",
+        "Bytes":  29840376,
+        "FileVersion":  "4.48.1.5606",
+        "Product":  "网易UU远程升级程序",
+        "Role":  "Self-updater"
+    },
+    {
+        "Name":  "uuyc-cli.exe",
+        "Bytes":  12666872,
+        "FileVersion":  "4.48.1.5606",
+        "Product":  "UU Remote Command Line Tool",
+        "Role":  "CLI control plane (devices, terminal, input diag)"
+    },
+    {
+        "Name":  "uuyc-mux.exe",
+        "Bytes":  10003448,
+        "FileVersion":  "3.4.0",
+        "Product":  "psmux",
+        "Role":  "Terminal multiplexer (psmux fork)"
+    }
+]

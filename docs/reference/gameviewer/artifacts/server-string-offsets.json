@@ -1,0 +1,316 @@
+{
+  "file": "D:\\Documents\\Projects\\.REA_Library\\GameViewer\\Input\\GameViewer\\4.48.1.5606\\GameViewerServer.exe",
+  "size": 34032632,
+  "hits": [
+    {
+      "enc": "utf16le",
+      "offset": 24016976,
+      "value": "virtual_mouse_switch"
+    },
+    {
+      "enc": "ascii",
+      "offset": 24017130,
+      "value": "virtual_mouse_switch"
+    },
+    {
+      "enc": "utf16le",
+      "offset": 24017536,
+      "value": "uuycinput"
+    },
+    {
+      "enc": "ascii",
+      "offset": 24030051,
+      "value": "KeyboardMouseRunner"
+    },
+    {
+      "enc": "ascii",
+      "offset": 24030051,
+      "value": "KeyboardMouseRunner::"
+    },
+    {
+      "enc": "ascii",
+      "offset": 24030451,
+      "value": "KeyboardMouseRunner"
+    },
+    {
+      "enc": "ascii",
+      "offset": 24030451,
+      "value": "KeyboardMouseRunner::"
+    },
+    {
+      "enc": "ascii",
+      "offset": 24030739,
+      "value": "KeyboardMouseRunner"
+    },
+    {
+      "enc": "ascii",
+      "offset": 24030739,
+      "value": "KeyboardMouseRunner::"
+    },
+    {
+      "enc": "ascii",
+      "offset": 24032362,
+      "value": "SendInput"
+    },
+    {
+      "enc": "utf16le",
+      "offset": 24053936,
+      "value": "uuyc-mux.exe"
+    },
+    {
+      "enc": "ascii",
+      "offset": 24054087,
+      "value": "terminal_manager"
+    },
+    {
+      "enc": "ascii",
+      "offset": 24055362,
+      "value": "handleMuxControlRequest"
+    },
+    {
+      "enc": "utf16le",
+      "offset": 24086680,
+      "value": "conpty_bridge"
+    },
+    {
+      "enc": "utf16le",
+      "offset": 24092042,
+      "value": "--uuyc-mux-session"
+    },
+    {
+      "enc": "ascii",
+      "offset": 24095040,
+      "value": "Terminal.MuxControl"
+    },
+    {
+      "enc": "utf16le",
+      "offset": 24106216,
+      "value": "--uuyc-mux-session"
+    },
+    {
+      "enc": "ascii",
+      "offset": 24844576,
+      "value": "VirtualMouseSwitch"
+    },
+    {
+      "enc": "ascii",
+      "offset": 24846330,
+      "value": "VirtualMouseSwitch"
+    },
+    {
+      "enc": "ascii",
+      "offset": 24855621,
+      "value": "virtual_mouse_switch"
+    },
+    {
+      "enc": "ascii",
+      "offset": 24866725,
+      "value": "VirtualMouseSwitch"
+    },
+    {
+      "enc": "ascii",
+      "offset": 24866770,
+      "value": "VirtualMouseSwitch"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25070320,
+      "value": "vhid_report"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25070424,
+      "value": "vhid_report"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25070496,
+      "value": "vhid_report"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25070576,
+      "value": "vhid_report"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25070648,
+      "value": "vhid_report"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25070720,
+      "value": "vhid_report"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25070792,
+      "value": "vhid_report"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25070864,
+      "value": "vhid_report"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25070952,
+      "value": "vhid_report"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25071016,
+      "value": "vhid_report"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25071184,
+      "value": "vhid_report"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25072064,
+      "value": "input_backend_activation"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25072222,
+      "value": "vhid_activate"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25072304,
+      "value": "input_backend_activation"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25072478,
+      "value": "vhid_activate"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25072560,
+      "value": "input_backend_activation"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25072830,
+      "value": "vhid_activate"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25073054,
+      "value": "vhid_activate"
+    },
+    {
+      "enc": "ascii",
+      "offset": 25074686,
+      "value": "vhid_activate"
+    },
+    {
+      "enc": "ascii",
+      "offset": 31991390,
+      "value": "KeyboardMouseRunner"
+    },
+    {
+      "enc": "ascii",
+      "offset": 31991599,
+      "value": "KeyboardMouseRunner"
+    },
+    {
+      "enc": "ascii",
+      "offset": 31991854,
+      "value": "KeyboardMouseRunner"
+    },
+    {
+      "enc": "ascii",
+      "offset": 31992053,
+      "value": "KeyboardMouseRunner"
+    },
+    {
+      "enc": "ascii",
+      "offset": 31992268,
+      "value": "KeyboardMouseRunner"
+    },
+    {
+      "enc": "ascii",
+      "offset": 31992486,
+      "value": "KeyboardMouseRunner"
+    },
+    {
+      "enc": "ascii",
+      "offset": 32004051,
+      "value": "handleMuxControlRequest"
+    },
+    {
+      "enc": "ascii",
+      "offset": 32062212,
+      "value": "VirtualMouseSwitch"
+    },
+    {
+      "enc": "ascii",
+      "offset": 32062276,
+      "value": "VirtualMouseSwitch"
+    },
+    {
+      "enc": "ascii",
+      "offset": 32078291,
+      "value": "queryRelativeMouseReportBytes"
+    },
+    {
+      "enc": "ascii",
+      "offset": 32276653,
+      "value": "KeyboardMouseRunner"
+    },
+    {
+      "enc": "ascii",
+      "offset": 32277331,
+      "value": "KeyboardMouseRunner"
+    },
+    {
+      "enc": "ascii",
+      "offset": 32277644,
+      "value": "KeyboardMouseRunner"
+    },
+    {
+      "enc": "ascii",
+      "offset": 32277941,
+      "value": "KeyboardMouseRunner"
+    },
+    {
+      "enc": "ascii",
+      "offset": 32278182,
+      "value": "KeyboardMouseRunner"
+    },
+    {
+      "enc": "ascii",
+      "offset": 32278469,
+      "value": "KeyboardMouseRunner"
+    },
+    {
+      "enc": "ascii",
+      "offset": 32291383,
+      "value": "TerminalMuxControl"
+    },
+    {
+      "enc": "ascii",
+      "offset": 32292410,
+      "value": "handleMuxControlRequest"
+    },
+    {
+      "enc": "ascii",
+      "offset": 32386858,
+      "value": "queryRelativeMouseReportBytes"
+    },
+    {
+      "enc": "ascii",
+      "offset": 33638260,
+      "value": "SendInput"
+    },
+    {
+      "enc": "ascii",
+      "offset": 33642364,
+      "value": "CreateNamedPipeW"
+    }
+  ]
+}

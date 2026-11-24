@@ -1,0 +1,54 @@
+ turn: 
+#http://www.firmaprofesional.com/cps0\
+#https://wwww.certigna.fr/autorites/0m
+$http://www.accv.es/legislacion_c.htm0U
+)http://crl.certigna.fr/certignarootca.crl01
++http://crl.dhimyotis.com/certignarootca.crl0
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0 
+4http://crl3.digicert.com/DigiCertAssuredIDRootCA.crl0
+5http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C
+7http://cacerts.digicert.com/DigiCertAssuredIDRootCA.crt0E
+8http://crl.d-trust.net/crl/d-trust_br_root_ca_1_2020.crl0y
+8http://crl.d-trust.net/crl/d-trust_br_root_ca_2_2023.crl0
+8http://crl.d-trust.net/crl/d-trust_ev_root_ca_1_2020.crl0y
+8http://crl.d-trust.net/crl/d-trust_ev_root_ca_2_2023.crl0
+=http://www.d-trust.net/crl/d-trust_root_class_3_ca_2_2009.crl0
+@http://www.accv.es/fileadmin/Archivos/certificados/raizaccv1.crt0
+@http://www.d-trust.net/crl/d-trust_root_class_3_ca_2_ev_2009.crl0
+Dhttp://www.accv.es/fileadmin/Archivos/certificados/raizaccv1_der.crl0
+If you want to help, upload a sample of this file to https://streams.videolan.org/upload/ and contact the ffmpeg-devel mailing list. (ffmpeg-devel@ffmpeg.org)
+Mhttp://crl3.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0S
+Mhttp://crl4.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0
+Nhttp://crl3.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crl0 
+Phttp://cacerts.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crt0
+Qhttp://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_
+http://ocsp.accv.es0
+http://ocsp.digicert.com0A
+http://ocsp.digicert.com0C
+http://ocsp.digicert.com0\
+http://ocsp.digicert.com0]
+http://www.cert.fnmt.es/dpcs/0
+http://www.digicert.com/CPS0
+http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01
+http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time
+http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time
+http://www.webrtc.org/experiments/rtp-hdrext/color-space
+http://www.webrtc.org/experiments/rtp-hdrext/generic-frame-descriptor-00
+http://www.webrtc.org/experiments/rtp-hdrext/inband-cn
+http://www.webrtc.org/experiments/rtp-hdrext/playout-delay
+http://www.webrtc.org/experiments/rtp-hdrext/transport-wide-cc-02
+http://www.webrtc.org/experiments/rtp-hdrext/video-capture-index
+http://www.webrtc.org/experiments/rtp-hdrext/video-content-type
+http://www.webrtc.org/experiments/rtp-hdrext/video-feedback-latency
+http://www.webrtc.org/experiments/rtp-hdrext/video-frame-is-new-frame
+http://www.webrtc.org/experiments/rtp-hdrext/video-frame-sending-delay
+http://www.webrtc.org/experiments/rtp-hdrext/video-frame-tracking-id
+http://www.webrtc.org/experiments/rtp-hdrext/video-layers-allocation00
+http://www.webrtc.org/experiments/rtp-hdrext/video-timing
+https://H
+https://aomediacodec.github.io/av1-rtp-spec/#dependency-descriptor-rtp-header-extension
+nica, CIF Q4601156E). CPS en http://www.accv.e
+stun:
+the future. See https://crbug.com/1053756
+turns:

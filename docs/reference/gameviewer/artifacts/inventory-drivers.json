@@ -1,0 +1,22 @@
+[
+    {
+        "Rel":  "drivers\\GameViewerIddDriver\\GameViewerIddDriver.dll",
+        "Bytes":  67824
+    },
+    {
+        "Rel":  "drivers\\nevaudio\\nevaudio.sys",
+        "Bytes":  157936
+    },
+    {
+        "Rel":  "drivers\\uuycinput\\uuycinput.sys",
+        "Bytes":  51440
+    },
+    {
+        "Rel":  "drivers\\uuycinput\\uuycinputmf.sys",
+        "Bytes":  19696
+    },
+    {
+        "Rel":  "drivers\\ViGEmBus\\ViGEmBus.sys",
+        "Bytes":  249400
+    }
+]

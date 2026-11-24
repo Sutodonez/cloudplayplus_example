@@ -1,0 +1,112 @@
+!_dirs.empty()
+!_path.empty()
+!hostAndPort.empty()
+#NetEase (Hangzhou) Network Co., Ltd0
+#NetEase (Hangzhou) Network Co., Ltd1,0*
+.?AV?$BasicEvent@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@$$CBVKeyValue@AbstractConfiguration@Util@Poco@@VFastMutex@4@@Poco@@
+.?AV?$BasicEvent@$$CB_NVFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@HVFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UAppInfoProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UAppProgressProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UPlayerCustomActionProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UPlayerPingProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UPlayerProgressProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UPlayerProtocolBase@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UPlayerStatusChangedProtocol@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@UProtocolBase@@VFastMutex@Poco@@@Poco@@
+.?AV?$BasicEvent@VKeyValue@AbstractConfiguration@Util@Poco@@VFastMutex@4@@Poco@@
+.?AVDirectoryNotEmptyException@Poco@@
+.?AVLogicException@Poco@@
+.?AVServiceNotFoundException@Net@Poco@@
+.?AVTCPConnectionNotification@Net@Poco@@
+.?AVTCPServer@Net@Poco@@
+.?AVTCPServerConnection@Net@Poco@@
+.?AVTCPServerConnectionFactory@Net@Poco@@
+.?AVTCPServerConnectionFilter@Net@Poco@@
+.?AVTCPServerDispatcher@Net@Poco@@
+.?AVTCPServerParams@Net@Poco@@
+.?AVWebSocketException@Net@Poco@@
+2DigiCert SHA256 RSA4096 Timestamp Responder 2025 10
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0 
+4http://crl3.digicert.com/DigiCertAssuredIDRootCA.crl0
+5http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C
+7http://cacerts.digicert.com/DigiCertAssuredIDRootCA.crt0E
+8DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1
+8DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA10
+8DigiCert Trusted G4 TimeStamping RSA4096 SHA256 2025 CA1
+8DigiCert Trusted G4 TimeStamping RSA4096 SHA256 2025 CA10
+AppPolicyGetProcessTerminationMethod
+Attempt to set value on an empty stack
+Can not access empty value.
+Can not convert empty value.
+Can not extract empty value.
+Destination address required
+DigiCert Assured ID Root CA0
+DigiCert Inc1
+DigiCert Trusted Root G40
+DigiCert, Inc.1;09
+DigiCert, Inc.1A0?
+Directory not empty
+E:\liuting\gitlab-source\nemu-api\vcpkg\buildtrees\poco\src\49720c5896-61fa9215f4.clean\Net\src\TCPServer.cpp
+E:\liuting\gitlab-source\nemu-api\vcpkg\buildtrees\poco\src\49720c5896-61fa9215f4.clean\Net\src\TCPServerDispatcher.cpp
+E:\liuting\gitlab-source\nemu-api\vcpkg\buildtrees\poco\src\49720c5896-61fa9215f4.clean\Net\src\TCPServerParams.cpp
+Empty string.
+Fatal,Critical,Error,Warning,Notice,Information,Debug,Trace
+Forbidden
+FreeLibraryWhenCallbackReturns
+GetCPInfo
+GetConsoleOutputCP
+IcE H;
+Mhttp://crl3.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0S
+Mhttp://crl4.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0
+Multiple Choices
+NEMUX_PLAYER_INSTANCE_MUTEX_
+NEMUX_PLAYER_INSTANCE_MUTEX_LAUNCHER_
+Nhttp://crl3.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crl0 
+Not a valid AM/PM designator
+Phttp://cacerts.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crt0
+Qhttp://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_
+Service Unavailable
+Service not found
+Siddham
+TCPServer: 
+TCPServerConnection
+TerminateProcess
+Unterminated HTTP response line
+Unterminated array
+Unterminated object
+WebSocket Exception
+`udt returning'
+cross device link
+destination address required
+device or resource busy
+directory not empty
+http://ocsp.digicert.com0A
+http://ocsp.digicert.com0C
+http://ocsp.digicert.com0\
+http://ocsp.digicert.com0]
+http://www.digicert.com/CPS0
+importPlayer
+mainnx importPlayer errcode:%d, message:%s
+mainnx importPlayer index:%s path:%s
+mainnx importPlayer request error: %d, %s
+missing terminating ] for character class
+no space on device
+no such device
+no such device or address
+notice
+return.
+return.active
+return.installed
+return.state
+syntax error in subpattern name (missing terminator)
+unterminated IPv6 address
+unterminated JSON string
+unterminated string literal
+unterminated string literal in Unicode
+unterminated string literal in escape
+vm.nat.port_forward.gateway.host_port
+www.digicert.com1!0
+www.digicert.com1$0"

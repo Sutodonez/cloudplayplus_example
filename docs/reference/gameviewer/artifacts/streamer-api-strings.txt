@@ -1,0 +1,65 @@
+ can't be called before SetRemoteDescription.
+ since CreateOffer specified offer_to_receive=0
+ transceiver since CreateOffer specified offer_to_receive=1
+.?AV<lambda_20>@?0??AddIceCandidate@PeerConnection@webrtc@@UEAAXV?$unique_ptr@VIceCandidateInterface@webrtc@@U?$default_delete@VIceCandidateInterface@webrtc@@@std@@@std@@V?$function@$$A6AXVRTCError@webrtc@@@Z@5@@Z@
+AddIceCandidate failed because the session was shut down
+AddIceCandidate: Candidate cannot be used.
+AddIceCandidate: Candidate is null.
+AddIceCandidate: ICE candidates can't be added without any remote session description.
+AddIceCandidate: Not ready to use candidate.
+AddIceCandidate: PeerConnection is closed.
+BaseChannel::SetLocalContent
+BaseChannel::SetRemoteContent
+Can't change candidate pool size after calling SetLocalDescription.
+Can't change crypto_options after calling SetLocalDescription.
+CreateAnswer
+CreateAnswer - observer is NULL.
+CreateAnswer failed because the session was shut down
+CreateAnswer failed to UpdateCryptoParamsForBundle.
+CreateAnswer failed to UpdateTransportInfoForBundle.
+CreateAnswer: 
+CreateAnswer: offer_to_receive_audio is not supported with Unified Plan semantics. Use the RtpTransceiver API instead.
+CreateAnswer: offer_to_receive_video is not supported with Unified Plan semantics. Use the RtpTransceiver API instead.
+CreateOffer
+CreateOffer - observer is NULL.
+CreateOffer called when PeerConnection is closed.
+CreateOffer called with invalid options.
+CreateOffer failed because the session was shut down
+CreateOffer failed to UpdateCryptoParamsForBundle.
+CreateOffer failed to UpdateTransportInfoForBundle.
+CreateOffer: 
+ExchangeControlledInterface
+ExchangeControllerInterface
+JsepTransport::SetLocalJsepTransportDescription
+JsepTransport::SetRemoteIceParameters
+JsepTransportController::SetLocalDescription
+JsepTransportController::SetRemoteDescription
+NvAPI_Stereo_SetConfigurationProfileValue
+PeerConnection::SetConfiguration
+PeerConnectionFactory::CreatePeerConnectionOrError() create allocator=
+SdpOfferAnswerHandler::AddIceCandidate
+SdpOfferAnswerHandler::CreateAnswer
+SdpOfferAnswerHandler::DoCreateAnswer
+SdpOfferAnswerHandler::DoCreateOffer
+SdpOfferAnswerHandler::DoSetLocalDescription
+SdpOfferAnswerHandler::DoSetRemoteDescription
+SetConfiguration: PeerConnection is closed.
+SetLocalDescription - observer is NULL.
+SetLocalDescription called when PeerConnection is closed.
+SetLocalDescription failed because the session was shut down
+SetLocalDescription failed to create session description - 
+SetLocalDescription: 
+SetLocalSource failed with ssrc 
+SetRemoteDescription failed because the session was shut down
+SetRemoteDescription: Remote media section at i=
+VideoChannel::SetLocalContent_w
+VideoChannel::SetRemoteContent_w
+VoiceChannel::SetLocalContent_w
+VoiceChannel::SetRemoteContent_w
+WebRTC.PeerConnection.AddIceCandidate
+[session:{}] [ice:{}] [a:{}] [i:{}] ice connection closed during CreateAnswer, drop answer
+[session:{}] [ice:{}] [a:{}] [i:{}] ice connection closed during CreateOffer, skip send offer
+[session:{}] [ice:{}] [a:{}] [i:{}] peer connection SetRemoteAnswer failed wrong state
+[session:{}] [ice:{}] [a:{}] [i:{}] peer connection SetRemoteOffer failed wrong state
+[session:{}] [ice:{}] [i:{}] ice connection closed during CreateOffer, skip restart offer
+[session:{}] [ice:{}] [i:{}] ice connection closed during SetRemoteOffer, skip background loops

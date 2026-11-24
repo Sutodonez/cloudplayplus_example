@@ -1,0 +1,38 @@
+#NetEase (Hangzhou) Network Co., Ltd0
+#NetEase (Hangzhou) Network Co., Ltd1,0*
+2DigiCert SHA256 RSA4096 Timestamp Responder 2025 10
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0
+2http://crl3.digicert.com/DigiCertTrustedRootG4.crl0 
+4http://crl3.digicert.com/DigiCertAssuredIDRootCA.crl0
+5http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C
+7http://cacerts.digicert.com/DigiCertAssuredIDRootCA.crt0E
+8DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1
+8DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA10
+8DigiCert Trusted G4 TimeStamping RSA4096 SHA256 2025 CA1
+8DigiCert Trusted G4 TimeStamping RSA4096 SHA256 2025 CA10
+AppPolicyGetProcessTerminationMethod
+Copyright (C) 2023 NetEase
+DigiCert Assured ID Root CA0
+DigiCert Inc1
+DigiCert Trusted Root G40
+DigiCert, Inc.1;09
+DigiCert, Inc.1A0?
+Empty name, failed...
+GetCPInfo
+GetConsoleOutputCP
+Mhttp://crl3.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0S
+Mhttp://crl4.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crl0
+NetEase
+Nhttp://crl3.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crl0 
+Phttp://cacerts.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crt0
+Qhttp://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_
+RpcServerListen returns RPC_S_ALREADY_LISTENING, still trying to proceed...
+TerminateProcess
+`udt returning'
+http://ocsp.digicert.com0A
+http://ocsp.digicert.com0C
+http://ocsp.digicert.com0\
+http://ocsp.digicert.com0]
+http://www.digicert.com/CPS0
+www.digicert.com1!0
+www.digicert.com1$0"
