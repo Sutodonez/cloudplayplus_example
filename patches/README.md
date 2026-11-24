@@ -16,6 +16,7 @@ Use zero-padded numeric prefixes so lexical order matches apply order:
 | Patch | Purpose |
 |-------|---------|
 | `0001-linux-cmake-allow-deprecated-literal-operator.patch` | Keep Linux `-Werror`, but allow `deprecated-literal-operator` so third-party `json.hpp` (via `flutter_secure_storage_linux`) does not fail CI on newer Clang/GCC. |
+| `0001-session-terminal-link.patch` | Server terminal linking — see [`terminal-link/`](terminal-link/) |
 
 ## Workflow
 

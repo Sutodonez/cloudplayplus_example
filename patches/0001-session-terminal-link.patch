@@ -1,0 +1,505 @@
+diff --git a/lib/entities/messages.dart b/lib/entities/messages.dart
+index 88376ef..6f98379 100644
+--- a/lib/entities/messages.dart
++++ b/lib/entities/messages.dart
+@@ -20,6 +20,10 @@ const int LP_KEYPRESSED = 1 << 4; //16
+ const int LP_EMPTY = 1 << 6; //64
+ const int LP_AUDIO_CONNECT = 65;
+ const int LP_AUDIO_DISCONNECT = 66;
++/// Session file/folder transfer chunk (reserved; see session_file_transfer).
++const int LP_FILE_CHUNK = 67;
++/// Remote terminal I/O chunk (see plugins/session_terminal_link).
++const int LP_TERM_CHUNK = 68;
+ const int LP_DISCONNECT = 1 << 7;
+ // [--end of message definitions--]
+ 
+diff --git a/lib/entities/session.dart b/lib/entities/session.dart
+index d74019c..acb3142 100644
+--- a/lib/entities/session.dart
++++ b/lib/entities/session.dart
+@@ -13,6 +13,7 @@ import 'package:cloudplayplus/utils/widgets/message_box.dart';
+ import 'package:flutter/foundation.dart';
+ import 'package:flutter_webrtc/flutter_webrtc.dart';
+ import 'package:hardware_simulator/hardware_simulator.dart';
++import 'package:session_terminal_link/session_terminal_link.dart';
+ import 'package:synchronized/synchronized.dart';
+ import 'package:flutter/services.dart';
+ import 'package:flutter/widgets.dart';
+@@ -109,6 +110,9 @@ class StreamingSession {
+   Timer? _clipboardTimer;
+   String _lastClipboardContent = '';
+ 
++  /// Remote terminal linking (host shells on controlled; UI on controller).
++  TerminalLinkEngine? terminalLink;
++
+   // 添加生命周期监听器
+   static final _lifecycleObserver = _AppLifecycleObserver();
+ 
+@@ -118,6 +122,29 @@ class StreamingSession {
+     WidgetsBinding.instance.addObserver(_lifecycleObserver);
+   }
+ 
++  void _ensureTerminalLink() {
++    if (terminalLink != null || channel == null) return;
++    final host = selfSessionType == SelfSessionType.controlled;
++    // Host needs dart:io Process; web cannot host shells.
++    if (host && AppPlatform.isWeb) return;
++    terminalLink = TerminalLinkEngine(
++      isHost: host,
++      sendText: (text) async {
++        if (channel?.state == RTCDataChannelState.RTCDataChannelOpen) {
++          await channel!.send(RTCDataChannelMessage(text));
++        }
++      },
++      sendBinary: (bytes) async {
++        if (channel?.state == RTCDataChannelState.RTCDataChannelOpen) {
++          await channel!.send(RTCDataChannelMessage.fromBinary(bytes));
++        }
++      },
++    );
++  }
++
++  /// Public entry for UI sheets to ensure the engine exists.
++  void ensureTerminalLink() => _ensureTerminalLink();
++
+   Function(String mediatype, MediaStream stream)? onAddRemoteStream;
+ 
+   //We are the controller
+@@ -233,6 +260,7 @@ class StreamingSession {
+             if (state == RTCDataChannelState.RTCDataChannelOpen) {
+               await channel?.send(RTCDataChannelMessage.fromBinary(
+                   Uint8List.fromList([LP_PING, RP_PING])));
++              _ensureTerminalLink();
+               if (StreamingSettings.streamAudio!) {
+                 StreamingSettings.audioBitrate ??= 32;
+                 audioBitrate = StreamingSettings.audioBitrate!;
+@@ -463,6 +491,7 @@ class StreamingSession {
+         ..ordered = true;
+       channel =
+           await pc!.createDataChannel('userInput', reliableDataChannelDict);
++      _ensureTerminalLink();
+ 
+       channel?.onMessage = (RTCDataChannelMessage msg) {
+         if (!image_hooked && !AppPlatform.isWeb) {
+@@ -742,6 +771,8 @@ class StreamingSession {
+     });
+ 
+     stopClipboardSync();
++    await terminalLink?.dispose();
++    terminalLink = null;
+   }
+ 
+   Timer? _pingTimeoutTimer;
+@@ -837,11 +868,20 @@ class StreamingSession {
+           audioSession = AudioSession(channel!, controller, controlled, audioBitrate);
+           audioSession?.audioRequested();
+           break;
++        case LP_TERM_CHUNK:
++          _ensureTerminalLink();
++          terminalLink?.onBinaryMessage(message.binary);
++          break;
+         default:
+           VLOG0("unhandled message.please debug");
+       }
+     } else {
+       Map<String, dynamic> data = jsonDecode(message.text);
++      if (TermLinkJsonCodec.isTermLinkEnvelope(data)) {
++        _ensureTerminalLink();
++        terminalLink?.onTextMessage(message.text);
++        return;
++      }
+       switch (data.keys.first) {
+         case "candidate":
+           var candidateMap = data["candidate"];
+@@ -894,11 +934,20 @@ class StreamingSession {
+           break;
+         case LP_EMPTY:
+           break;
++        case LP_TERM_CHUNK:
++          _ensureTerminalLink();
++          terminalLink?.onBinaryMessage(message.binary);
++          break;
+         default:
+           VLOG0("unhandled message from host.please debug");
+       }
+     } else {
+       Map<String, dynamic> data = jsonDecode(message.text);
++      if (TermLinkJsonCodec.isTermLinkEnvelope(data)) {
++        _ensureTerminalLink();
++        terminalLink?.onTextMessage(message.text);
++        return;
++      }
+       switch (data.keys.first) {
+         case "candidate":
+           var candidateMap = data['candidate'];
+diff --git a/lib/utils/widgets/device_tile_page.dart b/lib/utils/widgets/device_tile_page.dart
+index 9013cbd..e9a4b99 100644
+--- a/lib/utils/widgets/device_tile_page.dart
++++ b/lib/utils/widgets/device_tile_page.dart
+@@ -8,6 +8,7 @@ import 'package:cloudplayplus/services/websocket_service.dart';
+ import 'package:cloudplayplus/utils/system_tray_manager.dart';
+ import 'package:cloudplayplus/utils/widgets/global_remote_screen_renderer.dart';
+ import 'package:cloudplayplus/utils/widgets/message_box.dart';
++import 'package:cloudplayplus/utils/widgets/terminal_link_sheet.dart';
+ import 'package:floating_menu_panel/floating_menu_panel.dart';
+ import 'package:flutter/material.dart';
+ import 'package:flutter/services.dart';
+@@ -314,6 +315,9 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+                           !ScreenController.showVirtualGamePad.value);
+                     }
+                     if (index == 5) {
++                      await TerminalLinkSheet.show(context);
++                    }
++                    if (index == 6) {
+                       ScreenController.setshowDetailUseScrollView(true);
+                       ScreenController.setOnlyShowRemoteScreen(false);
+                       StreamingManager.stopStreaming(widget.device);
+@@ -325,6 +329,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+                     Icons.keyboard,
+                     Icons.mouse,
+                     Icons.gamepad,
++                    Icons.terminal,
+                     Icons.close,
+                   ],
+                 ),
+diff --git a/lib/utils/widgets/terminal_link_sheet.dart b/lib/utils/widgets/terminal_link_sheet.dart
+new file mode 100644
+index 0000000..66108c6
+--- /dev/null
++++ b/lib/utils/widgets/terminal_link_sheet.dart
+@@ -0,0 +1,322 @@
++import 'dart:async';
++import 'dart:convert';
++
++import 'package:cloudplayplus/entities/session.dart';
++import 'package:cloudplayplus/services/app_info_service.dart';
++import 'package:cloudplayplus/services/webrtc_service.dart';
++import 'package:cloudplayplus/utils/widgets/message_box.dart';
++import 'package:flutter/material.dart';
++import 'package:flutter/services.dart';
++import 'package:session_terminal_link/session_terminal_link.dart';
++
++/// In-session UI for remote terminal linking (controller side).
++class TerminalLinkSheet {
++  static Future<void> show(BuildContext context) async {
++    final session = WebrtcService.currentRenderingSession;
++    if (session == null ||
++        session.connectionState != StreamingSessionConnectionState.connected) {
++      MessageBoxManager().showMessage(
++        'No connected streaming session.',
++        'Terminal',
++      );
++      return;
++    }
++    session.ensureTerminalLink();
++    if (session.terminalLink == null) {
++      MessageBoxManager().showMessage(
++        'Terminal link is not ready yet. Wait for the data channel.',
++        'Terminal',
++      );
++      return;
++    }
++
++    await showModalBottomSheet<void>(
++      context: context,
++      isScrollControlled: true,
++      showDragHandle: true,
++      builder: (ctx) {
++        final height = MediaQuery.sizeOf(ctx).height * 0.85;
++        return SizedBox(
++          height: height,
++          child: SafeArea(
++            child: Padding(
++              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
++              child: _TerminalLinkBody(session: session),
++            ),
++          ),
++        );
++      },
++    );
++  }
++}
++
++class _TerminalLinkBody extends StatefulWidget {
++  final StreamingSession session;
++
++  const _TerminalLinkBody({required this.session});
++
++  @override
++  State<_TerminalLinkBody> createState() => _TerminalLinkBodyState();
++}
++
++class _TerminalLinkBodyState extends State<_TerminalLinkBody> {
++  final _output = StringBuffer();
++  final _scrollController = ScrollController();
++  final _inputController = TextEditingController();
++  final _inputFocus = FocusNode();
++
++  StreamSubscription<TerminalOutputEvent>? _outSub;
++  StreamSubscription<List<TermSessionInfo>>? _listSub;
++  StreamSubscription<TermSessionInfo>? _stateSub;
++
++  List<TermSessionInfo> _sessions = const [];
++  String? _activeId;
++  bool _busy = false;
++  String? _status;
++
++  TerminalLinkEngine? get _engine => widget.session.terminalLink;
++
++  @override
++  void initState() {
++    super.initState();
++    final engine = _engine;
++    if (engine == null) return;
++    _sessions = engine.knownSessions;
++    _activeId = engine.activeSessionId;
++    _outSub = engine.output.listen((ev) {
++      if (_activeId != null && ev.sessionId != _activeId) return;
++      setState(() {
++        _output.write(utf8.decode(ev.bytes, allowMalformed: true));
++      });
++      _scrollToEnd();
++    });
++    _listSub = engine.sessionLists.listen((list) {
++      if (!mounted) return;
++      setState(() => _sessions = list);
++    });
++    _stateSub = engine.sessionStates.listen((info) {
++      if (!mounted) return;
++      setState(() {
++        _status = '${info.name}: ${info.state.name}'
++            '${info.error != null ? ' — ${info.error}' : ''}';
++        if (info.state == TermSessionState.attached ||
++            info.state == TermSessionState.ready) {
++          _activeId = info.sessionId;
++        }
++      });
++    });
++    // Refresh list from host.
++    // ignore: discarded_futures
++    engine.list();
++  }
++
++  @override
++  void dispose() {
++    final id = _activeId;
++    final engine = _engine;
++    if (id != null && engine != null) {
++      // Detach only — keep host process alive (UU-style).
++      // ignore: discarded_futures
++      engine.detach(id);
++    }
++    _outSub?.cancel();
++    _listSub?.cancel();
++    _stateSub?.cancel();
++    _scrollController.dispose();
++    _inputController.dispose();
++    _inputFocus.dispose();
++    super.dispose();
++  }
++
++  void _scrollToEnd() {
++    WidgetsBinding.instance.addPostFrameCallback((_) {
++      if (!_scrollController.hasClients) return;
++      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
++    });
++  }
++
++  Future<void> _newSession() async {
++    final engine = _engine;
++    if (engine == null) return;
++    setState(() => _busy = true);
++    try {
++      _output.clear();
++      await engine.open();
++    } catch (e) {
++      MessageBoxManager().showMessage(e.toString(), 'Terminal');
++    } finally {
++      if (mounted) setState(() => _busy = false);
++    }
++  }
++
++  Future<void> _attach(TermSessionInfo info) async {
++    final engine = _engine;
++    if (engine == null) return;
++    setState(() {
++      _busy = true;
++      _output.clear();
++      _activeId = info.sessionId;
++    });
++    try {
++      await engine.attach(info.sessionId);
++    } catch (e) {
++      MessageBoxManager().showMessage(e.toString(), 'Terminal');
++    } finally {
++      if (mounted) setState(() => _busy = false);
++    }
++  }
++
++  Future<void> _kill(TermSessionInfo info) async {
++    final engine = _engine;
++    if (engine == null) return;
++    await engine.kill(info.sessionId);
++    if (_activeId == info.sessionId) {
++      setState(() {
++        _activeId = null;
++        _output.clear();
++      });
++    }
++  }
++
++  Future<void> _submitInput([String? raw]) async {
++    final engine = _engine;
++    final id = _activeId;
++    if (engine == null || id == null) return;
++    final text = raw ?? _inputController.text;
++    if (text.isEmpty) return;
++    _inputController.clear();
++    // Local echo for pipe-backed shells that may not echo.
++    setState(() => _output.write('$text\n'));
++    _scrollToEnd();
++    final payload = text.endsWith('\n') ? text : '$text\n';
++    await engine.sendInput(id, payload);
++    _inputFocus.requestFocus();
++  }
++
++  @override
++  Widget build(BuildContext context) {
++    final theme = Theme.of(context);
++    return Column(
++      crossAxisAlignment: CrossAxisAlignment.stretch,
++      children: [
++        Text('Remote terminal', style: theme.textTheme.titleLarge),
++        const SizedBox(height: 4),
++        Text(
++          'Shell on the host over the session data channel. '
++          'Closing this sheet detaches; the host process keeps running. '
++          'Pipe-backed (no ConPTY yet) — TUI apps may misbehave.',
++          style: theme.textTheme.bodySmall,
++        ),
++        if (_status != null) ...[
++          const SizedBox(height: 6),
++          Text(_status!, style: theme.textTheme.labelMedium),
++        ],
++        const SizedBox(height: 8),
++        Row(
++          children: [
++            FilledButton.icon(
++              onPressed: _busy ? null : _newSession,
++              icon: const Icon(Icons.add),
++              label: const Text('New session'),
++            ),
++            const SizedBox(width: 8),
++            OutlinedButton.icon(
++              onPressed: _busy
++                  ? null
++                  : () async {
++                      await _engine?.list();
++                    },
++              icon: const Icon(Icons.refresh),
++              label: const Text('Refresh'),
++            ),
++          ],
++        ),
++        if (_sessions.isNotEmpty) ...[
++          const SizedBox(height: 8),
++          SizedBox(
++            height: 40,
++            child: ListView.separated(
++              scrollDirection: Axis.horizontal,
++              itemCount: _sessions.length,
++              separatorBuilder: (_, __) => const SizedBox(width: 8),
++              itemBuilder: (context, i) {
++                final s = _sessions[i];
++                final selected = s.sessionId == _activeId;
++                return InputChip(
++                  selected: selected,
++                  label: Text('${s.name} (${s.state.name})'),
++                  onPressed: _busy ? null : () => _attach(s),
++                  onDeleted: _busy ? null : () => _kill(s),
++                  deleteIcon: const Icon(Icons.close, size: 16),
++                );
++              },
++            ),
++          ),
++        ],
++        const SizedBox(height: 8),
++        Expanded(
++          child: DecoratedBox(
++            decoration: BoxDecoration(
++              color: const Color(0xFF0F1115),
++              borderRadius: BorderRadius.circular(8),
++            ),
++            child: Scrollbar(
++              controller: _scrollController,
++              child: SingleChildScrollView(
++                controller: _scrollController,
++                padding: const EdgeInsets.all(12),
++                child: SelectableText(
++                  _output.isEmpty ? ' ' : _output.toString(),
++                  style: const TextStyle(
++                    fontFamily: 'monospace',
++                    fontSize: 12.5,
++                    height: 1.35,
++                    color: Color(0xFFE6EDF3),
++                  ),
++                ),
++              ),
++            ),
++          ),
++        ),
++        const SizedBox(height: 8),
++        KeyboardListener(
++          focusNode: FocusNode(),
++          onKeyEvent: (event) {
++            if (event is KeyDownEvent &&
++                event.logicalKey == LogicalKeyboardKey.enter) {
++              // Handled by TextField onSubmitted.
++            }
++          },
++          child: TextField(
++            controller: _inputController,
++            focusNode: _inputFocus,
++            enabled: _activeId != null && !_busy,
++            style: const TextStyle(fontFamily: 'monospace'),
++            decoration: InputDecoration(
++              hintText: _activeId == null
++                  ? 'Open or attach a session first'
++                  : 'Type a command and press Enter',
++              border: const OutlineInputBorder(),
++              isDense: true,
++              suffixIcon: IconButton(
++                icon: const Icon(Icons.send),
++                onPressed:
++                    _activeId == null || _busy ? null : () => _submitInput(),
++              ),
++            ),
++            onSubmitted: (_) => _submitInput(),
++            textInputAction: TextInputAction.send,
++          ),
++        ),
++        if (AppPlatform.isWeb)
++          Padding(
++            padding: const EdgeInsets.only(top: 6),
++            child: Text(
++              'Controller UI works on web; the host must be a desktop build.',
++              style: theme.textTheme.bodySmall,
++            ),
++          ),
++      ],
++    );
++  }
++}
+diff --git a/pubspec.yaml b/pubspec.yaml
+index e0efbf1..f185bfe 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -46,6 +46,8 @@ dependencies:
+     path: plugins/virtual.keyboard.dart
+   hardware_simulator:
+     path: plugins/hardware_simulator
++  session_terminal_link:
++    path: ../../plugins/session_terminal_link
+   flutter_sticky_header: ^0.8.0
+   fullscreen_window:
+     path: plugins/fullscreen_window

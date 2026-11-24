@@ -1,0 +1,17 @@
+name: session_terminal_link
+description: >
+  Isolated remote terminal linking over a reliable side channel
+  (WebRTC data channel). Host spawns a local shell; controller attaches
+  for interactive I/O. No NetEase binaries; ConPTY/psmux left as gaps.
+version: 0.1.0
+publish_to: "none"
+
+environment:
+  sdk: ">=3.2.0 <4.0.0"
+
+dependencies:
+  meta: ^1.11.0
+
+dev_dependencies:
+  lints: ^3.0.0
+  test: ^1.25.0
