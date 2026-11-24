@@ -1,0 +1,121 @@
+diff --git a/lib/global_settings/streaming_settings.dart b/lib/global_settings/streaming_settings.dart
+index d4607d8..ee1fb2e 100644
+--- a/lib/global_settings/streaming_settings.dart
++++ b/lib/global_settings/streaming_settings.dart
+@@ -81,6 +81,10 @@ class StreamingSettings {
+   // 是否监听远程设备的鼠标位置更新
+   static bool syncMousePosition = false;
+ 
++  /// Host-side: prefer virtual HID for relative mouse (Windows + WinUHid).
++  /// Does not change the wire protocol (`LP_MOUSEMOVE_RELATIVE`).
++  static bool useVhidMouse = false;
++
+   // 0: default mode. connect to monitor with that screenId
+   // 1: create a virtual monitor and stream to that monitor (Extended mode).
+   // 2: create a virtual monitor, and then set that monitor as default,
+@@ -170,6 +174,8 @@ class StreamingSettings {
+ 
+     isStreamingStateEnabled = SharedPreferencesManager.getBool('streamingState') ?? false;
+     ScreenController.setShowVideoInfo(isStreamingStateEnabled!);
++
++    useVhidMouse = SharedPreferencesManager.getBool('useVhidMouse') ?? false;
+   }
+ 
+   //Screen id setting is not global, so we need to call before start streaming.
+diff --git a/lib/services/app_init_service.dart b/lib/services/app_init_service.dart
+index 91cadc9..2409f92 100644
+--- a/lib/services/app_init_service.dart
++++ b/lib/services/app_init_service.dart
+@@ -92,6 +92,15 @@ class AppInitService {
+           ApplicationInfo.displayCountChangedCompleter!.complete();
+         }
+       }, 0);
++      // Apply host relative-mouse backend (SendInput vs virtual HID).
++      final useVhid =
++          SharedPreferencesManager.getBool('useVhidMouse') ?? false;
++      final ok = await HardwareSimulator.setMouseInputBackend(
++          useVhid ? MouseInputBackend.vhid : MouseInputBackend.sendInput);
++      if (useVhid && !ok) {
++        VLOG0(
++            "useVhidMouse enabled but WinUHid unavailable; using SendInput");
++      }
+     }
+     bool? isSystem = await HardwareSimulator.isRunningAsSystem();
+     if (isSystem == false) {
+diff --git a/lib/settings_screen.dart b/lib/settings_screen.dart
+index fa49a5c..5b9a2d6 100644
+--- a/lib/settings_screen.dart
++++ b/lib/settings_screen.dart
+@@ -12,6 +12,7 @@ import 'package:cloudplayplus/utils/widgets/text_field_wrapper.dart';
+ import 'package:flutter/cupertino.dart';
+ import 'package:flutter/material.dart';
+ import 'package:flutter/services.dart';
++import 'package:hardware_simulator/hardware_simulator.dart';
+ import 'package:native_textfield_tv/native_textfield_tv.dart';
+ import 'package:provider/provider.dart';
+ import 'package:url_launcher/url_launcher.dart';
+@@ -1011,6 +1012,8 @@ class _CursorSettingsScreenState extends State<CursorSettingsScreen> {
+   bool autoHideLocalCursor = true;
+   bool _renderRemoteCursor = false;
+   bool _switchCmdCtrl = false;
++  bool _useVhidMouse = false;
++  bool _vhidAvailable = false;
+   int _touchInputMode = TouchInputMode.touch.index;  // 触控模式：0=触摸(默认), 1=触控板, 2=鼠标
+   double _touchpadSensitivity = 1.0;  // 触控板灵敏度
+   double _touchpadSensitivityLocked = 10.0;  // 鼠标锁定状态下的移动灵敏度
+@@ -1087,6 +1090,14 @@ class _CursorSettingsScreenState extends State<CursorSettingsScreen> {
+     _renderRemoteCursor =
+         SharedPreferencesManager.getBool('renderRemoteCursor') ?? false;
+     _switchCmdCtrl = StreamingSettings.switchCmdCtrl;
++    _useVhidMouse = StreamingSettings.useVhidMouse;
++    if (AppPlatform.isWindows) {
++      try {
++        _vhidAvailable = await HardwareSimulator.isVhidMouseAvailable();
++      } catch (_) {
++        _vhidAvailable = false;
++      }
++    }
+     _touchInputMode = StreamingSettings.touchInputMode;
+     // 加载保存的缩放值，默认值为100
+     double savedValue = StreamingSettings.cursorScale;
+@@ -1177,6 +1188,40 @@ class _CursorSettingsScreenState extends State<CursorSettingsScreen> {
+                     });
+                   },
+                 ),
++                if (AppPlatform.isWindows)
++                  SettingsTile.switchTile(
++                    title: Text(_vhidAvailable
++                        ? '虚拟 HID 相对鼠标 (WinUHid，适合 Raw Input 老游戏)'
++                        : '虚拟 HID 相对鼠标 (需安装 WinUHid 驱动；未检测到则回退 SendInput)'),
++                    leading: const Icon(Icons.mouse_outlined),
++                    initialValue: _useVhidMouse,
++                    onToggle: (bool value) async {
++                      bool applied = true;
++                      if (value) {
++                        applied = await HardwareSimulator.setMouseInputBackend(
++                            MouseInputBackend.vhid);
++                      } else {
++                        await HardwareSimulator.setMouseInputBackend(
++                            MouseInputBackend.sendInput);
++                      }
++                      setState(() {
++                        _useVhidMouse = value;
++                        StreamingSettings.useVhidMouse = value;
++                        SharedPreferencesManager.setBool('useVhidMouse', value);
++                        if (value && !applied) {
++                          _vhidAvailable = false;
++                        }
++                      });
++                      if (value && !applied && mounted) {
++                        ScaffoldMessenger.of(context).showSnackBar(
++                          const SnackBar(
++                            content: Text(
++                                'WinUHid 不可用，已回退 SendInput。安装 WinUHid 驱动后重试。'),
++                          ),
++                        );
++                      }
++                    },
++                  ),
+               ],
+             ),
+             // 触控模式设置（独立的 Section）

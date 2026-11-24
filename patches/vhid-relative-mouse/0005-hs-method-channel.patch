@@ -1,0 +1,39 @@
+--- /tmp/hardware_simulator_src/lib/hardware_simulator_method_channel.dart	2026-11-24 12:45:02.921802052 +0000
++++ lib/hardware_simulator_method_channel.dart	2026-11-24 12:46:46.509845969 +0000
+@@ -317,6 +317,36 @@
+     });
+   }
+ 
++  @override
++  Future<bool> setMouseInputBackend(int backend) async {
++    final result =
++        await methodChannel.invokeMethod<bool>('setMouseInputBackend', {
++      'backend': backend,
++    });
++    return result ?? false;
++  }
++
++  @override
++  Future<int> getMouseInputBackend() async {
++    final result =
++        await methodChannel.invokeMethod<int>('getMouseInputBackend');
++    return result ?? 0;
++  }
++
++  @override
++  Future<int> getEffectiveMouseInputBackend() async {
++    final result =
++        await methodChannel.invokeMethod<int>('getEffectiveMouseInputBackend');
++    return result ?? 0;
++  }
++
++  @override
++  Future<bool> isVhidMouseAvailable() async {
++    final result =
++        await methodChannel.invokeMethod<bool>('isVhidMouseAvailable');
++    return result ?? false;
++  }
++
+   // Relative mouse movement.
+   @override
+   Future<void> performMouseMoveRelative(

@@ -1,0 +1,27 @@
+--- /tmp/hardware_simulator_src/lib/hardware_simulator_platform_interface.dart	2026-11-24 12:45:02.921802052 +0000
++++ lib/hardware_simulator_platform_interface.dart	2026-11-24 12:46:42.861848381 +0000
+@@ -160,6 +160,24 @@
+     throw UnimplementedError('performKeyEvent() has not been implemented.');
+   }
+ 
++  /// Mouse injection backend: 0 = SendInput, 1 = Virtual HID (WinUHid).
++  Future<bool> setMouseInputBackend(int backend) {
++    throw UnimplementedError('setMouseInputBackend() has not been implemented.');
++  }
++
++  Future<int> getMouseInputBackend() {
++    throw UnimplementedError('getMouseInputBackend() has not been implemented.');
++  }
++
++  Future<int> getEffectiveMouseInputBackend() {
++    throw UnimplementedError(
++        'getEffectiveMouseInputBackend() has not been implemented.');
++  }
++
++  Future<bool> isVhidMouseAvailable() {
++    throw UnimplementedError('isVhidMouseAvailable() has not been implemented.');
++  }
++
+   // Relative mouse movement.
+   Future<void> performMouseMoveRelative(
+       double deltax, double deltay, int screenId) async {

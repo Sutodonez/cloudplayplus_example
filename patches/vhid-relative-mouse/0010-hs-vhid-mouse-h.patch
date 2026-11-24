@@ -1,0 +1,22 @@
+--- /dev/null	2026-11-24 08:38:24.843785419 +0000
++++ windows/vhid_mouse.h	2026-11-24 12:45:19.885833514 +0000
+@@ -0,0 +1,19 @@
++#ifndef HARDWARE_SIMULATOR_VHID_MOUSE_H_
++#define HARDWARE_SIMULATOR_VHID_MOUSE_H_
++
++#include <windows.h>
++
++// Optional virtual-HID mouse backend.
++// Dynamically loads WinUHid.dll (https://github.com/cgutman/WinUHid, MIT).
++// Requires the WinUHid UMDF driver to be installed on the host; otherwise
++// all APIs fail and the caller should keep using SendInput.
++
++bool VhidMouseIsDriverPresent();
++bool VhidMouseEnsureCreated();
++void VhidMouseDestroy();
++
++bool VhidMouseReportMotion(SHORT dx, SHORT dy);
++bool VhidMouseReportButton(int buttonId, bool down);
++bool VhidMouseReportScroll(SHORT scrollValue, bool horizontal);
++
++#endif  // HARDWARE_SIMULATOR_VHID_MOUSE_H_

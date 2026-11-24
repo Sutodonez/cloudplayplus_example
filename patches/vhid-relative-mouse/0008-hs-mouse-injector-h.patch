@@ -1,0 +1,35 @@
+--- /dev/null	2026-11-24 08:38:24.843785419 +0000
++++ windows/mouse_injector.h	2026-11-24 12:45:15.229826317 +0000
+@@ -0,0 +1,32 @@
++#ifndef HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_
++#define HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_
++
++#include <cstdint>
++
++// Mouse injection backends for relative moves / buttons / wheel.
++// Keep the Dart MethodChannel surface stable: callers still use mouseMoveR etc.
++enum class MouseInputBackend {
++  kSendInput = 0,  // user32 SendInput (default)
++  kVhid = 1,       // Virtual HID via WinUHid when driver is installed
++};
++
++// Sets preferred backend. When kVhid is requested but unavailable, falls back
++// to SendInput and returns false.
++bool MouseInjectorSetBackend(MouseInputBackend backend);
++
++MouseInputBackend MouseInjectorGetBackend();
++
++// True when WinUHid.dll loads and a virtual mouse device can be created.
++bool MouseInjectorIsVhidAvailable();
++
++// Active backend after the last SetBackend (may be SendInput after VHID fail).
++MouseInputBackend MouseInjectorGetEffectiveBackend();
++
++void MouseInjectorMoveRelative(double dx, double dy);
++void MouseInjectorButton(int buttonId, bool release);
++void MouseInjectorScroll(int distance, bool horizontal);
++
++// Tear down VHID device / DLL. Safe to call multiple times.
++void MouseInjectorShutdown();
++
++#endif  // HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_

@@ -27,3 +27,10 @@ Use zero-padded numeric prefixes so lexical order matches apply order:
 3. Run `scripts/apply-patches.sh` and verify `scripts/build.sh`.
 
 Do not commit dirty ad-hoc edits in `vendor/` on the cppp branch.
+
+## Nested plugin submodules
+
+Some patches (for example VHID) edit files under nested plugin submodules such as
+`plugins/hardware_simulator/`. Those paths are not in the vendor superproject
+index; `scripts/apply-patches.sh` applies them to the working tree only. Do not
+commit the resulting dirty submodule — regenerate the patch series instead.

@@ -1,0 +1,56 @@
+--- /tmp/hardware_simulator_src/lib/hardware_simulator.dart	2026-11-24 12:45:02.921802052 +0000
++++ lib/hardware_simulator.dart	2026-11-24 12:46:52.925841359 +0000
+@@ -8,6 +8,17 @@
+   }
+ }
+ 
++/// Host-side mouse injection backend.
++///
++/// Kept behind [HWMouse.performMouseMoveRelative] / `LP_MOUSEMOVE_RELATIVE`.
++enum MouseInputBackend {
++  /// user32 SendInput relative moves (default).
++  sendInput,
++
++  /// Virtual HID mouse via WinUHid when the driver is installed.
++  vhid,
++}
++
+ class HWMouse {
+   HWMouse();
+   void performMouseMoveRelative(double deltax, double deltay, int screenId) {
+@@ -94,6 +105,35 @@
+     return HardwareSimulatorPlatform.instance.putImmersiveModeEnabled(enabled);
+   }
+ 
++  /// Prefer [MouseInputBackend.vhid] for Raw Input games; falls back to SendInput
++  /// when WinUHid is missing and returns false.
++  static Future<bool> setMouseInputBackend(MouseInputBackend backend) {
++    return HardwareSimulatorPlatform.instance
++        .setMouseInputBackend(backend.index);
++  }
++
++  static Future<MouseInputBackend> getMouseInputBackend() async {
++    final index =
++        await HardwareSimulatorPlatform.instance.getMouseInputBackend();
++    if (index >= 0 && index < MouseInputBackend.values.length) {
++      return MouseInputBackend.values[index];
++    }
++    return MouseInputBackend.sendInput;
++  }
++
++  static Future<MouseInputBackend> getEffectiveMouseInputBackend() async {
++    final index = await HardwareSimulatorPlatform.instance
++        .getEffectiveMouseInputBackend();
++    if (index >= 0 && index < MouseInputBackend.values.length) {
++      return MouseInputBackend.values[index];
++    }
++    return MouseInputBackend.sendInput;
++  }
++
++  static Future<bool> isVhidMouseAvailable() {
++    return HardwareSimulatorPlatform.instance.isVhidMouseAvailable();
++  }
++
+   static Future<void> showNotification(String content) {
+     return HardwareSimulatorPlatform.instance.showNotification(content);
+   }
