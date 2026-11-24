@@ -1,15 +1,17 @@
 diff --git a/lib/entities/messages.dart b/lib/entities/messages.dart
-index 88376ef..6f98379 100644
+index 88376ef..f9be975 100644
 --- a/lib/entities/messages.dart
 +++ b/lib/entities/messages.dart
-@@ -20,6 +20,10 @@ const int LP_KEYPRESSED = 1 << 4; //16
+@@ -20,6 +20,12 @@ const int LP_KEYPRESSED = 1 << 4; //16
  const int LP_EMPTY = 1 << 6; //64
  const int LP_AUDIO_CONNECT = 65;
  const int LP_AUDIO_DISCONNECT = 66;
 +/// Session file/folder transfer chunk (reserved; see session_file_transfer).
 +const int LP_FILE_CHUNK = 67;
++/// Privacy / blank-display mode (reserved; privacy PR owns the wire value).
++const int LP_PRIVACY_MODE = 68;
 +/// Remote terminal I/O chunk (see plugins/session_terminal_link).
-+const int LP_TERM_CHUNK = 68;
++const int LP_TERM_CHUNK = 69;
  const int LP_DISCONNECT = 1 << 7;
  // [--end of message definitions--]
  

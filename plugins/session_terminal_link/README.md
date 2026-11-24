@@ -22,7 +22,7 @@ decompiled bodies from `docs/reference/gameviewer/artifacts/`.
 |-------|----------|
 | Transport | Reliable WebRTC data channel (or any ordered side channel) |
 | Control | JSON envelope `{"term_link": {...}}` — open / attach / detach / kill / list / resize / input / state |
-| Payload | Binary chunks with opcode `68` (`kTermChunkOpcode` / `LP_TERM_CHUNK`) |
+| Payload | Binary chunks with opcode `69` (`kTermChunkOpcode` / `LP_TERM_CHUNK`) |
 | Host shell | `dart:io` `Process` — Windows PowerShell / macOS–Linux `$SHELL` |
 | Detach | Closing the controller UI detaches only; host process keeps running; reattach replays a 64 KiB ring buffer |
 

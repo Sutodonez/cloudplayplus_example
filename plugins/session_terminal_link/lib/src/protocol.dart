@@ -1,7 +1,7 @@
 /// Binary opcode for terminal I/O chunks on the reliable data channel.
-/// Placed after CloudPlayPlus audio (65/66) and file-transfer (67) opcodes;
-/// keep in sync with `lib/entities/messages.dart` (`LP_TERM_CHUNK`).
-const int kTermChunkOpcode = 68;
+/// Placed after audio (65/66), file-transfer (67), and privacy-mode (68)
+/// opcodes; keep in sync with `lib/entities/messages.dart` (`LP_TERM_CHUNK`).
+const int kTermChunkOpcode = 69;
 
 /// JSON envelope root key for terminal control / meta messages.
 const String kTermLinkJsonKey = 'term_link';
