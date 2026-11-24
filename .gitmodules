@@ -13,3 +13,6 @@
 [submodule "plugins/native_textfield_tv"]
 	path = plugins/native_textfield_tv
 	url = https://github.com/zhuhaichao518/native_textfield_tv.git
+[submodule "vendor/cloudplayplus"]
+	path = vendor/cloudplayplus
+	url = https://github.com/zhuhaichao518/cloudplayplus_stone.git

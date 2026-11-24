@@ -4,6 +4,15 @@ CloudPlayPlus (https://www.cloudplayplus.com, currently only available in mainla
 
 However, there are still many exciting features under development, including H.265 hardware encoding and support for various hardware decoding solutions(currently only NVDIA graphic card with encoding unit is supported). CloudPlayPlus aims to continuously enhance performance and user experience in remote gaming.
 
+## Repository layout (cppp)
+
+This fork (**cloudplayplus_plus** / **cppp**) keeps untouched upstream CloudPlayPlus (**CPP**) as a git submodule at `vendor/cloudplayplus` (pinned to https://github.com/zhuhaichao518/cloudplayplus_stone). Primary development stays at the repo root.
+
+- Clone with submodules: `git clone --recurse-submodules <url>`
+- Or after a plain clone: `scripts/submodule-init.sh`
+- Bump the CPP pin later with `scripts/bump-upstream.sh` (optional SHA)
+- Full notes: [docs/layout.md](docs/layout.md) (Phase 1 = submodule scaffold only; root Flutter tree unchanged until Phase 2)
+
 ## Getting Started
 You can build and run it as a simple flutter project (such as, flutter build windows). Before build you need to run flutter pub get in sub plugin folders to sync the whole project.
 
