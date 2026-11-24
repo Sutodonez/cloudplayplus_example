@@ -29,5 +29,8 @@ Do not commit dirty ad-hoc edits in `vendor/` on the cppp branch.
 
 | Patch | Topic |
 |-------|-------|
+| `0000-linux-no-error-deprecated-literal-operator.patch` | Linux: keep `-Werror` but allow `deprecated-literal-operator` (flutter_secure_storage `json.hpp`) |
 | `0001-nat-punch-ice-policy-and-wireup.patch` | NAT punch — ICE policy, Dart helper, session/settings — see [`nat-punch/`](./nat-punch/) |
 | `0002-nat-punch-flutter-webrtc-methodchannel.patch` | NAT punch — flutter-webrtc MethodChannel (bounded fork) |
+
+`scripts/apply-patches.sh` LF-normalizes vendor text before apply so Windows runners (CRLF checkout) can apply LF unified diffs.
