@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'backends/visible_attach_stub.dart';
@@ -56,6 +57,9 @@ class HostShellSession {
   }
 
   Future<void> selectPane(String paneId) async {
+    if (!isValidTerminalPaneId(paneId)) {
+      throw ArgumentError.value(paneId, 'paneId', 'invalid pane id');
+    }
     throw UnsupportedError('select_pane requires a dart:io host');
   }
 
@@ -72,7 +76,15 @@ class HostShellSession {
     rows = newRows;
   }
 
-  void writeInput(String data) {}
+  void writeInput(String data) {
+    // Mirror IO host: reject oversized payloads even on the stub path.
+    final bytes = utf8.encode(data).length;
+    if (bytes > kMaxTerminalInputBytes) {
+      throw ArgumentError(
+        'input exceeds $kMaxTerminalInputBytes UTF-8 bytes (got $bytes)',
+      );
+    }
+  }
 
   Future<void> kill() async {}
 

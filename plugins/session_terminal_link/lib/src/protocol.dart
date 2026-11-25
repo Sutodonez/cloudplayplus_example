@@ -6,6 +6,32 @@ const int kTermChunkOpcode = 69;
 /// JSON envelope root key for terminal control / meta messages.
 const String kTermLinkJsonKey = 'term_link';
 
+/// Max concurrent host-side terminal sessions per engine instance.
+/// Fixed cap against accidental / abusive session spam.
+const int kMaxHostTerminalSessions = 8;
+
+/// Max UTF-8 byte length of a single [TermLinkOp.input] payload.
+const int kMaxTerminalInputBytes = 32 * 1024;
+
+/// Max accepted length of a [TermLinkOp.selectPane] pane id.
+const int kMaxPaneIdLength = 64;
+
+/// tmux/psmux `#{pane_id}` (`%N`) or bare pane index digits.
+final RegExp kPaneIdPattern = RegExp(r'^%\d+$|^\d+$');
+
+/// Returns true when [paneId] is a safe, well-formed pane target.
+///
+/// When [knownPanes] is non-empty, [paneId] must also appear in that list
+/// (typically from psmux `list-panes -F #{pane_id}`).
+bool isValidTerminalPaneId(String paneId, {List<String>? knownPanes}) {
+  if (paneId.isEmpty || paneId.length > kMaxPaneIdLength) return false;
+  if (!kPaneIdPattern.hasMatch(paneId)) return false;
+  if (knownPanes != null && knownPanes.isNotEmpty) {
+    return knownPanes.contains(paneId);
+  }
+  return true;
+}
+
 /// Control operations.
 abstract final class TermLinkOp {
   static const String open = 'open';

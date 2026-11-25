@@ -183,6 +183,16 @@ class HostShellSession {
   }
 
   Future<void> selectPane(String paneId) async {
+    if (!isValidTerminalPaneId(
+      paneId,
+      knownPanes: _panes.isEmpty ? null : _panes,
+    )) {
+      throw ArgumentError.value(
+        paneId,
+        'paneId',
+        'invalid or unknown pane id',
+      );
+    }
     final mux = _muxSession;
     final cli = await ShellBackendFactory.psmux();
     if (mux == null || cli == null) {
@@ -249,7 +259,14 @@ class HostShellSession {
 
   void writeInput(String data) {
     if (_backend == null || _state == TermSessionState.exited) return;
-    _backend!.write(utf8.encode(data));
+    final bytes = utf8.encode(data);
+    if (bytes.length > kMaxTerminalInputBytes) {
+      throw ArgumentError(
+        'input exceeds $kMaxTerminalInputBytes UTF-8 bytes '
+        '(got ${bytes.length})',
+      );
+    }
+    _backend!.write(bytes);
   }
 
   Future<void> kill() async {

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'codec.dart';
@@ -140,6 +141,7 @@ class TerminalLinkEngine {
   Future<void> sendInput(String sessionId, String data) async {
     _ensureAlive();
     if (data.isEmpty) return;
+    _ensureInputWithinLimit(data);
     if (isHost) {
       _hostSessions[sessionId]?.writeInput(data);
       return;
@@ -168,6 +170,9 @@ class TerminalLinkEngine {
   /// Select a pane inside a psmux session.
   Future<void> selectPane(String sessionId, String paneId) async {
     _ensureAlive();
+    if (!isValidTerminalPaneId(paneId)) {
+      throw ArgumentError.value(paneId, 'paneId', 'invalid pane id');
+    }
     if (isHost) {
       await _hostSessions[sessionId]?.selectPane(paneId);
       final s = _hostSessions[sessionId];
@@ -268,7 +273,17 @@ class TerminalLinkEngine {
           break;
         case TermLinkOp.input:
           if (control.sessionId != null && control.data != null) {
-            _hostSessions[control.sessionId!]?.writeInput(control.data!);
+            try {
+              _ensureInputWithinLimit(control.data!);
+              _hostSessions[control.sessionId!]?.writeInput(control.data!);
+            } catch (e) {
+              await sendText(TermLinkJsonCodec.encodeControl(TermLinkControl(
+                op: TermLinkOp.error,
+                sessionId: control.sessionId,
+                error: e.toString(),
+                state: TermSessionState.failed,
+              )));
+            }
           }
           break;
         case TermLinkOp.splitPane:
@@ -291,6 +306,13 @@ class TerminalLinkEngine {
         case TermLinkOp.selectPane:
           if (control.sessionId != null && control.paneId != null) {
             try {
+              if (!isValidTerminalPaneId(control.paneId!)) {
+                throw ArgumentError.value(
+                  control.paneId,
+                  'paneId',
+                  'invalid pane id',
+                );
+              }
               await _hostSessions[control.sessionId!]
                   ?.selectPane(control.paneId!);
               final s = _hostSessions[control.sessionId!];
@@ -408,6 +430,17 @@ class TerminalLinkEngine {
     int cols = 120,
     int rows = 40,
   }) async {
+    if (_hostSessions.length >= kMaxHostTerminalSessions) {
+      await sendText(TermLinkJsonCodec.encodeControl(TermLinkControl(
+        op: TermLinkOp.error,
+        name: name,
+        shell: shell,
+        error:
+            'session limit ($kMaxHostTerminalSessions) reached',
+        state: TermSessionState.failed,
+      )));
+      return;
+    }
     final id = newTerminalSessionId();
     final resolvedShell = (shell == null || shell.isEmpty)
         ? defaultHostShell()
@@ -449,6 +482,13 @@ class TerminalLinkEngine {
       await _sendState(session.info);
       await _sendListResult();
     } catch (e) {
+      // Drop the failed slot so the session cap stays usable.
+      _hostSessions.remove(id);
+      _crcToSessionId.remove(TermChunkCodec.sessionIdCrc32(id));
+      if (activeSessionId == id) activeSessionId = null;
+      try {
+        await session.dispose();
+      } catch (_) {}
       await sendText(TermLinkJsonCodec.encodeControl(TermLinkControl(
         op: TermLinkOp.error,
         sessionId: id,
@@ -559,6 +599,15 @@ class TerminalLinkEngine {
   void _ensureAlive() {
     if (_disposed) {
       throw StateError('TerminalLinkEngine disposed');
+    }
+  }
+
+  void _ensureInputWithinLimit(String data) {
+    final bytes = utf8.encode(data).length;
+    if (bytes > kMaxTerminalInputBytes) {
+      throw ArgumentError(
+        'input exceeds $kMaxTerminalInputBytes UTF-8 bytes (got $bytes)',
+      );
     }
   }
 
