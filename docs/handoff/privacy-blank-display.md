@@ -8,7 +8,7 @@
 | Layer | Content |
 |-------|---------|
 | Plugin | `plugins/privacy_blank_display` (Windows): `off` / `blankDisplay` (monitor power-off + host mute) / `privacyScreen` (black overlay + `WDA_EXCLUDEFROMCAPTURE`); rebindable dismiss hotkey (default Ctrl+Alt+P); optional `LockWorkStation` |
-| Patch | `patches/0001-privacy-blank-display-wireup.patch` — see `patches/privacy-blank/FILE_LIST.md` |
+| Patch | `patches/0002-privacy-blank-display-wireup.patch` — see `patches/privacy-blank/FILE_LIST.md` |
 | Host GUI | Settings →「防窥」(non-Windows: grayed out, not hidden) |
 | Controller GUI | Connect picker: 跟随被控默认 / 本次不启用 / 关闭屏幕背光 / 隐私屏保; in-session floating `visibility_off` temp override |
 | Opcode | `LP_PRIVACY_MODE = 68` `[opcode, mode]` |

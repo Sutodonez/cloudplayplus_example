@@ -29,4 +29,4 @@ Do not commit dirty ad-hoc edits in `vendor/` on the cppp branch.
 
 | Patch | Topic |
 |-------|-------|
-| `0001-privacy-blank-display-wireup.patch` | Privacy / blank display wireup — see [`privacy-blank/`](./privacy-blank/) |
+| `0002-privacy-blank-display-wireup.patch` | Privacy / blank display wireup — see [`privacy-blank/`](./privacy-blank/) |

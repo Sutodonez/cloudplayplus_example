@@ -1,6 +1,6 @@
 # Privacy / blank display — owned vendor paths
 
-Replayable patch: `patches/0001-privacy-blank-display-wireup.patch`  
+Replayable patch: `patches/0002-privacy-blank-display-wireup.patch`  
 Plugin (cppp root, not in patch): `plugins/privacy_blank_display/`
 
 ## FILE_LIST (conflict surface on upstream bump)
