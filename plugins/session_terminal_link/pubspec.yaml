@@ -1,0 +1,19 @@
+name: session_terminal_link
+description: >
+  Isolated remote terminal linking over a reliable side channel
+  (WebRTC data channel). Host prefers Windows ConPTY + optional psmux
+  multi-pane and Windows Terminal visible attach; non-Windows uses pipes.
+  No NetEase binaries.
+version: 0.2.0
+publish_to: "none"
+
+environment:
+  sdk: ">=3.2.0 <4.0.0"
+
+dependencies:
+  ffi: ^2.1.0
+  meta: ^1.11.0
+
+dev_dependencies:
+  lints: ^3.0.0
+  test: ^1.25.0

@@ -1,6 +1,10 @@
 # cppp plugins
 
-Place **CloudPlayPlus Plus** plugins here (for example session file transfer).
+Place **CloudPlayPlus Plus** plugins here.
+
+| Plugin | Role |
+|--------|------|
+| [`session_terminal_link`](session_terminal_link/) | Server terminal / terminal linking over the session data channel |
 
 Upstream CPP plugins live under `vendor/cloudplayplus/plugins/` — do not duplicate them at this path.
 
