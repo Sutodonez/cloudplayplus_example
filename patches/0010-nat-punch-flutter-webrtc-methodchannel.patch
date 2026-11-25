@@ -36,7 +36,7 @@ new file mode 100644
 index 0000000..deadbeef
 --- /dev/null
 +++ b/plugins/flutter-webrtc/common/cpp/src/flutter_nat_punch.cc
-@@ -0,0 +1,213 @@
+@@ -0,0 +1,230 @@
 +#include "flutter_nat_punch.h"
 +
 +#include <cctype>
