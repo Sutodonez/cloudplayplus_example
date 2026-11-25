@@ -61,10 +61,18 @@ index d74019c..4cf0dc1 100644
      if (message.isBinary) {
        switch (message.binary[0]) {
 diff --git a/lib/global_settings/streaming_settings.dart b/lib/global_settings/streaming_settings.dart
-index d4607d8..cfaf76f 100644
+index d4607d8..bded8f0 100644
 --- a/lib/global_settings/streaming_settings.dart
 +++ b/lib/global_settings/streaming_settings.dart
-@@ -91,6 +91,25 @@ class StreamingSettings {
+@@ -2,6 +2,7 @@ import 'package:cloudplayplus/controller/hardware_input_controller.dart';
+ import 'package:cloudplayplus/controller/screen_controller.dart';
+ import 'package:cloudplayplus/services/app_info_service.dart';
+ import 'package:cloudplayplus/services/shared_preferences_manager.dart';
++import 'package:privacy_blank_display/privacy_blank_display.dart';
+ 
+ // 触控模式枚举：用于Windows设备的触控输入
+ // 顺序：触摸(默认) -> 触控板 -> 鼠标
+@@ -91,6 +92,25 @@ class StreamingSettings {
    static int customScreenWidth = 1920;
    static int customScreenHeight = 1080;
  
@@ -90,7 +98,7 @@ index d4607d8..cfaf76f 100644
    static bool? isStreamingStateEnabled;
  
    static void init() {
-@@ -170,6 +189,24 @@ class StreamingSettings {
+@@ -170,6 +190,32 @@ class StreamingSettings {
  
      isStreamingStateEnabled = SharedPreferencesManager.getBool('streamingState') ?? false;
      ScreenController.setShowVideoInfo(isStreamingStateEnabled!);
@@ -106,6 +114,14 @@ index d4607d8..cfaf76f 100644
 +        SharedPreferencesManager.getInt('privacyHotkeyModifiers') ?? 3;
 +    privacyHotkeyVk =
 +        SharedPreferencesManager.getInt('privacyHotkeyVk') ?? 0x50;
++    // Match settings UI: letter/digit/F + required modifiers; repair dirty prefs
++    // in memory (PrivacyBlankService rewrites SharedPreferences on apply).
++    final sanitizedHotkey = PrivacyHotkey(
++      modifiers: privacyHotkeyModifiers,
++      keyCode: privacyHotkeyVk,
++    ).sanitized();
++    privacyHotkeyModifiers = sanitizedHotkey.modifiers;
++    privacyHotkeyVk = sanitizedHotkey.keyCode;
 +    privacyAllowControllerOverride =
 +        SharedPreferencesManager.getBool('privacyAllowControllerOverride') ??
 +            true;
@@ -115,7 +131,7 @@ index d4607d8..cfaf76f 100644
    }
  
    //Screen id setting is not global, so we need to call before start streaming.
-@@ -198,6 +235,9 @@ class StreamingSettings {
+@@ -198,6 +244,9 @@ class StreamingSettings {
        'streamMode': streamMode,
        'customScreenWidth': customScreenWidth,
        'customScreenHeight': customScreenHeight,
@@ -125,7 +141,7 @@ index d4607d8..cfaf76f 100644
      };
      data.removeWhere((key, value) => value == null);
      return data;
-@@ -232,6 +272,8 @@ class StreamedSettings {
+@@ -232,6 +281,8 @@ class StreamedSettings {
    int? streamMode;
    int? customScreenWidth;
    int? customScreenHeight;
@@ -134,7 +150,7 @@ index d4607d8..cfaf76f 100644
  
    static StreamedSettings fromJson(Map<String, dynamic> settings) {
      return StreamedSettings()
-@@ -248,6 +290,7 @@ class StreamedSettings {
+@@ -248,6 +299,7 @@ class StreamedSettings {
        ..syncMousePosition = settings['syncMousePosition'] as bool?
        ..streamMode = settings['streamMode'] as int?
        ..customScreenWidth = settings['customScreenWidth'] as int?
@@ -164,10 +180,10 @@ index 91cadc9..0f2f166 100644
        HardwareSimulator.addDisplayCountChangedCallback((displayCount) {
 diff --git a/lib/services/privacy_blank_service.dart b/lib/services/privacy_blank_service.dart
 new file mode 100644
-index 0000000..2d73fc0
+index 0000000..99ca053
 --- /dev/null
 +++ b/lib/services/privacy_blank_service.dart
-@@ -0,0 +1,238 @@
+@@ -0,0 +1,248 @@
 +import 'dart:async';
 +
 +import 'package:cloudplayplus/base/constants.dart';
@@ -215,10 +231,19 @@ index 0000000..2d73fc0
 +  }
 +
 +  static Future<void> _applyStoredHotkey() async {
-+    final hotkey = PrivacyHotkey(
++    final raw = PrivacyHotkey(
 +      modifiers: StreamingSettings.privacyHotkeyModifiers,
 +      keyCode: StreamingSettings.privacyHotkeyVk,
 +    );
++    final hotkey = raw.sanitized();
++    if (!raw.isValid || hotkey.modifiers != raw.modifiers) {
++      StreamingSettings.privacyHotkeyModifiers = hotkey.modifiers;
++      StreamingSettings.privacyHotkeyVk = hotkey.keyCode;
++      await SharedPreferencesManager.setInt(
++          'privacyHotkeyModifiers', hotkey.modifiers);
++      await SharedPreferencesManager.setInt('privacyHotkeyVk', hotkey.keyCode);
++      VLOG0('Privacy hotkey prefs sanitized to ${hotkey.label}');
++    }
 +    final ok = await PrivacyBlankDisplay.setHotkey(hotkey);
 +    if (!ok) {
 +      VLOG0('Privacy hotkey register failed: ${hotkey.label}');
@@ -379,12 +404,16 @@ index 0000000..2d73fc0
 +    required bool allowControllerOverride,
 +    required bool autoBindExclusive,
 +  }) async {
++    final hotkey = PrivacyHotkey(
++      modifiers: hotkeyModifiers,
++      keyCode: hotkeyVk,
++    ).sanitized();
 +    StreamingSettings.privacyMode = mode;
 +    StreamingSettings.privacyAutoOnConnect = autoOnConnect;
 +    StreamingSettings.privacyDismissLocks = dismissLocks;
 +    StreamingSettings.privacyLockOnDisconnect = lockOnDisconnect;
-+    StreamingSettings.privacyHotkeyModifiers = hotkeyModifiers;
-+    StreamingSettings.privacyHotkeyVk = hotkeyVk;
++    StreamingSettings.privacyHotkeyModifiers = hotkey.modifiers;
++    StreamingSettings.privacyHotkeyVk = hotkey.keyCode;
 +    StreamingSettings.privacyAllowControllerOverride = allowControllerOverride;
 +    StreamingSettings.privacyAutoBindExclusive = autoBindExclusive;
 +    await SharedPreferencesManager.setInt('privacyMode', mode);
@@ -393,17 +422,14 @@ index 0000000..2d73fc0
 +    await SharedPreferencesManager.setBool(
 +        'privacyLockOnDisconnect', lockOnDisconnect);
 +    await SharedPreferencesManager.setInt(
-+        'privacyHotkeyModifiers', hotkeyModifiers);
-+    await SharedPreferencesManager.setInt('privacyHotkeyVk', hotkeyVk);
++        'privacyHotkeyModifiers', hotkey.modifiers);
++    await SharedPreferencesManager.setInt('privacyHotkeyVk', hotkey.keyCode);
 +    await SharedPreferencesManager.setBool(
 +        'privacyAllowControllerOverride', allowControllerOverride);
 +    await SharedPreferencesManager.setBool(
 +        'privacyAutoBindExclusive', autoBindExclusive);
 +    await PrivacyBlankDisplay.setDismissLocksHost(dismissLocks);
-+    await PrivacyBlankDisplay.setHotkey(PrivacyHotkey(
-+      modifiers: hotkeyModifiers,
-+      keyCode: hotkeyVk,
-+    ));
++    await PrivacyBlankDisplay.setHotkey(hotkey);
 +  }
 +}
 diff --git a/lib/services/streamed_manager.dart b/lib/services/streamed_manager.dart

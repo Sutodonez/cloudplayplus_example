@@ -60,6 +60,55 @@ void main() {
     expect(PrivacyHotkey.defaultHotkey.label, 'Ctrl+Alt+P');
   });
 
+  test('hotkey validation matches UI (letter/digit/F + modifiers)', () {
+    expect(PrivacyHotkey.defaultHotkey.isValid, isTrue);
+    expect(
+      const PrivacyHotkey(modifiers: 1, keyCode: 0x41).isValid,
+      isTrue,
+    );
+    expect(
+      const PrivacyHotkey(modifiers: 2, keyCode: 0x31).isValid,
+      isTrue,
+    );
+    expect(
+      const PrivacyHotkey(modifiers: 4, keyCode: 0x70).isValid,
+      isTrue,
+    );
+    // No modifiers.
+    expect(
+      const PrivacyHotkey(modifiers: 0, keyCode: 0x50).isValid,
+      isFalse,
+    );
+    // Unsupported VK (Escape).
+    expect(
+      const PrivacyHotkey(modifiers: 3, keyCode: 0x1B).isValid,
+      isFalse,
+    );
+    // Unknown modifier bits stripped / rejected.
+    expect(
+      const PrivacyHotkey(modifiers: 0x10, keyCode: 0x50).isValid,
+      isFalse,
+    );
+    expect(
+      const PrivacyHotkey(modifiers: 0, keyCode: 0x50).sanitized(),
+      PrivacyHotkey.defaultHotkey,
+    );
+    expect(
+      const PrivacyHotkey(modifiers: 3, keyCode: 0x1B).sanitized(),
+      PrivacyHotkey.defaultHotkey,
+    );
+    expect(
+      const PrivacyHotkey(modifiers: 0x13, keyCode: 0x50).sanitized().modifiers,
+      3,
+    );
+  });
+
+  test('fromMap sanitizes dirty persisted values', () {
+    final dirty = PrivacyHotkey.fromMap({'modifiers': 0, 'keyCode': 0x1B});
+    expect(dirty.modifiers, PrivacyHotkey.defaultHotkey.modifiers);
+    expect(dirty.keyCode, PrivacyHotkey.defaultHotkey.keyCode);
+  });
+
   test('setHotkey / getHotkey round-trip', () async {
     expect(
       await PrivacyBlankDisplay.setHotkey(PrivacyHotkey.defaultHotkey),

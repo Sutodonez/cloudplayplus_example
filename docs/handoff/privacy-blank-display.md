@@ -32,12 +32,13 @@
 - Floating toggle: follow-host (`-1`) treated as engaged → first tap forces off
 - WDA affinity failure destroys overlay window (fail closed)
 - Mute crash marker restore on plugin load; `lockWorkstation` requires `{confirm: true}`; `imagePath` rejected until whitelist loader
+- Hotkey persist/native validation aligned with UI (letter/digit/F + required modifiers; dirty prefs sanitized)
 
 ## Deferred
 
 - Custom screensaver **image** (`imagePath` reserved; solid black for now)
 - macOS / Linux host native privacy
-- Low: hotkey persistence constraints; multi-session global singleton state
+- Low: multi-session global singleton state
 
 ## Design sources (ideas only)
 

@@ -21,6 +21,9 @@ class PrivacyHotkeyModifiers {
 }
 
 /// Host dismiss hotkey (default Ctrl+Alt+P).
+///
+/// Validation matches the settings capture UI: at least one known modifier
+/// (Ctrl/Alt/Shift/Win) and a letter / digit / F1–F12 virtual-key code.
 class PrivacyHotkey {
   const PrivacyHotkey({
     required this.modifiers,
@@ -33,6 +36,11 @@ class PrivacyHotkey {
   /// Windows virtual-key code (e.g. `0x50` for P).
   final int keyCode;
 
+  static const int knownModifierMask = PrivacyHotkeyModifiers.ctrl |
+      PrivacyHotkeyModifiers.alt |
+      PrivacyHotkeyModifiers.shift |
+      PrivacyHotkeyModifiers.win;
+
   static const PrivacyHotkey defaultHotkey = PrivacyHotkey(
     modifiers: PrivacyHotkeyModifiers.ctrl | PrivacyHotkeyModifiers.alt,
     keyCode: 0x50, // 'P'
@@ -42,6 +50,35 @@ class PrivacyHotkey {
   bool get hasAlt => (modifiers & PrivacyHotkeyModifiers.alt) != 0;
   bool get hasShift => (modifiers & PrivacyHotkeyModifiers.shift) != 0;
   bool get hasWin => (modifiers & PrivacyHotkeyModifiers.win) != 0;
+
+  /// Digit `0`–`9`, letter `A`–`Z`, or `F1`–`F12` VK codes.
+  static bool isAllowedKeyCode(int keyCode) {
+    return (keyCode >= 0x30 && keyCode <= 0x39) ||
+        (keyCode >= 0x41 && keyCode <= 0x5A) ||
+        (keyCode >= 0x70 && keyCode <= 0x7B);
+  }
+
+  /// At least one of Ctrl/Alt/Shift/Win; unknown bits ignored for the check.
+  static bool isAllowedModifiers(int modifiers) {
+    return (modifiers & knownModifierMask) != 0;
+  }
+
+  /// True when modifiers and keyCode match the UI capture rules exactly
+  /// (no unknown modifier bits).
+  bool get isValid =>
+      isAllowedModifiers(modifiers) &&
+      (modifiers & ~knownModifierMask) == 0 &&
+      isAllowedKeyCode(keyCode);
+
+  /// Strip unknown modifier bits; fall back to [defaultHotkey] if still invalid.
+  PrivacyHotkey sanitized() {
+    final known = modifiers & knownModifierMask;
+    if (known == 0 || !isAllowedKeyCode(keyCode)) {
+      return defaultHotkey;
+    }
+    if (known == modifiers) return this;
+    return PrivacyHotkey(modifiers: known, keyCode: keyCode);
+  }
 
   /// Short label for settings UI, e.g. `Ctrl+Alt+P`.
   String get label {
@@ -79,7 +116,7 @@ class PrivacyHotkey {
     return PrivacyHotkey(
       modifiers: mods is int ? mods : defaultHotkey.modifiers,
       keyCode: key is int ? key : defaultHotkey.keyCode,
-    );
+    ).sanitized();
   }
 }
 
@@ -125,10 +162,14 @@ class PrivacyBlankDisplay {
   }
 
   /// Configure the host dismiss hotkey (rebindable; default Ctrl+Alt+P).
+  ///
+  /// Invalid combinations (no known modifier, or non letter/digit/F key) are
+  /// sanitized to [PrivacyHotkey.defaultHotkey] before reaching native code.
   static Future<bool> setHotkey(PrivacyHotkey hotkey) {
+    final safe = hotkey.sanitized();
     return PrivacyBlankDisplayPlatform.instance.setHotkey(
-      hotkey.modifiers,
-      hotkey.keyCode,
+      safe.modifiers,
+      safe.keyCode,
     );
   }
 

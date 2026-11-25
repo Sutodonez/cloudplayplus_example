@@ -99,6 +99,26 @@ UINT DartModsToWinMods(int dart_mods) {
   return win;
 }
 
+// Match settings UI: letter / digit / F1–F12 only.
+bool IsAllowedHotkeyKey(int key) {
+  return (key >= 0x30 && key <= 0x39) ||  // '0'..'9'
+         (key >= 0x41 && key <= 0x5A) ||  // 'A'..'Z'
+         (key >= 0x70 && key <= 0x7B);    // F1..F12
+}
+
+// Require at least one known modifier (Ctrl/Alt/Shift/Win).
+bool IsAllowedHotkeyMods(int mods) {
+  constexpr int kKnown =
+      kModCtrlBit | kModAltBit | kModShiftBit | kModWinBit;
+  return (mods & kKnown) != 0;
+}
+
+int SanitizeHotkeyMods(int mods) {
+  constexpr int kKnown =
+      kModCtrlBit | kModAltBit | kModShiftBit | kModWinBit;
+  return mods & kKnown;
+}
+
 bool SetEndpointMute(bool mute, bool* out_previous) {
   HRESULT hr_init = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
   const bool need_uninit =
@@ -536,10 +556,14 @@ void PrivacyBlankDisplayPlugin::HandleMethodCall(
   if (method == "setHotkey") {
     const auto* args =
         std::get_if<flutter::EncodableMap>(method_call.arguments());
-    const int mods = ReadIntArg(args, "modifiers", kModCtrlBit | kModAltBit);
+    const int mods_raw =
+        ReadIntArg(args, "modifiers", kModCtrlBit | kModAltBit);
     const int key = ReadIntArg(args, "keyCode", static_cast<int>('P'));
-    if (mods == 0 || key <= 0 || key > 0xFF) {
-      result->Error("invalid_hotkey", "modifiers and keyCode required");
+    const int mods = SanitizeHotkeyMods(mods_raw);
+    // Align with UI capture: known modifiers required; letter/digit/F only.
+    if (!IsAllowedHotkeyMods(mods) || !IsAllowedHotkeyKey(key)) {
+      result->Error("invalid_hotkey",
+                    "hotkey must use Ctrl/Alt/Shift/Win plus letter/digit/F key");
       return;
     }
     bool ok = false;
