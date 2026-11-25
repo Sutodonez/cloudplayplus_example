@@ -1,5 +1,5 @@
---- /tmp/hardware_simulator_src/macos/Classes/HardwareSimulatorPlugin.swift	2026-11-24 12:45:02.921802052 +0000
-+++ macos/Classes/HardwareSimulatorPlugin.swift	2026-11-24 12:47:07.821829087 +0000
+--- macos/Classes/HardwareSimulatorPlugin.swift
++++ macos/Classes/HardwareSimulatorPlugin.swift
 @@ -569,6 +569,13 @@
        } else {
          result(FlutterError(code: "BAD_ARGS", message: "Missing or incorrect arguments for MouseMove ABSL", details: nil))

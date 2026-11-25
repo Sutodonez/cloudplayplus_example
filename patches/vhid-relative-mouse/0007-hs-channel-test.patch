@@ -1,5 +1,5 @@
---- /tmp/hardware_simulator_src/test/hardware_simulator_method_channel_test.dart	2026-11-24 12:45:02.921802052 +0000
-+++ test/hardware_simulator_method_channel_test.dart	2026-11-24 12:48:19.149750771 +0000
+--- test/hardware_simulator_method_channel_test.dart
++++ test/hardware_simulator_method_channel_test.dart
 @@ -8,20 +8,37 @@
    MethodChannelHardwareSimulator platform = MethodChannelHardwareSimulator();
    const MethodChannel channel = MethodChannel('hardware_simulator');

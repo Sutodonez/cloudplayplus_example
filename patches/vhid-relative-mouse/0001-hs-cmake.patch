@@ -1,5 +1,5 @@
---- /tmp/hardware_simulator_src/windows/CMakeLists.txt	2026-11-24 12:45:02.921802052 +0000
-+++ windows/CMakeLists.txt	2026-11-24 12:46:39.041850736 +0000
+--- windows/CMakeLists.txt
++++ windows/CMakeLists.txt
 @@ -24,6 +24,10 @@
    "cursor_monitor.h"
    "gamecontroller_manager.cc"

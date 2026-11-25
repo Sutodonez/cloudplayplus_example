@@ -1,13 +1,15 @@
---- /dev/null	2026-11-24 08:38:24.843785419 +0000
-+++ windows/mouse_injector.h	2026-11-24 12:45:15.229826317 +0000
-@@ -0,0 +1,32 @@
+--- /dev/null
++++ windows/mouse_injector.h
+@@ -0,0 +1,41 @@
 +#ifndef HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_
 +#define HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_
 +
 +#include <cstdint>
 +
-+// Mouse injection backends for relative moves / buttons / wheel.
-+// Keep the Dart MethodChannel surface stable: callers still use mouseMoveR etc.
++// Mouse injection backends for relative + absolute moves / buttons / wheel.
++// Keep the Dart MethodChannel surface stable: callers still use mouseMoveR /
++// mouseMoveA etc. Absolute path uses percent + screenId so multi-monitor /
++// multi-screen control can keep the same wire framing.
 +enum class MouseInputBackend {
 +  kSendInput = 0,  // user32 SendInput (default)
 +  kVhid = 1,       // Virtual HID via WinUHid when driver is installed
@@ -26,6 +28,13 @@
 +MouseInputBackend MouseInjectorGetEffectiveBackend();
 +
 +void MouseInjectorMoveRelative(double dx, double dy);
++
++// Absolute move: percent within [screenId] monitor. When VHID is effective,
++// maps onto the virtual desktop (0..65535) for multi-screen future use.
++// Returns false if VHID was preferred but submission failed (caller may
++// fall back to SendInput).
++bool MouseInjectorMoveAbsolute(double percentX, double percentY, int screenId);
++
 +void MouseInjectorButton(int buttonId, bool release);
 +void MouseInjectorScroll(int distance, bool horizontal);
 +

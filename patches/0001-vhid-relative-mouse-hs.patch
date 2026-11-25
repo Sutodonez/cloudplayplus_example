@@ -1,8 +1,219 @@
-# from 0001-hs-cmake.patch
+diff --git a/plugins/hardware_simulator/CHANGELOG.md b/plugins/hardware_simulator/CHANGELOG.md
+index 41cc7d8..fa54b79 100644
+--- a/plugins/hardware_simulator/CHANGELOG.md
++++ b/plugins/hardware_simulator/CHANGELOG.md
+@@ -1,3 +1,13 @@
++## Unreleased
++
++* Windows: optional virtual HID mouse (WinUHid) for relative
++  (`performMouseMoveRelative` / `mouseMoveR`) and absolute
++  (`performMouseMoveAbsl` / `mouseMoveA`) injection. Absolute report uses
++  virtual-desktop 0..65535 (multi-monitor ready). SendInput stays default with
++  SHORT-range split hardening. MethodChannel:
++  `setMouseInputBackend`, `getMouseInputBackend`, `getEffectiveMouseInputBackend`,
++  `isVhidMouseAvailable`.
++
+ ## 0.0.1
+ 
+ * TODO: Describe initial release.
+diff --git a/plugins/hardware_simulator/lib/hardware_simulator.dart b/plugins/hardware_simulator/lib/hardware_simulator.dart
+index 807057f..9317868 100644
+--- a/plugins/hardware_simulator/lib/hardware_simulator.dart
++++ b/plugins/hardware_simulator/lib/hardware_simulator.dart
+@@ -8,6 +8,19 @@ class HWKeyboard {
+   }
+ }
+ 
++/// Host-side mouse injection backend.
++///
++/// Applies to both relative ([HWMouse.performMouseMoveRelative]) and absolute
++/// ([HWMouse.performMouseMoveAbsl]) host injection. Wire framing is unchanged.
++enum MouseInputBackend {
++  /// user32 SendInput (default).
++  sendInput,
++
++  /// Virtual HID mouse via WinUHid when the driver is installed
++  /// (relative report id 1 + absolute report id 2).
++  vhid,
++}
++
+ class HWMouse {
+   HWMouse();
+   void performMouseMoveRelative(double deltax, double deltay, int screenId) {
+@@ -94,6 +107,35 @@ class HardwareSimulator {
+     return HardwareSimulatorPlatform.instance.putImmersiveModeEnabled(enabled);
+   }
+ 
++  /// Prefer [MouseInputBackend.vhid] for relative + absolute host injection;
++  /// falls back to SendInput when WinUHid is missing and returns false.
++  static Future<bool> setMouseInputBackend(MouseInputBackend backend) {
++    return HardwareSimulatorPlatform.instance
++        .setMouseInputBackend(backend.index);
++  }
++
++  static Future<MouseInputBackend> getMouseInputBackend() async {
++    final index =
++        await HardwareSimulatorPlatform.instance.getMouseInputBackend();
++    if (index >= 0 && index < MouseInputBackend.values.length) {
++      return MouseInputBackend.values[index];
++    }
++    return MouseInputBackend.sendInput;
++  }
++
++  static Future<MouseInputBackend> getEffectiveMouseInputBackend() async {
++    final index = await HardwareSimulatorPlatform.instance
++        .getEffectiveMouseInputBackend();
++    if (index >= 0 && index < MouseInputBackend.values.length) {
++      return MouseInputBackend.values[index];
++    }
++    return MouseInputBackend.sendInput;
++  }
++
++  static Future<bool> isVhidMouseAvailable() {
++    return HardwareSimulatorPlatform.instance.isVhidMouseAvailable();
++  }
++
+   static Future<void> showNotification(String content) {
+     return HardwareSimulatorPlatform.instance.showNotification(content);
+   }
+diff --git a/plugins/hardware_simulator/lib/hardware_simulator_method_channel.dart b/plugins/hardware_simulator/lib/hardware_simulator_method_channel.dart
+index 0b1af2f..b0294f2 100644
+--- a/plugins/hardware_simulator/lib/hardware_simulator_method_channel.dart
++++ b/plugins/hardware_simulator/lib/hardware_simulator_method_channel.dart
+@@ -317,6 +317,36 @@ class MethodChannelHardwareSimulator extends HardwareSimulatorPlatform {
+     });
+   }
+ 
++  @override
++  Future<bool> setMouseInputBackend(int backend) async {
++    final result =
++        await methodChannel.invokeMethod<bool>('setMouseInputBackend', {
++      'backend': backend,
++    });
++    return result ?? false;
++  }
++
++  @override
++  Future<int> getMouseInputBackend() async {
++    final result =
++        await methodChannel.invokeMethod<int>('getMouseInputBackend');
++    return result ?? 0;
++  }
++
++  @override
++  Future<int> getEffectiveMouseInputBackend() async {
++    final result =
++        await methodChannel.invokeMethod<int>('getEffectiveMouseInputBackend');
++    return result ?? 0;
++  }
++
++  @override
++  Future<bool> isVhidMouseAvailable() async {
++    final result =
++        await methodChannel.invokeMethod<bool>('isVhidMouseAvailable');
++    return result ?? false;
++  }
++
+   // Relative mouse movement.
+   @override
+   Future<void> performMouseMoveRelative(
+diff --git a/plugins/hardware_simulator/lib/hardware_simulator_platform_interface.dart b/plugins/hardware_simulator/lib/hardware_simulator_platform_interface.dart
+index 6b5eadf..68b183a 100644
+--- a/plugins/hardware_simulator/lib/hardware_simulator_platform_interface.dart
++++ b/plugins/hardware_simulator/lib/hardware_simulator_platform_interface.dart
+@@ -160,6 +160,24 @@ abstract class HardwareSimulatorPlatform extends PlatformInterface {
+     throw UnimplementedError('performKeyEvent() has not been implemented.');
+   }
+ 
++  /// Mouse injection backend: 0 = SendInput, 1 = Virtual HID (WinUHid).
++  Future<bool> setMouseInputBackend(int backend) {
++    throw UnimplementedError('setMouseInputBackend() has not been implemented.');
++  }
++
++  Future<int> getMouseInputBackend() {
++    throw UnimplementedError('getMouseInputBackend() has not been implemented.');
++  }
++
++  Future<int> getEffectiveMouseInputBackend() {
++    throw UnimplementedError(
++        'getEffectiveMouseInputBackend() has not been implemented.');
++  }
++
++  Future<bool> isVhidMouseAvailable() {
++    throw UnimplementedError('isVhidMouseAvailable() has not been implemented.');
++  }
++
+   // Relative mouse movement.
+   Future<void> performMouseMoveRelative(
+       double deltax, double deltay, int screenId) async {
+diff --git a/plugins/hardware_simulator/macos/Classes/HardwareSimulatorPlugin.swift b/plugins/hardware_simulator/macos/Classes/HardwareSimulatorPlugin.swift
+index d71a59a..ef56e36 100644
+--- a/plugins/hardware_simulator/macos/Classes/HardwareSimulatorPlugin.swift
++++ b/plugins/hardware_simulator/macos/Classes/HardwareSimulatorPlugin.swift
+@@ -569,6 +569,13 @@ public class HardwareSimulatorPlugin: NSObject, FlutterPlugin {
+       } else {
+         result(FlutterError(code: "BAD_ARGS", message: "Missing or incorrect arguments for MouseMove ABSL", details: nil))
+       }
++    case "setMouseInputBackend":
++      // Virtual HID mouse is Windows-only; acknowledge SendInput-equivalent.
++      result(true)
++    case "getMouseInputBackend", "getEffectiveMouseInputBackend":
++      result(0)
++    case "isVhidMouseAvailable":
++      result(false)
+     case "mouseMoveR":
+       if let args = call.arguments as? [String: Any],
+         let percentX = args["x"] as? Double,
+diff --git a/plugins/hardware_simulator/test/hardware_simulator_method_channel_test.dart b/plugins/hardware_simulator/test/hardware_simulator_method_channel_test.dart
+index 1e4abe8..32d2de0 100644
+--- a/plugins/hardware_simulator/test/hardware_simulator_method_channel_test.dart
++++ b/plugins/hardware_simulator/test/hardware_simulator_method_channel_test.dart
+@@ -8,20 +8,37 @@ void main() {
+   MethodChannelHardwareSimulator platform = MethodChannelHardwareSimulator();
+   const MethodChannel channel = MethodChannel('hardware_simulator');
+ 
++  final Map<String, dynamic> responses = {
++    'getPlatformVersion': '42',
++    'setMouseInputBackend': true,
++    'getMouseInputBackend': 1,
++    'getEffectiveMouseInputBackend': 0,
++    'isVhidMouseAvailable': false,
++  };
++
+   setUp(() {
+-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
++    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
++        .setMockMethodCallHandler(
+       channel,
+       (MethodCall methodCall) async {
+-        return '42';
++        return responses[methodCall.method];
+       },
+     );
+   });
+ 
+   tearDown(() {
+-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
++    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
++        .setMockMethodCallHandler(channel, null);
+   });
+ 
+   test('getPlatformVersion', () async {
+     expect(await platform.getPlatformVersion(), '42');
+   });
++
++  test('mouse input backend channel methods', () async {
++    expect(await platform.setMouseInputBackend(1), isTrue);
++    expect(await platform.getMouseInputBackend(), 1);
++    expect(await platform.getEffectiveMouseInputBackend(), 0);
++    expect(await platform.isVhidMouseAvailable(), isFalse);
++  });
+ }
 diff --git a/plugins/hardware_simulator/windows/CMakeLists.txt b/plugins/hardware_simulator/windows/CMakeLists.txt
+index bead0cf..1b4645a 100644
 --- a/plugins/hardware_simulator/windows/CMakeLists.txt
 +++ b/plugins/hardware_simulator/windows/CMakeLists.txt
-@@ -24,6 +24,10 @@
+@@ -24,6 +24,10 @@ list(APPEND PLUGIN_SOURCES
    "cursor_monitor.h"
    "gamecontroller_manager.cc"
    "gamecontroller_manager.h"
@@ -13,8 +224,8 @@ diff --git a/plugins/hardware_simulator/windows/CMakeLists.txt b/plugins/hardwar
    "notification_window.cc"
    "notification_window.h"
    "virtual_display.cc"
-# from 0002-hs-plugin-cpp.patch
 diff --git a/plugins/hardware_simulator/windows/hardware_simulator_plugin.cpp b/plugins/hardware_simulator/windows/hardware_simulator_plugin.cpp
+index adcb2d2..2d80cb9 100644
 --- a/plugins/hardware_simulator/windows/hardware_simulator_plugin.cpp
 +++ b/plugins/hardware_simulator/windows/hardware_simulator_plugin.cpp
 @@ -2,6 +2,7 @@
@@ -25,7 +236,7 @@ diff --git a/plugins/hardware_simulator/windows/hardware_simulator_plugin.cpp b/
  #include "notification_window.h"
  #include "virtual_display_control.h"
  #include "SmartKeyboardBlocker.h"
-@@ -824,6 +825,7 @@
+@@ -824,6 +825,7 @@ HardwareSimulatorPlugin::~HardwareSimulatorPlugin() {
      destroyTouchDevice();
      destroyPenDevice();
      CleanupCursorLock();
@@ -33,7 +244,7 @@ diff --git a/plugins/hardware_simulator/windows/hardware_simulator_plugin.cpp b/
      if (dpi_monitor_proc_id_.has_value()) {
          registrar_->UnregisterTopLevelWindowProcDelegate(dpi_monitor_proc_id_.value());
          dpi_monitor_proc_id_.reset();
-@@ -857,45 +859,7 @@
+@@ -857,45 +859,7 @@ void send_input(INPUT& i) {
  }
  
  void performMouseButton(int button, bool release) {
@@ -80,7 +291,7 @@ diff --git a/plugins/hardware_simulator/windows/hardware_simulator_plugin.cpp b/
  }
  
  #pragma warning(disable:4244)
-@@ -1037,16 +1001,7 @@
+@@ -1037,19 +1001,19 @@ bool setPrimaryDisplay(int displayIndex) {
  }
  
  void performMouseMoveRelative(double x,double y){
@@ -98,7 +309,19 @@ diff --git a/plugins/hardware_simulator/windows/hardware_simulator_plugin.cpp b/
  }
  
  void performMouseMoveAbsl(double x,double y,int screenId){
-@@ -1106,27 +1061,11 @@
++    // When VHID is active, absolute moves also go through WinUHid (report id 2)
++    // so relative + absolute share one optional backend (multi-screen ready).
++    if (MouseInjectorGetEffectiveBackend() == MouseInputBackend::kVhid) {
++        if (MouseInjectorMoveAbsolute(x, y, screenId)) {
++            return;
++        }
++        // Mid-stream VHID failure: fall through to SendInput.
++    }
++
+     INPUT i {};
+ 
+     i.type = INPUT_MOUSE;
+@@ -1106,27 +1070,11 @@ void performMouseMoveToWindowPosition(double percentx, double percenty) {
  }
  
  void scroll(int distance) {
@@ -128,7 +351,7 @@ diff --git a/plugins/hardware_simulator/windows/hardware_simulator_plugin.cpp b/
  }
  
  std::wstring stringToWstring(const std::string& str) {
-@@ -1162,6 +1101,21 @@
+@@ -1162,6 +1110,21 @@ void HardwareSimulatorPlugin::HandleMethodCall(
          auto isDown = (args->find(flutter::EncodableValue("isDown")))->second;
          performKeyEvent(static_cast<int>(std::get<int>((keyCode))), static_cast<bool>(std::get<bool>((isDown))));
          result->Success(nullptr);
@@ -150,241 +373,12 @@ diff --git a/plugins/hardware_simulator/windows/hardware_simulator_plugin.cpp b/
    } else if (method_call.method_name().compare("mouseMoveR") == 0) {
          auto deltax = (args->find(flutter::EncodableValue("x")))->second;
          auto deltay = (args->find(flutter::EncodableValue("y")))->second;
-# from 0003-hs-macos-stubs.patch
-diff --git a/plugins/hardware_simulator/macos/Classes/HardwareSimulatorPlugin.swift b/plugins/hardware_simulator/macos/Classes/HardwareSimulatorPlugin.swift
---- a/plugins/hardware_simulator/macos/Classes/HardwareSimulatorPlugin.swift
-+++ b/plugins/hardware_simulator/macos/Classes/HardwareSimulatorPlugin.swift
-@@ -569,6 +569,13 @@
-       } else {
-         result(FlutterError(code: "BAD_ARGS", message: "Missing or incorrect arguments for MouseMove ABSL", details: nil))
-       }
-+    case "setMouseInputBackend":
-+      // Virtual HID mouse is Windows-only; acknowledge SendInput-equivalent.
-+      result(true)
-+    case "getMouseInputBackend", "getEffectiveMouseInputBackend":
-+      result(0)
-+    case "isVhidMouseAvailable":
-+      result(false)
-     case "mouseMoveR":
-       if let args = call.arguments as? [String: Any],
-         let percentX = args["x"] as? Double,
-# from 0004-hs-dart-api.patch
-diff --git a/plugins/hardware_simulator/lib/hardware_simulator.dart b/plugins/hardware_simulator/lib/hardware_simulator.dart
---- a/plugins/hardware_simulator/lib/hardware_simulator.dart
-+++ b/plugins/hardware_simulator/lib/hardware_simulator.dart
-@@ -8,6 +8,17 @@
-   }
- }
- 
-+/// Host-side mouse injection backend.
-+///
-+/// Kept behind [HWMouse.performMouseMoveRelative] / `LP_MOUSEMOVE_RELATIVE`.
-+enum MouseInputBackend {
-+  /// user32 SendInput relative moves (default).
-+  sendInput,
-+
-+  /// Virtual HID mouse via WinUHid when the driver is installed.
-+  vhid,
-+}
-+
- class HWMouse {
-   HWMouse();
-   void performMouseMoveRelative(double deltax, double deltay, int screenId) {
-@@ -94,6 +105,35 @@
-     return HardwareSimulatorPlatform.instance.putImmersiveModeEnabled(enabled);
-   }
- 
-+  /// Prefer [MouseInputBackend.vhid] for Raw Input games; falls back to SendInput
-+  /// when WinUHid is missing and returns false.
-+  static Future<bool> setMouseInputBackend(MouseInputBackend backend) {
-+    return HardwareSimulatorPlatform.instance
-+        .setMouseInputBackend(backend.index);
-+  }
-+
-+  static Future<MouseInputBackend> getMouseInputBackend() async {
-+    final index =
-+        await HardwareSimulatorPlatform.instance.getMouseInputBackend();
-+    if (index >= 0 && index < MouseInputBackend.values.length) {
-+      return MouseInputBackend.values[index];
-+    }
-+    return MouseInputBackend.sendInput;
-+  }
-+
-+  static Future<MouseInputBackend> getEffectiveMouseInputBackend() async {
-+    final index = await HardwareSimulatorPlatform.instance
-+        .getEffectiveMouseInputBackend();
-+    if (index >= 0 && index < MouseInputBackend.values.length) {
-+      return MouseInputBackend.values[index];
-+    }
-+    return MouseInputBackend.sendInput;
-+  }
-+
-+  static Future<bool> isVhidMouseAvailable() {
-+    return HardwareSimulatorPlatform.instance.isVhidMouseAvailable();
-+  }
-+
-   static Future<void> showNotification(String content) {
-     return HardwareSimulatorPlatform.instance.showNotification(content);
-   }
-# from 0005-hs-method-channel.patch
-diff --git a/plugins/hardware_simulator/lib/hardware_simulator_method_channel.dart b/plugins/hardware_simulator/lib/hardware_simulator_method_channel.dart
---- a/plugins/hardware_simulator/lib/hardware_simulator_method_channel.dart
-+++ b/plugins/hardware_simulator/lib/hardware_simulator_method_channel.dart
-@@ -317,6 +317,36 @@
-     });
-   }
- 
-+  @override
-+  Future<bool> setMouseInputBackend(int backend) async {
-+    final result =
-+        await methodChannel.invokeMethod<bool>('setMouseInputBackend', {
-+      'backend': backend,
-+    });
-+    return result ?? false;
-+  }
-+
-+  @override
-+  Future<int> getMouseInputBackend() async {
-+    final result =
-+        await methodChannel.invokeMethod<int>('getMouseInputBackend');
-+    return result ?? 0;
-+  }
-+
-+  @override
-+  Future<int> getEffectiveMouseInputBackend() async {
-+    final result =
-+        await methodChannel.invokeMethod<int>('getEffectiveMouseInputBackend');
-+    return result ?? 0;
-+  }
-+
-+  @override
-+  Future<bool> isVhidMouseAvailable() async {
-+    final result =
-+        await methodChannel.invokeMethod<bool>('isVhidMouseAvailable');
-+    return result ?? false;
-+  }
-+
-   // Relative mouse movement.
-   @override
-   Future<void> performMouseMoveRelative(
-# from 0006-hs-platform-interface.patch
-diff --git a/plugins/hardware_simulator/lib/hardware_simulator_platform_interface.dart b/plugins/hardware_simulator/lib/hardware_simulator_platform_interface.dart
---- a/plugins/hardware_simulator/lib/hardware_simulator_platform_interface.dart
-+++ b/plugins/hardware_simulator/lib/hardware_simulator_platform_interface.dart
-@@ -160,6 +160,24 @@
-     throw UnimplementedError('performKeyEvent() has not been implemented.');
-   }
- 
-+  /// Mouse injection backend: 0 = SendInput, 1 = Virtual HID (WinUHid).
-+  Future<bool> setMouseInputBackend(int backend) {
-+    throw UnimplementedError('setMouseInputBackend() has not been implemented.');
-+  }
-+
-+  Future<int> getMouseInputBackend() {
-+    throw UnimplementedError('getMouseInputBackend() has not been implemented.');
-+  }
-+
-+  Future<int> getEffectiveMouseInputBackend() {
-+    throw UnimplementedError(
-+        'getEffectiveMouseInputBackend() has not been implemented.');
-+  }
-+
-+  Future<bool> isVhidMouseAvailable() {
-+    throw UnimplementedError('isVhidMouseAvailable() has not been implemented.');
-+  }
-+
-   // Relative mouse movement.
-   Future<void> performMouseMoveRelative(
-       double deltax, double deltay, int screenId) async {
-# from 0007-hs-channel-test.patch
-diff --git a/plugins/hardware_simulator/test/hardware_simulator_method_channel_test.dart b/plugins/hardware_simulator/test/hardware_simulator_method_channel_test.dart
---- a/plugins/hardware_simulator/test/hardware_simulator_method_channel_test.dart
-+++ b/plugins/hardware_simulator/test/hardware_simulator_method_channel_test.dart
-@@ -8,20 +8,37 @@
-   MethodChannelHardwareSimulator platform = MethodChannelHardwareSimulator();
-   const MethodChannel channel = MethodChannel('hardware_simulator');
- 
-+  final Map<String, dynamic> responses = {
-+    'getPlatformVersion': '42',
-+    'setMouseInputBackend': true,
-+    'getMouseInputBackend': 1,
-+    'getEffectiveMouseInputBackend': 0,
-+    'isVhidMouseAvailable': false,
-+  };
-+
-   setUp(() {
--    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-+        .setMockMethodCallHandler(
-       channel,
-       (MethodCall methodCall) async {
--        return '42';
-+        return responses[methodCall.method];
-       },
-     );
-   });
- 
-   tearDown(() {
--    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
-+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-+        .setMockMethodCallHandler(channel, null);
-   });
- 
-   test('getPlatformVersion', () async {
-     expect(await platform.getPlatformVersion(), '42');
-   });
-+
-+  test('mouse input backend channel methods', () async {
-+    expect(await platform.setMouseInputBackend(1), isTrue);
-+    expect(await platform.getMouseInputBackend(), 1);
-+    expect(await platform.getEffectiveMouseInputBackend(), 0);
-+    expect(await platform.isVhidMouseAvailable(), isFalse);
-+  });
- }
-# from 0008-hs-mouse-injector-h.patch
-diff --git a/plugins/hardware_simulator/windows/mouse_injector.h b/plugins/hardware_simulator/windows/mouse_injector.h
-new file mode 100644
---- /dev/null
-+++ b/plugins/hardware_simulator/windows/mouse_injector.h
-@@ -0,0 +1,32 @@
-+#ifndef HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_
-+#define HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_
-+
-+#include <cstdint>
-+
-+// Mouse injection backends for relative moves / buttons / wheel.
-+// Keep the Dart MethodChannel surface stable: callers still use mouseMoveR etc.
-+enum class MouseInputBackend {
-+  kSendInput = 0,  // user32 SendInput (default)
-+  kVhid = 1,       // Virtual HID via WinUHid when driver is installed
-+};
-+
-+// Sets preferred backend. When kVhid is requested but unavailable, falls back
-+// to SendInput and returns false.
-+bool MouseInjectorSetBackend(MouseInputBackend backend);
-+
-+MouseInputBackend MouseInjectorGetBackend();
-+
-+// True when WinUHid.dll loads and a virtual mouse device can be created.
-+bool MouseInjectorIsVhidAvailable();
-+
-+// Active backend after the last SetBackend (may be SendInput after VHID fail).
-+MouseInputBackend MouseInjectorGetEffectiveBackend();
-+
-+void MouseInjectorMoveRelative(double dx, double dy);
-+void MouseInjectorButton(int buttonId, bool release);
-+void MouseInjectorScroll(int distance, bool horizontal);
-+
-+// Tear down VHID device / DLL. Safe to call multiple times.
-+void MouseInjectorShutdown();
-+
-+#endif  // HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_
-# from 0009-hs-mouse-injector-cpp.patch
 diff --git a/plugins/hardware_simulator/windows/mouse_injector.cpp b/plugins/hardware_simulator/windows/mouse_injector.cpp
 new file mode 100644
+index 0000000..750d545
 --- /dev/null
 +++ b/plugins/hardware_simulator/windows/mouse_injector.cpp
-@@ -0,0 +1,215 @@
+@@ -0,0 +1,309 @@
 +#include "mouse_injector.h"
 +
 +#include "vhid_mouse.h"
@@ -395,6 +389,7 @@ new file mode 100644
 +#include <atomic>
 +#include <cmath>
 +#include <future>
++#include <vector>
 +
 +namespace {
 +
@@ -402,6 +397,83 @@ new file mode 100644
 +    static_cast<int>(MouseInputBackend::kSendInput)};
 +std::atomic<int> g_effective_backend{
 +    static_cast<int>(MouseInputBackend::kSendInput)};
++
++struct InjectorMonitorInfo {
++  RECT rect;
++  bool is_primary;
++};
++
++std::vector<InjectorMonitorInfo> EnumerateMonitors() {
++  std::vector<InjectorMonitorInfo> monitors;
++  DISPLAY_DEVICE displayDevice;
++  displayDevice.cb = sizeof(DISPLAY_DEVICE);
++
++  for (DWORD deviceNum = 0;
++       EnumDisplayDevices(NULL, deviceNum, &displayDevice, 0); deviceNum++) {
++    if (!(displayDevice.StateFlags & DISPLAY_DEVICE_ACTIVE)) {
++      continue;
++    }
++    DEVMODE devMode = {};
++    devMode.dmSize = sizeof(DEVMODE);
++    if (!EnumDisplaySettings(displayDevice.DeviceName, ENUM_CURRENT_SETTINGS,
++                             &devMode)) {
++      continue;
++    }
++    InjectorMonitorInfo info = {};
++    info.rect.left = devMode.dmPosition.x;
++    info.rect.top = devMode.dmPosition.y;
++    info.rect.right = devMode.dmPosition.x +
++                      static_cast<LONG>(devMode.dmPelsWidth);
++    info.rect.bottom = devMode.dmPosition.y +
++                       static_cast<LONG>(devMode.dmPelsHeight);
++    info.is_primary =
++        (displayDevice.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE) != 0;
++    monitors.push_back(info);
++  }
++  return monitors;
++}
++
++// Map percent + screenId onto virtual-desktop normalized 0..65535.
++// Used by the absolute VHID report so multi-monitor layouts stay consistent.
++bool MapToVirtualDesktopAbs(int screenId, double percentX, double percentY,
++                            USHORT& out_x, USHORT& out_y) {
++  auto monitors = EnumerateMonitors();
++  if (screenId < 0 || screenId >= static_cast<int>(monitors.size())) {
++    return false;
++  }
++
++  RECT bounds = monitors[0].rect;
++  for (const auto& m : monitors) {
++    bounds.left = (std::min)(bounds.left, m.rect.left);
++    bounds.top = (std::min)(bounds.top, m.rect.top);
++    bounds.right = (std::max)(bounds.right, m.rect.right);
++    bounds.bottom = (std::max)(bounds.bottom, m.rect.bottom);
++  }
++
++  const LONG vw = bounds.right - bounds.left;
++  const LONG vh = bounds.bottom - bounds.top;
++  if (vw <= 0 || vh <= 0) {
++    return false;
++  }
++
++  const auto& screen = monitors[screenId];
++  const double px =
++      screen.rect.left - bounds.left +
++      (screen.rect.right - screen.rect.left) * percentX;
++  const double py =
++      screen.rect.top - bounds.top +
++      (screen.rect.bottom - screen.rect.top) * percentY;
++
++  auto clamp_u16 = [](double v) -> USHORT {
++    if (v < 0.0) return 0;
++    if (v > 65535.0) return 65535;
++    return static_cast<USHORT>(std::lround(v));
++  };
++
++  out_x = clamp_u16(px * 65535.0 / static_cast<double>(vw));
++  out_y = clamp_u16(py * 65535.0 / static_cast<double>(vh));
++  return true;
++}
 +
 +// Desktop-sync SendInput helpers (mirrors hardware_simulator_plugin.cpp).
 +thread_local HDESK g_last_input_desktop = nullptr;
@@ -571,6 +643,22 @@ new file mode 100644
 +  }
 +}
 +
++bool MouseInjectorMoveAbsolute(double percentX, double percentY, int screenId) {
++  if (MouseInjectorGetEffectiveBackend() != MouseInputBackend::kVhid) {
++    return false;
++  }
++  USHORT ax = 0;
++  USHORT ay = 0;
++  if (!MapToVirtualDesktopAbs(screenId, percentX, percentY, ax, ay)) {
++    return false;
++  }
++  if (!VhidMouseReportAbsolute(ax, ay)) {
++    g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++    return false;
++  }
++  return true;
++}
++
 +void MouseInjectorButton(int buttonId, bool release) {
 +  if (MouseInjectorGetEffectiveBackend() == MouseInputBackend::kVhid) {
 +    if (!VhidMouseReportButton(buttonId, !release)) {
@@ -600,37 +688,59 @@ new file mode 100644
 +  g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
 +  g_preferred_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
 +}
-# from 0010-hs-vhid-mouse-h.patch
-diff --git a/plugins/hardware_simulator/windows/vhid_mouse.h b/plugins/hardware_simulator/windows/vhid_mouse.h
+diff --git a/plugins/hardware_simulator/windows/mouse_injector.h b/plugins/hardware_simulator/windows/mouse_injector.h
 new file mode 100644
+index 0000000..935111d
 --- /dev/null
-+++ b/plugins/hardware_simulator/windows/vhid_mouse.h
-@@ -0,0 +1,19 @@
-+#ifndef HARDWARE_SIMULATOR_VHID_MOUSE_H_
-+#define HARDWARE_SIMULATOR_VHID_MOUSE_H_
++++ b/plugins/hardware_simulator/windows/mouse_injector.h
+@@ -0,0 +1,41 @@
++#ifndef HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_
++#define HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_
 +
-+#include <windows.h>
++#include <cstdint>
 +
-+// Optional virtual-HID mouse backend.
-+// Dynamically loads WinUHid.dll (https://github.com/cgutman/WinUHid, MIT).
-+// Requires the WinUHid UMDF driver to be installed on the host; otherwise
-+// all APIs fail and the caller should keep using SendInput.
++// Mouse injection backends for relative + absolute moves / buttons / wheel.
++// Keep the Dart MethodChannel surface stable: callers still use mouseMoveR /
++// mouseMoveA etc. Absolute path uses percent + screenId so multi-monitor /
++// multi-screen control can keep the same wire framing.
++enum class MouseInputBackend {
++  kSendInput = 0,  // user32 SendInput (default)
++  kVhid = 1,       // Virtual HID via WinUHid when driver is installed
++};
 +
-+bool VhidMouseIsDriverPresent();
-+bool VhidMouseEnsureCreated();
-+void VhidMouseDestroy();
++// Sets preferred backend. When kVhid is requested but unavailable, falls back
++// to SendInput and returns false.
++bool MouseInjectorSetBackend(MouseInputBackend backend);
 +
-+bool VhidMouseReportMotion(SHORT dx, SHORT dy);
-+bool VhidMouseReportButton(int buttonId, bool down);
-+bool VhidMouseReportScroll(SHORT scrollValue, bool horizontal);
++MouseInputBackend MouseInjectorGetBackend();
 +
-+#endif  // HARDWARE_SIMULATOR_VHID_MOUSE_H_
-# from 0011-hs-vhid-mouse-cpp.patch
++// True when WinUHid.dll loads and a virtual mouse device can be created.
++bool MouseInjectorIsVhidAvailable();
++
++// Active backend after the last SetBackend (may be SendInput after VHID fail).
++MouseInputBackend MouseInjectorGetEffectiveBackend();
++
++void MouseInjectorMoveRelative(double dx, double dy);
++
++// Absolute move: percent within [screenId] monitor. When VHID is effective,
++// maps onto the virtual desktop (0..65535) for multi-screen future use.
++// Returns false if VHID was preferred but submission failed (caller may
++// fall back to SendInput).
++bool MouseInjectorMoveAbsolute(double percentX, double percentY, int screenId);
++
++void MouseInjectorButton(int buttonId, bool release);
++void MouseInjectorScroll(int distance, bool horizontal);
++
++// Tear down VHID device / DLL. Safe to call multiple times.
++void MouseInjectorShutdown();
++
++#endif  // HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_
 diff --git a/plugins/hardware_simulator/windows/vhid_mouse.cpp b/plugins/hardware_simulator/windows/vhid_mouse.cpp
 new file mode 100644
+index 0000000..03d6648
 --- /dev/null
 +++ b/plugins/hardware_simulator/windows/vhid_mouse.cpp
-@@ -0,0 +1,314 @@
+@@ -0,0 +1,370 @@
 +#include "vhid_mouse.h"
 +
 +#include <mutex>
@@ -703,7 +813,7 @@ new file mode 100644
 +// Relative mouse report layout (report id 1):
 +// buttons(5)+pad(3), dx:16, dy:16, wheel:16, hwheel:16
 +#pragma pack(push, 1)
-+struct VhidMouseReport {
++struct VhidMouseRelReport {
 +  UCHAR id;
 +  UCHAR buttons;
 +  SHORT dx;
@@ -711,13 +821,24 @@ new file mode 100644
 +  SHORT wheel;
 +  SHORT hwheel;
 +};
++
++// Absolute mouse report layout (report id 2):
++// buttons(5)+pad(3), x:16, y:16  (0..65535 virtual-desktop normalized)
++struct VhidMouseAbsReport {
++  UCHAR id;
++  UCHAR buttons;
++  USHORT x;
++  USHORT y;
++};
 +#pragma pack(pop)
 +
-+// Standard-ish relative mouse descriptor with 16-bit axes (Raw Input friendly).
++// Dual-mode mouse: Report 1 = relative, Report 2 = absolute.
 +const BYTE kMouseReportDescriptor[] = {
 +    0x05, 0x01,        // Usage Page (Generic Desktop)
 +    0x09, 0x02,        // Usage (Mouse)
 +    0xA1, 0x01,        // Collection (Application)
++
++    // ----- Report ID 1: relative -----
 +    0x85, 0x01,        //   Report ID (1)
 +    0x09, 0x01,        //   Usage (Pointer)
 +    0xA1, 0x00,        //   Collection (Physical)
@@ -748,6 +869,32 @@ new file mode 100644
 +    0x95, 0x01,        //     Report Count (1)
 +    0x81, 0x06,        //     Input (Data,Var,Rel)
 +    0xC0,              //   End Collection
++
++    // ----- Report ID 2: absolute (virtual desktop 0..65535) -----
++    0x85, 0x02,        //   Report ID (2)
++    0x09, 0x01,        //   Usage (Pointer)
++    0xA1, 0x00,        //   Collection (Physical)
++    0x05, 0x09,        //     Usage Page (Button)
++    0x19, 0x01,        //     Usage Minimum (1)
++    0x29, 0x05,        //     Usage Maximum (5)
++    0x15, 0x00,        //     Logical Minimum (0)
++    0x25, 0x01,        //     Logical Maximum (1)
++    0x95, 0x05,        //     Report Count (5)
++    0x75, 0x01,        //     Report Size (1)
++    0x81, 0x02,        //     Input (Data,Var,Abs)
++    0x95, 0x01,        //     Report Count (1)
++    0x75, 0x03,        //     Report Size (3)
++    0x81, 0x03,        //     Input (Const,Var,Abs)
++    0x05, 0x01,        //     Usage Page (Generic Desktop)
++    0x09, 0x30,        //     Usage (X)
++    0x09, 0x31,        //     Usage (Y)
++    0x15, 0x00,        //     Logical Minimum (0)
++    0x27, 0xFF, 0xFF, 0x00, 0x00,  // Logical Maximum (65535)
++    0x75, 0x10,        //     Report Size (16)
++    0x95, 0x02,        //     Report Count (2)
++    0x81, 0x02,        //     Input (Data,Var,Abs)
++    0xC0,              //   End Collection
++
 +    0xC0,              // End Collection
 +};
 +
@@ -861,7 +1008,7 @@ new file mode 100644
 +    return false;
 +  }
 +
-+  VhidMouseReport empty = {};
++  VhidMouseRelReport empty = {};
 +  empty.id = 0x01;
 +  if (!g_api.SubmitInputReport(g_device, &empty, sizeof(empty))) {
 +    g_api.DestroyDevice(g_device);
@@ -873,17 +1020,29 @@ new file mode 100644
 +  return true;
 +}
 +
-+bool SubmitLocked(SHORT dx, SHORT dy, SHORT wheel, SHORT hwheel) {
++bool SubmitRelLocked(SHORT dx, SHORT dy, SHORT wheel, SHORT hwheel) {
 +  if (!CreateDeviceLocked()) {
 +    return false;
 +  }
-+  VhidMouseReport report = {};
++  VhidMouseRelReport report = {};
 +  report.id = 0x01;
 +  report.buttons = g_buttons;
 +  report.dx = dx;
 +  report.dy = dy;
 +  report.wheel = wheel;
 +  report.hwheel = hwheel;
++  return g_api.SubmitInputReport(g_device, &report, sizeof(report)) == TRUE;
++}
++
++bool SubmitAbsLocked(USHORT x, USHORT y) {
++  if (!CreateDeviceLocked()) {
++    return false;
++  }
++  VhidMouseAbsReport report = {};
++  report.id = 0x02;
++  report.buttons = g_buttons;
++  report.x = x;
++  report.y = y;
 +  return g_api.SubmitInputReport(g_device, &report, sizeof(report)) == TRUE;
 +}
 +
@@ -916,7 +1075,12 @@ new file mode 100644
 +
 +bool VhidMouseReportMotion(SHORT dx, SHORT dy) {
 +  std::lock_guard<std::mutex> lock(g_mutex);
-+  return SubmitLocked(dx, dy, 0, 0);
++  return SubmitRelLocked(dx, dy, 0, 0);
++}
++
++bool VhidMouseReportAbsolute(USHORT x, USHORT y) {
++  std::lock_guard<std::mutex> lock(g_mutex);
++  return SubmitAbsLocked(x, y);
 +}
 +
 +bool VhidMouseReportButton(int buttonId, bool down) {
@@ -935,29 +1099,45 @@ new file mode 100644
 +  } else {
 +    g_buttons = static_cast<UCHAR>(g_buttons & ~(1u << bit));
 +  }
-+  return SubmitLocked(0, 0, 0, 0);
++  // Button state is shared; emit a relative zero-motion report so listeners
++  // see the update without jumping absolute position.
++  return SubmitRelLocked(0, 0, 0, 0);
 +}
 +
 +bool VhidMouseReportScroll(SHORT scrollValue, bool horizontal) {
 +  std::lock_guard<std::mutex> lock(g_mutex);
 +  if (horizontal) {
-+    return SubmitLocked(0, 0, 0, scrollValue);
++    return SubmitRelLocked(0, 0, 0, scrollValue);
 +  }
-+  return SubmitLocked(0, 0, scrollValue, 0);
++  return SubmitRelLocked(0, 0, scrollValue, 0);
 +}
-# from 0012-hs-changelog.patch
-diff --git a/plugins/hardware_simulator/CHANGELOG.md b/plugins/hardware_simulator/CHANGELOG.md
---- a/plugins/hardware_simulator/CHANGELOG.md
-+++ b/plugins/hardware_simulator/CHANGELOG.md
-@@ -1,3 +1,11 @@
-+## Unreleased
+diff --git a/plugins/hardware_simulator/windows/vhid_mouse.h b/plugins/hardware_simulator/windows/vhid_mouse.h
+new file mode 100644
+index 0000000..7bc331b
+--- /dev/null
++++ b/plugins/hardware_simulator/windows/vhid_mouse.h
+@@ -0,0 +1,24 @@
++#ifndef HARDWARE_SIMULATOR_VHID_MOUSE_H_
++#define HARDWARE_SIMULATOR_VHID_MOUSE_H_
 +
-+* Windows: optional virtual HID relative mouse (WinUHid) behind
-+  `performMouseMoveRelative` / `mouseMoveR`. SendInput stays default with
-+  SHORT-range split hardening. MethodChannel:
-+  `setMouseInputBackend`, `getMouseInputBackend`, `getEffectiveMouseInputBackend`,
-+  `isVhidMouseAvailable`.
++#include <windows.h>
 +
- ## 0.0.1
- 
- * TODO: Describe initial release.
++// Optional virtual-HID mouse backend.
++// Dynamically loads WinUHid.dll (https://github.com/cgutman/WinUHid, MIT).
++// Requires the WinUHid UMDF driver to be installed on the host; otherwise
++// all APIs fail and the caller should keep using SendInput.
++//
++// Report ID 1 = relative motion (Raw Input games).
++// Report ID 2 = absolute position (0..65535 over the virtual desktop;
++// multi-monitor / multi-screen control can keep using percent + screenId).
++
++bool VhidMouseIsDriverPresent();
++bool VhidMouseEnsureCreated();
++void VhidMouseDestroy();
++
++bool VhidMouseReportMotion(SHORT dx, SHORT dy);
++bool VhidMouseReportAbsolute(USHORT x, USHORT y);
++bool VhidMouseReportButton(int buttonId, bool down);
++bool VhidMouseReportScroll(SHORT scrollValue, bool horizontal);
++
++#endif  // HARDWARE_SIMULATOR_VHID_MOUSE_H_

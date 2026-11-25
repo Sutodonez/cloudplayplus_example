@@ -1,5 +1,5 @@
---- /tmp/hardware_simulator_src/windows/hardware_simulator_plugin.cpp	2026-11-24 12:45:02.921802052 +0000
-+++ windows/hardware_simulator_plugin.cpp	2026-11-24 12:46:36.385852260 +0000
+--- windows/hardware_simulator_plugin.cpp
++++ windows/hardware_simulator_plugin.cpp
 @@ -2,6 +2,7 @@
  
  #include "cursor_monitor.h"
@@ -63,7 +63,7 @@
  }
  
  #pragma warning(disable:4244)
-@@ -1037,16 +1001,7 @@
+@@ -1037,19 +1001,19 @@
  }
  
  void performMouseMoveRelative(double x,double y){
@@ -81,7 +81,19 @@
  }
  
  void performMouseMoveAbsl(double x,double y,int screenId){
-@@ -1106,27 +1061,11 @@
++    // When VHID is active, absolute moves also go through WinUHid (report id 2)
++    // so relative + absolute share one optional backend (multi-screen ready).
++    if (MouseInjectorGetEffectiveBackend() == MouseInputBackend::kVhid) {
++        if (MouseInjectorMoveAbsolute(x, y, screenId)) {
++            return;
++        }
++        // Mid-stream VHID failure: fall through to SendInput.
++    }
++
+     INPUT i {};
+ 
+     i.type = INPUT_MOUSE;
+@@ -1106,27 +1070,11 @@
  }
  
  void scroll(int distance) {
@@ -111,7 +123,7 @@
  }
  
  std::wstring stringToWstring(const std::string& str) {
-@@ -1162,6 +1101,21 @@
+@@ -1162,6 +1110,21 @@
          auto isDown = (args->find(flutter::EncodableValue("isDown")))->second;
          performKeyEvent(static_cast<int>(std::get<int>((keyCode))), static_cast<bool>(std::get<bool>((isDown))));
          result->Success(nullptr);

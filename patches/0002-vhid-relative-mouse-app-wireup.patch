@@ -1,13 +1,13 @@
 diff --git a/lib/global_settings/streaming_settings.dart b/lib/global_settings/streaming_settings.dart
-index d4607d8..ee1fb2e 100644
+index d4607d8..be60ce0 100644
 --- a/lib/global_settings/streaming_settings.dart
 +++ b/lib/global_settings/streaming_settings.dart
 @@ -81,6 +81,10 @@ class StreamingSettings {
    // 是否监听远程设备的鼠标位置更新
    static bool syncMousePosition = false;
  
-+  /// Host-side: prefer virtual HID for relative mouse (Windows + WinUHid).
-+  /// Does not change the wire protocol (`LP_MOUSEMOVE_RELATIVE`).
++  /// Host-side: prefer virtual HID for relative + absolute mouse
++  /// (Windows + WinUHid). Does not change the wire protocol.
 +  static bool useVhidMouse = false;
 +
    // 0: default mode. connect to monitor with that screenId
@@ -23,14 +23,14 @@ index d4607d8..ee1fb2e 100644
  
    //Screen id setting is not global, so we need to call before start streaming.
 diff --git a/lib/services/app_init_service.dart b/lib/services/app_init_service.dart
-index 91cadc9..2409f92 100644
+index 91cadc9..328fe03 100644
 --- a/lib/services/app_init_service.dart
 +++ b/lib/services/app_init_service.dart
 @@ -92,6 +92,15 @@ class AppInitService {
            ApplicationInfo.displayCountChangedCompleter!.complete();
          }
        }, 0);
-+      // Apply host relative-mouse backend (SendInput vs virtual HID).
++      // Apply host mouse backend (SendInput vs virtual HID) for relative + absolute.
 +      final useVhid =
 +          SharedPreferencesManager.getBool('useVhidMouse') ?? false;
 +      final ok = await HardwareSimulator.setMouseInputBackend(
@@ -43,7 +43,7 @@ index 91cadc9..2409f92 100644
      bool? isSystem = await HardwareSimulator.isRunningAsSystem();
      if (isSystem == false) {
 diff --git a/lib/settings_screen.dart b/lib/settings_screen.dart
-index fa49a5c..5b9a2d6 100644
+index fa49a5c..76f14a7 100644
 --- a/lib/settings_screen.dart
 +++ b/lib/settings_screen.dart
 @@ -12,6 +12,7 @@ import 'package:cloudplayplus/utils/widgets/text_field_wrapper.dart';
@@ -78,15 +78,16 @@ index fa49a5c..5b9a2d6 100644
      _touchInputMode = StreamingSettings.touchInputMode;
      // 加载保存的缩放值，默认值为100
      double savedValue = StreamingSettings.cursorScale;
-@@ -1177,6 +1188,40 @@ class _CursorSettingsScreenState extends State<CursorSettingsScreen> {
+@@ -1177,6 +1188,74 @@ class _CursorSettingsScreenState extends State<CursorSettingsScreen> {
                      });
                    },
                  ),
 +                if (AppPlatform.isWindows)
 +                  SettingsTile.switchTile(
-+                    title: Text(_vhidAvailable
-+                        ? '虚拟 HID 相对鼠标 (WinUHid，适合 Raw Input 老游戏)'
-+                        : '虚拟 HID 相对鼠标 (需安装 WinUHid 驱动；未检测到则回退 SendInput)'),
++                    title: const Text('虚拟 HID 鼠标 (WinUHid)'),
++                    description: Text(_vhidAvailable
++                        ? '相对与绝对路径均走虚拟 HID；适合 Raw Input 老游戏，并为多屏控多屏预留。关则 SendInput。'
++                        : '未检测到 WinUHid：开启后仍会回退 SendInput。请先用下方按钮安装驱动与 DLL。'),
 +                    leading: const Icon(Icons.mouse_outlined),
 +                    initialValue: _useVhidMouse,
 +                    onToggle: (bool value) async {
@@ -110,10 +111,43 @@ index fa49a5c..5b9a2d6 100644
 +                        ScaffoldMessenger.of(context).showSnackBar(
 +                          const SnackBar(
 +                            content: Text(
-+                                'WinUHid 不可用，已回退 SendInput。安装 WinUHid 驱动后重试。'),
++                                'WinUHid 不可用，已回退 SendInput。请点击「安装 WinUHid 驱动」后重试。'),
 +                          ),
 +                        );
 +                      }
++                    },
++                  ),
++                if (AppPlatform.isWindows)
++                  SettingsTile(
++                    title: const Text('安装 WinUHid 驱动'),
++                    description: const Text(
++                        '打开官方仓库安装引导：安装 UMDF 驱动，并将 WinUHid.dll 放到 PATH 或程序目录。安装后重启本应用再开启上方开关。'),
++                    leading: const Icon(Icons.download_outlined),
++                    onPressed: (BuildContext context) async {
++                      final url = Uri.parse('https://github.com/cgutman/WinUHid');
++                      if (await canLaunchUrl(url)) {
++                        await launchUrl(
++                          url,
++                          mode: LaunchMode.externalApplication,
++                        );
++                      }
++                      if (!context.mounted) return;
++                      ScaffoldMessenger.of(context).showSnackBar(
++                        const SnackBar(
++                          content: Text(
++                              '已打开 WinUHid 页面。按仓库说明安装驱动与 DLL 后，重启应用并重新检测。'),
++                        ),
++                      );
++                      // Re-probe availability after the user returns.
++                      try {
++                        final available =
++                            await HardwareSimulator.isVhidMouseAvailable();
++                        if (mounted) {
++                          setState(() {
++                            _vhidAvailable = available;
++                          });
++                        }
++                      } catch (_) {}
 +                    },
 +                  ),
                ],

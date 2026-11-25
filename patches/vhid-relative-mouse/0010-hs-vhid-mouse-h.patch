@@ -1,6 +1,6 @@
---- /dev/null	2026-11-24 08:38:24.843785419 +0000
-+++ windows/vhid_mouse.h	2026-11-24 12:45:19.885833514 +0000
-@@ -0,0 +1,19 @@
+--- /dev/null
++++ windows/vhid_mouse.h
+@@ -0,0 +1,24 @@
 +#ifndef HARDWARE_SIMULATOR_VHID_MOUSE_H_
 +#define HARDWARE_SIMULATOR_VHID_MOUSE_H_
 +
@@ -10,12 +10,17 @@
 +// Dynamically loads WinUHid.dll (https://github.com/cgutman/WinUHid, MIT).
 +// Requires the WinUHid UMDF driver to be installed on the host; otherwise
 +// all APIs fail and the caller should keep using SendInput.
++//
++// Report ID 1 = relative motion (Raw Input games).
++// Report ID 2 = absolute position (0..65535 over the virtual desktop;
++// multi-monitor / multi-screen control can keep using percent + screenId).
 +
 +bool VhidMouseIsDriverPresent();
 +bool VhidMouseEnsureCreated();
 +void VhidMouseDestroy();
 +
 +bool VhidMouseReportMotion(SHORT dx, SHORT dy);
++bool VhidMouseReportAbsolute(USHORT x, USHORT y);
 +bool VhidMouseReportButton(int buttonId, bool down);
 +bool VhidMouseReportScroll(SHORT scrollValue, bool horizontal);
 +

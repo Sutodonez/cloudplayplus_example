@@ -1,10 +1,12 @@
---- /tmp/hardware_simulator_src/CHANGELOG.md	2026-11-24 12:45:02.921802052 +0000
-+++ CHANGELOG.md	2026-11-24 12:48:43.649719652 +0000
-@@ -1,3 +1,11 @@
+--- CHANGELOG.md
++++ CHANGELOG.md
+@@ -1,3 +1,13 @@
 +## Unreleased
 +
-+* Windows: optional virtual HID relative mouse (WinUHid) behind
-+  `performMouseMoveRelative` / `mouseMoveR`. SendInput stays default with
++* Windows: optional virtual HID mouse (WinUHid) for relative
++  (`performMouseMoveRelative` / `mouseMoveR`) and absolute
++  (`performMouseMoveAbsl` / `mouseMoveA`) injection. Absolute report uses
++  virtual-desktop 0..65535 (multi-monitor ready). SendInput stays default with
 +  SHORT-range split hardening. MethodChannel:
 +  `setMouseInputBackend`, `getMouseInputBackend`, `getEffectiveMouseInputBackend`,
 +  `isVhidMouseAvailable`.

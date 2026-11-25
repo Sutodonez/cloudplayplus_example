@@ -1,5 +1,5 @@
---- /tmp/hardware_simulator_src/lib/hardware_simulator_method_channel.dart	2026-11-24 12:45:02.921802052 +0000
-+++ lib/hardware_simulator_method_channel.dart	2026-11-24 12:46:46.509845969 +0000
+--- lib/hardware_simulator_method_channel.dart
++++ lib/hardware_simulator_method_channel.dart
 @@ -317,6 +317,36 @@
      });
    }

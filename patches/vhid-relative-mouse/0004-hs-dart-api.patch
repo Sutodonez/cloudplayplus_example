@@ -1,29 +1,31 @@
---- /tmp/hardware_simulator_src/lib/hardware_simulator.dart	2026-11-24 12:45:02.921802052 +0000
-+++ lib/hardware_simulator.dart	2026-11-24 12:46:52.925841359 +0000
-@@ -8,6 +8,17 @@
+--- lib/hardware_simulator.dart
++++ lib/hardware_simulator.dart
+@@ -8,6 +8,19 @@
    }
  }
  
 +/// Host-side mouse injection backend.
 +///
-+/// Kept behind [HWMouse.performMouseMoveRelative] / `LP_MOUSEMOVE_RELATIVE`.
++/// Applies to both relative ([HWMouse.performMouseMoveRelative]) and absolute
++/// ([HWMouse.performMouseMoveAbsl]) host injection. Wire framing is unchanged.
 +enum MouseInputBackend {
-+  /// user32 SendInput relative moves (default).
++  /// user32 SendInput (default).
 +  sendInput,
 +
-+  /// Virtual HID mouse via WinUHid when the driver is installed.
++  /// Virtual HID mouse via WinUHid when the driver is installed
++  /// (relative report id 1 + absolute report id 2).
 +  vhid,
 +}
 +
  class HWMouse {
    HWMouse();
    void performMouseMoveRelative(double deltax, double deltay, int screenId) {
-@@ -94,6 +105,35 @@
+@@ -94,6 +107,35 @@
      return HardwareSimulatorPlatform.instance.putImmersiveModeEnabled(enabled);
    }
  
-+  /// Prefer [MouseInputBackend.vhid] for Raw Input games; falls back to SendInput
-+  /// when WinUHid is missing and returns false.
++  /// Prefer [MouseInputBackend.vhid] for relative + absolute host injection;
++  /// falls back to SendInput when WinUHid is missing and returns false.
 +  static Future<bool> setMouseInputBackend(MouseInputBackend backend) {
 +    return HardwareSimulatorPlatform.instance
 +        .setMouseInputBackend(backend.index);
