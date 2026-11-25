@@ -37,3 +37,7 @@ git -C vendor/cloudplayplus reset --hard HEAD
 ```
 
 See [FILE_LIST.md](./FILE_LIST.md).
+
+## Security (trial)
+
+Punch targets are limited to **public unicast IPv4** literals; candidate-driven bursts are **serialized** and capped (session/burst). See `docs/reviews/pr14-trial-out-of-stack.md` (CPPS store).

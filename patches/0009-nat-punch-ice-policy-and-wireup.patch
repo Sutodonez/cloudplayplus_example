@@ -293,10 +293,10 @@ index 7e1555a..eb4e6f5 100644
      hookCursorImage ??= (AppPlatform.isWeb || AppPlatform.isDeskTop || AppPlatform.isMobile);
 diff --git a/lib/services/ice/ice_candidate_endpoint.dart b/lib/services/ice/ice_candidate_endpoint.dart
 new file mode 100644
-index 0000000..5e3b93a
+index 0000000..1111111 100644
 --- /dev/null
 +++ b/lib/services/ice/ice_candidate_endpoint.dart
-@@ -0,0 +1,44 @@
+@@ -0,0 +1,78 @@
 +/// Parsed `a=candidate:` / `candidate:` endpoint for punch targeting.
 +class IceCandidateEndpoint {
 +  IceCandidateEndpoint({
@@ -311,13 +311,40 @@ index 0000000..5e3b93a
 +  final String protocol;
 +  final String type;
 +
++  /// UDP host/srflx/prflx with a numeric public unicast IPv4 address.
++  ///
++  /// Rejects relay, hostnames, loopback, RFC1918, link-local, CGNAT, and
++  /// multicast so remote ICE lines cannot steer punch bursts at arbitrary
++  /// internal or non-literal destinations.
 +  bool get isPunchable =>
 +      protocol == 'udp' &&
 +      (type == 'srflx' || type == 'host' || type == 'prflx') &&
-+      ip.isNotEmpty &&
++      type != 'relay' &&
 +      port > 0 &&
 +      port <= 65535 &&
-+      type != 'relay';
++      isPublicUnicastIpv4(ip);
++
++  /// Literal IPv4 that is neither loopback, private, link-local, CGNAT, nor multicast.
++  static bool isPublicUnicastIpv4(String raw) {
++    final m = RegExp(r'^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$')
++        .firstMatch(raw.trim());
++    if (m == null) return false;
++    final o = List<int>.generate(4, (i) => int.parse(m.group(i + 1)!));
++    if (o.any((v) => v < 0 || v > 255)) return false;
++    final a = o[0], b = o[1];
++    // 0.0.0.0/8 unspecified; 127.0.0.0/8 loopback
++    if (a == 0 || a == 127) return false;
++    // 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16
++    if (a == 10) return false;
++    if (a == 172 && b >= 16 && b <= 31) return false;
++    if (a == 192 && b == 168) return false;
++    // 169.254.0.0/16 link-local; 100.64.0.0/10 CGNAT
++    if (a == 169 && b == 254) return false;
++    if (a == 100 && b >= 64 && b <= 127) return false;
++    // 224.0.0.0/4 multicast; 240.0.0.0/4 reserved
++    if (a >= 224) return false;
++    return true;
++  }
 +
 +  /// Example: `candidate:1 1 UDP 2122260223 203.0.113.1 54321 typ srflx ...`
 +  static IceCandidateEndpoint? parse(String raw) {
@@ -333,6 +360,13 @@ index 0000000..5e3b93a
 +    final typIdx = parts.indexOf('typ');
 +    if (typIdx < 0 || typIdx + 1 >= parts.length) return null;
 +    final type = parts[typIdx + 1].toLowerCase();
++    // Reject non-literal addresses early (no DNS for punch targets).
++    if (!RegExp(r'^\d{1,3}(\.\d{1,3}){3}$').hasMatch(ip) &&
++        !ip.contains(':')) {
++      return null;
++    }
++    // IPv6 punch not supported in this out-of-stack path yet.
++    if (ip.contains(':')) return null;
 +    return IceCandidateEndpoint(
 +      ip: ip,
 +      port: port,
@@ -568,10 +602,10 @@ index 0000000..26ba474
 +    if (dart.library.io) 'nat_punch_helper_io.dart';
 diff --git a/lib/services/ice/nat_punch_helper_io.dart b/lib/services/ice/nat_punch_helper_io.dart
 new file mode 100644
-index 0000000..9980ca8
+index 0000000..1111111 100644
 --- /dev/null
 +++ b/lib/services/ice/nat_punch_helper_io.dart
-@@ -0,0 +1,217 @@
+@@ -0,0 +1,244 @@
 +import 'dart:io';
 +import 'dart:math';
 +import 'dart:typed_data';
@@ -597,7 +631,20 @@ index 0000000..9980ca8
 +  bool _disposed = false;
 +  final Set<String> _punchedTargets = {};
 +
++  /// Serialize candidate-driven punches (Medium: unbounded unawaited work).
++  Future<void> _punchQueue = Future<void>.value();
++  static const int _maxUniqueTargetsPerSession = 32;
++  static const int _maxTargetsPerBurst = 8;
++  static const int _maxSockets = 32;
++  static const int _maxPacketsPerSocket = 16;
++
 +  bool get isSupported => true;
++
++  int get _socketCount =>
++      options.symmetricSocketCount.clamp(1, _maxSockets);
++
++  int get _packetsPerSocket =>
++      options.packetsPerSocket.clamp(1, _maxPacketsPerSocket);
 +
 +  Future<FirewallProbeResult> checkFirewall() async {
 +    if (_disposed || !options.enabled) {
@@ -654,13 +701,26 @@ index 0000000..9980ca8
 +  }
 +
 +  /// Parse and punch when a remote ICE candidate arrives (srflx / host UDP).
-+  Future<void> onRemoteIceCandidate(String? candidateLine) async {
++  /// Work is queued so floods of candidates cannot pile up concurrent bursts.
++  Future<void> onRemoteIceCandidate(String? candidateLine) {
++    final next = _punchQueue.then((_) => _onRemoteIceCandidateBody(candidateLine));
++    _punchQueue = next.catchError((Object e, StackTrace st) {
++      VLOG0('NatPunch candidate punch error: $e');
++    });
++    return next;
++  }
++
++  Future<void> _onRemoteIceCandidateBody(String? candidateLine) async {
 +    if (_disposed || !options.enabled || options.forceRelay) return;
 +    if (candidateLine == null || candidateLine.isEmpty) return;
 +    final parsed = IceCandidateEndpoint.parse(candidateLine);
 +    if (parsed == null || !parsed.isPunchable) return;
 +    final key = '${parsed.ip}:${parsed.port}';
 +    if (_punchedTargets.contains(key)) return;
++    if (_punchedTargets.length >= _maxUniqueTargetsPerSession) {
++      VLOG0('NatPunch session target cap reached; skipping $key');
++      return;
++    }
 +    _punchedTargets.add(key);
 +    await symmetricPunchToRemoteCandidates([candidateLine]);
 +  }
@@ -681,6 +741,7 @@ index 0000000..9980ca8
 +      final e = IceCandidateEndpoint.parse(line);
 +      if (e != null && e.isPunchable) {
 +        endpoints.add(e);
++        if (endpoints.length >= _maxTargetsPerBurst) break;
 +      }
 +    }
 +    if (endpoints.isEmpty) {
@@ -696,9 +757,9 @@ index 0000000..9980ca8
 +        targets: endpoints
 +            .map((e) => {'ip': e.ip, 'port': e.port})
 +            .toList(),
-+        socketCount: options.symmetricSocketCount,
-+        packetsPerSocket: options.packetsPerSocket,
-+        intervalMs: options.burstInterval.inMilliseconds,
++        socketCount: _socketCount,
++        packetsPerSocket: _packetsPerSocket,
++        intervalMs: options.burstInterval.inMilliseconds.clamp(0, 200),
 +      );
 +      if (native != null) {
 +        final sent = native['packetsSent'] as int? ?? 0;
@@ -723,14 +784,14 @@ index 0000000..9980ca8
 +    var packetsSent = 0;
 +    final sockets = <RawDatagramSocket>[];
 +    try {
-+      for (var i = 0; i < options.symmetricSocketCount; i++) {
++      for (var i = 0; i < _socketCount; i++) {
 +        sockets.add(await RawDatagramSocket.bind(InternetAddress.anyIPv4, 0));
 +      }
 +      final payload = Uint8List(20);
 +      // Minimal STUN-looking header (binding request type) — not a full STUN client.
 +      payload[0] = 0x00;
 +      payload[1] = 0x01;
-+      for (var p = 0; p < options.packetsPerSocket; p++) {
++      for (var p = 0; p < _packetsPerSocket; p++) {
 +        if (_disposed) break;
 +        for (final socket in sockets) {
 +          for (final ep in endpoints) {
@@ -744,7 +805,7 @@ index 0000000..9980ca8
 +            } catch (_) {}
 +          }
 +        }
-+        if (p + 1 < options.packetsPerSocket) {
++        if (p + 1 < _packetsPerSocket) {
 +          await Future<void>.delayed(options.burstInterval);
 +        }
 +      }
@@ -915,10 +976,10 @@ index 1d1da3c..194115d 100644
                    onToggle: (bool value) {
 diff --git a/test/ice_policy_test.dart b/test/ice_policy_test.dart
 new file mode 100644
-index 0000000..db65fae
+index 0000000..1111111 100644
 --- /dev/null
 +++ b/test/ice_policy_test.dart
-@@ -0,0 +1,142 @@
+@@ -0,0 +1,175 @@
 +import 'package:cloudplayplus/services/ice/ice_candidate_endpoint.dart';
 +import 'package:cloudplayplus/services/ice/ice_policy.dart';
 +import 'package:cloudplayplus/services/ice/ice_punch_options.dart';
@@ -953,6 +1014,39 @@ index 0000000..db65fae
 +      expect(ep, isNotNull);
 +      expect(ep!.type, 'host');
 +      expect(ep.isPunchable, isTrue);
++    });
++
++    test('rejects private and loopback punch targets', () {
++      expect(
++        IceCandidateEndpoint.parse(
++                'candidate:1 1 udp 1 10.0.0.5 10000 typ host')!
++            .isPunchable,
++        isFalse,
++      );
++      expect(
++        IceCandidateEndpoint.parse(
++                'candidate:1 1 udp 1 192.168.1.2 10000 typ srflx')!
++            .isPunchable,
++        isFalse,
++      );
++      expect(
++        IceCandidateEndpoint.parse(
++                'candidate:1 1 udp 1 127.0.0.1 10000 typ host')!
++            .isPunchable,
++        isFalse,
++      );
++      expect(
++        IceCandidateEndpoint.isPublicUnicastIpv4('203.0.113.9'),
++        isTrue,
++      );
++    });
++
++    test('rejects hostname candidate addresses', () {
++      expect(
++        IceCandidateEndpoint.parse(
++            'candidate:1 1 udp 1 evil.example 10000 typ host'),
++        isNull,
++      );
 +    });
 +  });
 +
