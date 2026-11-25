@@ -34,6 +34,15 @@
 
 With #9 / #8: **privacy → file → terminal** (before close).
 
+## Review fixes (Medium+)
+
+- Channel closed: `sendText`/`sendBinary` throw (no silent drop); send loop does not advance in-flight window until send succeeds
+- `dispose` / settings reload / session stop: abort peer before teardown; release send-window waiters
+- Control handlers serialized (same queue pattern as binary chunks)
+- Send-sheet open: `reloadFileTransferSettings` no-ops when prefs unchanged (no dispose of active transfer)
+
+Low findings deferred for later valuation.
+
 ## Replay
 
 ```bash
@@ -41,3 +50,5 @@ scripts/submodule-init.sh
 scripts/apply-patches.sh
 cd vendor/cloudplayplus && flutter pub get
 ```
+
+Plugin tests: `cd plugins/session_file_transfer && dart test` (16/16).

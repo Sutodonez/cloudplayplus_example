@@ -72,16 +72,57 @@ class FileTransferEngine {
   Completer<void>? _windowSlot;
   bool _isIncoming = false;
   Future<void> _chunkQueue = Future.value();
+  Future<void> _controlQueue = Future.value();
   int _lastPrefixHashAt = 0;
   static const int _prefixHashIntervalBytes = 1024 * 1024;
 
   FileTransferState get state => _state;
   String? get activeTransferId => _activeTransferId;
 
+  /// True while an offer/transfer is active and the peer should be told to stop.
+  bool get _needsPeerAbort =>
+      !_abortRequested &&
+      _activeTransferId != null &&
+      (_state == FileTransferState.transferring ||
+          _state == FileTransferState.offering);
+
+  /// Unblock a send loop waiting on progress ACKs.
+  void _releaseSendWindow() {
+    final slot = _windowSlot;
+    _windowSlot = null;
+    if (slot != null && !slot.isCompleted) {
+      slot.complete();
+    }
+  }
+
+  /// Local teardown. If a transfer is still active, notifies the peer with
+  /// [FileXferOp.abort] (best-effort) so the remote side does not hang.
   void dispose() {
+    final shouldNotify = _needsPeerAbort;
+    final id = _activeTransferId;
     _abortRequested = true;
-    unawaited(_writer.close());
-    _progressController.close();
+    _releaseSendWindow();
+    if (shouldNotify && id != null) {
+      unawaited(Future(() async {
+        try {
+          await sendText(FileXferJsonCodec.encodeControl(FileXferControl(
+            op: FileXferOp.abort,
+            transferId: id,
+            error: 'local dispose',
+          )));
+        } catch (_) {
+          // Channel may already be closed; local teardown still proceeds.
+        }
+      }));
+    }
+    unawaited(Future(() async {
+      try {
+        await _writer.close();
+      } catch (_) {}
+    }));
+    if (!_progressController.isClosed) {
+      _progressController.close();
+    }
   }
 
   /// Offer local [paths] (files and/or folders) to the peer (desktop).
@@ -137,23 +178,32 @@ class FileTransferEngine {
 
   Future<void> abort({String? reason}) async {
     _abortRequested = true;
+    _releaseSendWindow();
     final id = _activeTransferId;
     if (id != null) {
-      await sendText(FileXferJsonCodec.encodeControl(FileXferControl(
-        op: FileXferOp.abort,
-        transferId: id,
-        error: reason,
-      )));
+      try {
+        await sendText(FileXferJsonCodec.encodeControl(FileXferControl(
+          op: FileXferOp.abort,
+          transferId: id,
+          error: reason,
+        )));
+      } catch (_) {
+        // Prefer local abort even if the peer notify fails (channel closed).
+      }
     }
     _state = FileTransferState.aborted;
     _emitProgress(error: reason);
-    await _writer.close();
+    try {
+      await _writer.close();
+    } catch (_) {}
   }
 
   void onTextMessage(String text) {
     final control = FileXferJsonCodec.tryDecodeText(text);
     if (control == null) return;
-    unawaited(_handleControl(control));
+    // Serialize control handling (same pattern as binary chunks) to avoid
+    // races between accept / abort / resume / progress.
+    _controlQueue = _controlQueue.then((_) => _handleControl(control));
   }
 
   void onBinaryMessage(Uint8List data) {
@@ -186,9 +236,12 @@ class FileTransferEngine {
           return;
         }
         _abortRequested = true;
+        _releaseSendWindow();
         _state = FileTransferState.aborted;
         _emitProgress(error: control.error);
-        await _writer.close();
+        try {
+          await _writer.close();
+        } catch (_) {}
         break;
       case FileXferOp.progress:
         if (control.transferId != _activeTransferId) return;
@@ -552,7 +605,11 @@ class FileTransferEngine {
             offset: offset,
             payload: slice,
           );
+          // Only advance the in-flight window after a successful send. A
+          // closed/silent channel must throw from [sendBinary] so we fail
+          // instead of waiting forever for progress ACKs that never arrive.
           await sendBinary(packet);
+          if (_abortRequested) return;
           _inFlight++;
           offset += slice.length;
           _bytesTransferred += slice.length;
@@ -560,6 +617,7 @@ class FileTransferEngine {
         }
       }
     } catch (e) {
+      if (_abortRequested) return;
       _state = FileTransferState.failed;
       _emitProgress(error: e.toString());
       await abort(reason: e.toString());

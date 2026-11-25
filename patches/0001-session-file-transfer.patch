@@ -16,7 +16,7 @@ index 88376ef..bbe3ac5 100644
  // [--end of message definitions--]
  
 diff --git a/lib/entities/session.dart b/lib/entities/session.dart
-index d74019c..8167b78 100644
+index d74019c..3ddc74a 100644
 --- a/lib/entities/session.dart
 +++ b/lib/entities/session.dart
 @@ -13,6 +13,7 @@ import 'package:cloudplayplus/utils/widgets/message_box.dart';
@@ -46,32 +46,44 @@ index d74019c..8167b78 100644
    // 添加生命周期监听器
    static final _lifecycleObserver = _AppLifecycleObserver();
  
-@@ -118,6 +124,111 @@ class StreamingSession {
+@@ -118,6 +124,147 @@ class StreamingSession {
      WidgetsBinding.instance.addObserver(_lifecycleObserver);
    }
  
-+  void _ensureFileTransfer() {
-+    if (fileTransfer != null || channel == null) return;
++  ({bool autoAccept, String receiveRoot}) _fileTransferPrefs() {
 +    final autoAccept =
 +        SharedPreferencesManager.getBool('fileXferAutoAccept') ?? true;
 +    final customRoot = SharedPreferencesManager.getString('fileXferSavePath');
 +    final receiveRoot = (customRoot != null && customRoot.trim().isNotEmpty)
 +        ? customRoot.trim()
 +        : defaultReceiveRoot();
++    return (
++      autoAccept: AppPlatform.isWeb ? false : autoAccept,
++      receiveRoot: receiveRoot,
++    );
++  }
++
++  void _ensureFileTransfer() {
++    if (fileTransfer != null || channel == null) return;
++    final prefs = _fileTransferPrefs();
++    final autoAccept = prefs.autoAccept;
++    final receiveRoot = prefs.receiveRoot;
 +    fileTransfer = FileTransferEngine(
 +      sendText: (text) async {
-+        if (channel?.state == RTCDataChannelState.RTCDataChannelOpen) {
-+          await channel!.send(RTCDataChannelMessage(text));
++        if (channel?.state != RTCDataChannelState.RTCDataChannelOpen) {
++          throw StateError('File transfer data channel is not open');
 +        }
++        await channel!.send(RTCDataChannelMessage(text));
 +      },
 +      sendBinary: (bytes) async {
-+        if (channel?.state == RTCDataChannelState.RTCDataChannelOpen) {
-+          await channel!.send(RTCDataChannelMessage.fromBinary(bytes));
++        if (channel?.state != RTCDataChannelState.RTCDataChannelOpen) {
++          throw StateError('File transfer data channel is not open');
 +        }
++        await channel!.send(RTCDataChannelMessage.fromBinary(bytes));
 +      },
 +      receiveRoot: receiveRoot,
 +      // Web can send (memory-backed); receiving to Downloads needs dart:io.
-+      autoAcceptIncoming: AppPlatform.isWeb ? false : autoAccept,
++      autoAcceptIncoming: autoAccept,
 +    );
 +    fileTransfer!.onIncomingOffer = (offer) async {
 +      if (AppPlatform.isWeb) {
@@ -83,8 +95,10 @@ index d74019c..8167b78 100644
 +      }
 +      final count = offer.files.length;
 +      final total = offer.bytesTotal;
-+      final saveTo = fileTransfer!.receiveRoot;
-+      if (!autoAccept) {
++      final engine = fileTransfer!;
++      final saveTo = engine.receiveRoot;
++      // Read live engine flag so in-place prefs sync (no dispose) takes effect.
++      if (!engine.autoAcceptIncoming) {
 +        final ok = await MessageBoxManager().showConfirm(
 +          '对方要发送 $count 个文件（约 ${_formatBytes(total)}）\n保存到: $saveTo\n是否接收？',
 +          '文件传输',
@@ -114,11 +128,33 @@ index d74019c..8167b78 100644
 +    });
 +  }
 +
-+  /// Drop the engine so the next call reloads prefs (save path / auto-accept).
-+  Future<void> reloadFileTransferSettings() async {
++  /// Sync engine with prefs. No-ops when prefs are unchanged so opening the
++  /// send sheet does not dispose an active transfer. When save path / auto-
++  /// accept actually change, aborts the peer then recreates the engine.
++  Future<void> reloadFileTransferSettings({bool force = false}) async {
++    final prefs = _fileTransferPrefs();
++    final existing = fileTransfer;
++    if (existing != null && !force) {
++      if (existing.receiveRoot == prefs.receiveRoot &&
++          existing.autoAcceptIncoming == prefs.autoAccept) {
++        // Prefs unchanged — keep the live transfer.
++        return;
++      }
++      // Auto-accept can flip in place; receiveRoot requires a new writer root.
++      if (existing.receiveRoot == prefs.receiveRoot) {
++        existing.autoAcceptIncoming = prefs.autoAccept;
++        return;
++      }
++    }
++
 +    await _fileTransferProgressSub?.cancel();
 +    _fileTransferProgressSub = null;
-+    fileTransfer?.dispose();
++    if (existing != null) {
++      try {
++        await existing.abort(reason: 'file transfer settings reload');
++      } catch (_) {}
++      existing.dispose();
++    }
 +    fileTransfer = null;
 +    if (channel != null) {
 +      _ensureFileTransfer();
@@ -158,7 +194,7 @@ index d74019c..8167b78 100644
    Function(String mediatype, MediaStream stream)? onAddRemoteStream;
  
    //We are the controller
-@@ -233,6 +344,7 @@ class StreamingSession {
+@@ -233,6 +380,7 @@ class StreamingSession {
              if (state == RTCDataChannelState.RTCDataChannelOpen) {
                await channel?.send(RTCDataChannelMessage.fromBinary(
                    Uint8List.fromList([LP_PING, RP_PING])));
@@ -166,7 +202,7 @@ index d74019c..8167b78 100644
                if (StreamingSettings.streamAudio!) {
                  StreamingSettings.audioBitrate ??= 32;
                  audioBitrate = StreamingSettings.audioBitrate!;
-@@ -463,6 +575,7 @@ class StreamingSession {
+@@ -463,6 +611,7 @@ class StreamingSession {
          ..ordered = true;
        channel =
            await pc!.createDataChannel('userInput', reliableDataChannelDict);
@@ -174,18 +210,24 @@ index d74019c..8167b78 100644
  
        channel?.onMessage = (RTCDataChannelMessage msg) {
          if (!image_hooked && !AppPlatform.isWeb) {
-@@ -742,6 +855,10 @@ class StreamingSession {
+@@ -742,6 +891,16 @@ class StreamingSession {
      });
  
      stopClipboardSync();
 +    await _fileTransferProgressSub?.cancel();
 +    _fileTransferProgressSub = null;
-+    fileTransfer?.dispose();
++    final xfer = fileTransfer;
++    if (xfer != null) {
++      try {
++        await xfer.abort(reason: 'session closed');
++      } catch (_) {}
++      xfer.dispose();
++    }
 +    fileTransfer = null;
    }
  
    Timer? _pingTimeoutTimer;
-@@ -837,11 +954,20 @@ class StreamingSession {
+@@ -837,11 +996,20 @@ class StreamingSession {
            audioSession = AudioSession(channel!, controller, controlled, audioBitrate);
            audioSession?.audioRequested();
            break;
@@ -206,7 +248,7 @@ index d74019c..8167b78 100644
        switch (data.keys.first) {
          case "candidate":
            var candidateMap = data["candidate"];
-@@ -894,11 +1020,20 @@ class StreamingSession {
+@@ -894,11 +1062,20 @@ class StreamingSession {
            break;
          case LP_EMPTY:
            break;
@@ -394,10 +436,10 @@ index 0000000..9ecdd72
 +}
 diff --git a/lib/utils/widgets/file_transfer_sheet.dart b/lib/utils/widgets/file_transfer_sheet.dart
 new file mode 100644
-index 0000000..deafc15
+index 0000000..ac30394
 --- /dev/null
 +++ b/lib/utils/widgets/file_transfer_sheet.dart
-@@ -0,0 +1,225 @@
+@@ -0,0 +1,227 @@
 +import 'dart:async';
 +import 'dart:typed_data';
 +
@@ -454,6 +496,8 @@ index 0000000..deafc15
 +  @override
 +  void initState() {
 +    super.initState();
++    // reloadFileTransferSettings no-ops when prefs are unchanged, so opening
++    // the sheet does not dispose/abort an in-flight transfer.
 +    unawaited(() async {
 +      await widget.session.reloadFileTransferSettings();
 +      if (!mounted) return;
