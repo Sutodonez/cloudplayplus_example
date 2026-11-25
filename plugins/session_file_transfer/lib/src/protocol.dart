@@ -16,13 +16,16 @@ abstract final class FileXferOp {
   static const String progress = 'progress';
   static const String resumeQuery = 'resume_query';
   static const String resumeAck = 'resume_ack';
+  /// Sender detected prefix mismatch; receiver must truncate and restart
+  /// from [FileXferControl.fileIndex] / [FileXferControl.resumeOffset].
+  static const String resumeRestart = 'resume_restart';
 }
 
 /// One file entry inside an offer / resume ack.
 class FileEntry {
   final String relativePath;
   final int size;
-  /// Optional content hash (sha256 hex). Used for resume identity.
+  /// Content hash (sha256 hex). Always preferred for resume identity.
   final String? sha256;
 
   const FileEntry({
@@ -57,6 +60,10 @@ class FileXferControl {
   final int bytesTotal;
   final String? error;
   final String? saveRootHint;
+  /// SHA-256 of bytes `[0, resumeOffset)` on the receiving side (resume verify).
+  final String? prefixSha256;
+  /// Stable fingerprint of the offered manifest (path+size+sha lines).
+  final String? contentFingerprint;
 
   const FileXferControl({
     required this.op,
@@ -68,6 +75,8 @@ class FileXferControl {
     this.bytesTotal = 0,
     this.error,
     this.saveRootHint,
+    this.prefixSha256,
+    this.contentFingerprint,
   });
 
   Map<String, dynamic> toEnvelope() => {
@@ -81,6 +90,9 @@ class FileXferControl {
           'bytesTotal': bytesTotal,
           if (error != null) 'error': error,
           if (saveRootHint != null) 'saveRootHint': saveRootHint,
+          if (prefixSha256 != null) 'prefixSha256': prefixSha256,
+          if (contentFingerprint != null)
+            'contentFingerprint': contentFingerprint,
         },
       };
 
@@ -103,6 +115,8 @@ class FileXferControl {
       bytesTotal: (map['bytesTotal'] as num?)?.toInt() ?? 0,
       error: map['error'] as String?,
       saveRootHint: map['saveRootHint'] as String?,
+      prefixSha256: map['prefixSha256'] as String?,
+      contentFingerprint: map['contentFingerprint'] as String?,
     );
   }
 }

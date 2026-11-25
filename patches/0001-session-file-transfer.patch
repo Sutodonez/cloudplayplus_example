@@ -16,7 +16,7 @@ index 88376ef..bbe3ac5 100644
  // [--end of message definitions--]
  
 diff --git a/lib/entities/session.dart b/lib/entities/session.dart
-index d74019c..743ae97 100644
+index d74019c..8167b78 100644
 --- a/lib/entities/session.dart
 +++ b/lib/entities/session.dart
 @@ -13,6 +13,7 @@ import 'package:cloudplayplus/utils/widgets/message_box.dart';
@@ -27,7 +27,15 @@ index d74019c..743ae97 100644
  import 'package:synchronized/synchronized.dart';
  import 'package:flutter/services.dart';
  import 'package:flutter/widgets.dart';
-@@ -109,6 +110,10 @@ class StreamingSession {
+@@ -20,6 +21,7 @@ import 'package:flutter/widgets.dart';
+ import '../base/logging.dart';
+ import '../global_settings/streaming_settings.dart';
+ import '../services/app_info_service.dart';
++import '../services/shared_preferences_manager.dart';
+ import '../services/webrtc_service.dart';
+ import '../webrtctest/rtc_service_impl.dart';
+ import '../utils/rtc_utils.dart';
+@@ -109,6 +111,10 @@ class StreamingSession {
    Timer? _clipboardTimer;
    String _lastClipboardContent = '';
  
@@ -38,14 +46,18 @@ index d74019c..743ae97 100644
    // 添加生命周期监听器
    static final _lifecycleObserver = _AppLifecycleObserver();
  
-@@ -118,6 +123,67 @@ class StreamingSession {
+@@ -118,6 +124,111 @@ class StreamingSession {
      WidgetsBinding.instance.addObserver(_lifecycleObserver);
    }
  
 +  void _ensureFileTransfer() {
 +    if (fileTransfer != null || channel == null) return;
-+    // Web lacks dart:io receive path used by the engine.
-+    if (AppPlatform.isWeb) return;
++    final autoAccept =
++        SharedPreferencesManager.getBool('fileXferAutoAccept') ?? true;
++    final customRoot = SharedPreferencesManager.getString('fileXferSavePath');
++    final receiveRoot = (customRoot != null && customRoot.trim().isNotEmpty)
++        ? customRoot.trim()
++        : defaultReceiveRoot();
 +    fileTransfer = FileTransferEngine(
 +      sendText: (text) async {
 +        if (channel?.state == RTCDataChannelState.RTCDataChannelOpen) {
@@ -57,13 +69,30 @@ index d74019c..743ae97 100644
 +          await channel!.send(RTCDataChannelMessage.fromBinary(bytes));
 +        }
 +      },
-+      autoAcceptIncoming: true,
++      receiveRoot: receiveRoot,
++      // Web can send (memory-backed); receiving to Downloads needs dart:io.
++      autoAcceptIncoming: AppPlatform.isWeb ? false : autoAccept,
 +    );
 +    fileTransfer!.onIncomingOffer = (offer) async {
++      if (AppPlatform.isWeb) {
++        MessageBoxManager().showMessage(
++          '网页端暂不支持作为被控端接收文件（请在桌面被控端接收）。',
++          '文件传输',
++        );
++        return false;
++      }
 +      final count = offer.files.length;
 +      final total = offer.bytesTotal;
++      final saveTo = fileTransfer!.receiveRoot;
++      if (!autoAccept) {
++        final ok = await MessageBoxManager().showConfirm(
++          '对方要发送 $count 个文件（约 ${_formatBytes(total)}）\n保存到: $saveTo\n是否接收？',
++          '文件传输',
++        );
++        return ok;
++      }
 +      MessageBoxManager().showMessage(
-+        '正在接收 $count 个文件（约 ${_formatBytes(total)}）\n保存到: ${fileTransfer!.receiveRoot}',
++        '正在接收 $count 个文件（约 ${_formatBytes(total)}）\n保存到: $saveTo',
 +        '文件传输',
 +      );
 +      return true;
@@ -85,6 +114,17 @@ index d74019c..743ae97 100644
 +    });
 +  }
 +
++  /// Drop the engine so the next call reloads prefs (save path / auto-accept).
++  Future<void> reloadFileTransferSettings() async {
++    await _fileTransferProgressSub?.cancel();
++    _fileTransferProgressSub = null;
++    fileTransfer?.dispose();
++    fileTransfer = null;
++    if (channel != null) {
++      _ensureFileTransfer();
++    }
++  }
++
 +  static String _formatBytes(int bytes) {
 +    if (bytes < 1024) return '$bytes B';
 +    if (bytes < 1024 * 1024) {
@@ -103,10 +143,22 @@ index d74019c..743ae97 100644
 +    await engine.sendPaths(paths);
 +  }
 +
++  /// Web controller helper: send in-memory named blobs.
++  Future<void> sendFileBytes(
++    List<({String relativePath, Uint8List bytes})> files,
++  ) async {
++    _ensureFileTransfer();
++    final engine = fileTransfer;
++    if (engine == null) {
++      throw StateError('File transfer unavailable on this platform');
++    }
++    await engine.sendNamedBytes(files);
++  }
++
    Function(String mediatype, MediaStream stream)? onAddRemoteStream;
  
    //We are the controller
-@@ -233,6 +299,7 @@ class StreamingSession {
+@@ -233,6 +344,7 @@ class StreamingSession {
              if (state == RTCDataChannelState.RTCDataChannelOpen) {
                await channel?.send(RTCDataChannelMessage.fromBinary(
                    Uint8List.fromList([LP_PING, RP_PING])));
@@ -114,7 +166,7 @@ index d74019c..743ae97 100644
                if (StreamingSettings.streamAudio!) {
                  StreamingSettings.audioBitrate ??= 32;
                  audioBitrate = StreamingSettings.audioBitrate!;
-@@ -463,6 +530,7 @@ class StreamingSession {
+@@ -463,6 +575,7 @@ class StreamingSession {
          ..ordered = true;
        channel =
            await pc!.createDataChannel('userInput', reliableDataChannelDict);
@@ -122,7 +174,7 @@ index d74019c..743ae97 100644
  
        channel?.onMessage = (RTCDataChannelMessage msg) {
          if (!image_hooked && !AppPlatform.isWeb) {
-@@ -742,6 +810,10 @@ class StreamingSession {
+@@ -742,6 +855,10 @@ class StreamingSession {
      });
  
      stopClipboardSync();
@@ -133,7 +185,7 @@ index d74019c..743ae97 100644
    }
  
    Timer? _pingTimeoutTimer;
-@@ -837,11 +909,20 @@ class StreamingSession {
+@@ -837,11 +954,20 @@ class StreamingSession {
            audioSession = AudioSession(channel!, controller, controlled, audioBitrate);
            audioSession?.audioRequested();
            break;
@@ -154,7 +206,7 @@ index d74019c..743ae97 100644
        switch (data.keys.first) {
          case "candidate":
            var candidateMap = data["candidate"];
-@@ -894,11 +975,20 @@ class StreamingSession {
+@@ -894,11 +1020,20 @@ class StreamingSession {
            break;
          case LP_EMPTY:
            break;
@@ -175,8 +227,39 @@ index d74019c..743ae97 100644
        switch (data.keys.first) {
          case "candidate":
            var candidateMap = data['candidate'];
+diff --git a/lib/settings_screen.dart b/lib/settings_screen.dart
+index fa49a5c..8a59b17 100644
+--- a/lib/settings_screen.dart
++++ b/lib/settings_screen.dart
+@@ -19,6 +19,7 @@ import 'plugins/flutter_settings_ui/flutter_settings_ui.dart';
+ import 'services/shared_preferences_manager.dart';
+ import 'theme/theme_provider.dart';
+ import 'utils/navigation.dart';
++import 'utils/widgets/file_transfer_settings_screen.dart';
+ import 'utils/widgets/virtual_gamepad/virtual_gamepad_settings_screen.dart';
+ import 'utils/widgets/virtual_gamepad/control_manager.dart';
+ 
+@@ -113,6 +114,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
+                   );
+                 },
+               ),
++              SettingsTile.navigation(
++                leading: const Icon(Icons.folder_open),
++                title: const Text('文件传输'),
++                description: const Text('自动接收与保存目录'),
++                onPressed: (context) {
++                  Navigation.navigateTo(
++                    context: context,
++                    screen: const FileTransferSettingsScreen(),
++                    style: NavigationRouteStyle.cupertino,
++                  );
++                },
++              ),
+             ],
+           ),
+           if (!AppPlatform.isDeskTop)
 diff --git a/lib/utils/widgets/device_tile_page.dart b/lib/utils/widgets/device_tile_page.dart
-index 9013cbd..22a7f59 100644
+index 9013cbd..ce6fd09 100644
 --- a/lib/utils/widgets/device_tile_page.dart
 +++ b/lib/utils/widgets/device_tile_page.dart
 @@ -6,6 +6,7 @@ import 'package:cloudplayplus/services/shared_preferences_manager.dart';
@@ -187,9 +270,12 @@ index 9013cbd..22a7f59 100644
  import 'package:cloudplayplus/utils/widgets/global_remote_screen_renderer.dart';
  import 'package:cloudplayplus/utils/widgets/message_box.dart';
  import 'package:floating_menu_panel/floating_menu_panel.dart';
-@@ -314,6 +315,9 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+@@ -313,7 +314,12 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+                       ScreenController.setshowVirtualGamePad(
                            !ScreenController.showVirtualGamePad.value);
                      }
++                    // Floating toolbar merge order (with #9/#8):
++                    // privacy (visibility_off) → file (folder_open) → terminal → close.
                      if (index == 5) {
 +                      await FileTransferSheet.show(context);
 +                    }
@@ -197,21 +283,123 @@ index 9013cbd..22a7f59 100644
                        ScreenController.setshowDetailUseScrollView(true);
                        ScreenController.setOnlyShowRemoteScreen(false);
                        StreamingManager.stopStreaming(widget.device);
-@@ -325,6 +329,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+@@ -325,6 +331,8 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                      Icons.keyboard,
                      Icons.mouse,
                      Icons.gamepad,
++                    // Intent: privacy → file → terminal before close when stacking #9/#2/#8.
 +                    Icons.folder_open,
                      Icons.close,
                    ],
                  ),
+diff --git a/lib/utils/widgets/file_transfer_settings_screen.dart b/lib/utils/widgets/file_transfer_settings_screen.dart
+new file mode 100644
+index 0000000..9ecdd72
+--- /dev/null
++++ b/lib/utils/widgets/file_transfer_settings_screen.dart
+@@ -0,0 +1,94 @@
++import 'package:cloudplayplus/services/app_info_service.dart';
++import 'package:cloudplayplus/services/shared_preferences_manager.dart';
++import 'package:cloudplayplus/services/streaming_manager.dart';
++import 'package:file_picker/file_picker.dart';
++import 'package:flutter/material.dart';
++import 'package:session_file_transfer/session_file_transfer.dart';
++
++/// Host-side file transfer preferences (auto-accept + save path).
++class FileTransferSettingsScreen extends StatefulWidget {
++  const FileTransferSettingsScreen({super.key});
++
++  @override
++  State<FileTransferSettingsScreen> createState() =>
++      _FileTransferSettingsScreenState();
++}
++
++class _FileTransferSettingsScreenState
++    extends State<FileTransferSettingsScreen> {
++  bool _autoAccept = true;
++  String _savePath = '';
++
++  @override
++  void initState() {
++    super.initState();
++    _autoAccept =
++        SharedPreferencesManager.getBool('fileXferAutoAccept') ?? true;
++    _savePath = SharedPreferencesManager.getString('fileXferSavePath') ?? '';
++    if (_savePath.isEmpty) {
++      _savePath = defaultReceiveRoot();
++    }
++  }
++
++  Future<void> _persist() async {
++    await SharedPreferencesManager.setBool('fileXferAutoAccept', _autoAccept);
++    await SharedPreferencesManager.setString('fileXferSavePath', _savePath);
++    // Reload engines on any active sessions so prefs take effect.
++    for (final session in StreamingManager.sessions.values) {
++      await session.reloadFileTransferSettings();
++    }
++  }
++
++  Future<void> _pickSavePath() async {
++    if (AppPlatform.isWeb) {
++      ScaffoldMessenger.of(context).showSnackBar(
++        const SnackBar(content: Text('网页端不能配置被控端落盘路径')),
++      );
++      return;
++    }
++    final dir = await FilePicker.platform.getDirectoryPath(
++      dialogTitle: '选择文件接收保存目录',
++    );
++    if (dir == null) return;
++    setState(() => _savePath = dir);
++    await _persist();
++  }
++
++  @override
++  Widget build(BuildContext context) {
++    return Scaffold(
++      appBar: AppBar(title: const Text('文件传输')),
++      body: ListView(
++        children: [
++          SwitchListTile(
++            secondary: const Icon(Icons.file_download_done),
++            title: const Text('自动接收文件'),
++            subtitle: const Text('关闭后，收到对方发送请求时需手动确认'),
++            value: _autoAccept,
++            onChanged: AppPlatform.isWeb
++                ? null
++                : (v) async {
++                    setState(() => _autoAccept = v);
++                    await _persist();
++                  },
++          ),
++          ListTile(
++            leading: const Icon(Icons.folder_open),
++            title: const Text('保存目录'),
++            subtitle: Text(_savePath),
++            trailing: const Icon(Icons.edit),
++            onTap: AppPlatform.isWeb ? null : _pickSavePath,
++          ),
++          const Padding(
++            padding: EdgeInsets.all(16),
++            child: Text(
++              '默认目录为 Downloads/CloudPlayPlusTransfers。'
++              '合并前可配置；网页控制端只负责发送，落盘在被控端生效。',
++              style: TextStyle(fontSize: 13),
++            ),
++          ),
++        ],
++      ),
++    );
++  }
++}
 diff --git a/lib/utils/widgets/file_transfer_sheet.dart b/lib/utils/widgets/file_transfer_sheet.dart
 new file mode 100644
-index 0000000..3c7f0c4
+index 0000000..deafc15
 --- /dev/null
 +++ b/lib/utils/widgets/file_transfer_sheet.dart
-@@ -0,0 +1,186 @@
+@@ -0,0 +1,225 @@
 +import 'dart:async';
++import 'dart:typed_data';
 +
 +import 'package:cloudplayplus/entities/session.dart';
 +import 'package:cloudplayplus/services/app_info_service.dart';
@@ -221,13 +409,12 @@ index 0000000..3c7f0c4
 +import 'package:flutter/material.dart';
 +import 'package:session_file_transfer/session_file_transfer.dart';
 +
-+/// Minimal send/receive UI for session file transfer.
++/// Minimal send UI for session file transfer (controller side).
++///
++/// Desktop: path-based pick + folder send.
++/// Web: memory-backed file pick (withData); folder send not available.
 +class FileTransferSheet {
 +  static Future<void> show(BuildContext context) async {
-+    if (AppPlatform.isWeb) {
-+      MessageBoxManager().showMessage('网页端暂不支持文件传输', '文件传输');
-+      return;
-+    }
 +    final session = WebrtcService.currentRenderingSession;
 +    if (session == null ||
 +        session.connectionState != StreamingSessionConnectionState.connected) {
@@ -267,12 +454,11 @@ index 0000000..3c7f0c4
 +  @override
 +  void initState() {
 +    super.initState();
-+    final engine = widget.session.fileTransfer;
-+    if (engine != null) {
-+      _sub = engine.progress.listen((p) {
-+        if (mounted) setState(() => _progress = p);
-+      });
-+    }
++    unawaited(() async {
++      await widget.session.reloadFileTransferSettings();
++      if (!mounted) return;
++      await _attachProgress();
++    }());
 +  }
 +
 +  @override
@@ -281,38 +467,75 @@ index 0000000..3c7f0c4
 +    super.dispose();
 +  }
 +
-+  Future<void> _pickAndSend({required bool folder}) async {
++  Future<void> _attachProgress() async {
++    await _sub?.cancel();
++    final engine = widget.session.fileTransfer;
++    if (engine != null) {
++      _sub = engine.progress.listen((p) {
++        if (mounted) setState(() => _progress = p);
++      });
++    }
++  }
++
++  Future<void> _pickAndSendFiles() async {
 +    setState(() => _busy = true);
 +    try {
-+      final List<String> paths = [];
-+      if (folder) {
-+        final dir = await FilePicker.platform.getDirectoryPath(
-+          dialogTitle: '选择要发送的文件夹',
++      if (AppPlatform.isWeb) {
++        final result = await FilePicker.platform.pickFiles(
++          allowMultiple: true,
++          withData: true,
++          dialogTitle: '选择要发送的文件',
 +        );
-+        if (dir != null) paths.add(dir);
++        if (result == null) return;
++        final files = <({String relativePath, Uint8List bytes})>[];
++        for (final f in result.files) {
++          final bytes = f.bytes;
++          if (bytes == null) continue;
++          files.add((relativePath: f.name, bytes: bytes));
++        }
++        if (files.isEmpty) {
++          MessageBoxManager().showMessage('未能读取所选文件内容', '发送失败');
++          return;
++        }
++        await widget.session.sendFileBytes(files);
 +      } else {
 +        final result = await FilePicker.platform.pickFiles(
 +          allowMultiple: true,
 +          withData: false,
 +          dialogTitle: '选择要发送的文件',
 +        );
-+        if (result != null) {
-+          for (final f in result.files) {
-+            if (f.path != null) paths.add(f.path!);
-+          }
++        if (result == null) return;
++        final paths = <String>[];
++        for (final f in result.files) {
++          if (f.path != null) paths.add(f.path!);
 +        }
++        if (paths.isEmpty) return;
++        await widget.session.sendFiles(paths);
 +      }
-+      if (paths.isEmpty) return;
-+      await widget.session.sendFiles(paths);
-+      if (mounted) {
-+        final engine = widget.session.fileTransfer;
-+        await _sub?.cancel();
-+        if (engine != null) {
-+          _sub = engine.progress.listen((p) {
-+            if (mounted) setState(() => _progress = p);
-+          });
-+        }
-+      }
++      await _attachProgress();
++    } catch (e) {
++      MessageBoxManager().showMessage(e.toString(), '发送失败');
++    } finally {
++      if (mounted) setState(() => _busy = false);
++    }
++  }
++
++  Future<void> _pickAndSendFolder() async {
++    if (AppPlatform.isWeb) {
++      MessageBoxManager().showMessage(
++        '网页端暂不支持发送整个文件夹，请改选多个文件。',
++        '文件传输',
++      );
++      return;
++    }
++    setState(() => _busy = true);
++    try {
++      final dir = await FilePicker.platform.getDirectoryPath(
++        dialogTitle: '选择要发送的文件夹',
++      );
++      if (dir == null) return;
++      await widget.session.sendFiles([dir]);
++      await _attachProgress();
 +    } catch (e) {
 +      MessageBoxManager().showMessage(e.toString(), '发送失败');
 +    } finally {
@@ -330,18 +553,20 @@ index 0000000..3c7f0c4
 +        Text('会话文件传输', style: Theme.of(context).textTheme.titleLarge),
 +        const SizedBox(height: 4),
 +        Text(
-+          '通过当前远程会话的可靠数据通道发送文件或文件夹。对方默认保存到 Downloads/CloudPlayPlusTransfers。',
++          AppPlatform.isWeb
++              ? '通过当前远程会话发送文件（网页控制端）。被控端保存路径可在设置中配置。'
++              : '通过当前远程会话的可靠数据通道发送文件或文件夹。被控端保存路径与自动接收可在设置中配置。',
 +          style: Theme.of(context).textTheme.bodySmall,
 +        ),
 +        const SizedBox(height: 16),
 +        FilledButton.icon(
-+          onPressed: _busy ? null : () => _pickAndSend(folder: false),
++          onPressed: _busy ? null : _pickAndSendFiles,
 +          icon: const Icon(Icons.insert_drive_file_outlined),
 +          label: const Text('发送文件'),
 +        ),
 +        const SizedBox(height: 8),
 +        OutlinedButton.icon(
-+          onPressed: _busy ? null : () => _pickAndSend(folder: true),
++          onPressed: _busy ? null : _pickAndSendFolder,
 +          icon: const Icon(Icons.folder_outlined),
 +          label: const Text('发送文件夹'),
 +        ),
@@ -362,7 +587,8 @@ index 0000000..3c7f0c4
 +          if (p.state == FileTransferState.transferring ||
 +              p.state == FileTransferState.offering)
 +            TextButton(
-+              onPressed: () => widget.session.fileTransfer?.abort(reason: 'user abort'),
++              onPressed: () =>
++                  widget.session.fileTransfer?.abort(reason: 'user abort'),
 +              child: const Text('取消'),
 +            ),
 +        ],
@@ -397,6 +623,40 @@ index 0000000..3c7f0c4
 +    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
 +  }
 +}
+diff --git a/lib/utils/widgets/message_box.dart b/lib/utils/widgets/message_box.dart
+index 16808bf..60b5980 100644
+--- a/lib/utils/widgets/message_box.dart
++++ b/lib/utils/widgets/message_box.dart
+@@ -35,4 +35,29 @@ class MessageBoxManager {
+       },
+     );
+   }
++
++  /// Returns true if the user confirms. False on cancel / missing context.
++  Future<bool> showConfirm(String message, String title) async {
++    if (_context == null) return false;
++    final result = await showDialog<bool>(
++      context: _context!,
++      builder: (BuildContext context) {
++        return AlertDialog(
++          title: Text(title),
++          content: Text(message),
++          actions: [
++            TextButton(
++              onPressed: () => Navigator.of(context).pop(false),
++              child: const Text('拒绝'),
++            ),
++            TextButton(
++              onPressed: () => Navigator.of(context).pop(true),
++              child: const Text('接收'),
++            ),
++          ],
++        );
++      },
++    );
++    return result ?? false;
++  }
+ }
 diff --git a/pubspec.yaml b/pubspec.yaml
 index e0efbf1..1588718 100644
 --- a/pubspec.yaml
