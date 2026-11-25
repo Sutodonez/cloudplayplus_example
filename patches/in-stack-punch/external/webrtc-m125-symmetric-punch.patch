@@ -1,0 +1,61 @@
+--- a/p2p/client/basic_port_allocator.cc	2026-11-25 14:28:42.060881990 +0000
++++ b/p2p/client/basic_port_allocator.cc	2026-11-25 14:28:42.080883705 +0000
+@@ -958,6 +958,41 @@
+   port->PrepareAddress();
+ }
+ 
++int BasicPortAllocatorSession::SymmetricPunchToRemotes(
++    const std::vector<rtc::SocketAddress>& remotes,
++    size_t bursts_per_endpoint) {
++  RTC_DCHECK_RUN_ON(network_thread_);
++  if (remotes.empty() || bursts_per_endpoint == 0) {
++    return 0;
++  }
++  // Minimal payload; content does not matter for hole punching.
++  static constexpr char kPunchPayload[] = "CPP_SYM_PUNCH";
++  int attempts = 0;
++  for (PortInterface* port : ReadyPorts()) {
++    if (!port) {
++      continue;
++    }
++    // Prefer UDP host/srflx ports; skip relays for punch bursts.
++    if (port->GetProtocol() != PROTO_UDP) {
++      continue;
++    }
++    for (const rtc::SocketAddress& remote : remotes) {
++      for (size_t i = 0; i < bursts_per_endpoint; ++i) {
++        rtc::PacketOptions options;
++        const int sent = port->SendTo(kPunchPayload, sizeof(kPunchPayload) - 1,
++                                      remote, options, false);
++        if (sent >= 0) {
++          ++attempts;
++        }
++      }
++    }
++  }
++  RTC_LOG(LS_INFO) << "SymmetricPunchToRemotes issued " << attempts
++                   << " SendTo attempts toward " << remotes.size()
++                   << " remote(s)";
++  return attempts;
++}
++
+ void BasicPortAllocatorSession::OnAllocationSequenceObjectsCreated() {
+   RTC_DCHECK_RUN_ON(network_thread_);
+   allocation_sequences_created_ = true;
+--- a/p2p/client/basic_port_allocator.h	2026-11-25 14:28:42.056881646 +0000
++++ b/p2p/client/basic_port_allocator.h	2026-11-25 14:28:42.080883705 +0000
+@@ -157,6 +157,14 @@
+       std::vector<const rtc::Network*>& all_ipv6_networks,
+       int max_ipv6_networks);
+ 
++  // CPPS in-stack SymmetricPunch (trial Option A / m125): burst UDP from
++  // allocator-owned ready ports toward remote srflx/host endpoints so punch
++  // shares ICE local bindings. Original design; not NetEase code.
++  // Returns number of SendTo attempts issued (best-effort).
++  int SymmetricPunchToRemotes(
++      const std::vector<rtc::SocketAddress>& remotes,
++      size_t bursts_per_endpoint = 32);
++
+  protected:
+   void UpdateIceParametersInternal() override;
+ 
