@@ -369,17 +369,87 @@ class FileTransferEngine {
     return Sha256Hasher.hashStream(Stream.fromIterable(chunks));
   }
 
+  /// Validate an incoming offer before UI / accept (plugin security Medium).
+  /// Returns an error string when the offer must be rejected.
+  static String? validateIncomingOffer(FileXferControl offer) {
+    if (offer.files.length > FileXferLimits.maxFilesPerOffer) {
+      return 'too many files (${offer.files.length} > '
+          '${FileXferLimits.maxFilesPerOffer})';
+    }
+    var total = 0;
+    for (final entry in offer.files) {
+      if (entry.size < 0) {
+        return 'negative file size: ${entry.relativePath}';
+      }
+      final hash = entry.sha256;
+      if (hash == null ||
+          hash.length != FileXferLimits.sha256HexLength ||
+          !_isHex(hash)) {
+        return 'missing or invalid sha256: ${entry.relativePath}';
+      }
+      total += entry.size;
+      if (total > FileXferLimits.maxTotalDeclaredBytes) {
+        return 'declared total exceeds '
+            '${FileXferLimits.maxTotalDeclaredBytes} bytes';
+      }
+    }
+    if (offer.bytesTotal > 0 &&
+        offer.bytesTotal > FileXferLimits.maxTotalDeclaredBytes) {
+      return 'bytesTotal exceeds ${FileXferLimits.maxTotalDeclaredBytes}';
+    }
+    return null;
+  }
+
+  static bool _isHex(String s) {
+    for (var i = 0; i < s.length; i++) {
+      final c = s.codeUnitAt(i);
+      final isDigit = c >= 0x30 && c <= 0x39;
+      final isLower = c >= 0x61 && c <= 0x66;
+      final isUpper = c >= 0x41 && c <= 0x46;
+      if (!isDigit && !isLower && !isUpper) return false;
+    }
+    return true;
+  }
+
+  Future<void> _rejectOffer(String transferId, String error) async {
+    await sendText(FileXferJsonCodec.encodeControl(FileXferControl(
+      op: FileXferOp.reject,
+      transferId: transferId,
+      error: error,
+    )));
+  }
+
   Future<void> _onOffer(FileXferControl offer) async {
+    // Do not clobber an in-flight send/receive (bugbot High).
+    if (_state == FileTransferState.offering ||
+        _state == FileTransferState.transferring) {
+      await _rejectOffer(
+        offer.transferId,
+        'transfer already in progress'
+        '${_activeTransferId != null ? ' ($_activeTransferId)' : ''}',
+      );
+      return;
+    }
+
+    final validationError = validateIncomingOffer(offer);
+    if (validationError != null) {
+      await _rejectOffer(offer.transferId, validationError);
+      return;
+    }
+
     var accept = _autoAcceptIncoming;
     if (onIncomingOffer != null) {
       accept = await onIncomingOffer!(offer);
     }
     if (!accept) {
-      await sendText(FileXferJsonCodec.encodeControl(FileXferControl(
-        op: FileXferOp.reject,
-        transferId: offer.transferId,
-        error: 'user rejected',
-      )));
+      await _rejectOffer(offer.transferId, 'user rejected');
+      return;
+    }
+
+    // Re-check after the async UI confirm — a concurrent send may have started.
+    if (_state == FileTransferState.offering ||
+        _state == FileTransferState.transferring) {
+      await _rejectOffer(offer.transferId, 'transfer already in progress');
       return;
     }
 
@@ -486,9 +556,23 @@ class FileTransferEngine {
     if (_abortRequested) return;
     if (chunk.fileIndex >= _incoming.length) return;
 
+    final entry = _incoming[chunk.fileIndex];
+    // Cap writes to the declared manifest size (plugin security Medium #2).
+    if (chunk.offset < 0 ||
+        chunk.offset > entry.size ||
+        chunk.offset + chunk.payload.length > entry.size) {
+      await abort(
+        reason:
+            'chunk exceeds declared size for ${entry.relativePath} '
+            '(offset=${chunk.offset} len=${chunk.payload.length} '
+            'size=${entry.size})',
+      );
+      return;
+    }
+
     try {
       final expectedRel =
-          FileReceiveWriter.sanitizeRelative(_incoming[chunk.fileIndex].relativePath);
+          FileReceiveWriter.sanitizeRelative(entry.relativePath);
       // Sender restart (offset 0 while we still hold a partial): reopen.
       if (chunk.offset == 0 &&
           chunk.fileIndex == _fileIndex &&
@@ -509,7 +593,6 @@ class FileTransferEngine {
       _bytesTransferred += chunk.payload.length;
       _emitProgress();
 
-      final entry = _incoming[chunk.fileIndex];
       final atFileEnd = _writer.expectedOffset >= entry.size;
       final dueHash = atFileEnd ||
           (_writer.expectedOffset - _lastPrefixHashAt) >=

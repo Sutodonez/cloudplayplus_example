@@ -43,7 +43,13 @@ With #9 / #8: **privacy → file → terminal** (before close).
 - Control handlers serialized (same queue pattern as binary chunks)
 - Send-sheet open: `reloadFileTransferSettings` no-ops when prefs unchanged (no dispose of active transfer)
 
-Low findings deferred for later valuation.
+## Follow-up hardenings (post-#12)
+
+- Require sha256 on every offered file; reject missing/invalid
+- Reject chunks with `offset+len > entry.size`
+- Cap control JSON size / `files.length` / total declared bytes
+- Reject new offer while offering/transferring (no `_activeTransferId` clobber)
+- Host settings reload **StreamedManager** + StreamingManager sessions
 
 ## Replay
 

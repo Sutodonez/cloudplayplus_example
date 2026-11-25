@@ -39,6 +39,7 @@
 - Per-session mode map + strongest-wins native apply (multi-controller)
 - blankDisplay / `VDISPLAY_OCCUPY`: temporary SendInput mouse preference (VHID restored when clear)
 - Privacy opcode sent via control-priority channel gate
+- `privacyScreen`: **all** monitors must get WDA overlay; any failure tears down and rolls back mute/hotkey (no partial success)
 
 See [post-merge-security-hardening.md](./post-merge-security-hardening.md).
 
