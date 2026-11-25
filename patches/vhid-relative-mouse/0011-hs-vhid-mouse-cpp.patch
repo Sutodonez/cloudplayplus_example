@@ -1,10 +1,14 @@
 --- /dev/null
 +++ windows/vhid_mouse.cpp
-@@ -0,0 +1,370 @@
+@@ -0,0 +1,411 @@
 +#include "vhid_mouse.h"
++
++#include <shlwapi.h>
 +
 +#include <mutex>
 +#include <vector>
++
++#pragma comment(lib, "shlwapi.lib")
 +
 +namespace {
 +
@@ -176,13 +180,49 @@
 +PWINUHID_DEVICE g_device = nullptr;
 +UCHAR g_buttons = 0;
 +
++// Resolve WinUHid.dll next to the host executable only (no PATH / CWD search).
++bool GetAppDirWinUHidPath(wchar_t* out, size_t out_count) {
++  if (!out || out_count == 0) {
++    return false;
++  }
++  DWORD n = GetModuleFileNameW(nullptr, out, static_cast<DWORD>(out_count));
++  if (n == 0 || n >= out_count) {
++    return false;
++  }
++  if (!PathRemoveFileSpecW(out)) {
++    return false;
++  }
++  return PathAppendW(out, L"WinUHid.dll") == TRUE;
++}
++
++bool AppDirDllPresent() {
++  wchar_t path[MAX_PATH] = {};
++  if (!GetAppDirWinUHidPath(path, MAX_PATH)) {
++    return false;
++  }
++  const DWORD attrs = GetFileAttributesW(path);
++  return attrs != INVALID_FILE_ATTRIBUTES &&
++         (attrs & FILE_ATTRIBUTE_DIRECTORY) == 0;
++}
++
 +bool LoadWinUHidLocked() {
 +  if (g_load_attempted) {
 +    return g_api.module != nullptr && g_driver_ok;
 +  }
 +  g_load_attempted = true;
 +
-+  HMODULE mod = LoadLibraryW(L"WinUHid.dll");
++  wchar_t dll_path[MAX_PATH] = {};
++  if (!GetAppDirWinUHidPath(dll_path, MAX_PATH)) {
++    return false;
++  }
++  if (GetFileAttributesW(dll_path) == INVALID_FILE_ATTRIBUTES) {
++    return false;
++  }
++
++  // Absolute app-dir path + restricted search: do not walk PATH / CWD.
++  HMODULE mod = LoadLibraryExW(
++      dll_path, nullptr,
++      LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR | LOAD_LIBRARY_SEARCH_SYSTEM32);
 +  if (!mod) {
 +    return false;
 +  }
@@ -309,8 +349,9 @@
 +}  // namespace
 +
 +bool VhidMouseIsDriverPresent() {
-+  std::lock_guard<std::mutex> lock(g_mutex);
-+  return LoadWinUHidLocked();
++  // Settings / availability probe: do NOT LoadLibrary or create a HID device.
++  // Only check that WinUHid.dll sits next to the host executable.
++  return AppDirDllPresent();
 +}
 +
 +bool VhidMouseEnsureCreated() {

@@ -1,6 +1,6 @@
 --- macos/Classes/HardwareSimulatorPlugin.swift
 +++ macos/Classes/HardwareSimulatorPlugin.swift
-@@ -569,6 +569,13 @@
+@@ -569,6 +569,13 @@ public class HardwareSimulatorPlugin: NSObject, FlutterPlugin {
        } else {
          result(FlutterError(code: "BAD_ARGS", message: "Missing or incorrect arguments for MouseMove ABSL", details: nil))
        }

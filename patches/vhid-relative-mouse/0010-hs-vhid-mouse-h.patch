@@ -1,6 +1,6 @@
 --- /dev/null
 +++ windows/vhid_mouse.h
-@@ -0,0 +1,24 @@
+@@ -0,0 +1,27 @@
 +#ifndef HARDWARE_SIMULATOR_VHID_MOUSE_H_
 +#define HARDWARE_SIMULATOR_VHID_MOUSE_H_
 +
@@ -15,7 +15,10 @@
 +// Report ID 2 = absolute position (0..65535 over the virtual desktop;
 +// multi-monitor / multi-screen control can keep using percent + screenId).
 +
++// True when WinUHid.dll exists next to the host exe. Does not LoadLibrary
++// or create a device — safe for settings availability probes.
 +bool VhidMouseIsDriverPresent();
++// Load DLL (app-dir LoadLibraryExW) and create the virtual mouse device.
 +bool VhidMouseEnsureCreated();
 +void VhidMouseDestroy();
 +

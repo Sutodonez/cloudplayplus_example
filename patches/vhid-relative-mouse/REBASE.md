@@ -50,7 +50,7 @@ Then re-copy / regenerate `0002` app wireup against the current vendor `lib/` tr
 
 ## Host dependency (optional)
 
-- Install [cgutman/WinUHid](https://github.com/cgutman/WinUHid) UMDF driver + place `WinUHid.dll` on `PATH` / next to the app.
+- Install [cgutman/WinUHid](https://github.com/cgutman/WinUHid) UMDF driver + place `WinUHid.dll` next to the app exe (app-dir only; not searched on `PATH`). Host preference is persisted as `cppp_mouse_backend.flag` beside the exe so a SYSTEM host after `registerService` keeps the same backend.
 - Host UI: 键鼠设置 → **虚拟 HID 鼠标 (WinUHid)** switch (title + description) and **安装 WinUHid 驱动** button (opens official repo install guide).
 - If driver/DLL missing, plugin falls back to SendInput for relative and absolute.
 

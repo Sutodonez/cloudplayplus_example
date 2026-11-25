@@ -1,6 +1,6 @@
 --- lib/hardware_simulator_platform_interface.dart
 +++ lib/hardware_simulator_platform_interface.dart
-@@ -160,6 +160,24 @@
+@@ -160,6 +160,24 @@ abstract class HardwareSimulatorPlatform extends PlatformInterface {
      throw UnimplementedError('performKeyEvent() has not been implemented.');
    }
  

@@ -1,6 +1,6 @@
 --- lib/hardware_simulator.dart
 +++ lib/hardware_simulator.dart
-@@ -8,6 +8,19 @@
+@@ -8,6 +8,19 @@ class HWKeyboard {
    }
  }
  
@@ -20,7 +20,7 @@
  class HWMouse {
    HWMouse();
    void performMouseMoveRelative(double deltax, double deltay, int screenId) {
-@@ -94,6 +107,35 @@
+@@ -94,6 +107,35 @@ class HardwareSimulator {
      return HardwareSimulatorPlatform.instance.putImmersiveModeEnabled(enabled);
    }
  

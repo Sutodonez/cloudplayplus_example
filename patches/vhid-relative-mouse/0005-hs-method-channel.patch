@@ -1,6 +1,6 @@
 --- lib/hardware_simulator_method_channel.dart
 +++ lib/hardware_simulator_method_channel.dart
-@@ -317,6 +317,36 @@
+@@ -317,6 +317,36 @@ class MethodChannelHardwareSimulator extends HardwareSimulatorPlatform {
      });
    }
  

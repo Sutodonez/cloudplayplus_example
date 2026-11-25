@@ -1,17 +1,21 @@
 --- /dev/null
 +++ windows/mouse_injector.cpp
-@@ -0,0 +1,309 @@
+@@ -0,0 +1,355 @@
 +#include "mouse_injector.h"
 +
++#include "hardware_simulator_plugin.h"
 +#include "vhid_mouse.h"
 +
 +#include <windows.h>
++#include <shlwapi.h>
 +
 +#include <algorithm>
 +#include <atomic>
 +#include <cmath>
 +#include <future>
 +#include <vector>
++
++#pragma comment(lib, "shlwapi.lib")
 +
 +namespace {
 +
@@ -20,46 +24,67 @@
 +std::atomic<int> g_effective_backend{
 +    static_cast<int>(MouseInputBackend::kSendInput)};
 +
-+struct InjectorMonitorInfo {
-+  RECT rect;
-+  bool is_primary;
-+};
++constexpr wchar_t kPersistFileName[] = L"cppp_mouse_backend.flag";
 +
-+std::vector<InjectorMonitorInfo> EnumerateMonitors() {
-+  std::vector<InjectorMonitorInfo> monitors;
-+  DISPLAY_DEVICE displayDevice;
-+  displayDevice.cb = sizeof(DISPLAY_DEVICE);
-+
-+  for (DWORD deviceNum = 0;
-+       EnumDisplayDevices(NULL, deviceNum, &displayDevice, 0); deviceNum++) {
-+    if (!(displayDevice.StateFlags & DISPLAY_DEVICE_ACTIVE)) {
-+      continue;
-+    }
-+    DEVMODE devMode = {};
-+    devMode.dmSize = sizeof(DEVMODE);
-+    if (!EnumDisplaySettings(displayDevice.DeviceName, ENUM_CURRENT_SETTINGS,
-+                             &devMode)) {
-+      continue;
-+    }
-+    InjectorMonitorInfo info = {};
-+    info.rect.left = devMode.dmPosition.x;
-+    info.rect.top = devMode.dmPosition.y;
-+    info.rect.right = devMode.dmPosition.x +
-+                      static_cast<LONG>(devMode.dmPelsWidth);
-+    info.rect.bottom = devMode.dmPosition.y +
-+                       static_cast<LONG>(devMode.dmPelsHeight);
-+    info.is_primary =
-+        (displayDevice.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE) != 0;
-+    monitors.push_back(info);
++bool GetPersistPath(wchar_t* out, size_t out_count) {
++  if (!out || out_count == 0) {
++    return false;
 +  }
-+  return monitors;
++  DWORD n = GetModuleFileNameW(nullptr, out, static_cast<DWORD>(out_count));
++  if (n == 0 || n >= out_count) {
++    return false;
++  }
++  if (!PathRemoveFileSpecW(out)) {
++    return false;
++  }
++  return PathAppendW(out, kPersistFileName) == TRUE;
++}
++
++void PersistPreferredBackend(MouseInputBackend backend) {
++  wchar_t path[MAX_PATH] = {};
++  if (!GetPersistPath(path, MAX_PATH)) {
++    return;
++  }
++  HANDLE file = CreateFileW(path, GENERIC_WRITE, FILE_SHARE_READ, nullptr,
++                            CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
++  if (file == INVALID_HANDLE_VALUE) {
++    return;
++  }
++  const char digit = (backend == MouseInputBackend::kVhid) ? '1' : '0';
++  DWORD written = 0;
++  WriteFile(file, &digit, 1, &written, nullptr);
++  CloseHandle(file);
++}
++
++bool ReadPersistedBackend(MouseInputBackend& out) {
++  wchar_t path[MAX_PATH] = {};
++  if (!GetPersistPath(path, MAX_PATH)) {
++    return false;
++  }
++  HANDLE file = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ, nullptr,
++                            OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
++  if (file == INVALID_HANDLE_VALUE) {
++    return false;
++  }
++  char digit = '0';
++  DWORD read = 0;
++  const BOOL ok = ReadFile(file, &digit, 1, &read, nullptr);
++  CloseHandle(file);
++  if (!ok || read != 1) {
++    return false;
++  }
++  out = (digit == '1') ? MouseInputBackend::kVhid
++                       : MouseInputBackend::kSendInput;
++  return true;
 +}
 +
 +// Map percent + screenId onto virtual-desktop normalized 0..65535.
-+// Used by the absolute VHID report so multi-monitor layouts stay consistent.
++// Uses the same monitor list as SendInput (`adjust_to_main_screen`) so
++// screenId indices stay consistent across backends.
 +bool MapToVirtualDesktopAbs(int screenId, double percentX, double percentY,
 +                            USHORT& out_x, USHORT& out_y) {
-+  auto monitors = EnumerateMonitors();
++  const auto& monitors =
++      hardware_simulator::HardwareSimulatorPlugin::GetStaticMonitors();
 +  if (screenId < 0 || screenId >= static_cast<int>(monitors.size())) {
 +    return false;
 +  }
@@ -230,6 +255,7 @@
 +
 +bool MouseInjectorSetBackend(MouseInputBackend backend) {
 +  g_preferred_backend.store(static_cast<int>(backend));
++  PersistPreferredBackend(backend);
 +  if (backend == MouseInputBackend::kSendInput) {
 +    VhidMouseDestroy();
 +    g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
@@ -245,6 +271,25 @@
 +  return false;
 +}
 +
++void MouseInjectorRestorePersistedBackend() {
++  MouseInputBackend persisted = MouseInputBackend::kSendInput;
++  if (!ReadPersistedBackend(persisted)) {
++    return;
++  }
++  // Apply without re-writing the flag (SetBackend would rewrite the same value).
++  g_preferred_backend.store(static_cast<int>(persisted));
++  if (persisted == MouseInputBackend::kSendInput) {
++    VhidMouseDestroy();
++    g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++    return;
++  }
++  if (TryActivateVhid()) {
++    g_effective_backend.store(static_cast<int>(MouseInputBackend::kVhid));
++  } else {
++    g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++  }
++}
++
 +MouseInputBackend MouseInjectorGetBackend() {
 +  return static_cast<MouseInputBackend>(g_preferred_backend.load());
 +}
@@ -254,7 +299,8 @@
 +}
 +
 +bool MouseInjectorIsVhidAvailable() {
-+  return VhidMouseIsDriverPresent() && VhidMouseEnsureCreated();
++  // Probe must not LoadLibrary / EnsureCreated (settings load path).
++  return VhidMouseIsDriverPresent();
 +}
 +
 +void MouseInjectorMoveRelative(double dx, double dy) {

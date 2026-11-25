@@ -23,27 +23,43 @@ index d4607d8..be60ce0 100644
  
    //Screen id setting is not global, so we need to call before start streaming.
 diff --git a/lib/services/app_init_service.dart b/lib/services/app_init_service.dart
-index 91cadc9..328fe03 100644
+index 91cadc9..991da12 100644
 --- a/lib/services/app_init_service.dart
 +++ b/lib/services/app_init_service.dart
-@@ -92,6 +92,15 @@ class AppInitService {
+@@ -1,4 +1,5 @@
+ import 'package:cloudplayplus/base/logging.dart';
++import 'package:cloudplayplus/global_settings/streaming_settings.dart';
+ import 'package:cloudplayplus/services/login_service.dart';
+ import 'package:cloudplayplus/services/websocket_service.dart';
+ import 'package:hardware_simulator/hardware_simulator.dart';
+@@ -92,6 +93,25 @@ class AppInitService {
            ApplicationInfo.displayCountChangedCompleter!.complete();
          }
        }, 0);
-+      // Apply host mouse backend (SendInput vs virtual HID) for relative + absolute.
-+      final useVhid =
-+          SharedPreferencesManager.getBool('useVhidMouse') ?? false;
-+      final ok = await HardwareSimulator.setMouseInputBackend(
-+          useVhid ? MouseInputBackend.vhid : MouseInputBackend.sendInput);
-+      if (useVhid && !ok) {
-+        VLOG0(
-+            "useVhidMouse enabled but WinUHid unavailable; using SendInput");
++      // Apply host mouse backend. SharedPreferences are per-user-profile and
++      // do not survive registerService → SYSTEM relaunch; native plugin already
++      // restored `cppp_mouse_backend.flag` next to the exe. Only override when
++      // this process has an explicit pref; otherwise sync Dart from native.
++      final useVhidPref = SharedPreferencesManager.getBool('useVhidMouse');
++      if (useVhidPref != null) {
++        final ok = await HardwareSimulator.setMouseInputBackend(useVhidPref
++            ? MouseInputBackend.vhid
++            : MouseInputBackend.sendInput);
++        StreamingSettings.useVhidMouse = useVhidPref;
++        if (useVhidPref && !ok) {
++          VLOG0(
++              "useVhidMouse enabled but WinUHid unavailable; using SendInput");
++        }
++      } else {
++        final preferred = await HardwareSimulator.getMouseInputBackend();
++        StreamingSettings.useVhidMouse =
++            preferred == MouseInputBackend.vhid;
 +      }
      }
      bool? isSystem = await HardwareSimulator.isRunningAsSystem();
      if (isSystem == false) {
 diff --git a/lib/settings_screen.dart b/lib/settings_screen.dart
-index fa49a5c..76f14a7 100644
+index fa49a5c..8179fc4 100644
 --- a/lib/settings_screen.dart
 +++ b/lib/settings_screen.dart
 @@ -12,6 +12,7 @@ import 'package:cloudplayplus/utils/widgets/text_field_wrapper.dart';
@@ -121,7 +137,7 @@ index fa49a5c..76f14a7 100644
 +                  SettingsTile(
 +                    title: const Text('安装 WinUHid 驱动'),
 +                    description: const Text(
-+                        '打开官方仓库安装引导：安装 UMDF 驱动，并将 WinUHid.dll 放到 PATH 或程序目录。安装后重启本应用再开启上方开关。'),
++                        '打开官方仓库安装引导：安装 UMDF 驱动，并将 WinUHid.dll 放到本程序目录（与 cloudplayplus.exe 同级；不搜索 PATH）。安装后重启本应用再开启上方开关。'),
 +                    leading: const Icon(Icons.download_outlined),
 +                    onPressed: (BuildContext context) async {
 +                      final url = Uri.parse('https://github.com/cgutman/WinUHid');

@@ -8,7 +8,17 @@
  #include "notification_window.h"
  #include "virtual_display_control.h"
  #include "SmartKeyboardBlocker.h"
-@@ -824,6 +825,7 @@
+@@ -800,6 +801,9 @@ void HardwareSimulatorPlugin::RegisterWithRegistrar(
+ 
+   // start to monitor display resolution and DPI.
+   HardwareSimulatorPlugin::UpdateStaticMonitors();
++  // Restore VHID preference persisted by a prior user-session process so a
++  // SYSTEM host (after registerService relaunch) injects with the same backend.
++  MouseInjectorRestorePersistedBackend();
+   dpi_monitor_proc_id_ = registrar->RegisterTopLevelWindowProcDelegate(
+       [](HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) -> std::optional<LRESULT> {
+           if (message == WM_DPICHANGED || message == WM_DISPLAYCHANGE) {
+@@ -824,6 +828,7 @@ HardwareSimulatorPlugin::~HardwareSimulatorPlugin() {
      destroyTouchDevice();
      destroyPenDevice();
      CleanupCursorLock();
@@ -16,7 +26,7 @@
      if (dpi_monitor_proc_id_.has_value()) {
          registrar_->UnregisterTopLevelWindowProcDelegate(dpi_monitor_proc_id_.value());
          dpi_monitor_proc_id_.reset();
-@@ -857,45 +859,7 @@
+@@ -857,45 +862,7 @@ void send_input(INPUT& i) {
  }
  
  void performMouseButton(int button, bool release) {
@@ -63,7 +73,7 @@
  }
  
  #pragma warning(disable:4244)
-@@ -1037,19 +1001,19 @@
+@@ -1037,19 +1004,19 @@ bool setPrimaryDisplay(int displayIndex) {
  }
  
  void performMouseMoveRelative(double x,double y){
@@ -93,7 +103,7 @@
      INPUT i {};
  
      i.type = INPUT_MOUSE;
-@@ -1106,27 +1070,11 @@
+@@ -1106,27 +1073,11 @@ void performMouseMoveToWindowPosition(double percentx, double percenty) {
  }
  
  void scroll(int distance) {
@@ -123,7 +133,7 @@
  }
  
  std::wstring stringToWstring(const std::string& str) {
-@@ -1162,6 +1110,21 @@
+@@ -1162,6 +1113,21 @@ void HardwareSimulatorPlugin::HandleMethodCall(
          auto isDown = (args->find(flutter::EncodableValue("isDown")))->second;
          performKeyEvent(static_cast<int>(std::get<int>((keyCode))), static_cast<bool>(std::get<bool>((isDown))));
          result->Success(nullptr);

@@ -1,6 +1,6 @@
 --- test/hardware_simulator_method_channel_test.dart
 +++ test/hardware_simulator_method_channel_test.dart
-@@ -8,20 +8,37 @@
+@@ -8,20 +8,37 @@ void main() {
    MethodChannelHardwareSimulator platform = MethodChannelHardwareSimulator();
    const MethodChannel channel = MethodChannel('hardware_simulator');
  

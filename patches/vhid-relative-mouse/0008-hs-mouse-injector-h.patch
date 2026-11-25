@@ -1,6 +1,6 @@
 --- /dev/null
 +++ windows/mouse_injector.h
-@@ -0,0 +1,41 @@
+@@ -0,0 +1,48 @@
 +#ifndef HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_
 +#define HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_
 +
@@ -16,12 +16,18 @@
 +};
 +
 +// Sets preferred backend. When kVhid is requested but unavailable, falls back
-+// to SendInput and returns false.
++// to SendInput and returns false. Persists preference next to the exe so a
++// SYSTEM-elevated host process can restore it after registerService relaunch.
 +bool MouseInjectorSetBackend(MouseInputBackend backend);
++
++// Restore preference persisted by a prior (possibly non-SYSTEM) process.
++// Call once at plugin registration before Dart SharedPreferences apply.
++void MouseInjectorRestorePersistedBackend();
 +
 +MouseInputBackend MouseInjectorGetBackend();
 +
-+// True when WinUHid.dll loads and a virtual mouse device can be created.
++// True when WinUHid.dll is present next to the host exe (no LoadLibrary /
++// no HID device creation — safe for settings probes).
 +bool MouseInjectorIsVhidAvailable();
 +
 +// Active backend after the last SetBackend (may be SendInput after VHID fail).
@@ -30,7 +36,8 @@
 +void MouseInjectorMoveRelative(double dx, double dy);
 +
 +// Absolute move: percent within [screenId] monitor. When VHID is effective,
-+// maps onto the virtual desktop (0..65535) for multi-screen future use.
++// maps onto the virtual desktop (0..65535) using the same monitor list as
++// SendInput (HardwareSimulatorPlugin::GetStaticMonitors).
 +// Returns false if VHID was preferred but submission failed (caller may
 +// fall back to SendInput).
 +bool MouseInjectorMoveAbsolute(double percentX, double percentY, int screenId);
