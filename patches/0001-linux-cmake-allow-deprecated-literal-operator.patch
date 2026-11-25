@@ -1,0 +1,16 @@
+diff --git a/linux/CMakeLists.txt b/linux/CMakeLists.txt
+index 094013c..d3c04c4 100644
+--- a/linux/CMakeLists.txt
++++ b/linux/CMakeLists.txt
+@@ -41,7 +41,10 @@ endif()
+ # of modifying this function.
+ function(APPLY_STANDARD_SETTINGS TARGET)
+   target_compile_features(${TARGET} PUBLIC cxx_std_14)
+-  target_compile_options(${TARGET} PRIVATE -Wall -Werror)
++  # Keep -Werror for first-party code, but do not fail the build on known
++  # third-party plugin header warnings (e.g. flutter_secure_storage_linux
++  # json.hpp literal-operator deprecation on newer Clang/GCC).
++  target_compile_options(${TARGET} PRIVATE -Wall -Werror -Wno-error=deprecated-literal-operator)
+   target_compile_options(${TARGET} PRIVATE "$<$<NOT:$<CONFIG:Debug>>:-O3>")
+   target_compile_definitions(${TARGET} PRIVATE "$<$<NOT:$<CONFIG:Debug>>:NDEBUG>")
+ endfunction()

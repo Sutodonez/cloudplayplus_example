@@ -231,7 +231,11 @@ jobs:
 
   windows_build:
     name: Windows - Desktop
-    runs-on: windows-latest
+    # Pin to windows-2022: windows-latest currently ships VS 2026 only.
+    # Flutter 3.35.x maps unsupported VS 18 → CMake "Visual Studio 16 2019"
+    # and fails with "could not find any instance of Visual Studio".
+    # VS 2026 support needs Flutter ≥ 3.38.2; keep the pin until we bump.
+    runs-on: windows-2022
     defaults:
       run:
         working-directory: vendor/cloudplayplus

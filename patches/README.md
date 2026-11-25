@@ -11,6 +11,12 @@ Use zero-padded numeric prefixes so lexical order matches apply order:
 0002-another-change.patch
 ```
 
+## Current series
+
+| Patch | Purpose |
+|-------|---------|
+| `0001-linux-cmake-allow-deprecated-literal-operator.patch` | Keep Linux `-Werror`, but allow `deprecated-literal-operator` so third-party `json.hpp` (via `flutter_secure_storage_linux`) does not fail CI on newer Clang/GCC. |
+
 ## Workflow
 
 1. Make a change inside a throwaway checkout of the pin (or regenerate with `git diff`).
