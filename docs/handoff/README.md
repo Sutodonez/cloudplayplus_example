@@ -55,7 +55,7 @@ Workers/subagents **cannot** transfer across Projects. New Project: new workers;
 ## C. GUI placement (as implemented in PRs)
 
 - **Punch:** global `settings_screen` section「NAT 穿透 / 打洞」— `enablePunch`, `forceRelay` (with existing TURN).
-- **Files:** in-session floating menu folder icon → `FileTransferSheet` (send files/folder + progress). Host auto-accepts to `Downloads/CloudPlayPlusTransfers`. Web unsupported.
+- **Files:** in-session floating menu folder icon → `FileTransferSheet` (send files/folder + progress). Host default **manual confirm** (`fileXferAutoAccept=false`); optional auto-accept to `Downloads/CloudPlayPlusTransfers`. Authenticated controller = full trust (terminal independent). Web unsupported.
 - **VHID:** host「键鼠设置」—「虚拟 HID 相对鼠标」`useVhidMouse`. Falls back to SendInput if WinUHid missing. No controller HUD.
 - **Privacy:** host settings + connect picker; opcode `LP_PRIVACY_MODE=68`. See [privacy-blank-display.md](./privacy-blank-display.md).
 - **Terminal:** in-session server terminal; opcode `LP_TERMINAL=69` (privacy keeps 68).
@@ -102,9 +102,10 @@ Gaps: no in-stack PortAllocator punch (prebuilt libwebrtc only); mobile/Apple na
 
 ## F. Known gaps (other tracks)
 
-- **Files:** Web unsupported; large-file sha default ≤4 MiB; UU resume parity UNKNOWN; package `plugins/session_file_transfer`; opcode `LP_FILE_CHUNK=67`.  
-- **VHID:** WinUHid driver+DLL not bundled; absolute mouse still SendInput; HS absorbed as path tree + `docs/patches/vhid-relative-mouse/` (fork create 403 at authoring time).
+- **Files:** Web unsupported; UU resume parity UNKNOWN; package `plugins/session_file_transfer`; opcode `LP_FILE_CHUNK=67`.  
+- **VHID:** WinUHid driver+DLL not bundled; blankDisplay/exclusive temporarily prefers SendInput. HS path tree + `patches/vhid-relative-mouse/`.
 - **Privacy:** custom screensaver image deferred; non-Windows native deferred. See [privacy-blank-display.md](./privacy-blank-display.md).
+- **Post-merge (main):** channel backpressure / auto-accept default / exclusive+VHID / privacy per-session / floating menu enum — [post-merge-security-hardening.md](./post-merge-security-hardening.md).
 
 ---
 

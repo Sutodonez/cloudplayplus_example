@@ -34,11 +34,18 @@
 - Mute crash marker restore on plugin load; `lockWorkstation` requires `{confirm: true}`; `imagePath` rejected until whitelist loader
 - Hotkey persist/native validation aligned with UI (letter/digit/F + required modifiers; dirty prefs sanitized)
 
+## Post-merge hardenings
+
+- Per-session mode map + strongest-wins native apply (multi-controller)
+- blankDisplay / `VDISPLAY_OCCUPY`: temporary SendInput mouse preference (VHID restored when clear)
+- Privacy opcode sent via control-priority channel gate
+
+See [post-merge-security-hardening.md](./post-merge-security-hardening.md).
+
 ## Deferred
 
 - Custom screensaver **image** (`imagePath` reserved; solid black for now)
 - macOS / Linux host native privacy
-- Low: multi-session global singleton state
 
 ## Design sources (ideas only)
 

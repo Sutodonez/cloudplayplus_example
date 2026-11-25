@@ -18,7 +18,9 @@
 - Payload: binary opcode `LP_FILE_CHUNK` (67)
 - Integrity: streaming sha256 for every file (no ≤4 MiB cap); full-file verify on receive complete
 - Resume: ledger + chunk-aligned offsets + prefix sha256 verified by sender; content fingerprint
-- Host: settings for **auto-accept** and **save path** (default `Downloads/CloudPlayPlusTransfers`)
+- Host: settings for **auto-accept** (desktop **default false** — explicit confirm) and **save path** (default `Downloads/CloudPlayPlusTransfers`)
+- Trust: authenticated controller = full trust (terminal shell remains); auto-accept is a separate convenience switch
+- Shared `userInput` channel: file **binary** chunks use bulk backpressure; control JSON stays high-priority (see [post-merge-security-hardening.md](./post-merge-security-hardening.md))
 - Controller: floating-menu folder icon → send sheet; **Web controller** sends via memory-backed pick
 - Asymmetric progress UI (sender sheet; receiver MessageBox) — accepted for v1
 

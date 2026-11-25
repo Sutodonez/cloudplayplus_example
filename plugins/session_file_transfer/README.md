@@ -8,7 +8,10 @@ Isolated Dart module for CloudPlayPlus **session file/folder transfer** (cppp pl
 - **Control:** JSON envelope `{"file_xfer": {...}}` (offer / accept / reject /
   abort / progress / complete / resume_query / resume_ack / resume_restart).
 - **Payload:** binary chunks with opcode `67` (`kFileChunkOpcode` /
-  `LP_FILE_CHUNK`).
+  `LP_FILE_CHUNK`). Desktop default is **manual confirm**
+  (`autoAcceptIncoming: false`); enable auto-accept in host settings if desired.
+  Authenticated controller is treated as full trust for terminal/shell; that
+  trust model is independent of the file auto-accept switch.
 - **Folders:** flattened to relative paths under the selected root folder name.
 - **Integrity:** streaming sha256 for every offered file (no ≤4 MiB cap);
   receiver verifies full-file hash on complete.
