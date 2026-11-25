@@ -1,0 +1,16 @@
+--- macos/Classes/HardwareSimulatorPlugin.swift
++++ macos/Classes/HardwareSimulatorPlugin.swift
+@@ -569,6 +569,13 @@ public class HardwareSimulatorPlugin: NSObject, FlutterPlugin {
+       } else {
+         result(FlutterError(code: "BAD_ARGS", message: "Missing or incorrect arguments for MouseMove ABSL", details: nil))
+       }
++    case "setMouseInputBackend":
++      // Virtual HID mouse is Windows-only; acknowledge SendInput-equivalent.
++      result(true)
++    case "getMouseInputBackend", "getEffectiveMouseInputBackend":
++      result(0)
++    case "isVhidMouseAvailable":
++      result(false)
+     case "mouseMoveR":
+       if let args = call.arguments as? [String: Any],
+         let percentX = args["x"] as? Double,

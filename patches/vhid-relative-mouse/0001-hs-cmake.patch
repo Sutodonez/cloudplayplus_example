@@ -1,0 +1,13 @@
+--- windows/CMakeLists.txt
++++ windows/CMakeLists.txt
+@@ -24,6 +24,10 @@ list(APPEND PLUGIN_SOURCES
+   "cursor_monitor.h"
+   "gamecontroller_manager.cc"
+   "gamecontroller_manager.h"
++  "mouse_injector.cpp"
++  "mouse_injector.h"
++  "vhid_mouse.cpp"
++  "vhid_mouse.h"
+   "notification_window.cc"
+   "notification_window.h"
+   "virtual_display.cc"

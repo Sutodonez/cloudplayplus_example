@@ -19,6 +19,8 @@ Use zero-padded numeric prefixes so lexical order matches apply order:
 | `0002-privacy-blank-display-wireup.patch` | Privacy / blank display wireup — see [`privacy-blank/`](./privacy-blank/) |
 | `0003-session-terminal-link.patch` | Server terminal linking — see [`terminal-link/`](./terminal-link/) |
 | `0004-session-file-transfer.patch` | Session file/folder transfer — see [`file-transfer/`](./file-transfer/) |
+| `0005-vhid-relative-mouse-hs.patch` | Optional WinUHid VHID mouse (relative + absolute) in nested `hardware_simulator` — see [`vhid-relative-mouse/`](./vhid-relative-mouse/) |
+| `0006-vhid-relative-mouse-app-wireup.patch` | Host `useVhidMouse` settings + WinUHid install guide |
 
 ## Workflow
 
@@ -27,3 +29,10 @@ Use zero-padded numeric prefixes so lexical order matches apply order:
 3. Run `scripts/apply-patches.sh` and verify `scripts/build.sh`.
 
 Do not commit dirty ad-hoc edits in `vendor/` on the cppp branch.
+
+## Nested plugin submodules
+
+Some patches (for example VHID) edit files under nested plugin submodules such as
+`plugins/hardware_simulator/`. Those paths are not in the vendor superproject
+index; `scripts/apply-patches.sh` applies them to the working tree only. Do not
+commit the resulting dirty submodule — regenerate the patch series instead.

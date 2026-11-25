@@ -1,0 +1,39 @@
+--- lib/hardware_simulator_method_channel.dart
++++ lib/hardware_simulator_method_channel.dart
+@@ -317,6 +317,36 @@ class MethodChannelHardwareSimulator extends HardwareSimulatorPlatform {
+     });
+   }
+ 
++  @override
++  Future<bool> setMouseInputBackend(int backend) async {
++    final result =
++        await methodChannel.invokeMethod<bool>('setMouseInputBackend', {
++      'backend': backend,
++    });
++    return result ?? false;
++  }
++
++  @override
++  Future<int> getMouseInputBackend() async {
++    final result =
++        await methodChannel.invokeMethod<int>('getMouseInputBackend');
++    return result ?? 0;
++  }
++
++  @override
++  Future<int> getEffectiveMouseInputBackend() async {
++    final result =
++        await methodChannel.invokeMethod<int>('getEffectiveMouseInputBackend');
++    return result ?? 0;
++  }
++
++  @override
++  Future<bool> isVhidMouseAvailable() async {
++    final result =
++        await methodChannel.invokeMethod<bool>('isVhidMouseAvailable');
++    return result ?? false;
++  }
++
+   // Relative mouse movement.
+   @override
+   Future<void> performMouseMoveRelative(

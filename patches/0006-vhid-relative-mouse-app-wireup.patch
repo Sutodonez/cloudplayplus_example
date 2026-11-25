@@ -1,0 +1,168 @@
+diff --git a/lib/global_settings/streaming_settings.dart b/lib/global_settings/streaming_settings.dart
+index bded8f0..7e1555a 100644
+--- a/lib/global_settings/streaming_settings.dart
++++ b/lib/global_settings/streaming_settings.dart
+@@ -100,6 +100,7 @@ class StreamingSettings {
+   static bool privacyLockOnDisconnect = false;
+   // Dismiss hotkey: modifier bitmask (ctrl=1,alt=2,shift=4,win=8) + VK code.
+   static int privacyHotkeyModifiers = 3; // Ctrl|Alt
++  static bool useVhidMouse = false;
+   static int privacyHotkeyVk = 0x50; // 'P'
+   /// Q22: when true (default), controller may temporarily override host privacy
+   /// via connect JSON / mid-session opcode. When false, host default wins.
+@@ -202,6 +203,7 @@ class StreamingSettings {
+         SharedPreferencesManager.getInt('privacyHotkeyModifiers') ?? 3;
+     privacyHotkeyVk =
+         SharedPreferencesManager.getInt('privacyHotkeyVk') ?? 0x50;
++    useVhidMouse = SharedPreferencesManager.getBool('useVhidMouse') ?? false;
+     // Match settings UI: letter/digit/F + required modifiers; repair dirty prefs
+     // in memory (PrivacyBlankService rewrites SharedPreferences on apply).
+     final sanitizedHotkey = PrivacyHotkey(
+diff --git a/lib/services/app_init_service.dart b/lib/services/app_init_service.dart
+index 4d2b78a..b35a5ef 100644
+--- a/lib/services/app_init_service.dart
++++ b/lib/services/app_init_service.dart
+@@ -1,4 +1,5 @@
+ import 'package:cloudplayplus/base/logging.dart';
++import 'package:cloudplayplus/global_settings/streaming_settings.dart';
+ import 'package:cloudplayplus/services/login_service.dart';
+ import 'package:cloudplayplus/services/privacy_blank_service.dart';
+ import 'package:cloudplayplus/services/websocket_service.dart';
+@@ -80,6 +81,25 @@ class AppInitService {
+     //TODO:implement for other platforms
+     if (AppPlatform.isWindows) {
+       await PrivacyBlankService.init();
++      // Apply host mouse backend. SharedPreferences are per-user-profile and
++      // do not survive registerService → SYSTEM relaunch; native plugin already
++      // restored `cppp_mouse_backend.flag` next to the exe. Only override when
++      // this process has an explicit pref; otherwise sync Dart from native.
++      final useVhidPref = SharedPreferencesManager.getBool('useVhidMouse');
++      if (useVhidPref != null) {
++        final ok = await HardwareSimulator.setMouseInputBackend(useVhidPref
++            ? MouseInputBackend.vhid
++            : MouseInputBackend.sendInput);
++        StreamingSettings.useVhidMouse = useVhidPref;
++        if (useVhidPref && !ok) {
++          VLOG0(
++              "useVhidMouse enabled but WinUHid unavailable; using SendInput");
++        }
++      } else {
++        final preferred = await HardwareSimulator.getMouseInputBackend();
++        StreamingSettings.useVhidMouse =
++            preferred == MouseInputBackend.vhid;
++      }
+       HardwareSimulator.initParsecVdd();
+       ApplicationInfo.screencount = await HardwareSimulator.getAllDisplays();
+       HardwareSimulator.addDisplayCountChangedCallback((displayCount) {
+diff --git a/lib/settings_screen.dart b/lib/settings_screen.dart
+index 6a9b8c8..1d1da3c 100644
+--- a/lib/settings_screen.dart
++++ b/lib/settings_screen.dart
+@@ -13,6 +13,7 @@ import 'package:cloudplayplus/utils/widgets/text_field_wrapper.dart';
+ import 'package:flutter/cupertino.dart';
+ import 'package:flutter/material.dart';
+ import 'package:flutter/services.dart';
++import 'package:hardware_simulator/hardware_simulator.dart';
+ import 'package:native_textfield_tv/native_textfield_tv.dart';
+ import 'package:privacy_blank_display/privacy_blank_display.dart';
+ import 'package:provider/provider.dart';
+@@ -1045,6 +1046,8 @@ class _CursorSettingsScreenState extends State<CursorSettingsScreen> {
+   bool autoHideLocalCursor = true;
+   bool _renderRemoteCursor = false;
+   bool _switchCmdCtrl = false;
++  bool _useVhidMouse = false;
++  bool _vhidAvailable = false;
+   int _touchInputMode = TouchInputMode.touch.index;  // 触控模式：0=触摸(默认), 1=触控板, 2=鼠标
+   double _touchpadSensitivity = 1.0;  // 触控板灵敏度
+   double _touchpadSensitivityLocked = 10.0;  // 鼠标锁定状态下的移动灵敏度
+@@ -1121,6 +1124,14 @@ class _CursorSettingsScreenState extends State<CursorSettingsScreen> {
+     _renderRemoteCursor =
+         SharedPreferencesManager.getBool('renderRemoteCursor') ?? false;
+     _switchCmdCtrl = StreamingSettings.switchCmdCtrl;
++    _useVhidMouse = StreamingSettings.useVhidMouse;
++    if (AppPlatform.isWindows) {
++      try {
++        _vhidAvailable = await HardwareSimulator.isVhidMouseAvailable();
++      } catch (_) {
++        _vhidAvailable = false;
++      }
++    }
+     _touchInputMode = StreamingSettings.touchInputMode;
+     // 加载保存的缩放值，默认值为100
+     double savedValue = StreamingSettings.cursorScale;
+@@ -1211,6 +1222,75 @@ class _CursorSettingsScreenState extends State<CursorSettingsScreen> {
+                     });
+                   },
+                 ),
++
++                if (AppPlatform.isWindows)
++                  SettingsTile.switchTile(
++                    title: const Text('虚拟 HID 鼠标 (WinUHid)'),
++                    description: Text(_vhidAvailable
++                        ? '相对与绝对路径均走虚拟 HID；适合 Raw Input 老游戏，并为多屏控多屏预留。关则 SendInput。'
++                        : '未检测到 WinUHid：开启后仍会回退 SendInput。请先用下方按钮安装驱动与 DLL。'),
++                    leading: const Icon(Icons.mouse_outlined),
++                    initialValue: _useVhidMouse,
++                    onToggle: (bool value) async {
++                      bool applied = true;
++                      if (value) {
++                        applied = await HardwareSimulator.setMouseInputBackend(
++                            MouseInputBackend.vhid);
++                      } else {
++                        await HardwareSimulator.setMouseInputBackend(
++                            MouseInputBackend.sendInput);
++                      }
++                      setState(() {
++                        _useVhidMouse = value;
++                        StreamingSettings.useVhidMouse = value;
++                        SharedPreferencesManager.setBool('useVhidMouse', value);
++                        if (value && !applied) {
++                          _vhidAvailable = false;
++                        }
++                      });
++                      if (value && !applied && mounted) {
++                        ScaffoldMessenger.of(context).showSnackBar(
++                          const SnackBar(
++                            content: Text(
++                                'WinUHid 不可用，已回退 SendInput。请点击「安装 WinUHid 驱动」后重试。'),
++                          ),
++                        );
++                      }
++                    },
++                  ),
++                if (AppPlatform.isWindows)
++                  SettingsTile(
++                    title: const Text('安装 WinUHid 驱动'),
++                    description: const Text(
++                        '打开官方仓库安装引导：安装 UMDF 驱动，并将 WinUHid.dll 放到本程序目录（与 cloudplayplus.exe 同级；不搜索 PATH）。安装后重启本应用再开启上方开关。'),
++                    leading: const Icon(Icons.download_outlined),
++                    onPressed: (BuildContext context) async {
++                      final url = Uri.parse('https://github.com/cgutman/WinUHid');
++                      if (await canLaunchUrl(url)) {
++                        await launchUrl(
++                          url,
++                          mode: LaunchMode.externalApplication,
++                        );
++                      }
++                      if (!context.mounted) return;
++                      ScaffoldMessenger.of(context).showSnackBar(
++                        const SnackBar(
++                          content: Text(
++                              '已打开 WinUHid 页面。按仓库说明安装驱动与 DLL 后，重启应用并重新检测。'),
++                        ),
++                      );
++                      // Re-probe availability after the user returns.
++                      try {
++                        final available =
++                            await HardwareSimulator.isVhidMouseAvailable();
++                        if (mounted) {
++                          setState(() {
++                            _vhidAvailable = available;
++                          });
++                        }
++                      } catch (_) {}
++                    },
++                  ),
+               ],
+             ),
+             // 触控模式设置（独立的 Section）

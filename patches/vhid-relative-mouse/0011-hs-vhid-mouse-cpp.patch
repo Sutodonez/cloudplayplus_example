@@ -1,0 +1,414 @@
+--- /dev/null
++++ windows/vhid_mouse.cpp
+@@ -0,0 +1,411 @@
++#include "vhid_mouse.h"
++
++#include <shlwapi.h>
++
++#include <mutex>
++#include <vector>
++
++#pragma comment(lib, "shlwapi.lib")
++
++namespace {
++
++// Minimal WinUHid C API surface (dynamically resolved). See WinUHid.h upstream.
++typedef enum _WINUHID_EVENT_TYPE {
++  WINUHID_EVENT_NONE = 0x0,
++  WINUHID_EVENT_GET_FEATURE = 0x1,
++  WINUHID_EVENT_SET_FEATURE = 0x2,
++  WINUHID_EVENT_WRITE_REPORT = 0x4,
++  WINUHID_EVENT_READ_REPORT = 0x8,
++} WINUHID_EVENT_TYPE;
++
++typedef struct _WINUHID_DEVICE_CONFIG {
++  WINUHID_EVENT_TYPE SupportedEvents;
++  USHORT VendorID;
++  USHORT ProductID;
++  USHORT VersionNumber;
++  USHORT ReportDescriptorLength;
++  LPCVOID ReportDescriptor;
++  GUID ContainerId;
++  PCWSTR InstanceID;
++  PCWSTR HardwareIDs;
++  UINT ReadReportPeriodUs;
++} WINUHID_DEVICE_CONFIG;
++
++typedef ULONG WINUHID_REQUEST_ID;
++
++typedef struct _WINUHID_EVENT {
++  WINUHID_EVENT_TYPE Type;
++  WINUHID_REQUEST_ID RequestId;
++  UCHAR ReportId;
++  union {
++    struct {
++      ULONG DataLength;
++      UCHAR Data[1];
++    } Write;
++    struct {
++      ULONG DataLength;
++    } Read;
++  };
++} WINUHID_EVENT;
++
++typedef struct _WINUHID_DEVICE* PWINUHID_DEVICE;
++
++typedef DWORD(WINAPI* PFN_WinUHidGetDriverInterfaceVersion)(VOID);
++typedef PWINUHID_DEVICE(WINAPI* PFN_WinUHidCreateDevice)(
++    const WINUHID_DEVICE_CONFIG* Config);
++typedef BOOL(WINAPI* PFN_WinUHidSubmitInputReport)(PWINUHID_DEVICE Device,
++                                                   LPCVOID Report,
++                                                   DWORD ReportSize);
++typedef VOID(WINAPI* PFN_WinUHidEventCallback)(PVOID CallbackContext,
++                                               PWINUHID_DEVICE Device,
++                                               const WINUHID_EVENT* Event);
++typedef BOOL(WINAPI* PFN_WinUHidStartDevice)(
++    PWINUHID_DEVICE Device, PFN_WinUHidEventCallback EventCallback,
++    PVOID CallbackContext);
++typedef VOID(WINAPI* PFN_WinUHidCompleteWriteEvent)(PWINUHID_DEVICE Device,
++                                                   const WINUHID_EVENT* Event,
++                                                   BOOL Success);
++typedef VOID(WINAPI* PFN_WinUHidCompleteReadEvent)(PWINUHID_DEVICE Device,
++                                                  const WINUHID_EVENT* Event,
++                                                  LPCVOID Data,
++                                                  DWORD DataLength);
++typedef VOID(WINAPI* PFN_WinUHidDestroyDevice)(PWINUHID_DEVICE Device);
++
++// Relative mouse report layout (report id 1):
++// buttons(5)+pad(3), dx:16, dy:16, wheel:16, hwheel:16
++#pragma pack(push, 1)
++struct VhidMouseRelReport {
++  UCHAR id;
++  UCHAR buttons;
++  SHORT dx;
++  SHORT dy;
++  SHORT wheel;
++  SHORT hwheel;
++};
++
++// Absolute mouse report layout (report id 2):
++// buttons(5)+pad(3), x:16, y:16  (0..65535 virtual-desktop normalized)
++struct VhidMouseAbsReport {
++  UCHAR id;
++  UCHAR buttons;
++  USHORT x;
++  USHORT y;
++};
++#pragma pack(pop)
++
++// Dual-mode mouse: Report 1 = relative, Report 2 = absolute.
++const BYTE kMouseReportDescriptor[] = {
++    0x05, 0x01,        // Usage Page (Generic Desktop)
++    0x09, 0x02,        // Usage (Mouse)
++    0xA1, 0x01,        // Collection (Application)
++
++    // ----- Report ID 1: relative -----
++    0x85, 0x01,        //   Report ID (1)
++    0x09, 0x01,        //   Usage (Pointer)
++    0xA1, 0x00,        //   Collection (Physical)
++    0x05, 0x09,        //     Usage Page (Button)
++    0x19, 0x01,        //     Usage Minimum (1)
++    0x29, 0x05,        //     Usage Maximum (5)
++    0x15, 0x00,        //     Logical Minimum (0)
++    0x25, 0x01,        //     Logical Maximum (1)
++    0x95, 0x05,        //     Report Count (5)
++    0x75, 0x01,        //     Report Size (1)
++    0x81, 0x02,        //     Input (Data,Var,Abs)
++    0x95, 0x01,        //     Report Count (1)
++    0x75, 0x03,        //     Report Size (3)
++    0x81, 0x03,        //     Input (Const,Var,Abs)
++    0x05, 0x01,        //     Usage Page (Generic Desktop)
++    0x09, 0x30,        //     Usage (X)
++    0x09, 0x31,        //     Usage (Y)
++    0x16, 0x01, 0x80,  //     Logical Minimum (-32767)
++    0x26, 0xFF, 0x7F,  //     Logical Maximum (32767)
++    0x75, 0x10,        //     Report Size (16)
++    0x95, 0x02,        //     Report Count (2)
++    0x81, 0x06,        //     Input (Data,Var,Rel)
++    0x09, 0x38,        //     Usage (Wheel)
++    0x95, 0x01,        //     Report Count (1)
++    0x81, 0x06,        //     Input (Data,Var,Rel)
++    0x05, 0x0C,        //     Usage Page (Consumer)
++    0x0A, 0x38, 0x02,  //     Usage (AC Pan)
++    0x95, 0x01,        //     Report Count (1)
++    0x81, 0x06,        //     Input (Data,Var,Rel)
++    0xC0,              //   End Collection
++
++    // ----- Report ID 2: absolute (virtual desktop 0..65535) -----
++    0x85, 0x02,        //   Report ID (2)
++    0x09, 0x01,        //   Usage (Pointer)
++    0xA1, 0x00,        //   Collection (Physical)
++    0x05, 0x09,        //     Usage Page (Button)
++    0x19, 0x01,        //     Usage Minimum (1)
++    0x29, 0x05,        //     Usage Maximum (5)
++    0x15, 0x00,        //     Logical Minimum (0)
++    0x25, 0x01,        //     Logical Maximum (1)
++    0x95, 0x05,        //     Report Count (5)
++    0x75, 0x01,        //     Report Size (1)
++    0x81, 0x02,        //     Input (Data,Var,Abs)
++    0x95, 0x01,        //     Report Count (1)
++    0x75, 0x03,        //     Report Size (3)
++    0x81, 0x03,        //     Input (Const,Var,Abs)
++    0x05, 0x01,        //     Usage Page (Generic Desktop)
++    0x09, 0x30,        //     Usage (X)
++    0x09, 0x31,        //     Usage (Y)
++    0x15, 0x00,        //     Logical Minimum (0)
++    0x27, 0xFF, 0xFF, 0x00, 0x00,  // Logical Maximum (65535)
++    0x75, 0x10,        //     Report Size (16)
++    0x95, 0x02,        //     Report Count (2)
++    0x81, 0x02,        //     Input (Data,Var,Abs)
++    0xC0,              //   End Collection
++
++    0xC0,              // End Collection
++};
++
++struct WinUHidApi {
++  HMODULE module = nullptr;
++  PFN_WinUHidGetDriverInterfaceVersion GetDriverInterfaceVersion = nullptr;
++  PFN_WinUHidCreateDevice CreateDevice = nullptr;
++  PFN_WinUHidSubmitInputReport SubmitInputReport = nullptr;
++  PFN_WinUHidStartDevice StartDevice = nullptr;
++  PFN_WinUHidCompleteWriteEvent CompleteWriteEvent = nullptr;
++  PFN_WinUHidCompleteReadEvent CompleteReadEvent = nullptr;
++  PFN_WinUHidDestroyDevice DestroyDevice = nullptr;
++};
++
++std::mutex g_mutex;
++WinUHidApi g_api;
++bool g_load_attempted = false;
++bool g_driver_ok = false;
++PWINUHID_DEVICE g_device = nullptr;
++UCHAR g_buttons = 0;
++
++// Resolve WinUHid.dll next to the host executable only (no PATH / CWD search).
++bool GetAppDirWinUHidPath(wchar_t* out, size_t out_count) {
++  if (!out || out_count == 0) {
++    return false;
++  }
++  DWORD n = GetModuleFileNameW(nullptr, out, static_cast<DWORD>(out_count));
++  if (n == 0 || n >= out_count) {
++    return false;
++  }
++  if (!PathRemoveFileSpecW(out)) {
++    return false;
++  }
++  return PathAppendW(out, L"WinUHid.dll") == TRUE;
++}
++
++bool AppDirDllPresent() {
++  wchar_t path[MAX_PATH] = {};
++  if (!GetAppDirWinUHidPath(path, MAX_PATH)) {
++    return false;
++  }
++  const DWORD attrs = GetFileAttributesW(path);
++  return attrs != INVALID_FILE_ATTRIBUTES &&
++         (attrs & FILE_ATTRIBUTE_DIRECTORY) == 0;
++}
++
++bool LoadWinUHidLocked() {
++  if (g_load_attempted) {
++    return g_api.module != nullptr && g_driver_ok;
++  }
++  g_load_attempted = true;
++
++  wchar_t dll_path[MAX_PATH] = {};
++  if (!GetAppDirWinUHidPath(dll_path, MAX_PATH)) {
++    return false;
++  }
++  if (GetFileAttributesW(dll_path) == INVALID_FILE_ATTRIBUTES) {
++    return false;
++  }
++
++  // Absolute app-dir path + restricted search: do not walk PATH / CWD.
++  HMODULE mod = LoadLibraryExW(
++      dll_path, nullptr,
++      LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR | LOAD_LIBRARY_SEARCH_SYSTEM32);
++  if (!mod) {
++    return false;
++  }
++
++  g_api.module = mod;
++  g_api.GetDriverInterfaceVersion =
++      reinterpret_cast<PFN_WinUHidGetDriverInterfaceVersion>(
++          GetProcAddress(mod, "WinUHidGetDriverInterfaceVersion"));
++  g_api.CreateDevice = reinterpret_cast<PFN_WinUHidCreateDevice>(
++      GetProcAddress(mod, "WinUHidCreateDevice"));
++  g_api.SubmitInputReport = reinterpret_cast<PFN_WinUHidSubmitInputReport>(
++      GetProcAddress(mod, "WinUHidSubmitInputReport"));
++  g_api.StartDevice = reinterpret_cast<PFN_WinUHidStartDevice>(
++      GetProcAddress(mod, "WinUHidStartDevice"));
++  g_api.CompleteWriteEvent = reinterpret_cast<PFN_WinUHidCompleteWriteEvent>(
++      GetProcAddress(mod, "WinUHidCompleteWriteEvent"));
++  g_api.CompleteReadEvent = reinterpret_cast<PFN_WinUHidCompleteReadEvent>(
++      GetProcAddress(mod, "WinUHidCompleteReadEvent"));
++  g_api.DestroyDevice = reinterpret_cast<PFN_WinUHidDestroyDevice>(
++      GetProcAddress(mod, "WinUHidDestroyDevice"));
++
++  if (!g_api.GetDriverInterfaceVersion || !g_api.CreateDevice ||
++      !g_api.SubmitInputReport || !g_api.StartDevice ||
++      !g_api.CompleteWriteEvent || !g_api.CompleteReadEvent ||
++      !g_api.DestroyDevice) {
++    FreeLibrary(mod);
++    g_api = {};
++    return false;
++  }
++
++  DWORD version = g_api.GetDriverInterfaceVersion();
++  g_driver_ok = version != 0;
++  if (!g_driver_ok) {
++    FreeLibrary(mod);
++    g_api = {};
++    return false;
++  }
++  return true;
++}
++
++VOID CALLBACK FeatureStubCallback(PVOID /*ctx*/, PWINUHID_DEVICE device,
++                                  const WINUHID_EVENT* event) {
++  // We do not advertise feature support; complete defensively if called.
++  if (!event || !g_api.CompleteWriteEvent || !g_api.CompleteReadEvent) {
++    return;
++  }
++  if (event->Type == WINUHID_EVENT_GET_FEATURE ||
++      event->Type == WINUHID_EVENT_READ_REPORT) {
++    g_api.CompleteReadEvent(device, event, nullptr, 0);
++  } else {
++    g_api.CompleteWriteEvent(device, event, FALSE);
++  }
++}
++
++bool CreateDeviceLocked() {
++  if (g_device) {
++    return true;
++  }
++  if (!LoadWinUHidLocked()) {
++    return false;
++  }
++
++  WINUHID_DEVICE_CONFIG config = {};
++  config.SupportedEvents = WINUHID_EVENT_NONE;
++  // Open-source CloudPlayPlus virtual mouse identity (not NetEase / GameViewer).
++  config.VendorID = 0x1209;   // pid.codes
++  config.ProductID = 0xC0FF;  // CloudPlayPlus virtual mouse
++  config.VersionNumber = 0x0100;
++  config.ReportDescriptorLength =
++      static_cast<USHORT>(sizeof(kMouseReportDescriptor));
++  config.ReportDescriptor = kMouseReportDescriptor;
++  config.InstanceID = L"CloudPlayPlusVirtualMouse";
++  config.ReadReportPeriodUs = 0;
++
++  g_device = g_api.CreateDevice(&config);
++  if (!g_device) {
++    return false;
++  }
++
++  if (!g_api.StartDevice(g_device, FeatureStubCallback, nullptr)) {
++    g_api.DestroyDevice(g_device);
++    g_device = nullptr;
++    return false;
++  }
++
++  VhidMouseRelReport empty = {};
++  empty.id = 0x01;
++  if (!g_api.SubmitInputReport(g_device, &empty, sizeof(empty))) {
++    g_api.DestroyDevice(g_device);
++    g_device = nullptr;
++    return false;
++  }
++
++  g_buttons = 0;
++  return true;
++}
++
++bool SubmitRelLocked(SHORT dx, SHORT dy, SHORT wheel, SHORT hwheel) {
++  if (!CreateDeviceLocked()) {
++    return false;
++  }
++  VhidMouseRelReport report = {};
++  report.id = 0x01;
++  report.buttons = g_buttons;
++  report.dx = dx;
++  report.dy = dy;
++  report.wheel = wheel;
++  report.hwheel = hwheel;
++  return g_api.SubmitInputReport(g_device, &report, sizeof(report)) == TRUE;
++}
++
++bool SubmitAbsLocked(USHORT x, USHORT y) {
++  if (!CreateDeviceLocked()) {
++    return false;
++  }
++  VhidMouseAbsReport report = {};
++  report.id = 0x02;
++  report.buttons = g_buttons;
++  report.x = x;
++  report.y = y;
++  return g_api.SubmitInputReport(g_device, &report, sizeof(report)) == TRUE;
++}
++
++}  // namespace
++
++bool VhidMouseIsDriverPresent() {
++  // Settings / availability probe: do NOT LoadLibrary or create a HID device.
++  // Only check that WinUHid.dll sits next to the host executable.
++  return AppDirDllPresent();
++}
++
++bool VhidMouseEnsureCreated() {
++  std::lock_guard<std::mutex> lock(g_mutex);
++  return CreateDeviceLocked();
++}
++
++void VhidMouseDestroy() {
++  std::lock_guard<std::mutex> lock(g_mutex);
++  if (g_device && g_api.DestroyDevice) {
++    g_api.DestroyDevice(g_device);
++    g_device = nullptr;
++  }
++  g_buttons = 0;
++  if (g_api.module) {
++    FreeLibrary(g_api.module);
++    g_api = {};
++  }
++  g_load_attempted = false;
++  g_driver_ok = false;
++}
++
++bool VhidMouseReportMotion(SHORT dx, SHORT dy) {
++  std::lock_guard<std::mutex> lock(g_mutex);
++  return SubmitRelLocked(dx, dy, 0, 0);
++}
++
++bool VhidMouseReportAbsolute(USHORT x, USHORT y) {
++  std::lock_guard<std::mutex> lock(g_mutex);
++  return SubmitAbsLocked(x, y);
++}
++
++bool VhidMouseReportButton(int buttonId, bool down) {
++  // buttonId: 1=left, 2=middle, 3=right, 4=X1, 5=X2 (matches plugin)
++  int bit = -1;
++  if (buttonId == 1) bit = 0;
++  else if (buttonId == 2) bit = 2;
++  else if (buttonId == 3) bit = 1;
++  else if (buttonId == 4) bit = 3;
++  else if (buttonId == 5) bit = 4;
++  else return false;
++
++  std::lock_guard<std::mutex> lock(g_mutex);
++  if (down) {
++    g_buttons = static_cast<UCHAR>(g_buttons | (1u << bit));
++  } else {
++    g_buttons = static_cast<UCHAR>(g_buttons & ~(1u << bit));
++  }
++  // Button state is shared; emit a relative zero-motion report so listeners
++  // see the update without jumping absolute position.
++  return SubmitRelLocked(0, 0, 0, 0);
++}
++
++bool VhidMouseReportScroll(SHORT scrollValue, bool horizontal) {
++  std::lock_guard<std::mutex> lock(g_mutex);
++  if (horizontal) {
++    return SubmitRelLocked(0, 0, 0, scrollValue);
++  }
++  return SubmitRelLocked(0, 0, scrollValue, 0);
++}

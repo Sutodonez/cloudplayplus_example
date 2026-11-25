@@ -1,0 +1,51 @@
+--- /dev/null
++++ windows/mouse_injector.h
+@@ -0,0 +1,48 @@
++#ifndef HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_
++#define HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_
++
++#include <cstdint>
++
++// Mouse injection backends for relative + absolute moves / buttons / wheel.
++// Keep the Dart MethodChannel surface stable: callers still use mouseMoveR /
++// mouseMoveA etc. Absolute path uses percent + screenId so multi-monitor /
++// multi-screen control can keep the same wire framing.
++enum class MouseInputBackend {
++  kSendInput = 0,  // user32 SendInput (default)
++  kVhid = 1,       // Virtual HID via WinUHid when driver is installed
++};
++
++// Sets preferred backend. When kVhid is requested but unavailable, falls back
++// to SendInput and returns false. Persists preference next to the exe so a
++// SYSTEM-elevated host process can restore it after registerService relaunch.
++bool MouseInjectorSetBackend(MouseInputBackend backend);
++
++// Restore preference persisted by a prior (possibly non-SYSTEM) process.
++// Call once at plugin registration before Dart SharedPreferences apply.
++void MouseInjectorRestorePersistedBackend();
++
++MouseInputBackend MouseInjectorGetBackend();
++
++// True when WinUHid.dll is present next to the host exe (no LoadLibrary /
++// no HID device creation — safe for settings probes).
++bool MouseInjectorIsVhidAvailable();
++
++// Active backend after the last SetBackend (may be SendInput after VHID fail).
++MouseInputBackend MouseInjectorGetEffectiveBackend();
++
++void MouseInjectorMoveRelative(double dx, double dy);
++
++// Absolute move: percent within [screenId] monitor. When VHID is effective,
++// maps onto the virtual desktop (0..65535) using the same monitor list as
++// SendInput (HardwareSimulatorPlugin::GetStaticMonitors).
++// Returns false if VHID was preferred but submission failed (caller may
++// fall back to SendInput).
++bool MouseInjectorMoveAbsolute(double percentX, double percentY, int screenId);
++
++void MouseInjectorButton(int buttonId, bool release);
++void MouseInjectorScroll(int distance, bool horizontal);
++
++// Tear down VHID device / DLL. Safe to call multiple times.
++void MouseInjectorShutdown();
++
++#endif  // HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_

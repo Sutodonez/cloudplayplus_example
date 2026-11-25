@@ -1,0 +1,58 @@
+--- lib/hardware_simulator.dart
++++ lib/hardware_simulator.dart
+@@ -8,6 +8,19 @@ class HWKeyboard {
+   }
+ }
+ 
++/// Host-side mouse injection backend.
++///
++/// Applies to both relative ([HWMouse.performMouseMoveRelative]) and absolute
++/// ([HWMouse.performMouseMoveAbsl]) host injection. Wire framing is unchanged.
++enum MouseInputBackend {
++  /// user32 SendInput (default).
++  sendInput,
++
++  /// Virtual HID mouse via WinUHid when the driver is installed
++  /// (relative report id 1 + absolute report id 2).
++  vhid,
++}
++
+ class HWMouse {
+   HWMouse();
+   void performMouseMoveRelative(double deltax, double deltay, int screenId) {
+@@ -94,6 +107,35 @@ class HardwareSimulator {
+     return HardwareSimulatorPlatform.instance.putImmersiveModeEnabled(enabled);
+   }
+ 
++  /// Prefer [MouseInputBackend.vhid] for relative + absolute host injection;
++  /// falls back to SendInput when WinUHid is missing and returns false.
++  static Future<bool> setMouseInputBackend(MouseInputBackend backend) {
++    return HardwareSimulatorPlatform.instance
++        .setMouseInputBackend(backend.index);
++  }
++
++  static Future<MouseInputBackend> getMouseInputBackend() async {
++    final index =
++        await HardwareSimulatorPlatform.instance.getMouseInputBackend();
++    if (index >= 0 && index < MouseInputBackend.values.length) {
++      return MouseInputBackend.values[index];
++    }
++    return MouseInputBackend.sendInput;
++  }
++
++  static Future<MouseInputBackend> getEffectiveMouseInputBackend() async {
++    final index = await HardwareSimulatorPlatform.instance
++        .getEffectiveMouseInputBackend();
++    if (index >= 0 && index < MouseInputBackend.values.length) {
++      return MouseInputBackend.values[index];
++    }
++    return MouseInputBackend.sendInput;
++  }
++
++  static Future<bool> isVhidMouseAvailable() {
++    return HardwareSimulatorPlatform.instance.isVhidMouseAvailable();
++  }
++
+   static Future<void> showNotification(String content) {
+     return HardwareSimulatorPlatform.instance.showNotification(content);
+   }

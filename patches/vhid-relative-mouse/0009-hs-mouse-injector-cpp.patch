@@ -1,0 +1,358 @@
+--- /dev/null
++++ windows/mouse_injector.cpp
+@@ -0,0 +1,355 @@
++#include "mouse_injector.h"
++
++#include "hardware_simulator_plugin.h"
++#include "vhid_mouse.h"
++
++#include <windows.h>
++#include <shlwapi.h>
++
++#include <algorithm>
++#include <atomic>
++#include <cmath>
++#include <future>
++#include <vector>
++
++#pragma comment(lib, "shlwapi.lib")
++
++namespace {
++
++std::atomic<int> g_preferred_backend{
++    static_cast<int>(MouseInputBackend::kSendInput)};
++std::atomic<int> g_effective_backend{
++    static_cast<int>(MouseInputBackend::kSendInput)};
++
++constexpr wchar_t kPersistFileName[] = L"cppp_mouse_backend.flag";
++
++bool GetPersistPath(wchar_t* out, size_t out_count) {
++  if (!out || out_count == 0) {
++    return false;
++  }
++  DWORD n = GetModuleFileNameW(nullptr, out, static_cast<DWORD>(out_count));
++  if (n == 0 || n >= out_count) {
++    return false;
++  }
++  if (!PathRemoveFileSpecW(out)) {
++    return false;
++  }
++  return PathAppendW(out, kPersistFileName) == TRUE;
++}
++
++void PersistPreferredBackend(MouseInputBackend backend) {
++  wchar_t path[MAX_PATH] = {};
++  if (!GetPersistPath(path, MAX_PATH)) {
++    return;
++  }
++  HANDLE file = CreateFileW(path, GENERIC_WRITE, FILE_SHARE_READ, nullptr,
++                            CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
++  if (file == INVALID_HANDLE_VALUE) {
++    return;
++  }
++  const char digit = (backend == MouseInputBackend::kVhid) ? '1' : '0';
++  DWORD written = 0;
++  WriteFile(file, &digit, 1, &written, nullptr);
++  CloseHandle(file);
++}
++
++bool ReadPersistedBackend(MouseInputBackend& out) {
++  wchar_t path[MAX_PATH] = {};
++  if (!GetPersistPath(path, MAX_PATH)) {
++    return false;
++  }
++  HANDLE file = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ, nullptr,
++                            OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
++  if (file == INVALID_HANDLE_VALUE) {
++    return false;
++  }
++  char digit = '0';
++  DWORD read = 0;
++  const BOOL ok = ReadFile(file, &digit, 1, &read, nullptr);
++  CloseHandle(file);
++  if (!ok || read != 1) {
++    return false;
++  }
++  out = (digit == '1') ? MouseInputBackend::kVhid
++                       : MouseInputBackend::kSendInput;
++  return true;
++}
++
++// Map percent + screenId onto virtual-desktop normalized 0..65535.
++// Uses the same monitor list as SendInput (`adjust_to_main_screen`) so
++// screenId indices stay consistent across backends.
++bool MapToVirtualDesktopAbs(int screenId, double percentX, double percentY,
++                            USHORT& out_x, USHORT& out_y) {
++  const auto& monitors =
++      hardware_simulator::HardwareSimulatorPlugin::GetStaticMonitors();
++  if (screenId < 0 || screenId >= static_cast<int>(monitors.size())) {
++    return false;
++  }
++
++  RECT bounds = monitors[0].rect;
++  for (const auto& m : monitors) {
++    bounds.left = (std::min)(bounds.left, m.rect.left);
++    bounds.top = (std::min)(bounds.top, m.rect.top);
++    bounds.right = (std::max)(bounds.right, m.rect.right);
++    bounds.bottom = (std::max)(bounds.bottom, m.rect.bottom);
++  }
++
++  const LONG vw = bounds.right - bounds.left;
++  const LONG vh = bounds.bottom - bounds.top;
++  if (vw <= 0 || vh <= 0) {
++    return false;
++  }
++
++  const auto& screen = monitors[screenId];
++  const double px =
++      screen.rect.left - bounds.left +
++      (screen.rect.right - screen.rect.left) * percentX;
++  const double py =
++      screen.rect.top - bounds.top +
++      (screen.rect.bottom - screen.rect.top) * percentY;
++
++  auto clamp_u16 = [](double v) -> USHORT {
++    if (v < 0.0) return 0;
++    if (v > 65535.0) return 65535;
++    return static_cast<USHORT>(std::lround(v));
++  };
++
++  out_x = clamp_u16(px * 65535.0 / static_cast<double>(vw));
++  out_y = clamp_u16(py * 65535.0 / static_cast<double>(vh));
++  return true;
++}
++
++// Desktop-sync SendInput helpers (mirrors hardware_simulator_plugin.cpp).
++thread_local HDESK g_last_input_desktop = nullptr;
++
++HDESK SyncThreadDesktop() {
++  HDESK hDesk = OpenInputDesktop(DF_ALLOWOTHERACCOUNTHOOK, FALSE, GENERIC_ALL);
++  if (!hDesk) {
++    return nullptr;
++  }
++  SetThreadDesktop(hDesk);
++  CloseDesktop(hDesk);
++  return hDesk;
++}
++
++void AsyncSendInputRetry(INPUT i) {
++  while (true) {
++    if (SendInput(1, &i, sizeof(INPUT)) == 1) {
++      break;
++    }
++    auto hDesk = SyncThreadDesktop();
++    if (g_last_input_desktop != hDesk) {
++      g_last_input_desktop = hDesk;
++    } else {
++      break;
++    }
++  }
++}
++
++void SendInputReliable(INPUT& i) {
++  if (SendInput(1, &i, sizeof(INPUT)) != 1) {
++    auto fut = std::async(std::launch::async, AsyncSendInputRetry, i);
++    fut.wait();
++  }
++}
++
++SHORT ClampToShort(double v) {
++  if (v > 32767.0) return 32767;
++  if (v < -32767.0) return -32767;
++  return static_cast<SHORT>(std::lround(v));
++}
++
++void SendInputMoveRelative(double dx, double dy) {
++  // Split oversized deltas so each SendInput stays within SHORT range.
++  double remaining_x = dx;
++  double remaining_y = dy;
++  // Cap iterations to avoid pathological loops from huge values.
++  for (int i = 0; i < 64; ++i) {
++    if (remaining_x == 0.0 && remaining_y == 0.0) {
++      break;
++    }
++    SHORT sx = ClampToShort(remaining_x);
++    SHORT sy = ClampToShort(remaining_y);
++    if (sx == 0 && sy == 0) {
++      break;
++    }
++
++    INPUT input = {};
++    input.type = INPUT_MOUSE;
++    input.mi.dwFlags = MOUSEEVENTF_MOVE;
++    input.mi.dx = sx;
++    input.mi.dy = sy;
++    SendInputReliable(input);
++
++    remaining_x -= sx;
++    remaining_y -= sy;
++  }
++}
++
++void SendInputButton(int button, bool release) {
++  INPUT i = {};
++  i.type = INPUT_MOUSE;
++  auto& mi = i.mi;
++  if (button == 1) {
++    mi.dwFlags = release ? MOUSEEVENTF_LEFTUP : MOUSEEVENTF_LEFTDOWN;
++  } else if (button == 2) {
++    mi.dwFlags = release ? MOUSEEVENTF_MIDDLEUP : MOUSEEVENTF_MIDDLEDOWN;
++  } else if (button == 3) {
++    mi.dwFlags = release ? MOUSEEVENTF_RIGHTUP : MOUSEEVENTF_RIGHTDOWN;
++  } else if (button == 4) {
++    mi.dwFlags = release ? MOUSEEVENTF_XUP : MOUSEEVENTF_XDOWN;
++    mi.mouseData = XBUTTON1;
++  } else {
++    mi.dwFlags = release ? MOUSEEVENTF_XUP : MOUSEEVENTF_XDOWN;
++    mi.mouseData = XBUTTON2;
++  }
++  SendInputReliable(i);
++}
++
++void SendInputScroll(int distance, bool horizontal) {
++  INPUT i = {};
++  i.type = INPUT_MOUSE;
++  i.mi.dwFlags = horizontal ? MOUSEEVENTF_HWHEEL : MOUSEEVENTF_WHEEL;
++  i.mi.mouseData = distance;
++  SendInputReliable(i);
++}
++
++bool TryActivateVhid() {
++  if (!VhidMouseIsDriverPresent()) {
++    return false;
++  }
++  if (!VhidMouseEnsureCreated()) {
++    VhidMouseDestroy();
++    return false;
++  }
++  return true;
++}
++
++void VhidMoveRelative(double dx, double dy) {
++  double remaining_x = dx;
++  double remaining_y = dy;
++  for (int i = 0; i < 64; ++i) {
++    if (remaining_x == 0.0 && remaining_y == 0.0) {
++      break;
++    }
++    SHORT sx = ClampToShort(remaining_x);
++    SHORT sy = ClampToShort(remaining_y);
++    if (sx == 0 && sy == 0) {
++      break;
++    }
++    if (!VhidMouseReportMotion(sx, sy)) {
++      // Fall back mid-stream so games keep receiving input.
++      g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++      SendInputMoveRelative(remaining_x, remaining_y);
++      return;
++    }
++    remaining_x -= sx;
++    remaining_y -= sy;
++  }
++}
++
++}  // namespace
++
++bool MouseInjectorSetBackend(MouseInputBackend backend) {
++  g_preferred_backend.store(static_cast<int>(backend));
++  PersistPreferredBackend(backend);
++  if (backend == MouseInputBackend::kSendInput) {
++    VhidMouseDestroy();
++    g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++    return true;
++  }
++
++  if (TryActivateVhid()) {
++    g_effective_backend.store(static_cast<int>(MouseInputBackend::kVhid));
++    return true;
++  }
++
++  g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++  return false;
++}
++
++void MouseInjectorRestorePersistedBackend() {
++  MouseInputBackend persisted = MouseInputBackend::kSendInput;
++  if (!ReadPersistedBackend(persisted)) {
++    return;
++  }
++  // Apply without re-writing the flag (SetBackend would rewrite the same value).
++  g_preferred_backend.store(static_cast<int>(persisted));
++  if (persisted == MouseInputBackend::kSendInput) {
++    VhidMouseDestroy();
++    g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++    return;
++  }
++  if (TryActivateVhid()) {
++    g_effective_backend.store(static_cast<int>(MouseInputBackend::kVhid));
++  } else {
++    g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++  }
++}
++
++MouseInputBackend MouseInjectorGetBackend() {
++  return static_cast<MouseInputBackend>(g_preferred_backend.load());
++}
++
++MouseInputBackend MouseInjectorGetEffectiveBackend() {
++  return static_cast<MouseInputBackend>(g_effective_backend.load());
++}
++
++bool MouseInjectorIsVhidAvailable() {
++  // Probe must not LoadLibrary / EnsureCreated (settings load path).
++  return VhidMouseIsDriverPresent();
++}
++
++void MouseInjectorMoveRelative(double dx, double dy) {
++  if (MouseInjectorGetEffectiveBackend() == MouseInputBackend::kVhid) {
++    VhidMoveRelative(dx, dy);
++  } else {
++    SendInputMoveRelative(dx, dy);
++  }
++}
++
++bool MouseInjectorMoveAbsolute(double percentX, double percentY, int screenId) {
++  if (MouseInjectorGetEffectiveBackend() != MouseInputBackend::kVhid) {
++    return false;
++  }
++  USHORT ax = 0;
++  USHORT ay = 0;
++  if (!MapToVirtualDesktopAbs(screenId, percentX, percentY, ax, ay)) {
++    return false;
++  }
++  if (!VhidMouseReportAbsolute(ax, ay)) {
++    g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++    return false;
++  }
++  return true;
++}
++
++void MouseInjectorButton(int buttonId, bool release) {
++  if (MouseInjectorGetEffectiveBackend() == MouseInputBackend::kVhid) {
++    if (!VhidMouseReportButton(buttonId, !release)) {
++      g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++      SendInputButton(buttonId, release);
++    }
++  } else {
++    SendInputButton(buttonId, release);
++  }
++}
++
++void MouseInjectorScroll(int distance, bool horizontal) {
++  if (MouseInjectorGetEffectiveBackend() == MouseInputBackend::kVhid) {
++    // HID wheel here is detent-oriented; map SendInput-style delta through.
++    SHORT value = ClampToShort(static_cast<double>(distance));
++    if (!VhidMouseReportScroll(value, horizontal)) {
++      g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++      SendInputScroll(distance, horizontal);
++    }
++  } else {
++    SendInputScroll(distance, horizontal);
++  }
++}
++
++void MouseInjectorShutdown() {
++  VhidMouseDestroy();
++  g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++  g_preferred_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++}

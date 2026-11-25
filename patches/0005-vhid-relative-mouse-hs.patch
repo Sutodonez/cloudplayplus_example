@@ -1,0 +1,1250 @@
+diff --git a/plugins/hardware_simulator/CHANGELOG.md b/plugins/hardware_simulator/CHANGELOG.md
+index 41cc7d8..fa54b79 100644
+--- a/plugins/hardware_simulator/CHANGELOG.md
++++ b/plugins/hardware_simulator/CHANGELOG.md
+@@ -1,3 +1,13 @@
++## Unreleased
++
++* Windows: optional virtual HID mouse (WinUHid) for relative
++  (`performMouseMoveRelative` / `mouseMoveR`) and absolute
++  (`performMouseMoveAbsl` / `mouseMoveA`) injection. Absolute report uses
++  virtual-desktop 0..65535 (multi-monitor ready). SendInput stays default with
++  SHORT-range split hardening. MethodChannel:
++  `setMouseInputBackend`, `getMouseInputBackend`, `getEffectiveMouseInputBackend`,
++  `isVhidMouseAvailable`.
++
+ ## 0.0.1
+ 
+ * TODO: Describe initial release.
+diff --git a/plugins/hardware_simulator/lib/hardware_simulator.dart b/plugins/hardware_simulator/lib/hardware_simulator.dart
+index 807057f..9317868 100644
+--- a/plugins/hardware_simulator/lib/hardware_simulator.dart
++++ b/plugins/hardware_simulator/lib/hardware_simulator.dart
+@@ -8,6 +8,19 @@ class HWKeyboard {
+   }
+ }
+ 
++/// Host-side mouse injection backend.
++///
++/// Applies to both relative ([HWMouse.performMouseMoveRelative]) and absolute
++/// ([HWMouse.performMouseMoveAbsl]) host injection. Wire framing is unchanged.
++enum MouseInputBackend {
++  /// user32 SendInput (default).
++  sendInput,
++
++  /// Virtual HID mouse via WinUHid when the driver is installed
++  /// (relative report id 1 + absolute report id 2).
++  vhid,
++}
++
+ class HWMouse {
+   HWMouse();
+   void performMouseMoveRelative(double deltax, double deltay, int screenId) {
+@@ -94,6 +107,35 @@ class HardwareSimulator {
+     return HardwareSimulatorPlatform.instance.putImmersiveModeEnabled(enabled);
+   }
+ 
++  /// Prefer [MouseInputBackend.vhid] for relative + absolute host injection;
++  /// falls back to SendInput when WinUHid is missing and returns false.
++  static Future<bool> setMouseInputBackend(MouseInputBackend backend) {
++    return HardwareSimulatorPlatform.instance
++        .setMouseInputBackend(backend.index);
++  }
++
++  static Future<MouseInputBackend> getMouseInputBackend() async {
++    final index =
++        await HardwareSimulatorPlatform.instance.getMouseInputBackend();
++    if (index >= 0 && index < MouseInputBackend.values.length) {
++      return MouseInputBackend.values[index];
++    }
++    return MouseInputBackend.sendInput;
++  }
++
++  static Future<MouseInputBackend> getEffectiveMouseInputBackend() async {
++    final index = await HardwareSimulatorPlatform.instance
++        .getEffectiveMouseInputBackend();
++    if (index >= 0 && index < MouseInputBackend.values.length) {
++      return MouseInputBackend.values[index];
++    }
++    return MouseInputBackend.sendInput;
++  }
++
++  static Future<bool> isVhidMouseAvailable() {
++    return HardwareSimulatorPlatform.instance.isVhidMouseAvailable();
++  }
++
+   static Future<void> showNotification(String content) {
+     return HardwareSimulatorPlatform.instance.showNotification(content);
+   }
+diff --git a/plugins/hardware_simulator/lib/hardware_simulator_method_channel.dart b/plugins/hardware_simulator/lib/hardware_simulator_method_channel.dart
+index 0b1af2f..b0294f2 100644
+--- a/plugins/hardware_simulator/lib/hardware_simulator_method_channel.dart
++++ b/plugins/hardware_simulator/lib/hardware_simulator_method_channel.dart
+@@ -317,6 +317,36 @@ class MethodChannelHardwareSimulator extends HardwareSimulatorPlatform {
+     });
+   }
+ 
++  @override
++  Future<bool> setMouseInputBackend(int backend) async {
++    final result =
++        await methodChannel.invokeMethod<bool>('setMouseInputBackend', {
++      'backend': backend,
++    });
++    return result ?? false;
++  }
++
++  @override
++  Future<int> getMouseInputBackend() async {
++    final result =
++        await methodChannel.invokeMethod<int>('getMouseInputBackend');
++    return result ?? 0;
++  }
++
++  @override
++  Future<int> getEffectiveMouseInputBackend() async {
++    final result =
++        await methodChannel.invokeMethod<int>('getEffectiveMouseInputBackend');
++    return result ?? 0;
++  }
++
++  @override
++  Future<bool> isVhidMouseAvailable() async {
++    final result =
++        await methodChannel.invokeMethod<bool>('isVhidMouseAvailable');
++    return result ?? false;
++  }
++
+   // Relative mouse movement.
+   @override
+   Future<void> performMouseMoveRelative(
+diff --git a/plugins/hardware_simulator/lib/hardware_simulator_platform_interface.dart b/plugins/hardware_simulator/lib/hardware_simulator_platform_interface.dart
+index 6b5eadf..68b183a 100644
+--- a/plugins/hardware_simulator/lib/hardware_simulator_platform_interface.dart
++++ b/plugins/hardware_simulator/lib/hardware_simulator_platform_interface.dart
+@@ -160,6 +160,24 @@ abstract class HardwareSimulatorPlatform extends PlatformInterface {
+     throw UnimplementedError('performKeyEvent() has not been implemented.');
+   }
+ 
++  /// Mouse injection backend: 0 = SendInput, 1 = Virtual HID (WinUHid).
++  Future<bool> setMouseInputBackend(int backend) {
++    throw UnimplementedError('setMouseInputBackend() has not been implemented.');
++  }
++
++  Future<int> getMouseInputBackend() {
++    throw UnimplementedError('getMouseInputBackend() has not been implemented.');
++  }
++
++  Future<int> getEffectiveMouseInputBackend() {
++    throw UnimplementedError(
++        'getEffectiveMouseInputBackend() has not been implemented.');
++  }
++
++  Future<bool> isVhidMouseAvailable() {
++    throw UnimplementedError('isVhidMouseAvailable() has not been implemented.');
++  }
++
+   // Relative mouse movement.
+   Future<void> performMouseMoveRelative(
+       double deltax, double deltay, int screenId) async {
+diff --git a/plugins/hardware_simulator/macos/Classes/HardwareSimulatorPlugin.swift b/plugins/hardware_simulator/macos/Classes/HardwareSimulatorPlugin.swift
+index d71a59a..ef56e36 100644
+--- a/plugins/hardware_simulator/macos/Classes/HardwareSimulatorPlugin.swift
++++ b/plugins/hardware_simulator/macos/Classes/HardwareSimulatorPlugin.swift
+@@ -569,6 +569,13 @@ public class HardwareSimulatorPlugin: NSObject, FlutterPlugin {
+       } else {
+         result(FlutterError(code: "BAD_ARGS", message: "Missing or incorrect arguments for MouseMove ABSL", details: nil))
+       }
++    case "setMouseInputBackend":
++      // Virtual HID mouse is Windows-only; acknowledge SendInput-equivalent.
++      result(true)
++    case "getMouseInputBackend", "getEffectiveMouseInputBackend":
++      result(0)
++    case "isVhidMouseAvailable":
++      result(false)
+     case "mouseMoveR":
+       if let args = call.arguments as? [String: Any],
+         let percentX = args["x"] as? Double,
+diff --git a/plugins/hardware_simulator/test/hardware_simulator_method_channel_test.dart b/plugins/hardware_simulator/test/hardware_simulator_method_channel_test.dart
+index 1e4abe8..32d2de0 100644
+--- a/plugins/hardware_simulator/test/hardware_simulator_method_channel_test.dart
++++ b/plugins/hardware_simulator/test/hardware_simulator_method_channel_test.dart
+@@ -8,20 +8,37 @@ void main() {
+   MethodChannelHardwareSimulator platform = MethodChannelHardwareSimulator();
+   const MethodChannel channel = MethodChannel('hardware_simulator');
+ 
++  final Map<String, dynamic> responses = {
++    'getPlatformVersion': '42',
++    'setMouseInputBackend': true,
++    'getMouseInputBackend': 1,
++    'getEffectiveMouseInputBackend': 0,
++    'isVhidMouseAvailable': false,
++  };
++
+   setUp(() {
+-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
++    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
++        .setMockMethodCallHandler(
+       channel,
+       (MethodCall methodCall) async {
+-        return '42';
++        return responses[methodCall.method];
+       },
+     );
+   });
+ 
+   tearDown(() {
+-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
++    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
++        .setMockMethodCallHandler(channel, null);
+   });
+ 
+   test('getPlatformVersion', () async {
+     expect(await platform.getPlatformVersion(), '42');
+   });
++
++  test('mouse input backend channel methods', () async {
++    expect(await platform.setMouseInputBackend(1), isTrue);
++    expect(await platform.getMouseInputBackend(), 1);
++    expect(await platform.getEffectiveMouseInputBackend(), 0);
++    expect(await platform.isVhidMouseAvailable(), isFalse);
++  });
+ }
+diff --git a/plugins/hardware_simulator/windows/CMakeLists.txt b/plugins/hardware_simulator/windows/CMakeLists.txt
+index bead0cf..1b4645a 100644
+--- a/plugins/hardware_simulator/windows/CMakeLists.txt
++++ b/plugins/hardware_simulator/windows/CMakeLists.txt
+@@ -24,6 +24,10 @@ list(APPEND PLUGIN_SOURCES
+   "cursor_monitor.h"
+   "gamecontroller_manager.cc"
+   "gamecontroller_manager.h"
++  "mouse_injector.cpp"
++  "mouse_injector.h"
++  "vhid_mouse.cpp"
++  "vhid_mouse.h"
+   "notification_window.cc"
+   "notification_window.h"
+   "virtual_display.cc"
+diff --git a/plugins/hardware_simulator/windows/hardware_simulator_plugin.cpp b/plugins/hardware_simulator/windows/hardware_simulator_plugin.cpp
+index adcb2d2..a33929f 100644
+--- a/plugins/hardware_simulator/windows/hardware_simulator_plugin.cpp
++++ b/plugins/hardware_simulator/windows/hardware_simulator_plugin.cpp
+@@ -2,6 +2,7 @@
+ 
+ #include "cursor_monitor.h"
+ #include "gamecontroller_manager.h"
++#include "mouse_injector.h"
+ #include "notification_window.h"
+ #include "virtual_display_control.h"
+ #include "SmartKeyboardBlocker.h"
+@@ -800,6 +801,9 @@ void HardwareSimulatorPlugin::RegisterWithRegistrar(
+ 
+   // start to monitor display resolution and DPI.
+   HardwareSimulatorPlugin::UpdateStaticMonitors();
++  // Restore VHID preference persisted by a prior user-session process so a
++  // SYSTEM host (after registerService relaunch) injects with the same backend.
++  MouseInjectorRestorePersistedBackend();
+   dpi_monitor_proc_id_ = registrar->RegisterTopLevelWindowProcDelegate(
+       [](HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) -> std::optional<LRESULT> {
+           if (message == WM_DPICHANGED || message == WM_DISPLAYCHANGE) {
+@@ -824,6 +828,7 @@ HardwareSimulatorPlugin::~HardwareSimulatorPlugin() {
+     destroyTouchDevice();
+     destroyPenDevice();
+     CleanupCursorLock();
++    MouseInjectorShutdown();
+     if (dpi_monitor_proc_id_.has_value()) {
+         registrar_->UnregisterTopLevelWindowProcDelegate(dpi_monitor_proc_id_.value());
+         dpi_monitor_proc_id_.reset();
+@@ -857,45 +862,7 @@ void send_input(INPUT& i) {
+ }
+ 
+ void performMouseButton(int button, bool release) {
+-    //SHORT KEY_STATE_DOWN = 0x8000;
+-
+-    INPUT i{};
+-
+-    i.type = INPUT_MOUSE;
+-    auto& mi = i.mi;
+-
+-    int mouse_button;
+-    if (button == 1) {
+-        mi.dwFlags = release ? MOUSEEVENTF_LEFTUP : MOUSEEVENTF_LEFTDOWN;
+-        mouse_button = VK_LBUTTON;
+-    }
+-    else if (button == 2) {
+-        mi.dwFlags = release ? MOUSEEVENTF_MIDDLEUP : MOUSEEVENTF_MIDDLEDOWN;
+-        mouse_button = VK_MBUTTON;
+-    }
+-    else if (button == 3) {
+-        mi.dwFlags = release ? MOUSEEVENTF_RIGHTUP : MOUSEEVENTF_RIGHTDOWN;
+-        mouse_button = VK_RBUTTON;
+-    }
+-    else if (button == 4) {
+-        mi.dwFlags = release ? MOUSEEVENTF_XUP : MOUSEEVENTF_XDOWN;
+-        mi.mouseData = XBUTTON1;
+-        mouse_button = VK_XBUTTON1;
+-    }
+-    else {
+-        mi.dwFlags = release ? MOUSEEVENTF_XUP : MOUSEEVENTF_XDOWN;
+-        mi.mouseData = XBUTTON2;
+-        mouse_button = VK_XBUTTON2;
+-    }
+-    
+-    //Haichao: what is it used for? It blocks button up for UAC window.
+-    /*auto key_state = GetAsyncKeyState(mouse_button);
+-    bool key_state_down = (key_state & 0x8000) != 0;
+-    if (key_state_down != release) {
+-        return;
+-    }*/
+-
+-    send_input(i);
++    MouseInjectorButton(button, release);
+ }
+ 
+ #pragma warning(disable:4244)
+@@ -1037,19 +1004,19 @@ bool setPrimaryDisplay(int displayIndex) {
+ }
+ 
+ void performMouseMoveRelative(double x,double y){
+-    INPUT i {};
+-
+-    i.type = INPUT_MOUSE;
+-    auto &mi = i.mi;
+-
+-    mi.dwFlags = MOUSEEVENTF_MOVE;
+-    mi.dx = x;
+-    mi.dy = y;
+-
+-    send_input(i);
++    MouseInjectorMoveRelative(x, y);
+ }
+ 
+ void performMouseMoveAbsl(double x,double y,int screenId){
++    // When VHID is active, absolute moves also go through WinUHid (report id 2)
++    // so relative + absolute share one optional backend (multi-screen ready).
++    if (MouseInjectorGetEffectiveBackend() == MouseInputBackend::kVhid) {
++        if (MouseInjectorMoveAbsolute(x, y, screenId)) {
++            return;
++        }
++        // Mid-stream VHID failure: fall through to SendInput.
++    }
++
+     INPUT i {};
+ 
+     i.type = INPUT_MOUSE;
+@@ -1106,27 +1073,11 @@ void performMouseMoveToWindowPosition(double percentx, double percenty) {
+ }
+ 
+ void scroll(int distance) {
+-    INPUT i{};
+-
+-    i.type = INPUT_MOUSE;
+-    auto& mi = i.mi;
+-
+-    mi.dwFlags = MOUSEEVENTF_WHEEL;
+-    mi.mouseData = distance;
+-
+-    send_input(i);
++    MouseInjectorScroll(distance, false);
+ }
+ 
+ void hscroll(int distance) {
+-    INPUT i{};
+-
+-    i.type = INPUT_MOUSE;
+-    auto& mi = i.mi;
+-
+-    mi.dwFlags = MOUSEEVENTF_HWHEEL;
+-    mi.mouseData = distance;
+-
+-    send_input(i);
++    MouseInjectorScroll(distance, true);
+ }
+ 
+ std::wstring stringToWstring(const std::string& str) {
+@@ -1162,6 +1113,21 @@ void HardwareSimulatorPlugin::HandleMethodCall(
+         auto isDown = (args->find(flutter::EncodableValue("isDown")))->second;
+         performKeyEvent(static_cast<int>(std::get<int>((keyCode))), static_cast<bool>(std::get<bool>((isDown))));
+         result->Success(nullptr);
++  } else if (method_call.method_name().compare("setMouseInputBackend") == 0) {
++        auto backend_value = (args->find(flutter::EncodableValue("backend")))->second;
++        int backend = static_cast<int>(std::get<int>(backend_value));
++        MouseInputBackend chosen = (backend == 1) ? MouseInputBackend::kVhid
++                                                  : MouseInputBackend::kSendInput;
++        bool ok = MouseInjectorSetBackend(chosen);
++        result->Success(flutter::EncodableValue(ok));
++  } else if (method_call.method_name().compare("getMouseInputBackend") == 0) {
++        result->Success(flutter::EncodableValue(
++            static_cast<int>(MouseInjectorGetBackend())));
++  } else if (method_call.method_name().compare("getEffectiveMouseInputBackend") == 0) {
++        result->Success(flutter::EncodableValue(
++            static_cast<int>(MouseInjectorGetEffectiveBackend())));
++  } else if (method_call.method_name().compare("isVhidMouseAvailable") == 0) {
++        result->Success(flutter::EncodableValue(MouseInjectorIsVhidAvailable()));
+   } else if (method_call.method_name().compare("mouseMoveR") == 0) {
+         auto deltax = (args->find(flutter::EncodableValue("x")))->second;
+         auto deltay = (args->find(flutter::EncodableValue("y")))->second;
+diff --git a/plugins/hardware_simulator/windows/mouse_injector.cpp b/plugins/hardware_simulator/windows/mouse_injector.cpp
+new file mode 100644
+index 0000000..7882f34
+--- /dev/null
++++ b/plugins/hardware_simulator/windows/mouse_injector.cpp
+@@ -0,0 +1,355 @@
++#include "mouse_injector.h"
++
++#include "hardware_simulator_plugin.h"
++#include "vhid_mouse.h"
++
++#include <windows.h>
++#include <shlwapi.h>
++
++#include <algorithm>
++#include <atomic>
++#include <cmath>
++#include <future>
++#include <vector>
++
++#pragma comment(lib, "shlwapi.lib")
++
++namespace {
++
++std::atomic<int> g_preferred_backend{
++    static_cast<int>(MouseInputBackend::kSendInput)};
++std::atomic<int> g_effective_backend{
++    static_cast<int>(MouseInputBackend::kSendInput)};
++
++constexpr wchar_t kPersistFileName[] = L"cppp_mouse_backend.flag";
++
++bool GetPersistPath(wchar_t* out, size_t out_count) {
++  if (!out || out_count == 0) {
++    return false;
++  }
++  DWORD n = GetModuleFileNameW(nullptr, out, static_cast<DWORD>(out_count));
++  if (n == 0 || n >= out_count) {
++    return false;
++  }
++  if (!PathRemoveFileSpecW(out)) {
++    return false;
++  }
++  return PathAppendW(out, kPersistFileName) == TRUE;
++}
++
++void PersistPreferredBackend(MouseInputBackend backend) {
++  wchar_t path[MAX_PATH] = {};
++  if (!GetPersistPath(path, MAX_PATH)) {
++    return;
++  }
++  HANDLE file = CreateFileW(path, GENERIC_WRITE, FILE_SHARE_READ, nullptr,
++                            CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
++  if (file == INVALID_HANDLE_VALUE) {
++    return;
++  }
++  const char digit = (backend == MouseInputBackend::kVhid) ? '1' : '0';
++  DWORD written = 0;
++  WriteFile(file, &digit, 1, &written, nullptr);
++  CloseHandle(file);
++}
++
++bool ReadPersistedBackend(MouseInputBackend& out) {
++  wchar_t path[MAX_PATH] = {};
++  if (!GetPersistPath(path, MAX_PATH)) {
++    return false;
++  }
++  HANDLE file = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ, nullptr,
++                            OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
++  if (file == INVALID_HANDLE_VALUE) {
++    return false;
++  }
++  char digit = '0';
++  DWORD read = 0;
++  const BOOL ok = ReadFile(file, &digit, 1, &read, nullptr);
++  CloseHandle(file);
++  if (!ok || read != 1) {
++    return false;
++  }
++  out = (digit == '1') ? MouseInputBackend::kVhid
++                       : MouseInputBackend::kSendInput;
++  return true;
++}
++
++// Map percent + screenId onto virtual-desktop normalized 0..65535.
++// Uses the same monitor list as SendInput (`adjust_to_main_screen`) so
++// screenId indices stay consistent across backends.
++bool MapToVirtualDesktopAbs(int screenId, double percentX, double percentY,
++                            USHORT& out_x, USHORT& out_y) {
++  const auto& monitors =
++      hardware_simulator::HardwareSimulatorPlugin::GetStaticMonitors();
++  if (screenId < 0 || screenId >= static_cast<int>(monitors.size())) {
++    return false;
++  }
++
++  RECT bounds = monitors[0].rect;
++  for (const auto& m : monitors) {
++    bounds.left = (std::min)(bounds.left, m.rect.left);
++    bounds.top = (std::min)(bounds.top, m.rect.top);
++    bounds.right = (std::max)(bounds.right, m.rect.right);
++    bounds.bottom = (std::max)(bounds.bottom, m.rect.bottom);
++  }
++
++  const LONG vw = bounds.right - bounds.left;
++  const LONG vh = bounds.bottom - bounds.top;
++  if (vw <= 0 || vh <= 0) {
++    return false;
++  }
++
++  const auto& screen = monitors[screenId];
++  const double px =
++      screen.rect.left - bounds.left +
++      (screen.rect.right - screen.rect.left) * percentX;
++  const double py =
++      screen.rect.top - bounds.top +
++      (screen.rect.bottom - screen.rect.top) * percentY;
++
++  auto clamp_u16 = [](double v) -> USHORT {
++    if (v < 0.0) return 0;
++    if (v > 65535.0) return 65535;
++    return static_cast<USHORT>(std::lround(v));
++  };
++
++  out_x = clamp_u16(px * 65535.0 / static_cast<double>(vw));
++  out_y = clamp_u16(py * 65535.0 / static_cast<double>(vh));
++  return true;
++}
++
++// Desktop-sync SendInput helpers (mirrors hardware_simulator_plugin.cpp).
++thread_local HDESK g_last_input_desktop = nullptr;
++
++HDESK SyncThreadDesktop() {
++  HDESK hDesk = OpenInputDesktop(DF_ALLOWOTHERACCOUNTHOOK, FALSE, GENERIC_ALL);
++  if (!hDesk) {
++    return nullptr;
++  }
++  SetThreadDesktop(hDesk);
++  CloseDesktop(hDesk);
++  return hDesk;
++}
++
++void AsyncSendInputRetry(INPUT i) {
++  while (true) {
++    if (SendInput(1, &i, sizeof(INPUT)) == 1) {
++      break;
++    }
++    auto hDesk = SyncThreadDesktop();
++    if (g_last_input_desktop != hDesk) {
++      g_last_input_desktop = hDesk;
++    } else {
++      break;
++    }
++  }
++}
++
++void SendInputReliable(INPUT& i) {
++  if (SendInput(1, &i, sizeof(INPUT)) != 1) {
++    auto fut = std::async(std::launch::async, AsyncSendInputRetry, i);
++    fut.wait();
++  }
++}
++
++SHORT ClampToShort(double v) {
++  if (v > 32767.0) return 32767;
++  if (v < -32767.0) return -32767;
++  return static_cast<SHORT>(std::lround(v));
++}
++
++void SendInputMoveRelative(double dx, double dy) {
++  // Split oversized deltas so each SendInput stays within SHORT range.
++  double remaining_x = dx;
++  double remaining_y = dy;
++  // Cap iterations to avoid pathological loops from huge values.
++  for (int i = 0; i < 64; ++i) {
++    if (remaining_x == 0.0 && remaining_y == 0.0) {
++      break;
++    }
++    SHORT sx = ClampToShort(remaining_x);
++    SHORT sy = ClampToShort(remaining_y);
++    if (sx == 0 && sy == 0) {
++      break;
++    }
++
++    INPUT input = {};
++    input.type = INPUT_MOUSE;
++    input.mi.dwFlags = MOUSEEVENTF_MOVE;
++    input.mi.dx = sx;
++    input.mi.dy = sy;
++    SendInputReliable(input);
++
++    remaining_x -= sx;
++    remaining_y -= sy;
++  }
++}
++
++void SendInputButton(int button, bool release) {
++  INPUT i = {};
++  i.type = INPUT_MOUSE;
++  auto& mi = i.mi;
++  if (button == 1) {
++    mi.dwFlags = release ? MOUSEEVENTF_LEFTUP : MOUSEEVENTF_LEFTDOWN;
++  } else if (button == 2) {
++    mi.dwFlags = release ? MOUSEEVENTF_MIDDLEUP : MOUSEEVENTF_MIDDLEDOWN;
++  } else if (button == 3) {
++    mi.dwFlags = release ? MOUSEEVENTF_RIGHTUP : MOUSEEVENTF_RIGHTDOWN;
++  } else if (button == 4) {
++    mi.dwFlags = release ? MOUSEEVENTF_XUP : MOUSEEVENTF_XDOWN;
++    mi.mouseData = XBUTTON1;
++  } else {
++    mi.dwFlags = release ? MOUSEEVENTF_XUP : MOUSEEVENTF_XDOWN;
++    mi.mouseData = XBUTTON2;
++  }
++  SendInputReliable(i);
++}
++
++void SendInputScroll(int distance, bool horizontal) {
++  INPUT i = {};
++  i.type = INPUT_MOUSE;
++  i.mi.dwFlags = horizontal ? MOUSEEVENTF_HWHEEL : MOUSEEVENTF_WHEEL;
++  i.mi.mouseData = distance;
++  SendInputReliable(i);
++}
++
++bool TryActivateVhid() {
++  if (!VhidMouseIsDriverPresent()) {
++    return false;
++  }
++  if (!VhidMouseEnsureCreated()) {
++    VhidMouseDestroy();
++    return false;
++  }
++  return true;
++}
++
++void VhidMoveRelative(double dx, double dy) {
++  double remaining_x = dx;
++  double remaining_y = dy;
++  for (int i = 0; i < 64; ++i) {
++    if (remaining_x == 0.0 && remaining_y == 0.0) {
++      break;
++    }
++    SHORT sx = ClampToShort(remaining_x);
++    SHORT sy = ClampToShort(remaining_y);
++    if (sx == 0 && sy == 0) {
++      break;
++    }
++    if (!VhidMouseReportMotion(sx, sy)) {
++      // Fall back mid-stream so games keep receiving input.
++      g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++      SendInputMoveRelative(remaining_x, remaining_y);
++      return;
++    }
++    remaining_x -= sx;
++    remaining_y -= sy;
++  }
++}
++
++}  // namespace
++
++bool MouseInjectorSetBackend(MouseInputBackend backend) {
++  g_preferred_backend.store(static_cast<int>(backend));
++  PersistPreferredBackend(backend);
++  if (backend == MouseInputBackend::kSendInput) {
++    VhidMouseDestroy();
++    g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++    return true;
++  }
++
++  if (TryActivateVhid()) {
++    g_effective_backend.store(static_cast<int>(MouseInputBackend::kVhid));
++    return true;
++  }
++
++  g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++  return false;
++}
++
++void MouseInjectorRestorePersistedBackend() {
++  MouseInputBackend persisted = MouseInputBackend::kSendInput;
++  if (!ReadPersistedBackend(persisted)) {
++    return;
++  }
++  // Apply without re-writing the flag (SetBackend would rewrite the same value).
++  g_preferred_backend.store(static_cast<int>(persisted));
++  if (persisted == MouseInputBackend::kSendInput) {
++    VhidMouseDestroy();
++    g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++    return;
++  }
++  if (TryActivateVhid()) {
++    g_effective_backend.store(static_cast<int>(MouseInputBackend::kVhid));
++  } else {
++    g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++  }
++}
++
++MouseInputBackend MouseInjectorGetBackend() {
++  return static_cast<MouseInputBackend>(g_preferred_backend.load());
++}
++
++MouseInputBackend MouseInjectorGetEffectiveBackend() {
++  return static_cast<MouseInputBackend>(g_effective_backend.load());
++}
++
++bool MouseInjectorIsVhidAvailable() {
++  // Probe must not LoadLibrary / EnsureCreated (settings load path).
++  return VhidMouseIsDriverPresent();
++}
++
++void MouseInjectorMoveRelative(double dx, double dy) {
++  if (MouseInjectorGetEffectiveBackend() == MouseInputBackend::kVhid) {
++    VhidMoveRelative(dx, dy);
++  } else {
++    SendInputMoveRelative(dx, dy);
++  }
++}
++
++bool MouseInjectorMoveAbsolute(double percentX, double percentY, int screenId) {
++  if (MouseInjectorGetEffectiveBackend() != MouseInputBackend::kVhid) {
++    return false;
++  }
++  USHORT ax = 0;
++  USHORT ay = 0;
++  if (!MapToVirtualDesktopAbs(screenId, percentX, percentY, ax, ay)) {
++    return false;
++  }
++  if (!VhidMouseReportAbsolute(ax, ay)) {
++    g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++    return false;
++  }
++  return true;
++}
++
++void MouseInjectorButton(int buttonId, bool release) {
++  if (MouseInjectorGetEffectiveBackend() == MouseInputBackend::kVhid) {
++    if (!VhidMouseReportButton(buttonId, !release)) {
++      g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++      SendInputButton(buttonId, release);
++    }
++  } else {
++    SendInputButton(buttonId, release);
++  }
++}
++
++void MouseInjectorScroll(int distance, bool horizontal) {
++  if (MouseInjectorGetEffectiveBackend() == MouseInputBackend::kVhid) {
++    // HID wheel here is detent-oriented; map SendInput-style delta through.
++    SHORT value = ClampToShort(static_cast<double>(distance));
++    if (!VhidMouseReportScroll(value, horizontal)) {
++      g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++      SendInputScroll(distance, horizontal);
++    }
++  } else {
++    SendInputScroll(distance, horizontal);
++  }
++}
++
++void MouseInjectorShutdown() {
++  VhidMouseDestroy();
++  g_effective_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++  g_preferred_backend.store(static_cast<int>(MouseInputBackend::kSendInput));
++}
+diff --git a/plugins/hardware_simulator/windows/mouse_injector.h b/plugins/hardware_simulator/windows/mouse_injector.h
+new file mode 100644
+index 0000000..f0d1345
+--- /dev/null
++++ b/plugins/hardware_simulator/windows/mouse_injector.h
+@@ -0,0 +1,48 @@
++#ifndef HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_
++#define HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_
++
++#include <cstdint>
++
++// Mouse injection backends for relative + absolute moves / buttons / wheel.
++// Keep the Dart MethodChannel surface stable: callers still use mouseMoveR /
++// mouseMoveA etc. Absolute path uses percent + screenId so multi-monitor /
++// multi-screen control can keep the same wire framing.
++enum class MouseInputBackend {
++  kSendInput = 0,  // user32 SendInput (default)
++  kVhid = 1,       // Virtual HID via WinUHid when driver is installed
++};
++
++// Sets preferred backend. When kVhid is requested but unavailable, falls back
++// to SendInput and returns false. Persists preference next to the exe so a
++// SYSTEM-elevated host process can restore it after registerService relaunch.
++bool MouseInjectorSetBackend(MouseInputBackend backend);
++
++// Restore preference persisted by a prior (possibly non-SYSTEM) process.
++// Call once at plugin registration before Dart SharedPreferences apply.
++void MouseInjectorRestorePersistedBackend();
++
++MouseInputBackend MouseInjectorGetBackend();
++
++// True when WinUHid.dll is present next to the host exe (no LoadLibrary /
++// no HID device creation — safe for settings probes).
++bool MouseInjectorIsVhidAvailable();
++
++// Active backend after the last SetBackend (may be SendInput after VHID fail).
++MouseInputBackend MouseInjectorGetEffectiveBackend();
++
++void MouseInjectorMoveRelative(double dx, double dy);
++
++// Absolute move: percent within [screenId] monitor. When VHID is effective,
++// maps onto the virtual desktop (0..65535) using the same monitor list as
++// SendInput (HardwareSimulatorPlugin::GetStaticMonitors).
++// Returns false if VHID was preferred but submission failed (caller may
++// fall back to SendInput).
++bool MouseInjectorMoveAbsolute(double percentX, double percentY, int screenId);
++
++void MouseInjectorButton(int buttonId, bool release);
++void MouseInjectorScroll(int distance, bool horizontal);
++
++// Tear down VHID device / DLL. Safe to call multiple times.
++void MouseInjectorShutdown();
++
++#endif  // HARDWARE_SIMULATOR_MOUSE_INJECTOR_H_
+diff --git a/plugins/hardware_simulator/windows/vhid_mouse.cpp b/plugins/hardware_simulator/windows/vhid_mouse.cpp
+new file mode 100644
+index 0000000..89d7b18
+--- /dev/null
++++ b/plugins/hardware_simulator/windows/vhid_mouse.cpp
+@@ -0,0 +1,411 @@
++#include "vhid_mouse.h"
++
++#include <shlwapi.h>
++
++#include <mutex>
++#include <vector>
++
++#pragma comment(lib, "shlwapi.lib")
++
++namespace {
++
++// Minimal WinUHid C API surface (dynamically resolved). See WinUHid.h upstream.
++typedef enum _WINUHID_EVENT_TYPE {
++  WINUHID_EVENT_NONE = 0x0,
++  WINUHID_EVENT_GET_FEATURE = 0x1,
++  WINUHID_EVENT_SET_FEATURE = 0x2,
++  WINUHID_EVENT_WRITE_REPORT = 0x4,
++  WINUHID_EVENT_READ_REPORT = 0x8,
++} WINUHID_EVENT_TYPE;
++
++typedef struct _WINUHID_DEVICE_CONFIG {
++  WINUHID_EVENT_TYPE SupportedEvents;
++  USHORT VendorID;
++  USHORT ProductID;
++  USHORT VersionNumber;
++  USHORT ReportDescriptorLength;
++  LPCVOID ReportDescriptor;
++  GUID ContainerId;
++  PCWSTR InstanceID;
++  PCWSTR HardwareIDs;
++  UINT ReadReportPeriodUs;
++} WINUHID_DEVICE_CONFIG;
++
++typedef ULONG WINUHID_REQUEST_ID;
++
++typedef struct _WINUHID_EVENT {
++  WINUHID_EVENT_TYPE Type;
++  WINUHID_REQUEST_ID RequestId;
++  UCHAR ReportId;
++  union {
++    struct {
++      ULONG DataLength;
++      UCHAR Data[1];
++    } Write;
++    struct {
++      ULONG DataLength;
++    } Read;
++  };
++} WINUHID_EVENT;
++
++typedef struct _WINUHID_DEVICE* PWINUHID_DEVICE;
++
++typedef DWORD(WINAPI* PFN_WinUHidGetDriverInterfaceVersion)(VOID);
++typedef PWINUHID_DEVICE(WINAPI* PFN_WinUHidCreateDevice)(
++    const WINUHID_DEVICE_CONFIG* Config);
++typedef BOOL(WINAPI* PFN_WinUHidSubmitInputReport)(PWINUHID_DEVICE Device,
++                                                   LPCVOID Report,
++                                                   DWORD ReportSize);
++typedef VOID(WINAPI* PFN_WinUHidEventCallback)(PVOID CallbackContext,
++                                               PWINUHID_DEVICE Device,
++                                               const WINUHID_EVENT* Event);
++typedef BOOL(WINAPI* PFN_WinUHidStartDevice)(
++    PWINUHID_DEVICE Device, PFN_WinUHidEventCallback EventCallback,
++    PVOID CallbackContext);
++typedef VOID(WINAPI* PFN_WinUHidCompleteWriteEvent)(PWINUHID_DEVICE Device,
++                                                   const WINUHID_EVENT* Event,
++                                                   BOOL Success);
++typedef VOID(WINAPI* PFN_WinUHidCompleteReadEvent)(PWINUHID_DEVICE Device,
++                                                  const WINUHID_EVENT* Event,
++                                                  LPCVOID Data,
++                                                  DWORD DataLength);
++typedef VOID(WINAPI* PFN_WinUHidDestroyDevice)(PWINUHID_DEVICE Device);
++
++// Relative mouse report layout (report id 1):
++// buttons(5)+pad(3), dx:16, dy:16, wheel:16, hwheel:16
++#pragma pack(push, 1)
++struct VhidMouseRelReport {
++  UCHAR id;
++  UCHAR buttons;
++  SHORT dx;
++  SHORT dy;
++  SHORT wheel;
++  SHORT hwheel;
++};
++
++// Absolute mouse report layout (report id 2):
++// buttons(5)+pad(3), x:16, y:16  (0..65535 virtual-desktop normalized)
++struct VhidMouseAbsReport {
++  UCHAR id;
++  UCHAR buttons;
++  USHORT x;
++  USHORT y;
++};
++#pragma pack(pop)
++
++// Dual-mode mouse: Report 1 = relative, Report 2 = absolute.
++const BYTE kMouseReportDescriptor[] = {
++    0x05, 0x01,        // Usage Page (Generic Desktop)
++    0x09, 0x02,        // Usage (Mouse)
++    0xA1, 0x01,        // Collection (Application)
++
++    // ----- Report ID 1: relative -----
++    0x85, 0x01,        //   Report ID (1)
++    0x09, 0x01,        //   Usage (Pointer)
++    0xA1, 0x00,        //   Collection (Physical)
++    0x05, 0x09,        //     Usage Page (Button)
++    0x19, 0x01,        //     Usage Minimum (1)
++    0x29, 0x05,        //     Usage Maximum (5)
++    0x15, 0x00,        //     Logical Minimum (0)
++    0x25, 0x01,        //     Logical Maximum (1)
++    0x95, 0x05,        //     Report Count (5)
++    0x75, 0x01,        //     Report Size (1)
++    0x81, 0x02,        //     Input (Data,Var,Abs)
++    0x95, 0x01,        //     Report Count (1)
++    0x75, 0x03,        //     Report Size (3)
++    0x81, 0x03,        //     Input (Const,Var,Abs)
++    0x05, 0x01,        //     Usage Page (Generic Desktop)
++    0x09, 0x30,        //     Usage (X)
++    0x09, 0x31,        //     Usage (Y)
++    0x16, 0x01, 0x80,  //     Logical Minimum (-32767)
++    0x26, 0xFF, 0x7F,  //     Logical Maximum (32767)
++    0x75, 0x10,        //     Report Size (16)
++    0x95, 0x02,        //     Report Count (2)
++    0x81, 0x06,        //     Input (Data,Var,Rel)
++    0x09, 0x38,        //     Usage (Wheel)
++    0x95, 0x01,        //     Report Count (1)
++    0x81, 0x06,        //     Input (Data,Var,Rel)
++    0x05, 0x0C,        //     Usage Page (Consumer)
++    0x0A, 0x38, 0x02,  //     Usage (AC Pan)
++    0x95, 0x01,        //     Report Count (1)
++    0x81, 0x06,        //     Input (Data,Var,Rel)
++    0xC0,              //   End Collection
++
++    // ----- Report ID 2: absolute (virtual desktop 0..65535) -----
++    0x85, 0x02,        //   Report ID (2)
++    0x09, 0x01,        //   Usage (Pointer)
++    0xA1, 0x00,        //   Collection (Physical)
++    0x05, 0x09,        //     Usage Page (Button)
++    0x19, 0x01,        //     Usage Minimum (1)
++    0x29, 0x05,        //     Usage Maximum (5)
++    0x15, 0x00,        //     Logical Minimum (0)
++    0x25, 0x01,        //     Logical Maximum (1)
++    0x95, 0x05,        //     Report Count (5)
++    0x75, 0x01,        //     Report Size (1)
++    0x81, 0x02,        //     Input (Data,Var,Abs)
++    0x95, 0x01,        //     Report Count (1)
++    0x75, 0x03,        //     Report Size (3)
++    0x81, 0x03,        //     Input (Const,Var,Abs)
++    0x05, 0x01,        //     Usage Page (Generic Desktop)
++    0x09, 0x30,        //     Usage (X)
++    0x09, 0x31,        //     Usage (Y)
++    0x15, 0x00,        //     Logical Minimum (0)
++    0x27, 0xFF, 0xFF, 0x00, 0x00,  // Logical Maximum (65535)
++    0x75, 0x10,        //     Report Size (16)
++    0x95, 0x02,        //     Report Count (2)
++    0x81, 0x02,        //     Input (Data,Var,Abs)
++    0xC0,              //   End Collection
++
++    0xC0,              // End Collection
++};
++
++struct WinUHidApi {
++  HMODULE module = nullptr;
++  PFN_WinUHidGetDriverInterfaceVersion GetDriverInterfaceVersion = nullptr;
++  PFN_WinUHidCreateDevice CreateDevice = nullptr;
++  PFN_WinUHidSubmitInputReport SubmitInputReport = nullptr;
++  PFN_WinUHidStartDevice StartDevice = nullptr;
++  PFN_WinUHidCompleteWriteEvent CompleteWriteEvent = nullptr;
++  PFN_WinUHidCompleteReadEvent CompleteReadEvent = nullptr;
++  PFN_WinUHidDestroyDevice DestroyDevice = nullptr;
++};
++
++std::mutex g_mutex;
++WinUHidApi g_api;
++bool g_load_attempted = false;
++bool g_driver_ok = false;
++PWINUHID_DEVICE g_device = nullptr;
++UCHAR g_buttons = 0;
++
++// Resolve WinUHid.dll next to the host executable only (no PATH / CWD search).
++bool GetAppDirWinUHidPath(wchar_t* out, size_t out_count) {
++  if (!out || out_count == 0) {
++    return false;
++  }
++  DWORD n = GetModuleFileNameW(nullptr, out, static_cast<DWORD>(out_count));
++  if (n == 0 || n >= out_count) {
++    return false;
++  }
++  if (!PathRemoveFileSpecW(out)) {
++    return false;
++  }
++  return PathAppendW(out, L"WinUHid.dll") == TRUE;
++}
++
++bool AppDirDllPresent() {
++  wchar_t path[MAX_PATH] = {};
++  if (!GetAppDirWinUHidPath(path, MAX_PATH)) {
++    return false;
++  }
++  const DWORD attrs = GetFileAttributesW(path);
++  return attrs != INVALID_FILE_ATTRIBUTES &&
++         (attrs & FILE_ATTRIBUTE_DIRECTORY) == 0;
++}
++
++bool LoadWinUHidLocked() {
++  if (g_load_attempted) {
++    return g_api.module != nullptr && g_driver_ok;
++  }
++  g_load_attempted = true;
++
++  wchar_t dll_path[MAX_PATH] = {};
++  if (!GetAppDirWinUHidPath(dll_path, MAX_PATH)) {
++    return false;
++  }
++  if (GetFileAttributesW(dll_path) == INVALID_FILE_ATTRIBUTES) {
++    return false;
++  }
++
++  // Absolute app-dir path + restricted search: do not walk PATH / CWD.
++  HMODULE mod = LoadLibraryExW(
++      dll_path, nullptr,
++      LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR | LOAD_LIBRARY_SEARCH_SYSTEM32);
++  if (!mod) {
++    return false;
++  }
++
++  g_api.module = mod;
++  g_api.GetDriverInterfaceVersion =
++      reinterpret_cast<PFN_WinUHidGetDriverInterfaceVersion>(
++          GetProcAddress(mod, "WinUHidGetDriverInterfaceVersion"));
++  g_api.CreateDevice = reinterpret_cast<PFN_WinUHidCreateDevice>(
++      GetProcAddress(mod, "WinUHidCreateDevice"));
++  g_api.SubmitInputReport = reinterpret_cast<PFN_WinUHidSubmitInputReport>(
++      GetProcAddress(mod, "WinUHidSubmitInputReport"));
++  g_api.StartDevice = reinterpret_cast<PFN_WinUHidStartDevice>(
++      GetProcAddress(mod, "WinUHidStartDevice"));
++  g_api.CompleteWriteEvent = reinterpret_cast<PFN_WinUHidCompleteWriteEvent>(
++      GetProcAddress(mod, "WinUHidCompleteWriteEvent"));
++  g_api.CompleteReadEvent = reinterpret_cast<PFN_WinUHidCompleteReadEvent>(
++      GetProcAddress(mod, "WinUHidCompleteReadEvent"));
++  g_api.DestroyDevice = reinterpret_cast<PFN_WinUHidDestroyDevice>(
++      GetProcAddress(mod, "WinUHidDestroyDevice"));
++
++  if (!g_api.GetDriverInterfaceVersion || !g_api.CreateDevice ||
++      !g_api.SubmitInputReport || !g_api.StartDevice ||
++      !g_api.CompleteWriteEvent || !g_api.CompleteReadEvent ||
++      !g_api.DestroyDevice) {
++    FreeLibrary(mod);
++    g_api = {};
++    return false;
++  }
++
++  DWORD version = g_api.GetDriverInterfaceVersion();
++  g_driver_ok = version != 0;
++  if (!g_driver_ok) {
++    FreeLibrary(mod);
++    g_api = {};
++    return false;
++  }
++  return true;
++}
++
++VOID CALLBACK FeatureStubCallback(PVOID /*ctx*/, PWINUHID_DEVICE device,
++                                  const WINUHID_EVENT* event) {
++  // We do not advertise feature support; complete defensively if called.
++  if (!event || !g_api.CompleteWriteEvent || !g_api.CompleteReadEvent) {
++    return;
++  }
++  if (event->Type == WINUHID_EVENT_GET_FEATURE ||
++      event->Type == WINUHID_EVENT_READ_REPORT) {
++    g_api.CompleteReadEvent(device, event, nullptr, 0);
++  } else {
++    g_api.CompleteWriteEvent(device, event, FALSE);
++  }
++}
++
++bool CreateDeviceLocked() {
++  if (g_device) {
++    return true;
++  }
++  if (!LoadWinUHidLocked()) {
++    return false;
++  }
++
++  WINUHID_DEVICE_CONFIG config = {};
++  config.SupportedEvents = WINUHID_EVENT_NONE;
++  // Open-source CloudPlayPlus virtual mouse identity (not NetEase / GameViewer).
++  config.VendorID = 0x1209;   // pid.codes
++  config.ProductID = 0xC0FF;  // CloudPlayPlus virtual mouse
++  config.VersionNumber = 0x0100;
++  config.ReportDescriptorLength =
++      static_cast<USHORT>(sizeof(kMouseReportDescriptor));
++  config.ReportDescriptor = kMouseReportDescriptor;
++  config.InstanceID = L"CloudPlayPlusVirtualMouse";
++  config.ReadReportPeriodUs = 0;
++
++  g_device = g_api.CreateDevice(&config);
++  if (!g_device) {
++    return false;
++  }
++
++  if (!g_api.StartDevice(g_device, FeatureStubCallback, nullptr)) {
++    g_api.DestroyDevice(g_device);
++    g_device = nullptr;
++    return false;
++  }
++
++  VhidMouseRelReport empty = {};
++  empty.id = 0x01;
++  if (!g_api.SubmitInputReport(g_device, &empty, sizeof(empty))) {
++    g_api.DestroyDevice(g_device);
++    g_device = nullptr;
++    return false;
++  }
++
++  g_buttons = 0;
++  return true;
++}
++
++bool SubmitRelLocked(SHORT dx, SHORT dy, SHORT wheel, SHORT hwheel) {
++  if (!CreateDeviceLocked()) {
++    return false;
++  }
++  VhidMouseRelReport report = {};
++  report.id = 0x01;
++  report.buttons = g_buttons;
++  report.dx = dx;
++  report.dy = dy;
++  report.wheel = wheel;
++  report.hwheel = hwheel;
++  return g_api.SubmitInputReport(g_device, &report, sizeof(report)) == TRUE;
++}
++
++bool SubmitAbsLocked(USHORT x, USHORT y) {
++  if (!CreateDeviceLocked()) {
++    return false;
++  }
++  VhidMouseAbsReport report = {};
++  report.id = 0x02;
++  report.buttons = g_buttons;
++  report.x = x;
++  report.y = y;
++  return g_api.SubmitInputReport(g_device, &report, sizeof(report)) == TRUE;
++}
++
++}  // namespace
++
++bool VhidMouseIsDriverPresent() {
++  // Settings / availability probe: do NOT LoadLibrary or create a HID device.
++  // Only check that WinUHid.dll sits next to the host executable.
++  return AppDirDllPresent();
++}
++
++bool VhidMouseEnsureCreated() {
++  std::lock_guard<std::mutex> lock(g_mutex);
++  return CreateDeviceLocked();
++}
++
++void VhidMouseDestroy() {
++  std::lock_guard<std::mutex> lock(g_mutex);
++  if (g_device && g_api.DestroyDevice) {
++    g_api.DestroyDevice(g_device);
++    g_device = nullptr;
++  }
++  g_buttons = 0;
++  if (g_api.module) {
++    FreeLibrary(g_api.module);
++    g_api = {};
++  }
++  g_load_attempted = false;
++  g_driver_ok = false;
++}
++
++bool VhidMouseReportMotion(SHORT dx, SHORT dy) {
++  std::lock_guard<std::mutex> lock(g_mutex);
++  return SubmitRelLocked(dx, dy, 0, 0);
++}
++
++bool VhidMouseReportAbsolute(USHORT x, USHORT y) {
++  std::lock_guard<std::mutex> lock(g_mutex);
++  return SubmitAbsLocked(x, y);
++}
++
++bool VhidMouseReportButton(int buttonId, bool down) {
++  // buttonId: 1=left, 2=middle, 3=right, 4=X1, 5=X2 (matches plugin)
++  int bit = -1;
++  if (buttonId == 1) bit = 0;
++  else if (buttonId == 2) bit = 2;
++  else if (buttonId == 3) bit = 1;
++  else if (buttonId == 4) bit = 3;
++  else if (buttonId == 5) bit = 4;
++  else return false;
++
++  std::lock_guard<std::mutex> lock(g_mutex);
++  if (down) {
++    g_buttons = static_cast<UCHAR>(g_buttons | (1u << bit));
++  } else {
++    g_buttons = static_cast<UCHAR>(g_buttons & ~(1u << bit));
++  }
++  // Button state is shared; emit a relative zero-motion report so listeners
++  // see the update without jumping absolute position.
++  return SubmitRelLocked(0, 0, 0, 0);
++}
++
++bool VhidMouseReportScroll(SHORT scrollValue, bool horizontal) {
++  std::lock_guard<std::mutex> lock(g_mutex);
++  if (horizontal) {
++    return SubmitRelLocked(0, 0, 0, scrollValue);
++  }
++  return SubmitRelLocked(0, 0, scrollValue, 0);
++}
+diff --git a/plugins/hardware_simulator/windows/vhid_mouse.h b/plugins/hardware_simulator/windows/vhid_mouse.h
+new file mode 100644
+index 0000000..92a6e2b
+--- /dev/null
++++ b/plugins/hardware_simulator/windows/vhid_mouse.h
+@@ -0,0 +1,27 @@
++#ifndef HARDWARE_SIMULATOR_VHID_MOUSE_H_
++#define HARDWARE_SIMULATOR_VHID_MOUSE_H_
++
++#include <windows.h>
++
++// Optional virtual-HID mouse backend.
++// Dynamically loads WinUHid.dll (https://github.com/cgutman/WinUHid, MIT).
++// Requires the WinUHid UMDF driver to be installed on the host; otherwise
++// all APIs fail and the caller should keep using SendInput.
++//
++// Report ID 1 = relative motion (Raw Input games).
++// Report ID 2 = absolute position (0..65535 over the virtual desktop;
++// multi-monitor / multi-screen control can keep using percent + screenId).
++
++// True when WinUHid.dll exists next to the host exe. Does not LoadLibrary
++// or create a device — safe for settings availability probes.
++bool VhidMouseIsDriverPresent();
++// Load DLL (app-dir LoadLibraryExW) and create the virtual mouse device.
++bool VhidMouseEnsureCreated();
++void VhidMouseDestroy();
++
++bool VhidMouseReportMotion(SHORT dx, SHORT dy);
++bool VhidMouseReportAbsolute(USHORT x, USHORT y);
++bool VhidMouseReportButton(int buttonId, bool down);
++bool VhidMouseReportScroll(SHORT scrollValue, bool horizontal);
++
++#endif  // HARDWARE_SIMULATOR_VHID_MOUSE_H_

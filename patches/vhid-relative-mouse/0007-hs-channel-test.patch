@@ -1,0 +1,43 @@
+--- test/hardware_simulator_method_channel_test.dart
++++ test/hardware_simulator_method_channel_test.dart
+@@ -8,20 +8,37 @@ void main() {
+   MethodChannelHardwareSimulator platform = MethodChannelHardwareSimulator();
+   const MethodChannel channel = MethodChannel('hardware_simulator');
+ 
++  final Map<String, dynamic> responses = {
++    'getPlatformVersion': '42',
++    'setMouseInputBackend': true,
++    'getMouseInputBackend': 1,
++    'getEffectiveMouseInputBackend': 0,
++    'isVhidMouseAvailable': false,
++  };
++
+   setUp(() {
+-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
++    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
++        .setMockMethodCallHandler(
+       channel,
+       (MethodCall methodCall) async {
+-        return '42';
++        return responses[methodCall.method];
+       },
+     );
+   });
+ 
+   tearDown(() {
+-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
++    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
++        .setMockMethodCallHandler(channel, null);
+   });
+ 
+   test('getPlatformVersion', () async {
+     expect(await platform.getPlatformVersion(), '42');
+   });
++
++  test('mouse input backend channel methods', () async {
++    expect(await platform.setMouseInputBackend(1), isTrue);
++    expect(await platform.getMouseInputBackend(), 1);
++    expect(await platform.getEffectiveMouseInputBackend(), 0);
++    expect(await platform.isVhidMouseAvailable(), isFalse);
++  });
+ }

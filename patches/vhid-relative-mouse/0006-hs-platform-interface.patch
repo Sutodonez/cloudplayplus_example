@@ -1,0 +1,27 @@
+--- lib/hardware_simulator_platform_interface.dart
++++ lib/hardware_simulator_platform_interface.dart
+@@ -160,6 +160,24 @@ abstract class HardwareSimulatorPlatform extends PlatformInterface {
+     throw UnimplementedError('performKeyEvent() has not been implemented.');
+   }
+ 
++  /// Mouse injection backend: 0 = SendInput, 1 = Virtual HID (WinUHid).
++  Future<bool> setMouseInputBackend(int backend) {
++    throw UnimplementedError('setMouseInputBackend() has not been implemented.');
++  }
++
++  Future<int> getMouseInputBackend() {
++    throw UnimplementedError('getMouseInputBackend() has not been implemented.');
++  }
++
++  Future<int> getEffectiveMouseInputBackend() {
++    throw UnimplementedError(
++        'getEffectiveMouseInputBackend() has not been implemented.');
++  }
++
++  Future<bool> isVhidMouseAvailable() {
++    throw UnimplementedError('isVhidMouseAvailable() has not been implemented.');
++  }
++
+   // Relative mouse movement.
+   Future<void> performMouseMoveRelative(
+       double deltax, double deltay, int screenId) async {

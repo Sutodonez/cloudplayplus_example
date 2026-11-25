@@ -1,0 +1,157 @@
+--- windows/hardware_simulator_plugin.cpp
++++ windows/hardware_simulator_plugin.cpp
+@@ -2,6 +2,7 @@
+ 
+ #include "cursor_monitor.h"
+ #include "gamecontroller_manager.h"
++#include "mouse_injector.h"
+ #include "notification_window.h"
+ #include "virtual_display_control.h"
+ #include "SmartKeyboardBlocker.h"
+@@ -800,6 +801,9 @@ void HardwareSimulatorPlugin::RegisterWithRegistrar(
+ 
+   // start to monitor display resolution and DPI.
+   HardwareSimulatorPlugin::UpdateStaticMonitors();
++  // Restore VHID preference persisted by a prior user-session process so a
++  // SYSTEM host (after registerService relaunch) injects with the same backend.
++  MouseInjectorRestorePersistedBackend();
+   dpi_monitor_proc_id_ = registrar->RegisterTopLevelWindowProcDelegate(
+       [](HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) -> std::optional<LRESULT> {
+           if (message == WM_DPICHANGED || message == WM_DISPLAYCHANGE) {
+@@ -824,6 +828,7 @@ HardwareSimulatorPlugin::~HardwareSimulatorPlugin() {
+     destroyTouchDevice();
+     destroyPenDevice();
+     CleanupCursorLock();
++    MouseInjectorShutdown();
+     if (dpi_monitor_proc_id_.has_value()) {
+         registrar_->UnregisterTopLevelWindowProcDelegate(dpi_monitor_proc_id_.value());
+         dpi_monitor_proc_id_.reset();
+@@ -857,45 +862,7 @@ void send_input(INPUT& i) {
+ }
+ 
+ void performMouseButton(int button, bool release) {
+-    //SHORT KEY_STATE_DOWN = 0x8000;
+-
+-    INPUT i{};
+-
+-    i.type = INPUT_MOUSE;
+-    auto& mi = i.mi;
+-
+-    int mouse_button;
+-    if (button == 1) {
+-        mi.dwFlags = release ? MOUSEEVENTF_LEFTUP : MOUSEEVENTF_LEFTDOWN;
+-        mouse_button = VK_LBUTTON;
+-    }
+-    else if (button == 2) {
+-        mi.dwFlags = release ? MOUSEEVENTF_MIDDLEUP : MOUSEEVENTF_MIDDLEDOWN;
+-        mouse_button = VK_MBUTTON;
+-    }
+-    else if (button == 3) {
+-        mi.dwFlags = release ? MOUSEEVENTF_RIGHTUP : MOUSEEVENTF_RIGHTDOWN;
+-        mouse_button = VK_RBUTTON;
+-    }
+-    else if (button == 4) {
+-        mi.dwFlags = release ? MOUSEEVENTF_XUP : MOUSEEVENTF_XDOWN;
+-        mi.mouseData = XBUTTON1;
+-        mouse_button = VK_XBUTTON1;
+-    }
+-    else {
+-        mi.dwFlags = release ? MOUSEEVENTF_XUP : MOUSEEVENTF_XDOWN;
+-        mi.mouseData = XBUTTON2;
+-        mouse_button = VK_XBUTTON2;
+-    }
+-    
+-    //Haichao: what is it used for? It blocks button up for UAC window.
+-    /*auto key_state = GetAsyncKeyState(mouse_button);
+-    bool key_state_down = (key_state & 0x8000) != 0;
+-    if (key_state_down != release) {
+-        return;
+-    }*/
+-
+-    send_input(i);
++    MouseInjectorButton(button, release);
+ }
+ 
+ #pragma warning(disable:4244)
+@@ -1037,19 +1004,19 @@ bool setPrimaryDisplay(int displayIndex) {
+ }
+ 
+ void performMouseMoveRelative(double x,double y){
+-    INPUT i {};
+-
+-    i.type = INPUT_MOUSE;
+-    auto &mi = i.mi;
+-
+-    mi.dwFlags = MOUSEEVENTF_MOVE;
+-    mi.dx = x;
+-    mi.dy = y;
+-
+-    send_input(i);
++    MouseInjectorMoveRelative(x, y);
+ }
+ 
+ void performMouseMoveAbsl(double x,double y,int screenId){
++    // When VHID is active, absolute moves also go through WinUHid (report id 2)
++    // so relative + absolute share one optional backend (multi-screen ready).
++    if (MouseInjectorGetEffectiveBackend() == MouseInputBackend::kVhid) {
++        if (MouseInjectorMoveAbsolute(x, y, screenId)) {
++            return;
++        }
++        // Mid-stream VHID failure: fall through to SendInput.
++    }
++
+     INPUT i {};
+ 
+     i.type = INPUT_MOUSE;
+@@ -1106,27 +1073,11 @@ void performMouseMoveToWindowPosition(double percentx, double percenty) {
+ }
+ 
+ void scroll(int distance) {
+-    INPUT i{};
+-
+-    i.type = INPUT_MOUSE;
+-    auto& mi = i.mi;
+-
+-    mi.dwFlags = MOUSEEVENTF_WHEEL;
+-    mi.mouseData = distance;
+-
+-    send_input(i);
++    MouseInjectorScroll(distance, false);
+ }
+ 
+ void hscroll(int distance) {
+-    INPUT i{};
+-
+-    i.type = INPUT_MOUSE;
+-    auto& mi = i.mi;
+-
+-    mi.dwFlags = MOUSEEVENTF_HWHEEL;
+-    mi.mouseData = distance;
+-
+-    send_input(i);
++    MouseInjectorScroll(distance, true);
+ }
+ 
+ std::wstring stringToWstring(const std::string& str) {
+@@ -1162,6 +1113,21 @@ void HardwareSimulatorPlugin::HandleMethodCall(
+         auto isDown = (args->find(flutter::EncodableValue("isDown")))->second;
+         performKeyEvent(static_cast<int>(std::get<int>((keyCode))), static_cast<bool>(std::get<bool>((isDown))));
+         result->Success(nullptr);
++  } else if (method_call.method_name().compare("setMouseInputBackend") == 0) {
++        auto backend_value = (args->find(flutter::EncodableValue("backend")))->second;
++        int backend = static_cast<int>(std::get<int>(backend_value));
++        MouseInputBackend chosen = (backend == 1) ? MouseInputBackend::kVhid
++                                                  : MouseInputBackend::kSendInput;
++        bool ok = MouseInjectorSetBackend(chosen);
++        result->Success(flutter::EncodableValue(ok));
++  } else if (method_call.method_name().compare("getMouseInputBackend") == 0) {
++        result->Success(flutter::EncodableValue(
++            static_cast<int>(MouseInjectorGetBackend())));
++  } else if (method_call.method_name().compare("getEffectiveMouseInputBackend") == 0) {
++        result->Success(flutter::EncodableValue(
++            static_cast<int>(MouseInjectorGetEffectiveBackend())));
++  } else if (method_call.method_name().compare("isVhidMouseAvailable") == 0) {
++        result->Success(flutter::EncodableValue(MouseInjectorIsVhidAvailable()));
+   } else if (method_call.method_name().compare("mouseMoveR") == 0) {
+         auto deltax = (args->find(flutter::EncodableValue("x")))->second;
+         auto deltay = (args->find(flutter::EncodableValue("y")))->second;
