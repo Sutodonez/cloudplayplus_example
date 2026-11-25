@@ -1,0 +1,1091 @@
+diff --git a/lib/entities/session.dart b/lib/entities/session.dart
+index 65c1e35..9c46f8d 100644
+--- a/lib/entities/session.dart
++++ b/lib/entities/session.dart
+@@ -7,6 +7,7 @@ import 'package:cloudplayplus/dev_settings.dart/develop_settings.dart';
+ import 'package:cloudplayplus/entities/audiosession.dart';
+ import 'package:cloudplayplus/entities/device.dart';
+ import 'package:cloudplayplus/services/privacy_blank_service.dart';
++import 'package:cloudplayplus/services/reliable_channel_gate.dart';
+ import 'package:cloudplayplus/services/streamed_manager.dart';
+ import 'package:cloudplayplus/services/streaming_manager.dart';
+ import 'package:cloudplayplus/services/websocket_service.dart';
+@@ -121,6 +122,10 @@ class StreamingSession {
+   FileTransferEngine? fileTransfer;
+   StreamSubscription<FileTransferProgress>? _fileTransferProgressSub;
+ 
++  /// Priority + backpressure gate for the shared reliable `userInput` channel.
++  ReliableChannelGate? _channelGate;
++  bool _bulkBackpressureTipShown = false;
++
+   // 添加生命周期监听器
+   static final _lifecycleObserver = _AppLifecycleObserver();
+ 
+@@ -130,23 +135,57 @@ class StreamingSession {
+     WidgetsBinding.instance.addObserver(_lifecycleObserver);
+   }
+ 
++  /// Session key used for per-session privacy tracking on the controlled host.
++  String get privacySessionId => controller.websocketSessionid;
++
++  ReliableChannelGate _ensureChannelGate() {
++    final existing = _channelGate;
++    if (existing != null) return existing;
++    final gate = ReliableChannelGate(
++      isOpen: () => channel?.state == RTCDataChannelState.RTCDataChannelOpen,
++      bufferedAmount: () => channel?.bufferedAmount ?? 0,
++      sendTextImpl: (text) async {
++        await channel!.send(RTCDataChannelMessage(text));
++      },
++      sendBinaryImpl: (bytes) async {
++        await channel!.send(RTCDataChannelMessage.fromBinary(bytes));
++      },
++      onBulkBackpressure: (active) {
++        if (!active || _bulkBackpressureTipShown) return;
++        _bulkBackpressureTipShown = true;
++        MessageBoxManager().showMessage(
++          '文件/终端流量较大，已对数据通道施加背压；隐私与控制消息仍优先发送。',
++          '通道拥塞',
++        );
++      },
++    );
++    _channelGate = gate;
++    return gate;
++  }
++
++  void _disposeChannelGate() {
++    _channelGate?.dispose();
++    _channelGate = null;
++    _bulkBackpressureTipShown = false;
++  }
++
+   void _ensureTerminalLink() {
+     if (terminalLink != null || channel == null) return;
+     final host = selfSessionType == SelfSessionType.controlled;
+     // Host needs dart:io Process; web cannot host shells.
+     if (host && AppPlatform.isWeb) return;
++    final gate = _ensureChannelGate();
+     terminalLink = TerminalLinkEngine(
+       isHost: host,
+-      sendText: (text) async {
+-        if (channel?.state == RTCDataChannelState.RTCDataChannelOpen) {
+-          await channel!.send(RTCDataChannelMessage(text));
+-        }
+-      },
+-      sendBinary: (bytes) async {
+-        if (channel?.state == RTCDataChannelState.RTCDataChannelOpen) {
+-          await channel!.send(RTCDataChannelMessage.fromBinary(bytes));
+-        }
+-      },
++      // Control JSON stays high-priority; stdout chunks use bulk backpressure.
++      sendText: (text) => gate.sendText(
++            text,
++            priority: ReliableSendPriority.control,
++          ),
++      sendBinary: (bytes) => gate.sendBinary(
++            bytes,
++            priority: ReliableSendPriority.bulk,
++          ),
+     );
+   }
+ 
+@@ -154,8 +193,11 @@ class StreamingSession {
+   void ensureTerminalLink() => _ensureTerminalLink();
+ 
+   ({bool autoAccept, String receiveRoot}) _fileTransferPrefs() {
++    // Default false: require explicit confirm (post-merge Medium #2).
++    // Terminal remains available under the product trust model
++    // “authenticated controller = full trust” (documented in handoff).
+     final autoAccept =
+-        SharedPreferencesManager.getBool('fileXferAutoAccept') ?? true;
++        SharedPreferencesManager.getBool('fileXferAutoAccept') ?? false;
+     final customRoot = SharedPreferencesManager.getString('fileXferSavePath');
+     final receiveRoot = (customRoot != null && customRoot.trim().isNotEmpty)
+         ? customRoot.trim()
+@@ -171,19 +213,16 @@ class StreamingSession {
+     final prefs = _fileTransferPrefs();
+     final autoAccept = prefs.autoAccept;
+     final receiveRoot = prefs.receiveRoot;
++    final gate = _ensureChannelGate();
+     fileTransfer = FileTransferEngine(
+-      sendText: (text) async {
+-        if (channel?.state != RTCDataChannelState.RTCDataChannelOpen) {
+-          throw StateError('File transfer data channel is not open');
+-        }
+-        await channel!.send(RTCDataChannelMessage(text));
+-      },
+-      sendBinary: (bytes) async {
+-        if (channel?.state != RTCDataChannelState.RTCDataChannelOpen) {
+-          throw StateError('File transfer data channel is not open');
+-        }
+-        await channel!.send(RTCDataChannelMessage.fromBinary(bytes));
+-      },
++      sendText: (text) => gate.sendText(
++            text,
++            priority: ReliableSendPriority.control,
++          ),
++      sendBinary: (bytes) => gate.sendBinary(
++            bytes,
++            priority: ReliableSendPriority.bulk,
++          ),
+       receiveRoot: receiveRoot,
+       // Web can send (memory-backed); receiving to Downloads needs dart:io.
+       autoAcceptIncoming: autoAccept,
+@@ -933,6 +972,7 @@ class StreamingSession {
+       } catch (_) {}
+     }
+     fileTransfer = null;
++    _disposeChannelGate();
+   }
+ 
+   Timer? _pingTimeoutTimer;
+@@ -1032,7 +1072,11 @@ class StreamingSession {
+           if (message.binary.length >= 2) {
+             final mode = PrivacyBlankService.modeFromIndex(message.binary[1]);
+             // Host policy gate (Q22): ignore when override is disallowed.
+-            PrivacyBlankService.applyControllerMode(mode);
++            // Per-session so concurrent controllers do not clobber each other.
++            PrivacyBlankService.applyControllerMode(
++              mode,
++              sessionId: privacySessionId,
++            );
+           }
+           break;
+         case LP_TERM_CHUNK:
+@@ -1088,8 +1132,11 @@ class StreamingSession {
+   /// Controller: request host privacy / blank-display mode mid-session.
+   Future<void> requestHostPrivacyMode(PrivacyBlankMode mode) async {
+     if (channel?.state != RTCDataChannelState.RTCDataChannelOpen) return;
+-    await channel!.send(RTCDataChannelMessage.fromBinary(
+-        Uint8List.fromList([LP_PRIVACY_MODE, mode.index])));
++    // Privacy control must not wait behind file/terminal bulk (Medium #1).
++    await _ensureChannelGate().sendBinary(
++      Uint8List.fromList([LP_PRIVACY_MODE, mode.index]),
++      priority: ReliableSendPriority.control,
++    );
+   }
+ 
+   void processDataChannelMessageFromHost(RTCDataChannelMessage message) async {
+diff --git a/lib/services/privacy_blank_service.dart b/lib/services/privacy_blank_service.dart
+index 99ca053..12303d5 100644
+--- a/lib/services/privacy_blank_service.dart
++++ b/lib/services/privacy_blank_service.dart
+@@ -4,7 +4,9 @@ import 'package:cloudplayplus/base/constants.dart';
+ import 'package:cloudplayplus/base/logging.dart';
+ import 'package:cloudplayplus/global_settings/streaming_settings.dart';
+ import 'package:cloudplayplus/services/app_info_service.dart';
++import 'package:cloudplayplus/services/privacy_session_modes.dart';
+ import 'package:cloudplayplus/services/shared_preferences_manager.dart';
++import 'package:hardware_simulator/hardware_simulator.dart';
+ import 'package:privacy_blank_display/privacy_blank_display.dart';
+ 
+ /// Host-side privacy / blank-display orchestrator.
+@@ -14,6 +16,11 @@ import 'package:privacy_blank_display/privacy_blank_display.dart';
+ /// host setting [StreamingSettings.privacyAllowControllerOverride] is true.
+ /// Mid-session opcode requests use the same gate.
+ ///
++/// Multi-session: desired modes are tracked per session id via
++/// [PrivacySessionModes]; the native surface applies the strongest effective
++/// mode so concurrent controllers cannot clear each other's privacy by
++/// accident (post-merge Low #4).
++///
+ /// Applies [PrivacyBlankMode] while at least one inbound stream session is
+ /// active (when auto-on / override), and restores [PrivacyBlankMode.off] when
+ /// the last session ends — unless the user dismissed via the host hotkey.
+@@ -21,11 +28,20 @@ class PrivacyBlankService {
+   PrivacyBlankService._();
+ 
+   static bool _initialized = false;
+-  static bool _sessionEngaged = false;
+   static bool _dismissedThisSession = false;
+   static StreamSubscription<void>? _dismissSub;
+   static PrivacyBlankMode _active = PrivacyBlankMode.off;
+ 
++  /// Per-session desired modes (process-level native apply uses [effective]).
++  static final PrivacySessionModes sessionModes = PrivacySessionModes();
++
++  /// Sessions that auto-bound / run as `VDISPLAY_OCCUPY` (exclusive topology).
++  static final Set<String> _exclusiveSessionIds = {};
++
++  /// Refcount for temporary SendInput preference under exclusive / blank.
++  static int _safeMouseHolders = 0;
++  static MouseInputBackend? _savedMouseBackend;
++
+   static PrivacyBlankMode get activeMode => _active;
+ 
+   static Future<void> init() async {
+@@ -38,9 +54,11 @@ class PrivacyBlankService {
+     await _applyStoredHotkey();
+     _dismissSub ??= PrivacyBlankDisplay.onDismissedByHotkey.listen((_) {
+       _dismissedThisSession = true;
+-      _sessionEngaged = false;
+       _active = PrivacyBlankMode.off;
++      // Host hotkey dismisses the physical surface for everyone this round.
++      sessionModes.clear();
+       VLOG0('Privacy blank dismissed by host hotkey');
++      unawaited(_syncSafeMousePath());
+     });
+   }
+ 
+@@ -118,6 +136,12 @@ class PrivacyBlankService {
+   /// Effective mode still respects the controller-override host gate.
+   ///
+   /// Returns true if [settings.streamMode] was changed.
++  ///
++  /// **VHID note (post-merge Medium #3):** exclusive occupy collapses the
++  /// desktop onto a single VDD (`screenId` rewritten to 0). Absolute VHID
++  /// mapping uses the multi-monitor virtual-desktop space and can disagree
++  /// with that topology / Raw Input focus. Callers must
++  /// [noteExclusiveSession] so the mouse path temporarily prefers SendInput.
+   static bool ensureExclusiveForBlankDisplay(StreamedSettings settings) {
+     if (!StreamingSettings.privacyAutoBindExclusive) {
+       VLOG0('blankDisplay exclusive auto-bind disabled by host policy');
+@@ -141,10 +165,22 @@ class PrivacyBlankService {
+     settings.screenId = 0;
+     VLOG0(
+         'blankDisplay auto-bound to VDISPLAY_OCCUPY '
+-        '(${settings.customScreenWidth}x${settings.customScreenHeight})');
++        '(${settings.customScreenWidth}x${settings.customScreenHeight}); '
++        'mouse path will prefer SendInput while exclusive');
+     return true;
+   }
+ 
++  /// Mark a session as exclusive (`VDISPLAY_OCCUPY`) for safe-mouse guarding.
++  static Future<void> noteExclusiveSession(String sessionId,
++      {required bool exclusive}) async {
++    if (exclusive) {
++      _exclusiveSessionIds.add(sessionId);
++    } else {
++      _exclusiveSessionIds.remove(sessionId);
++    }
++    await _syncSafeMousePath();
++  }
++
+   static Future<bool> applyMode(PrivacyBlankMode mode) async {
+     await init();
+     if (!AppPlatform.isWindows) return false;
+@@ -157,11 +193,11 @@ class PrivacyBlankService {
+     final ok = await PrivacyBlankDisplay.setMode(mode);
+     if (ok) {
+       _active = mode;
+-      _sessionEngaged = mode != PrivacyBlankMode.off;
+       if (mode != PrivacyBlankMode.off) {
+         _dismissedThisSession = false;
+       }
+       VLOG0('Privacy blank mode -> $mode');
++      await _syncSafeMousePath();
+     } else {
+       // Keep Dart `_active` aligned with native: failed setMode must not
+       // leave host muted/hotkey-only (native rolls back on overlay failure).
+@@ -170,34 +206,65 @@ class PrivacyBlankService {
+     return ok;
+   }
+ 
+-  /// Apply a controller-requested mid-session mode subject to host policy.
++  /// Apply a controller-requested mid-session mode for [sessionId].
+   /// Returns false when rejected or native apply fails.
+-  static Future<bool> applyControllerMode(PrivacyBlankMode mode) async {
++  static Future<bool> applyControllerMode(
++    PrivacyBlankMode mode, {
++    required String sessionId,
++  }) async {
+     if (!allowsControllerOverride) {
+       VLOG0('LP_PRIVACY_MODE rejected: host disallows controller override');
+       return false;
+     }
+-    return applyMode(mode);
++    sessionModes.setSessionMode(sessionId, mode);
++    return _recomputeNativeMode();
+   }
+ 
+   /// Called when an inbound streaming session becomes active.
+-  static Future<void> onSessionStarted({int? requestedMode}) async {
++  static Future<void> onSessionStarted({
++    required String sessionId,
++    int? requestedMode,
++    bool exclusiveTopology = false,
++  }) async {
+     await init();
+     if (!AppPlatform.isWindows) return;
+-    if (!shouldEngageForSession(requestedMode: requestedMode)) return;
++
++    if (exclusiveTopology) {
++      _exclusiveSessionIds.add(sessionId);
++    }
++
++    if (!shouldEngageForSession(requestedMode: requestedMode)) {
++      sessionModes.setSessionMode(sessionId, PrivacyBlankMode.off);
++      await _syncSafeMousePath();
++      return;
++    }
+ 
+     final mode = resolveModeForSession(requestedMode: requestedMode);
+-    if (mode == PrivacyBlankMode.off) return;
+-    if (_sessionEngaged && _active == mode) return;
+-    await applyMode(mode);
++    sessionModes.setSessionMode(sessionId, mode);
++    await _recomputeNativeMode();
++  }
++
++  /// Called when one inbound streaming session ends.
++  static Future<void> onSessionEnded(String sessionId) async {
++    await init();
++    sessionModes.removeSession(sessionId);
++    _exclusiveSessionIds.remove(sessionId);
++
++    if (sessionModes.sessionCount == 0) {
++      await onAllSessionsEnded();
++      return;
++    }
++    await _recomputeNativeMode();
+   }
+ 
+   /// Called when the last inbound streaming session ends.
+   static Future<void> onAllSessionsEnded() async {
+     await init();
+     _dismissedThisSession = false;
++    sessionModes.clear();
++    _exclusiveSessionIds.clear();
+     if (_active == PrivacyBlankMode.off) {
+-      _sessionEngaged = false;
++      await _syncSafeMousePath();
+       return;
+     }
+     await applyMode(PrivacyBlankMode.off);
+@@ -208,6 +275,68 @@ class PrivacyBlankService {
+     }
+   }
+ 
++  static Future<bool> _recomputeNativeMode() async {
++    if (_dismissedThisSession) {
++      await _syncSafeMousePath();
++      return false;
++    }
++    final desired = sessionModes.effectiveMode();
++    if (desired == _active) {
++      await _syncSafeMousePath();
++      return true;
++    }
++    return applyMode(desired);
++  }
++
++  /// Prefer SendInput while blankDisplay or exclusive VDD is active so absolute
++  /// mouse stays on the primary/VDD path (VHID virtual-desktop map is unsafe
++  /// under that topology). Restores the prior preferred backend when clear.
++  static Future<void> _syncSafeMousePath() async {
++    if (!AppPlatform.isWindows) return;
++    final needSafe = _active == PrivacyBlankMode.blankDisplay ||
++        sessionModes.hasBlankDisplay ||
++        _exclusiveSessionIds.isNotEmpty;
++    if (needSafe) {
++      await _acquireSafeMouse('blankDisplay/exclusive');
++    } else {
++      await _releaseSafeMouse();
++    }
++  }
++
++  static Future<void> _acquireSafeMouse(String reason) async {
++    if (_safeMouseHolders > 0) {
++      _safeMouseHolders = 1;
++      return;
++    }
++    try {
++      _savedMouseBackend = await HardwareSimulator.getMouseInputBackend();
++      if (_savedMouseBackend == MouseInputBackend.vhid) {
++        await HardwareSimulator.setMouseInputBackend(
++            MouseInputBackend.sendInput);
++        VLOG0(
++            'VHID paused ($reason): absolute/relative mouse uses SendInput '
++            'until privacy blank / exclusive VDD ends');
++      }
++      _safeMouseHolders = 1;
++    } catch (e) {
++      VLOG0('safe mouse acquire failed: $e');
++    }
++  }
++
++  static Future<void> _releaseSafeMouse() async {
++    if (_safeMouseHolders == 0) return;
++    _safeMouseHolders = 0;
++    final restore = _savedMouseBackend;
++    _savedMouseBackend = null;
++    if (restore == null || restore == MouseInputBackend.sendInput) return;
++    try {
++      await HardwareSimulator.setMouseInputBackend(restore);
++      VLOG0('VHID restored after blankDisplay/exclusive cleared');
++    } catch (e) {
++      VLOG0('safe mouse restore failed: $e');
++    }
++  }
++
+   static Future<void> persistHostDefaults({
+     required int mode,
+     required bool autoOnConnect,
+diff --git a/lib/services/privacy_session_modes.dart b/lib/services/privacy_session_modes.dart
+new file mode 100644
+index 0000000..6260d11
+--- /dev/null
++++ b/lib/services/privacy_session_modes.dart
+@@ -0,0 +1,40 @@
++import 'package:privacy_blank_display/privacy_blank_display.dart';
++
++/// Pure multi-session privacy aggregator (testable without native plugins).
++///
++/// Host privacy still applies through one process-level native surface, but
++/// each streaming session records its own desired mode. The effective mode is
++/// the strongest among active sessions (`privacyScreen` > `blankDisplay` >
++/// `off`) so one controller cannot silently clear another session's privacy.
++class PrivacySessionModes {
++  final Map<String, PrivacyBlankMode> _modes = {};
++
++  Map<String, PrivacyBlankMode> get snapshot =>
++      Map<String, PrivacyBlankMode>.unmodifiable(_modes);
++
++  int get sessionCount => _modes.length;
++
++  bool get hasBlankDisplay =>
++      _modes.values.any((m) => m == PrivacyBlankMode.blankDisplay);
++
++  void setSessionMode(String sessionId, PrivacyBlankMode mode) {
++    _modes[sessionId] = mode;
++  }
++
++  void removeSession(String sessionId) {
++    _modes.remove(sessionId);
++  }
++
++  void clear() => _modes.clear();
++
++  /// Strongest mode among tracked sessions, or [PrivacyBlankMode.off] if none.
++  PrivacyBlankMode effectiveMode() {
++    var best = PrivacyBlankMode.off;
++    for (final mode in _modes.values) {
++      if (mode.index > best.index) {
++        best = mode;
++      }
++    }
++    return best;
++  }
++}
+diff --git a/lib/services/reliable_channel_gate.dart b/lib/services/reliable_channel_gate.dart
+new file mode 100644
+index 0000000..99c92e1
+--- /dev/null
++++ b/lib/services/reliable_channel_gate.dart
+@@ -0,0 +1,133 @@
++import 'dart:async';
++import 'dart:typed_data';
++
++/// Send priority on the shared reliable `userInput` data channel.
++///
++/// **Design choice (post-merge Medium #1):** keep one ordered reliable channel
++/// (no second SCTP stream) and apply priority + `bufferedAmount` backpressure
++/// so file/terminal bulk traffic cannot starve privacy/control messages.
++enum ReliableSendPriority {
++  /// Privacy opcodes, file/term control JSON, pings — never blocked by bulk.
++  control,
++
++  /// File / terminal binary chunks — wait when the SCTP send buffer is high.
++  bulk,
++}
++
++/// Priority send gate wrapping one [RTCDataChannel]-like reliable channel.
++///
++/// Control messages call `send` immediately (serialized only with other
++/// in-flight sends) and do **not** wait on the bulk backpressure loop, so a
++/// file/terminal flood cannot delay privacy flips. Bulk senders pause when
++/// `bufferedAmount` is high; optional [onBulkBackpressure] tips the UI.
++class ReliableChannelGate {
++  ReliableChannelGate({
++    required this.isOpen,
++    required this.bufferedAmount,
++    required this.sendTextImpl,
++    required this.sendBinaryImpl,
++    this.bulkHighWaterBytes = 256 * 1024,
++    this.bulkLowWaterBytes = 64 * 1024,
++    this.pollInterval = const Duration(milliseconds: 16),
++    this.onBulkBackpressure,
++  }) : assert(bulkLowWaterBytes <= bulkHighWaterBytes);
++
++  final bool Function() isOpen;
++  final int Function() bufferedAmount;
++  final Future<void> Function(String text) sendTextImpl;
++  final Future<void> Function(Uint8List bytes) sendBinaryImpl;
++
++  /// Pause new bulk sends when buffered amount is at or above this.
++  final int bulkHighWaterBytes;
++
++  /// Resume bulk sends after waiting once buffered amount drops to this.
++  final int bulkLowWaterBytes;
++
++  final Duration pollInterval;
++
++  /// Fired when bulk backpressure starts (`true`) or clears (`false`).
++  final void Function(bool active)? onBulkBackpressure;
++
++  Future<void> _sendChain = Future<void>.value();
++  bool _bulkWaiting = false;
++  bool _disposed = false;
++
++  bool get isBulkBackpressured => _bulkWaiting;
++
++  /// Enqueue a text send. Control bypasses bulk buffer wait.
++  Future<void> sendText(
++    String text, {
++    ReliableSendPriority priority = ReliableSendPriority.control,
++  }) {
++    return _send(priority, () => sendTextImpl(text));
++  }
++
++  /// Enqueue a binary send. Control bypasses bulk buffer wait.
++  Future<void> sendBinary(
++    Uint8List bytes, {
++    ReliableSendPriority priority = ReliableSendPriority.control,
++  }) {
++    return _send(priority, () => sendBinaryImpl(bytes));
++  }
++
++  Future<void> _send(
++    ReliableSendPriority priority,
++    Future<void> Function() doSend,
++  ) async {
++    if (_disposed) {
++      throw StateError('ReliableChannelGate disposed');
++    }
++    if (priority == ReliableSendPriority.bulk) {
++      await _waitForBulkBudget();
++    }
++    return _withSendLock(doSend);
++  }
++
++  /// Serialize actual channel.send calls (control may cut ahead of bulk wait).
++  Future<void> _withSendLock(Future<void> Function() job) {
++    if (_disposed) {
++      return Future.error(StateError('ReliableChannelGate disposed'));
++    }
++    final done = Completer<void>();
++    _sendChain = _sendChain.then((_) async {
++      try {
++        _ensureOpen();
++        await job();
++        if (!done.isCompleted) done.complete();
++      } catch (e, st) {
++        if (!done.isCompleted) done.completeError(e, st);
++      }
++    });
++    _sendChain = _sendChain.catchError((_) {});
++    return done.future;
++  }
++
++  Future<void> _waitForBulkBudget() async {
++    if (bufferedAmount() < bulkHighWaterBytes) {
++      _setBulkWaiting(false);
++      return;
++    }
++    _setBulkWaiting(true);
++    while (!_disposed && isOpen() && bufferedAmount() > bulkLowWaterBytes) {
++      await Future<void>.delayed(pollInterval);
++    }
++    _setBulkWaiting(false);
++  }
++
++  void _setBulkWaiting(bool active) {
++    if (_bulkWaiting == active) return;
++    _bulkWaiting = active;
++    onBulkBackpressure?.call(active);
++  }
++
++  void _ensureOpen() {
++    if (_disposed || !isOpen()) {
++      throw StateError('Reliable data channel is not open');
++    }
++  }
++
++  void dispose() {
++    _disposed = true;
++    _setBulkWaiting(false);
++  }
++}
+diff --git a/lib/services/streamed_manager.dart b/lib/services/streamed_manager.dart
+index cdc4111..073f3c0 100644
+--- a/lib/services/streamed_manager.dart
++++ b/lib/services/streamed_manager.dart
+@@ -197,6 +197,7 @@ class StreamedManager {
+       Completer<void>? displayCallbackCompleter;
+ 
+       // Q21: blankDisplay auto-binds exclusive virtual display (VDISPLAY_OCCUPY).
++      // Exclusive topology also triggers SendInput mouse preference (Medium #3).
+       PrivacyBlankService.ensureExclusiveForBlankDisplay(settings);
+ 
+       if (settings.streamMode == VDISPLAY_OCCUPY || settings.streamMode == VDSIPLAY_EXTEND) {
+@@ -329,8 +330,12 @@ class StreamedManager {
+       sessions[target.websocketSessionid] = session;
+       setCurrentStreamedState(sessions.length);
+       // Host privacy / blank display after the capture pipeline is up.
++      // Per-session tracking avoids multi-controller interference (Low #4).
+       await PrivacyBlankService.onSessionStarted(
+-          requestedMode: settings.privacyMode);
++        sessionId: target.websocketSessionid,
++        requestedMode: settings.privacyMode,
++        exclusiveTopology: settings.streamMode == VDISPLAY_OCCUPY,
++      );
+     });
+   }
+ 
+@@ -372,9 +377,8 @@ class StreamedManager {
+         VLOG0("No session found with sessionId: $target.websocketSessionid");
+       }
+       setCurrentStreamedState(sessions.length);
+-      if (sessions.isEmpty) {
+-        PrivacyBlankService.onAllSessionsEnded();
+-      }
++      // Drop this session's privacy desire; clears native mode when last ends.
++      PrivacyBlankService.onSessionEnded(target.websocketSessionid);
+     });
+   }
+ 
+diff --git a/lib/utils/widgets/device_tile_page.dart b/lib/utils/widgets/device_tile_page.dart
+index 0359a32..8a5c1ee 100644
+--- a/lib/utils/widgets/device_tile_page.dart
++++ b/lib/utils/widgets/device_tile_page.dart
+@@ -24,6 +24,7 @@ import '../../services/app_info_service.dart';
+ import '../hash_util.dart';
+ import 'cpp_icon.dart';
+ import 'package:cloudplayplus/utils/widgets/file_transfer_sheet.dart';
++import 'package:cloudplayplus/utils/widgets/streaming_floating_menu.dart';
+ 
+ class DeviceSelectManager {
+   static Device? lastSelectedDevice = null;
+@@ -295,75 +296,58 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+                   backgroundColor: Color(0xff00b0cb).withValues(alpha: 0.4),
+                   contentColor: Colors.white.withValues(alpha: 0.6),
+                   onPressed: (index) async {
+-                    if (index == 0) {
+-                      await ScreenController.setIsFullScreen(
+-                          !ScreenController.isFullScreen);
+-                      ScreenController.setOnlyShowRemoteScreen(true);
+-                    }
+-                    if (index == 1) {
+-                      /*ScreenController.setShowNavBar(
+-                          !ScreenController.showBottomNav.value);
+-                      ScreenController.setShowMasterList(!ScreenController.showMasterList.value);*/
+-                      ScreenController.setOnlyShowRemoteScreen(
+-                          !ScreenController.onlyShowRemoteScreen);
+-                    }
+-                    if (index == 2) {
+-                      ScreenController.setShowVirtualKeyboard(
+-                          !ScreenController.showVirtualKeyboard.value);
+-                    }
+-                    if (index == 3) {
+-                      ScreenController.setShowVirtualMouse(
+-                          !ScreenController.showVirtualMouse.value);
+-                    }
+-                    if (index == 4) {
+-                      ScreenController.setshowVirtualGamePad(
+-                          !ScreenController.showVirtualGamePad.value);
+-                    }
+-                    // Terminal entry. Merge order with privacy (#9) + file (#2)
+-                    // per Q2: privacy → file → terminal (then close).
+-                    if (index == 5) {
+-                      // Mid-session temporary override (Q22): toggle privacy screen.
+-                      // Follow-host (-1) must NOT be treated as off — host may
+-                      // already be engaged; first tap forces off (explicit
+-                      // override), second tap enables privacyScreen.
+-                      final session = WebrtcService.currentRenderingSession;
+-                      if (session != null) {
+-                        final currentlyEngaged = _privacyMode != 0;
+-                        final next = currentlyEngaged
+-                            ? PrivacyBlankMode.off
+-                            : PrivacyBlankMode.privacyScreen;
+-                        setState(() {
+-                          _privacyMode = next.index;
+-                        });
+-                        await session.requestHostPrivacyMode(next);
+-                      }
+-                    }
+-                    // Q2 merge order: privacy → file → terminal → close.
+-                    if (index == 6) {
+-                      await FileTransferSheet.show(context);
+-                    }
+-                    if (index == 7) {
+-                      await TerminalLinkSheet.show(context);
+-                    }
+-                    if (index == 8) {
+-                      ScreenController.setshowDetailUseScrollView(true);
+-                      ScreenController.setOnlyShowRemoteScreen(false);
+-                      StreamingManager.stopStreaming(widget.device);
++                    StreamingFloatingMenu.assertAligned();
++                    final action = (index >= 0 &&
++                            index < StreamingFloatingMenuAction.values.length)
++                        ? StreamingFloatingMenuAction.values[index]
++                        : null;
++                    switch (action) {
++                      case StreamingFloatingMenuAction.fullscreen:
++                        await ScreenController.setIsFullScreen(
++                            !ScreenController.isFullScreen);
++                        ScreenController.setOnlyShowRemoteScreen(true);
++                      case StreamingFloatingMenuAction.onlyRemote:
++                        ScreenController.setOnlyShowRemoteScreen(
++                            !ScreenController.onlyShowRemoteScreen);
++                      case StreamingFloatingMenuAction.keyboard:
++                        ScreenController.setShowVirtualKeyboard(
++                            !ScreenController.showVirtualKeyboard.value);
++                      case StreamingFloatingMenuAction.mouse:
++                        ScreenController.setShowVirtualMouse(
++                            !ScreenController.showVirtualMouse.value);
++                      case StreamingFloatingMenuAction.gamepad:
++                        ScreenController.setshowVirtualGamePad(
++                            !ScreenController.showVirtualGamePad.value);
++                      case StreamingFloatingMenuAction.privacy:
++                        // Mid-session temporary override (Q22): toggle privacy.
++                        // Follow-host (-1) must NOT be treated as off — host may
++                        // already be engaged; first tap forces off (explicit
++                        // override), second tap enables privacyScreen.
++                        final session = WebrtcService.currentRenderingSession;
++                        if (session != null) {
++                          final currentlyEngaged = _privacyMode != 0;
++                          final next = currentlyEngaged
++                              ? PrivacyBlankMode.off
++                              : PrivacyBlankMode.privacyScreen;
++                          setState(() {
++                            _privacyMode = next.index;
++                          });
++                          await session.requestHostPrivacyMode(next);
++                        }
++                      case StreamingFloatingMenuAction.fileTransfer:
++                        await FileTransferSheet.show(context);
++                      case StreamingFloatingMenuAction.terminal:
++                        await TerminalLinkSheet.show(context);
++                      case StreamingFloatingMenuAction.close:
++                        ScreenController.setshowDetailUseScrollView(true);
++                        ScreenController.setOnlyShowRemoteScreen(false);
++                        StreamingManager.stopStreaming(widget.device);
++                      case null:
++                        break;
+                     }
+                   },
+-                  // When merging with #9/#2, insert visibility_off then
+-                  // folder_open immediately before Icons.terminal (Q2).
+-                  buttons: const [
+-                    Icons.crop_free,
+-                    Icons.open_in_full,
+-                    Icons.keyboard,
+-                    Icons.mouse,
+-                    Icons.gamepad,
+-                    Icons.visibility_off,
+-                    Icons.folder_open,
+-                    Icons.terminal,
+-                    Icons.close,
+-                  ],
++                  // Q2 order: privacy → file → terminal → close (see enum).
++                  buttons: StreamingFloatingMenu.icons,
+                 ),
+               ],
+             );
+diff --git a/lib/utils/widgets/file_transfer_settings_screen.dart b/lib/utils/widgets/file_transfer_settings_screen.dart
+index 9ecdd72..aecc1ef 100644
+--- a/lib/utils/widgets/file_transfer_settings_screen.dart
++++ b/lib/utils/widgets/file_transfer_settings_screen.dart
+@@ -16,14 +16,15 @@ class FileTransferSettingsScreen extends StatefulWidget {
+ 
+ class _FileTransferSettingsScreenState
+     extends State<FileTransferSettingsScreen> {
+-  bool _autoAccept = true;
++  // Default false: require explicit confirm (post-merge Medium #2).
++  bool _autoAccept = false;
+   String _savePath = '';
+ 
+   @override
+   void initState() {
+     super.initState();
+     _autoAccept =
+-        SharedPreferencesManager.getBool('fileXferAutoAccept') ?? true;
++        SharedPreferencesManager.getBool('fileXferAutoAccept') ?? false;
+     _savePath = SharedPreferencesManager.getString('fileXferSavePath') ?? '';
+     if (_savePath.isEmpty) {
+       _savePath = defaultReceiveRoot();
+@@ -63,7 +64,7 @@ class _FileTransferSettingsScreenState
+           SwitchListTile(
+             secondary: const Icon(Icons.file_download_done),
+             title: const Text('自动接收文件'),
+-            subtitle: const Text('关闭后，收到对方发送请求时需手动确认'),
++            subtitle: const Text('默认关闭；开启后无需确认即写入保存目录'),
+             value: _autoAccept,
+             onChanged: AppPlatform.isWeb
+                 ? null
+@@ -83,7 +84,9 @@ class _FileTransferSettingsScreenState
+             padding: EdgeInsets.all(16),
+             child: Text(
+               '默认目录为 Downloads/CloudPlayPlusTransfers。'
+-              '合并前可配置；网页控制端只负责发送，落盘在被控端生效。',
++              '默认需手动确认接收。已认证主控视为全权（可开终端 shell）；'
++              '自动接收是额外便利开关，与终端信任模型独立。'
++              '网页控制端只负责发送，落盘在被控端生效。',
+               style: TextStyle(fontSize: 13),
+             ),
+           ),
+diff --git a/lib/utils/widgets/streaming_floating_menu.dart b/lib/utils/widgets/streaming_floating_menu.dart
+new file mode 100644
+index 0000000..5c5c798
+--- /dev/null
++++ b/lib/utils/widgets/streaming_floating_menu.dart
+@@ -0,0 +1,41 @@
++import 'package:flutter/material.dart';
++
++/// In-session floating menu actions.
++///
++/// Index order **must** match [StreamingFloatingMenu.icons]. Named values
++/// replace bare `index == 5..8` so later icon inserts do not silently shift
++/// privacy / file / terminal / close (post-merge Low #5).
++enum StreamingFloatingMenuAction {
++  fullscreen,
++  onlyRemote,
++  keyboard,
++  mouse,
++  gamepad,
++  privacy,
++  fileTransfer,
++  terminal,
++  close,
++}
++
++/// Icon list for [FloatingMenuPanel.buttons], aligned with
++/// [StreamingFloatingMenuAction] declaration order.
++abstract final class StreamingFloatingMenu {
++  static const List<IconData> icons = [
++    Icons.crop_free,
++    Icons.open_in_full,
++    Icons.keyboard,
++    Icons.mouse,
++    Icons.gamepad,
++    Icons.visibility_off,
++    Icons.folder_open,
++    Icons.terminal,
++    Icons.close,
++  ];
++
++  static void assertAligned() {
++    assert(
++      icons.length == StreamingFloatingMenuAction.values.length,
++      'StreamingFloatingMenu.icons must match StreamingFloatingMenuAction',
++    );
++  }
++}
+diff --git a/plugins/hardware_simulator/windows/hardware_simulator_plugin.cpp b/plugins/hardware_simulator/windows/hardware_simulator_plugin.cpp
+index a33929f..a44efe4 100644
+--- a/plugins/hardware_simulator/windows/hardware_simulator_plugin.cpp
++++ b/plugins/hardware_simulator/windows/hardware_simulator_plugin.cpp
+@@ -1010,11 +1010,17 @@ void performMouseMoveRelative(double x,double y){
+ void performMouseMoveAbsl(double x,double y,int screenId){
+     // When VHID is active, absolute moves also go through WinUHid (report id 2)
+     // so relative + absolute share one optional backend (multi-screen ready).
++    //
++    // Exclusive VDISPLAY_OCCUPY / privacy blankDisplay: Dart
++    // PrivacyBlankService temporarily prefers SendInput because VHID's
++    // virtual-desktop 0..65535 map can disagree with the single-VDD topology
++    // (screenId rewritten to 0). If VHID is still effective here, mapping
++    // failure must fall through to SendInput (same monitor list).
+     if (MouseInjectorGetEffectiveBackend() == MouseInputBackend::kVhid) {
+         if (MouseInjectorMoveAbsolute(x, y, screenId)) {
+             return;
+         }
+-        // Mid-stream VHID failure: fall through to SendInput.
++        // Mid-stream VHID failure / out-of-range screenId: fall through to SendInput.
+     }
+ 
+     INPUT i {};
+diff --git a/plugins/hardware_simulator/windows/mouse_injector.cpp b/plugins/hardware_simulator/windows/mouse_injector.cpp
+index 7882f34..63d1b95 100644
+--- a/plugins/hardware_simulator/windows/mouse_injector.cpp
++++ b/plugins/hardware_simulator/windows/mouse_injector.cpp
+@@ -78,6 +78,11 @@ bool ReadPersistedBackend(MouseInputBackend& out) {
+ // Map percent + screenId onto virtual-desktop normalized 0..65535.
+ // Uses the same monitor list as SendInput (`adjust_to_main_screen`) so
+ // screenId indices stay consistent across backends.
++//
++// Under privacy blankDisplay + VDISPLAY_OCCUPY the host collapses onto one
++// VDD (Dart rewrites screenId to 0 and prefers SendInput). If this mapper is
++// still invoked with a stale multi-monitor list or out-of-range screenId,
++// return false so the caller falls back to SendInput.
+ bool MapToVirtualDesktopAbs(int screenId, double percentX, double percentY,
+                             USHORT& out_x, USHORT& out_y) {
+   const auto& monitors =
+diff --git a/plugins/hardware_simulator/windows/mouse_injector.h b/plugins/hardware_simulator/windows/mouse_injector.h
+index f0d1345..33fd6ed 100644
+--- a/plugins/hardware_simulator/windows/mouse_injector.h
++++ b/plugins/hardware_simulator/windows/mouse_injector.h
+@@ -35,8 +35,9 @@ void MouseInjectorMoveRelative(double dx, double dy);
+ // Absolute move: percent within [screenId] monitor. When VHID is effective,
+ // maps onto the virtual desktop (0..65535) using the same monitor list as
+ // SendInput (HardwareSimulatorPlugin::GetStaticMonitors).
+-// Returns false if VHID was preferred but submission failed (caller may
+-// fall back to SendInput).
++// Returns false if VHID was preferred but submission/mapping failed (caller
++// must fall back to SendInput). Mapping fails on out-of-range screenId —
++// important when exclusive VDD / privacy blank rewrote topology to screen 0.
+ bool MouseInjectorMoveAbsolute(double percentX, double percentY, int screenId);
+ 
+ void MouseInjectorButton(int buttonId, bool release);
+diff --git a/test/privacy_session_modes_test.dart b/test/privacy_session_modes_test.dart
+new file mode 100644
+index 0000000..211ed75
+--- /dev/null
++++ b/test/privacy_session_modes_test.dart
+@@ -0,0 +1,37 @@
++import 'package:cloudplayplus/services/privacy_session_modes.dart';
++import 'package:flutter_test/flutter_test.dart';
++import 'package:privacy_blank_display/privacy_blank_display.dart';
++
++void main() {
++  test('effectiveMode picks strongest among sessions', () {
++    final modes = PrivacySessionModes();
++    modes.setSessionMode('a', PrivacyBlankMode.off);
++    modes.setSessionMode('b', PrivacyBlankMode.blankDisplay);
++    expect(modes.effectiveMode(), PrivacyBlankMode.blankDisplay);
++
++    modes.setSessionMode('c', PrivacyBlankMode.privacyScreen);
++    expect(modes.effectiveMode(), PrivacyBlankMode.privacyScreen);
++
++    modes.removeSession('c');
++    expect(modes.effectiveMode(), PrivacyBlankMode.blankDisplay);
++
++    modes.removeSession('b');
++    expect(modes.effectiveMode(), PrivacyBlankMode.off);
++  });
++
++  test('one session force-off does not clear another session blank', () {
++    final modes = PrivacySessionModes();
++    modes.setSessionMode('ctrl-1', PrivacyBlankMode.blankDisplay);
++    modes.setSessionMode('ctrl-2', PrivacyBlankMode.off);
++    expect(modes.effectiveMode(), PrivacyBlankMode.blankDisplay);
++    expect(modes.hasBlankDisplay, isTrue);
++  });
++
++  test('clear empties aggregator', () {
++    final modes = PrivacySessionModes();
++    modes.setSessionMode('x', PrivacyBlankMode.privacyScreen);
++    modes.clear();
++    expect(modes.sessionCount, 0);
++    expect(modes.effectiveMode(), PrivacyBlankMode.off);
++  });
++}
+diff --git a/test/reliable_channel_gate_test.dart b/test/reliable_channel_gate_test.dart
+new file mode 100644
+index 0000000..b2d473f
+--- /dev/null
++++ b/test/reliable_channel_gate_test.dart
+@@ -0,0 +1,78 @@
++import 'dart:typed_data';
++
++import 'package:cloudplayplus/services/reliable_channel_gate.dart';
++import 'package:flutter_test/flutter_test.dart';
++
++void main() {
++  test('control send is not blocked by high bufferedAmount', () async {
++    var buffered = 512 * 1024;
++    final sent = <String>[];
++    final gate = ReliableChannelGate(
++      isOpen: () => true,
++      bufferedAmount: () => buffered,
++      sendTextImpl: (t) async => sent.add(t),
++      sendBinaryImpl: (_) async {},
++      bulkHighWaterBytes: 256 * 1024,
++      bulkLowWaterBytes: 64 * 1024,
++      pollInterval: const Duration(milliseconds: 1),
++    );
++
++    await gate.sendText('privacy', priority: ReliableSendPriority.control);
++    expect(sent, ['privacy']);
++  });
++
++  test('bulk send waits until bufferedAmount drops', () async {
++    var buffered = 400 * 1024;
++    final sent = <int>[];
++    final gate = ReliableChannelGate(
++      isOpen: () => true,
++      bufferedAmount: () => buffered,
++      sendTextImpl: (_) async {},
++      sendBinaryImpl: (b) async => sent.add(b.length),
++      bulkHighWaterBytes: 256 * 1024,
++      bulkLowWaterBytes: 64 * 1024,
++      pollInterval: const Duration(milliseconds: 5),
++    );
++
++    final pending = gate.sendBinary(
++      Uint8List(8),
++      priority: ReliableSendPriority.bulk,
++    );
++    await Future<void>.delayed(const Duration(milliseconds: 20));
++    expect(sent, isEmpty);
++    expect(gate.isBulkBackpressured, isTrue);
++
++    buffered = 32 * 1024;
++    await pending;
++    expect(sent, [8]);
++    expect(gate.isBulkBackpressured, isFalse);
++  });
++
++  test('control completes while bulk is waiting on backpressure', () async {
++    var buffered = 400 * 1024;
++    final order = <String>[];
++    final gate = ReliableChannelGate(
++      isOpen: () => true,
++      bufferedAmount: () => buffered,
++      sendTextImpl: (t) async => order.add(t),
++      sendBinaryImpl: (_) async => order.add('bulk'),
++      bulkHighWaterBytes: 256 * 1024,
++      bulkLowWaterBytes: 64 * 1024,
++      pollInterval: const Duration(milliseconds: 5),
++    );
++
++    final bulk = gate.sendBinary(
++      Uint8List(1),
++      priority: ReliableSendPriority.bulk,
++    );
++    await Future<void>.delayed(const Duration(milliseconds: 10));
++    expect(gate.isBulkBackpressured, isTrue);
++
++    await gate.sendText('ctrl', priority: ReliableSendPriority.control);
++    expect(order, ['ctrl']);
++
++    buffered = 0;
++    await bulk;
++    expect(order, ['ctrl', 'bulk']);
++  });
++}
+diff --git a/test/streaming_floating_menu_test.dart b/test/streaming_floating_menu_test.dart
+new file mode 100644
+index 0000000..8637bab
+--- /dev/null
++++ b/test/streaming_floating_menu_test.dart
+@@ -0,0 +1,30 @@
++import 'package:cloudplayplus/utils/widgets/streaming_floating_menu.dart';
++import 'package:flutter/material.dart';
++import 'package:flutter_test/flutter_test.dart';
++
++void main() {
++  test('floating menu icons align with named actions', () {
++    StreamingFloatingMenu.assertAligned();
++    expect(
++      StreamingFloatingMenu.icons.length,
++      StreamingFloatingMenuAction.values.length,
++    );
++    expect(
++      StreamingFloatingMenu.icons[StreamingFloatingMenuAction.privacy.index],
++      Icons.visibility_off,
++    );
++    expect(
++      StreamingFloatingMenu
++          .icons[StreamingFloatingMenuAction.fileTransfer.index],
++      Icons.folder_open,
++    );
++    expect(
++      StreamingFloatingMenu.icons[StreamingFloatingMenuAction.terminal.index],
++      Icons.terminal,
++    );
++    expect(
++      StreamingFloatingMenu.icons[StreamingFloatingMenuAction.close.index],
++      Icons.close,
++    );
++  });
++}

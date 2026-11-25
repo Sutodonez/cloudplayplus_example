@@ -29,7 +29,8 @@ class FileTransferEngine {
     String? receiveRoot,
     this.chunkSize = 16 * 1024,
     this.maxInFlight = 8,
-    bool autoAcceptIncoming = true,
+    // Desktop default is false (explicit confirm); session wireup reads prefs.
+    bool autoAcceptIncoming = false,
   })  : receiveRoot = receiveRoot ?? defaultReceiveRoot(),
         _autoAcceptIncoming = autoAcceptIncoming {
     _resumeStore = ResumeStore(this.receiveRoot);
