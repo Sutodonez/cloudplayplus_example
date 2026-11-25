@@ -41,9 +41,16 @@ class MethodChannelPrivacyBlankDisplay extends PrivacyBlankDisplayPlatform {
     if (kIsWeb || defaultTargetPlatform != TargetPlatform.windows) {
       return false;
     }
+    // Do not forward imagePath until a native whitelist loader exists.
+    if (imagePath != null) {
+      throw ArgumentError.value(
+        imagePath,
+        'imagePath',
+        'Custom screensaver images are not implemented yet',
+      );
+    }
     final result = await methodChannel.invokeMethod<bool>('setMode', {
       'mode': modeIndex,
-      if (imagePath != null) 'imagePath': imagePath,
     });
     return result ?? false;
   }
@@ -86,7 +93,9 @@ class MethodChannelPrivacyBlankDisplay extends PrivacyBlankDisplayPlatform {
     if (kIsWeb || defaultTargetPlatform != TargetPlatform.windows) {
       return false;
     }
-    final result = await methodChannel.invokeMethod<bool>('lockWorkstation');
+    final result = await methodChannel.invokeMethod<bool>('lockWorkstation', {
+      'confirm': true,
+    });
     return result ?? false;
   }
 

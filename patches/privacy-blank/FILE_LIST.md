@@ -8,14 +8,14 @@ Plugin (cppp root, not in patch): `plugins/privacy_blank_display/`
 | Path | Role |
 |------|------|
 | `pubspec.yaml` | Path dep → `../../plugins/privacy_blank_display` |
-| `lib/services/privacy_blank_service.dart` | Host orchestrator (mute/hotkey/VDD auto-bind/Q22) |
+| `lib/services/privacy_blank_service.dart` | Host orchestrator (mute/hotkey/VDD auto-bind/Q22 + policy gates) |
 | `lib/services/app_init_service.dart` | Init privacy service on Windows |
-| `lib/services/streamed_manager.dart` | Engage/restore; blankDisplay→VDISPLAY_OCCUPY |
+| `lib/services/streamed_manager.dart` | Engage/restore; blankDisplay→VDISPLAY_OCCUPY (gated) |
 | `lib/entities/messages.dart` | `LP_PRIVACY_MODE = 68` |
-| `lib/entities/session.dart` | Opcode handler + `requestHostPrivacyMode` |
-| `lib/global_settings/streaming_settings.dart` | Host defaults + controller override payload |
-| `lib/settings_screen.dart` | Host「防窥」settings (hotkey capture; non-Win grayed) |
-| `lib/utils/widgets/device_tile_page.dart` | Connect privacy picker + floating menu toggle |
+| `lib/entities/session.dart` | Opcode handler → `applyControllerMode` + `requestHostPrivacyMode` |
+| `lib/global_settings/streaming_settings.dart` | Host defaults + override allow / exclusive auto-bind flags |
+| `lib/settings_screen.dart` | Host「防窥」settings (policy toggles; hotkey; non-Win grayed) |
+| `lib/utils/widgets/device_tile_page.dart` | Connect privacy picker + floating menu toggle (follow-host fix) |
 
 ## Replay
 

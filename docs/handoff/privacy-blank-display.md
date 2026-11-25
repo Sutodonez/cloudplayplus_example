@@ -23,11 +23,21 @@
 | Copy: 关闭屏幕背光 / 彻底关闭需独占 / 屏保留自定义图空间 | Done (settings + connect picker) |
 | Non-Windows: gray out, don't hide | Done |
 | Q22: host default; controller temp override | Done (`controllerPrivacyOverride`; null = follow host) |
+| Host gate: allow controller override | Done (`privacyAllowControllerOverride`, default on) |
+| Host gate: blankDisplay→VDISPLAY auto-bind | Done (`privacyAutoBindExclusive`, default on) |
+
+## Review hardenings (PR #9 follow-up)
+
+- Overlay/`setMode` failure rolls back mute+hotkey (no Dart/`_active` diverge)
+- Floating toggle: follow-host (`-1`) treated as engaged → first tap forces off
+- WDA affinity failure destroys overlay window (fail closed)
+- Mute crash marker restore on plugin load; `lockWorkstation` requires `{confirm: true}`; `imagePath` rejected until whitelist loader
 
 ## Deferred
 
 - Custom screensaver **image** (`imagePath` reserved; solid black for now)
 - macOS / Linux host native privacy
+- Low: hotkey persistence constraints; multi-session global singleton state
 
 ## Design sources (ideas only)
 

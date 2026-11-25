@@ -58,7 +58,37 @@ bool g_mute_saved = false;
 bool g_previous_mute = false;
 bool g_privacy_muted = false;
 
+// Marker so a crashed process can restore host unmute on next plugin load.
+const wchar_t kMuteMarkerFile[] = L"cloudplayplus_privacy_mute.marker";
+
 const wchar_t kOverlayClass[] = L"CpppPrivacyBlankOverlay";
+
+std::wstring MuteMarkerPath() {
+  wchar_t temp[MAX_PATH] = {};
+  DWORD n = GetTempPathW(MAX_PATH, temp);
+  if (n == 0 || n >= MAX_PATH) {
+    return std::wstring(kMuteMarkerFile);
+  }
+  return std::wstring(temp) + kMuteMarkerFile;
+}
+
+void WriteMuteMarker() {
+  HANDLE h = CreateFileW(MuteMarkerPath().c_str(), GENERIC_WRITE, 0, nullptr,
+                         CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+  if (h != INVALID_HANDLE_VALUE) {
+    CloseHandle(h);
+  }
+}
+
+void ClearMuteMarker() {
+  DeleteFileW(MuteMarkerPath().c_str());
+}
+
+bool MuteMarkerPresent() {
+  DWORD attrs = GetFileAttributesW(MuteMarkerPath().c_str());
+  return attrs != INVALID_FILE_ATTRIBUTES &&
+         (attrs & FILE_ATTRIBUTE_DIRECTORY) == 0;
+}
 
 UINT DartModsToWinMods(int dart_mods) {
   UINT win = 0;
@@ -120,17 +150,29 @@ void ApplyHostMuteLocked(bool enable) {
       g_previous_mute = previous;
       g_mute_saved = true;
       g_privacy_muted = true;
+      WriteMuteMarker();
     }
   } else {
-    if (!g_privacy_muted) return;
+    if (!g_privacy_muted && !MuteMarkerPresent()) return;
     if (g_mute_saved) {
       SetEndpointMute(g_previous_mute, nullptr);
     } else {
+      // Crash-recovery path: marker present but in-process state lost.
       SetEndpointMute(false, nullptr);
     }
     g_privacy_muted = false;
     g_mute_saved = false;
+    ClearMuteMarker();
   }
+}
+
+/// If a previous process crashed while privacy-muted, restore unmute once.
+void RecoverStaleMuteIfNeeded() {
+  if (!MuteMarkerPresent()) return;
+  SetEndpointMute(false, nullptr);
+  ClearMuteMarker();
+  g_privacy_muted = false;
+  g_mute_saved = false;
 }
 
 LRESULT CALLBACK OverlayWndProc(HWND hwnd, UINT msg, WPARAM wparam,
@@ -198,8 +240,12 @@ BOOL CALLBACK MonitorEnumProc(HMONITOR monitor, HDC, LPRECT, LPARAM) {
   }
 
   // Exclude overlay from desktop capture so the remote stream still sees the
-  // real desktop (Win10 2004+). Older builds ignore the call.
-  SetWindowDisplayAffinity(hwnd, WDA_EXCLUDEFROMCAPTURE);
+  // real desktop (Win10 2004+). Fail closed if affinity cannot be set —
+  // otherwise the overlay would blank the remote view as well.
+  if (!SetWindowDisplayAffinity(hwnd, WDA_EXCLUDEFROMCAPTURE)) {
+    DestroyWindow(hwnd);
+    return TRUE;
+  }
   SetLayeredWindowAttributes(hwnd, 0, 255, LWA_ALPHA);
   ShowWindow(hwnd, SW_SHOWNOACTIVATE);
   SetWindowPos(hwnd, HWND_TOPMOST, r.left, r.top, r.right - r.left,
@@ -318,7 +364,15 @@ bool ApplyModeLocked(int mode) {
 
   if (mode == kModePrivacyScreen) {
     CreateOverlaysLocked();
-    return !g_overlays.empty();
+    if (g_overlays.empty()) {
+      // Do not leave mute/hotkey engaged when overlay setup failed —
+      // Dart `_active` stays previous/off while native would otherwise diverge.
+      ApplyHostMuteLocked(false);
+      UnregisterHotkeyLocked();
+      g_mode = kModeOff;
+      return false;
+    }
+    return true;
   }
 
   if (mode == kModeBlankDisplay) {
@@ -405,6 +459,7 @@ PrivacyBlankDisplayPlugin::PrivacyBlankDisplayPlugin(
     : registrar_(registrar) {
   std::lock_guard<std::mutex> lock(g_mutex);
   g_registrar = registrar_;
+  RecoverStaleMuteIfNeeded();
   window_proc_id_ = registrar_->RegisterTopLevelWindowProcDelegate(
       [](HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) -> std::optional<LRESULT> {
         if (message == WM_HOTKEY && static_cast<int>(wparam) == kHotkeyId) {
@@ -505,6 +560,23 @@ void PrivacyBlankDisplayPlugin::HandleMethodCall(
   }
 
   if (method == "lockWorkstation") {
+    // Require explicit confirm arg so a stray invoke cannot lock the host.
+    const auto* args =
+        std::get_if<flutter::EncodableMap>(method_call.arguments());
+    bool confirm = false;
+    if (args) {
+      auto it = args->find(flutter::EncodableValue("confirm"));
+      if (it != args->end()) {
+        if (const auto* b = std::get_if<bool>(&it->second)) {
+          confirm = *b;
+        }
+      }
+    }
+    if (!confirm) {
+      result->Error("confirm_required",
+                    "lockWorkstation requires {confirm: true}");
+      return;
+    }
     result->Success(flutter::EncodableValue(LockWorkStation() != 0));
     return;
   }
@@ -520,7 +592,17 @@ void PrivacyBlankDisplayPlugin::HandleMethodCall(
           mode = *i;
         } else if (const auto* i64 = std::get_if<int64_t>(&it->second)) {
           mode = static_cast<int>(*i64);
+        } else {
+          result->Error("invalid_mode", "mode must be int 0..2");
+          return;
         }
+      }
+      // imagePath is reserved for a future custom screensaver; reject paths
+      // until a whitelist loader exists (no path-injection surface today).
+      if (args->find(flutter::EncodableValue("imagePath")) != args->end()) {
+        result->Error("unsupported",
+                      "imagePath is not implemented; omit the argument");
+        return;
       }
     }
     if (mode < kModeOff || mode > kModePrivacyScreen) {

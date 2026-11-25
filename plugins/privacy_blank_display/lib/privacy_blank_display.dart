@@ -103,7 +103,8 @@ class PrivacyBlankDisplay {
   }
 
   /// Apply [mode]. Optional [imagePath] is reserved for a future custom
-  /// screensaver image (currently ignored; overlay is solid black).
+  /// screensaver image; passing a path today throws until a whitelist loader
+  /// exists (overlay remains solid black).
   ///
   /// While any non-off mode is active, the host default render endpoint is
   /// muted and restored when privacy turns off.

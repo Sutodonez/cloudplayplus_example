@@ -23,4 +23,5 @@ Windows host only for native blank/overlay/mute. Other platforms: `isSupported()
 ## Constraints
 
 - Do not copy NetEase binaries or decompiled bodies.
-- Custom screensaver images: API reserved (`imagePath`); v1 uses solid black.
+- Custom screensaver images: API reserved (`imagePath`); v1 uses solid black and rejects path args on the method channel until a whitelist loader exists.
+- `lockWorkstation` requires `{confirm: true}`; host mute crash recovery via temp marker file.
