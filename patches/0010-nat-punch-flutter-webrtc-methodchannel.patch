@@ -39,8 +39,8 @@ index 0000000..deadbeef
 @@ -0,0 +1,213 @@
 +#include "flutter_nat_punch.h"
 +
++#include <cctype>
 +#include <chrono>
-+#include <cstdio>
 +#include <cstring>
 +#include <thread>
 +#include <vector>
@@ -117,13 +117,30 @@ index 0000000..deadbeef
 +// Mirror Dart IceCandidateEndpoint.isPublicUnicastIpv4 — reject private /
 +// loopback / link-local / CGNAT / multicast so MethodChannel callers cannot
 +// steer bursts at arbitrary internal destinations.
++// Manual IPv4 parse — avoid MSVC C4996 on sscanf under /WX.
 +bool IsPublicUnicastIpv4(const std::string& ip) {
-+  unsigned a = 0, b = 0, c = 0, d = 0;
-+  char extra = 0;
-+  if (sscanf(ip.c_str(), "%u.%u.%u.%u%c", &a, &b, &c, &d, &extra) != 4) {
-+    return false;
++  unsigned octets[4] = {0, 0, 0, 0};
++  size_t i = 0;
++  for (int oi = 0; oi < 4; ++oi) {
++    if (i >= ip.size() || !isdigit(static_cast<unsigned char>(ip[i]))) {
++      return false;
++    }
++    unsigned v = 0;
++    const size_t start = i;
++    while (i < ip.size() && isdigit(static_cast<unsigned char>(ip[i]))) {
++      v = v * 10u + static_cast<unsigned>(ip[i] - '0');
++      if (v > 255) return false;
++      ++i;
++    }
++    if (i == start) return false;
++    octets[oi] = v;
++    if (oi < 3) {
++      if (i >= ip.size() || ip[i] != '.') return false;
++      ++i;
++    }
 +  }
-+  if (a > 255 || b > 255 || c > 255 || d > 255) return false;
++  if (i != ip.size()) return false;
++  const unsigned a = octets[0], b = octets[1];
 +  if (a == 0 || a == 127) return false;
 +  if (a == 10) return false;
 +  if (a == 172 && b >= 16 && b <= 31) return false;
