@@ -30,7 +30,9 @@ fi
 
 for patch in "${patches[@]}"; do
   echo "==> Applying $patch"
-  git -C "$VENDOR" apply --index --whitespace=nowarn "$ROOT/$patch"
+  # --ignore-cr-at-eol: Windows runners may check out vendor with CRLF while
+  # patches are LF; without this, later patches fail after earlier ones apply.
+  git -C "$VENDOR" apply --index --whitespace=nowarn --ignore-cr-at-eol "$ROOT/$patch"
 done
 
 echo "==> Applied ${#patches[@]} patch(es). Review with: git -C $VENDOR status"
