@@ -489,7 +489,7 @@ index fa8365f..cdc4111 100644
    }
  
 diff --git a/lib/settings_screen.dart b/lib/settings_screen.dart
-index fa49a5c..27efd6e 100644
+index fa49a5c..5bda5bd 100644
 --- a/lib/settings_screen.dart
 +++ b/lib/settings_screen.dart
 @@ -6,6 +6,7 @@ import 'package:cloudplayplus/pages/display_manager_page.dart';
@@ -534,7 +534,7 @@ index fa49a5c..27efd6e 100644
              ],
            ),
            if (!AppPlatform.isDeskTop)
-@@ -1637,3 +1658,301 @@ class _DisplaySettingsScreenState extends State<DisplaySettingsScreen> {
+@@ -1637,3 +1658,302 @@ class _DisplaySettingsScreenState extends State<DisplaySettingsScreen> {
      }
    }
  }
@@ -796,7 +796,8 @@ index fa49a5c..27efd6e 100644
 +        return c;
 +      }
 +    }
-+    const fKeys = <LogicalKeyboardKey, int>{
++    // Non-const: LogicalKeyboardKey lacks primitive equality for const maps.
++    final fKeys = <LogicalKeyboardKey, int>{
 +      LogicalKeyboardKey.f1: 0x70,
 +      LogicalKeyboardKey.f2: 0x71,
 +      LogicalKeyboardKey.f3: 0x72,
