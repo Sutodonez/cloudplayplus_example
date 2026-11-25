@@ -3,7 +3,7 @@
 **Upstream HS pin:** `vendor/cloudplayplus/plugins/hardware_simulator` @ `19dc81a`  
 **Apply:** `scripts/apply-patches.sh` → `patches/0001-*.patch` + `patches/0002-*.patch`
 
-## New (via `0001-vhid-relative-mouse-hs.patch`)
+## New (via `0005-vhid-relative-mouse-hs.patch`)
 
 - `plugins/hardware_simulator/windows/mouse_injector.h`
 - `plugins/hardware_simulator/windows/mouse_injector.cpp`
@@ -21,7 +21,7 @@
 - `plugins/hardware_simulator/test/hardware_simulator_method_channel_test.dart`
 - `plugins/hardware_simulator/CHANGELOG.md`
 
-## Modified (CPP app — `0002-vhid-relative-mouse-app-wireup.patch`)
+## Modified (CPP app — `0006-vhid-relative-mouse-app-wireup.patch`)
 
 - `lib/global_settings/streaming_settings.dart` — `useVhidMouse`
 - `lib/services/app_init_service.dart` — apply backend on Windows host start

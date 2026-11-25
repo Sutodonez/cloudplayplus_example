@@ -9,8 +9,8 @@
 
 | Path | Role |
 |------|------|
-| `patches/0001-vhid-relative-mouse-hs.patch` | HS deltas (paths under `plugins/hardware_simulator/`) |
-| `patches/0002-vhid-relative-mouse-app-wireup.patch` | CPP app settings / init / UI wireup + WinUHid install guide button |
+| `patches/0005-vhid-relative-mouse-hs.patch` | HS deltas (paths under `plugins/hardware_simulator/`) |
+| `patches/0006-vhid-relative-mouse-app-wireup.patch` | CPP app settings / init / UI wireup + WinUHid install guide button |
 | `patches/vhid-relative-mouse/00*.patch` | Same HS deltas as classic `-p0` series for a standalone HS checkout |
 | `patches/vhid-relative-mouse/FILE_LIST.md` | Conflict surface |
 

@@ -1,41 +1,37 @@
 diff --git a/lib/global_settings/streaming_settings.dart b/lib/global_settings/streaming_settings.dart
-index d4607d8..be60ce0 100644
+index bded8f0..7e1555a 100644
 --- a/lib/global_settings/streaming_settings.dart
 +++ b/lib/global_settings/streaming_settings.dart
-@@ -81,6 +81,10 @@ class StreamingSettings {
-   // 是否监听远程设备的鼠标位置更新
-   static bool syncMousePosition = false;
- 
-+  /// Host-side: prefer virtual HID for relative + absolute mouse
-+  /// (Windows + WinUHid). Does not change the wire protocol.
+@@ -100,6 +100,7 @@ class StreamingSettings {
+   static bool privacyLockOnDisconnect = false;
+   // Dismiss hotkey: modifier bitmask (ctrl=1,alt=2,shift=4,win=8) + VK code.
+   static int privacyHotkeyModifiers = 3; // Ctrl|Alt
 +  static bool useVhidMouse = false;
-+
-   // 0: default mode. connect to monitor with that screenId
-   // 1: create a virtual monitor and stream to that monitor (Extended mode).
-   // 2: create a virtual monitor, and then set that monitor as default,
-@@ -170,6 +174,8 @@ class StreamingSettings {
- 
-     isStreamingStateEnabled = SharedPreferencesManager.getBool('streamingState') ?? false;
-     ScreenController.setShowVideoInfo(isStreamingStateEnabled!);
-+
+   static int privacyHotkeyVk = 0x50; // 'P'
+   /// Q22: when true (default), controller may temporarily override host privacy
+   /// via connect JSON / mid-session opcode. When false, host default wins.
+@@ -202,6 +203,7 @@ class StreamingSettings {
+         SharedPreferencesManager.getInt('privacyHotkeyModifiers') ?? 3;
+     privacyHotkeyVk =
+         SharedPreferencesManager.getInt('privacyHotkeyVk') ?? 0x50;
 +    useVhidMouse = SharedPreferencesManager.getBool('useVhidMouse') ?? false;
-   }
- 
-   //Screen id setting is not global, so we need to call before start streaming.
+     // Match settings UI: letter/digit/F + required modifiers; repair dirty prefs
+     // in memory (PrivacyBlankService rewrites SharedPreferences on apply).
+     final sanitizedHotkey = PrivacyHotkey(
 diff --git a/lib/services/app_init_service.dart b/lib/services/app_init_service.dart
-index 91cadc9..991da12 100644
+index 4d2b78a..b35a5ef 100644
 --- a/lib/services/app_init_service.dart
 +++ b/lib/services/app_init_service.dart
 @@ -1,4 +1,5 @@
  import 'package:cloudplayplus/base/logging.dart';
 +import 'package:cloudplayplus/global_settings/streaming_settings.dart';
  import 'package:cloudplayplus/services/login_service.dart';
+ import 'package:cloudplayplus/services/privacy_blank_service.dart';
  import 'package:cloudplayplus/services/websocket_service.dart';
- import 'package:hardware_simulator/hardware_simulator.dart';
-@@ -92,6 +93,25 @@ class AppInitService {
-           ApplicationInfo.displayCountChangedCompleter!.complete();
-         }
-       }, 0);
+@@ -80,6 +81,25 @@ class AppInitService {
+     //TODO:implement for other platforms
+     if (AppPlatform.isWindows) {
+       await PrivacyBlankService.init();
 +      // Apply host mouse backend. SharedPreferences are per-user-profile and
 +      // do not survive registerService → SYSTEM relaunch; native plugin already
 +      // restored `cppp_mouse_backend.flag` next to the exe. Only override when
@@ -55,22 +51,22 @@ index 91cadc9..991da12 100644
 +        StreamingSettings.useVhidMouse =
 +            preferred == MouseInputBackend.vhid;
 +      }
-     }
-     bool? isSystem = await HardwareSimulator.isRunningAsSystem();
-     if (isSystem == false) {
+       HardwareSimulator.initParsecVdd();
+       ApplicationInfo.screencount = await HardwareSimulator.getAllDisplays();
+       HardwareSimulator.addDisplayCountChangedCallback((displayCount) {
 diff --git a/lib/settings_screen.dart b/lib/settings_screen.dart
-index fa49a5c..8179fc4 100644
+index 6a9b8c8..1d1da3c 100644
 --- a/lib/settings_screen.dart
 +++ b/lib/settings_screen.dart
-@@ -12,6 +12,7 @@ import 'package:cloudplayplus/utils/widgets/text_field_wrapper.dart';
+@@ -13,6 +13,7 @@ import 'package:cloudplayplus/utils/widgets/text_field_wrapper.dart';
  import 'package:flutter/cupertino.dart';
  import 'package:flutter/material.dart';
  import 'package:flutter/services.dart';
 +import 'package:hardware_simulator/hardware_simulator.dart';
  import 'package:native_textfield_tv/native_textfield_tv.dart';
+ import 'package:privacy_blank_display/privacy_blank_display.dart';
  import 'package:provider/provider.dart';
- import 'package:url_launcher/url_launcher.dart';
-@@ -1011,6 +1012,8 @@ class _CursorSettingsScreenState extends State<CursorSettingsScreen> {
+@@ -1045,6 +1046,8 @@ class _CursorSettingsScreenState extends State<CursorSettingsScreen> {
    bool autoHideLocalCursor = true;
    bool _renderRemoteCursor = false;
    bool _switchCmdCtrl = false;
@@ -79,7 +75,7 @@ index fa49a5c..8179fc4 100644
    int _touchInputMode = TouchInputMode.touch.index;  // 触控模式：0=触摸(默认), 1=触控板, 2=鼠标
    double _touchpadSensitivity = 1.0;  // 触控板灵敏度
    double _touchpadSensitivityLocked = 10.0;  // 鼠标锁定状态下的移动灵敏度
-@@ -1087,6 +1090,14 @@ class _CursorSettingsScreenState extends State<CursorSettingsScreen> {
+@@ -1121,6 +1124,14 @@ class _CursorSettingsScreenState extends State<CursorSettingsScreen> {
      _renderRemoteCursor =
          SharedPreferencesManager.getBool('renderRemoteCursor') ?? false;
      _switchCmdCtrl = StreamingSettings.switchCmdCtrl;
@@ -94,10 +90,11 @@ index fa49a5c..8179fc4 100644
      _touchInputMode = StreamingSettings.touchInputMode;
      // 加载保存的缩放值，默认值为100
      double savedValue = StreamingSettings.cursorScale;
-@@ -1177,6 +1188,74 @@ class _CursorSettingsScreenState extends State<CursorSettingsScreen> {
+@@ -1211,6 +1222,75 @@ class _CursorSettingsScreenState extends State<CursorSettingsScreen> {
                      });
                    },
                  ),
++
 +                if (AppPlatform.isWindows)
 +                  SettingsTile.switchTile(
 +                    title: const Text('虚拟 HID 鼠标 (WinUHid)'),
