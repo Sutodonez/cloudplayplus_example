@@ -259,7 +259,7 @@ index 0000000..747cd0c
 +
 +#endif  // FLUTTER_WEBRTC_NAT_PUNCH_IN_STACK_HXX
 diff --git a/plugins/flutter-webrtc/common/cpp/src/flutter_nat_punch.cc b/plugins/flutter-webrtc/common/cpp/src/flutter_nat_punch.cc
-index 631d95e..b0a5cbf 100644
+index 188c699..db13a0d 100644
 --- a/plugins/flutter-webrtc/common/cpp/src/flutter_nat_punch.cc
 +++ b/plugins/flutter-webrtc/common/cpp/src/flutter_nat_punch.cc
 @@ -1,4 +1,5 @@
@@ -268,10 +268,11 @@ index 631d95e..b0a5cbf 100644
  
  #include <cctype>
  #include <chrono>
-@@ -210,4 +211,39 @@ void FlutterNatPunch::SymmetricPunch(
-           int port = ep.port;
-           if (p > 0) {
-             port = ep.port + ((p % 5) - 2);
+@@ -227,4 +228,40 @@ void FlutterNatPunch::SymmetricPunch(
+   }).detach();
+ }
+ 
++
 +void FlutterNatPunch::InStackStatus(
 +    const EncodableMap& /*params*/,
 +    std::unique_ptr<MethodResultProxy> result) {
@@ -307,7 +308,7 @@ index 631d95e..b0a5cbf 100644
 +  result->Success(EncodableValue(out));
 +}
 +
-             if (port < 1) port = 1;
+ }  // namespace flutter_webrtc_plugin
 diff --git a/plugins/flutter-webrtc/common/cpp/src/flutter_webrtc.cc b/plugins/flutter-webrtc/common/cpp/src/flutter_webrtc.cc
 index 91f1b0f..c10460a 100644
 --- a/plugins/flutter-webrtc/common/cpp/src/flutter_webrtc.cc
