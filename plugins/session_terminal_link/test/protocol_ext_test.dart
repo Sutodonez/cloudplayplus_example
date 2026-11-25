@@ -43,4 +43,23 @@ void main() {
     expect(again.muxSession, 'cppp-s1');
     expect(again.panes, ['%0', '%1']);
   });
+
+  test('state control round-trip preserves mux metadata', () {
+    final control = TermLinkControl(
+      op: TermLinkOp.state,
+      sessionId: 's1',
+      name: 'n',
+      shell: 'powershell.exe',
+      state: TermSessionState.ready,
+      backend: 'psmux+conpty',
+      muxSession: 'cppp-s1',
+      panes: const ['%0', '%1'],
+    );
+    final decoded = TermLinkJsonCodec.tryDecodeText(
+      TermLinkJsonCodec.encodeControl(control),
+    );
+    expect(decoded!.backend, 'psmux+conpty');
+    expect(decoded.muxSession, 'cppp-s1');
+    expect(decoded.panes, ['%0', '%1']);
+  });
 }

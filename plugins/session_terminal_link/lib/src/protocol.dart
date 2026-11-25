@@ -153,6 +153,10 @@ class TermLinkControl {
   /// Backend / visible-attach detail echoed to the controller.
   final String? detail;
   final bool? ok;
+  /// Mux metadata on [TermLinkOp.state] (mirrors [TermSessionInfo]).
+  final String? backend;
+  final String? muxSession;
+  final List<String> panes;
 
   const TermLinkControl({
     required this.op,
@@ -170,6 +174,9 @@ class TermLinkControl {
     this.paneId,
     this.detail,
     this.ok,
+    this.backend,
+    this.muxSession,
+    this.panes = const [],
   });
 
   Map<String, dynamic> toEnvelope() => {
@@ -190,6 +197,9 @@ class TermLinkControl {
           if (paneId != null) 'paneId': paneId,
           if (detail != null) 'detail': detail,
           if (ok != null) 'ok': ok,
+          if (backend != null) 'backend': backend,
+          if (muxSession != null) 'muxSession': muxSession,
+          if (panes.isNotEmpty) 'panes': panes,
         },
       };
 
@@ -224,6 +234,12 @@ class TermLinkControl {
       paneId: map['paneId'] as String?,
       detail: map['detail'] as String?,
       ok: map['ok'] as bool?,
+      backend: map['backend'] as String?,
+      muxSession: map['muxSession'] as String?,
+      panes: (map['panes'] as List?)
+              ?.map((e) => e.toString())
+              .toList(growable: false) ??
+          const [],
     );
   }
 }

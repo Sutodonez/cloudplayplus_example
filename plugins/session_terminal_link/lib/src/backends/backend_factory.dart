@@ -43,8 +43,25 @@ class ShellBackendFactory {
           cols: cols,
           rows: rows,
         );
-        if (ConPtyShellBackend.isAvailable) {
-          final backend = ConPtyShellBackend(kind: 'psmux+conpty');
+        try {
+          if (ConPtyShellBackend.isAvailable) {
+            final backend = ConPtyShellBackend(kind: 'psmux+conpty');
+            final attach = mux.attachArgv(muxSessionName);
+            await backend.start(
+              shell: attach.first,
+              args: attach.sublist(1),
+              cols: cols,
+              rows: rows,
+              workingDirectory: Platform.environment['USERPROFILE'],
+            );
+            return ShellBackendChoice(
+              backend: backend,
+              kind: 'psmux+conpty',
+              detail: 'psmux session=$muxSessionName via ConPTY attach',
+            );
+          }
+          // psmux without ConPTY: pipe-attach (degraded TUI).
+          final backend = PipeShellBackend();
           final attach = mux.attachArgv(muxSessionName);
           await backend.start(
             shell: attach.first,
@@ -55,25 +72,17 @@ class ShellBackendFactory {
           );
           return ShellBackendChoice(
             backend: backend,
-            kind: 'psmux+conpty',
-            detail: 'psmux session=$muxSessionName via ConPTY attach',
+            kind: 'psmux+pipe',
+            detail: 'psmux session=$muxSessionName via pipe attach (no ConPTY)',
           );
+        } catch (e) {
+          // Avoid orphan cppp-* sessions when attach/start fails after
+          // new-session succeeded.
+          try {
+            await mux.killSession(muxSessionName);
+          } catch (_) {}
+          rethrow;
         }
-        // psmux without ConPTY: pipe-attach (degraded TUI).
-        final backend = PipeShellBackend();
-        final attach = mux.attachArgv(muxSessionName);
-        await backend.start(
-          shell: attach.first,
-          args: attach.sublist(1),
-          cols: cols,
-          rows: rows,
-          workingDirectory: Platform.environment['USERPROFILE'],
-        );
-        return ShellBackendChoice(
-          backend: backend,
-          kind: 'psmux+pipe',
-          detail: 'psmux session=$muxSessionName via pipe attach (no ConPTY)',
-        );
       }
 
       if (ConPtyShellBackend.isAvailable) {

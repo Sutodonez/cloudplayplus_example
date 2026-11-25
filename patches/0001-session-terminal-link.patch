@@ -178,7 +178,7 @@ new file mode 100644
 index 0000000..aaeeab2
 --- /dev/null
 +++ b/lib/utils/widgets/terminal_link_sheet.dart
-@@ -0,0 +1,417 @@
+@@ -0,0 +1,416 @@
 +import 'dart:async';
 +import 'dart:convert';
 +
@@ -187,7 +187,6 @@ index 0000000..aaeeab2
 +import 'package:cloudplayplus/services/webrtc_service.dart';
 +import 'package:cloudplayplus/utils/widgets/message_box.dart';
 +import 'package:flutter/material.dart';
-+import 'package:flutter/services.dart';
 +import 'package:session_terminal_link/session_terminal_link.dart';
 +
 +/// 会话内「终端连接」底栏（主控端）。
@@ -291,6 +290,7 @@ index 0000000..aaeeab2
 +    _sessions = engine.knownSessions;
 +    _activeId = engine.activeSessionId;
 +    _outSub = engine.output.listen((ev) {
++      if (!mounted) return;
 +      if (_activeId != null && ev.sessionId != _activeId) return;
 +      setState(() {
 +        _output.write(utf8.decode(ev.bytes, allowMalformed: true));
@@ -307,9 +307,17 @@ index 0000000..aaeeab2
 +        final backend = info.backend != null ? ' · ${info.backend}' : '';
 +        _status =
 +            '${info.name}: ${_stateLabel(info.state)}$backend${info.error != null ? ' — ${info.error}' : ''}';
++        // Align with engine: only claim focus when unset, matching the
++        // current session, or when the engine already focused this id
++        // (e.g. new open). Never let an unrelated ready/attached steal.
 +        if (info.state == TermSessionState.attached ||
 +            info.state == TermSessionState.ready) {
-+          _activeId = info.sessionId;
++          final engineActive = engine.activeSessionId;
++          if (_activeId == null ||
++              _activeId == info.sessionId ||
++              engineActive == info.sessionId) {
++            _activeId = info.sessionId;
++          }
 +        }
 +      });
 +    });
@@ -555,34 +563,25 @@ index 0000000..aaeeab2
 +          ),
 +        ),
 +        const SizedBox(height: 8),
-+        KeyboardListener(
-+          focusNode: FocusNode(),
-+          onKeyEvent: (event) {
-+            if (event is KeyDownEvent &&
-+                event.logicalKey == LogicalKeyboardKey.enter) {
-+              // 由 TextField.onSubmitted 处理。
-+            }
-+          },
-+          child: TextField(
-+            controller: _inputController,
-+            focusNode: _inputFocus,
-+            enabled: _activeId != null && !_busy,
-+            style: const TextStyle(fontFamily: 'monospace'),
-+            decoration: InputDecoration(
-+              hintText: _activeId == null
-+                  ? '请先新建或附着会话'
-+                  : '输入命令后按 Enter',
-+              border: const OutlineInputBorder(),
-+              isDense: true,
-+              suffixIcon: IconButton(
-+                icon: const Icon(Icons.send),
-+                onPressed:
-+                    _activeId == null || _busy ? null : () => _submitInput(),
-+              ),
++        TextField(
++          controller: _inputController,
++          focusNode: _inputFocus,
++          enabled: _activeId != null && !_busy,
++          style: const TextStyle(fontFamily: 'monospace'),
++          decoration: InputDecoration(
++            hintText: _activeId == null
++                ? '请先新建或附着会话'
++                : '输入命令后按 Enter',
++            border: const OutlineInputBorder(),
++            isDense: true,
++            suffixIcon: IconButton(
++              icon: const Icon(Icons.send),
++              onPressed:
++                  _activeId == null || _busy ? null : () => _submitInput(),
 +            ),
-+            onSubmitted: (_) => _submitInput(),
-+            textInputAction: TextInputAction.send,
 +          ),
++          onSubmitted: (_) => _submitInput(),
++          textInputAction: TextInputAction.send,
 +        ),
 +        if (AppPlatform.isWeb)
 +          Padding(

@@ -332,22 +332,48 @@ class TerminalLinkEngine {
         break;
       case TermLinkOp.state:
         if (control.sessionId == null) return;
+        final existed = _remoteSessions
+            .any((s) => s.sessionId == control.sessionId);
+        TermSessionInfo? prev;
+        for (final s in _remoteSessions) {
+          if (s.sessionId == control.sessionId) {
+            prev = s;
+            break;
+          }
+        }
+        // Prefer wire fields; fall back to cached mux metadata so lifecycle
+        // state updates never wipe backend / muxSession / panes.
+        final panes = control.panes.isNotEmpty
+            ? control.panes
+            : (prev?.panes ?? const <String>[]);
         final info = TermSessionInfo(
           sessionId: control.sessionId!,
-          name: control.name ?? control.sessionId!,
-          shell: control.shell ?? '',
-          state: control.state ?? TermSessionState.ready,
+          name: control.name ?? prev?.name ?? control.sessionId!,
+          shell: (control.shell != null && control.shell!.isNotEmpty)
+              ? control.shell!
+              : (prev?.shell ?? ''),
+          state: control.state ?? prev?.state ?? TermSessionState.ready,
           cols: control.cols,
           rows: control.rows,
-          exitCode: control.exitCode,
-          error: control.error,
+          exitCode: control.exitCode ?? prev?.exitCode,
+          error: control.error ?? prev?.error,
+          backend: control.backend ?? prev?.backend,
+          muxSession: control.muxSession ?? prev?.muxSession,
+          panes: panes,
         );
         _upsertRemote(info);
         _crcToSessionId[TermChunkCodec.sessionIdCrc32(info.sessionId)] =
             info.sessionId;
+        // Focus only on open (new session), attach, or updates to the
+        // already-active session — never let an unrelated ready/attached
+        // steal activeSessionId.
         if (info.state == TermSessionState.ready ||
             info.state == TermSessionState.attached) {
-          activeSessionId = info.sessionId;
+          if (!existed ||
+              activeSessionId == null ||
+              activeSessionId == info.sessionId) {
+            activeSessionId = info.sessionId;
+          }
         }
         if (!_stateController.isClosed) _stateController.add(info);
         _emitRemoteList();
@@ -493,6 +519,9 @@ class TerminalLinkEngine {
       state: info.state,
       error: info.error,
       exitCode: info.exitCode,
+      backend: info.backend,
+      muxSession: info.muxSession,
+      panes: info.panes,
     )));
   }
 
