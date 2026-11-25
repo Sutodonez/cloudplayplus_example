@@ -23,7 +23,7 @@ Isolated Dart module for CloudPlayPlus **session file/folder transfer** (cppp pl
 | Path | Role |
 |------|------|
 | `plugins/session_file_transfer/` | This package (cppp-owned) |
-| `patches/0001-session-file-transfer.patch` | Vendor wireup onto `vendor/cloudplayplus` |
+| `patches/0004-session-file-transfer.patch` | Vendor wireup onto `vendor/cloudplayplus` |
 | `patches/file-transfer/FILE_LIST.md` | Replay conflict surface |
 
 ```bash

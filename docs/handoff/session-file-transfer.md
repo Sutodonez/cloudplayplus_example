@@ -9,7 +9,7 @@
 | Path | Role |
 |------|------|
 | `plugins/session_file_transfer/` | Pure-Dart transfer engine (control JSON + binary chunks, folder flatten, UU-like resume) |
-| `patches/0001-session-file-transfer.patch` | Wireup onto `vendor/cloudplayplus` |
+| `patches/0004-session-file-transfer.patch` | Wireup onto `vendor/cloudplayplus` |
 | `patches/file-transfer/FILE_LIST.md` | Replay conflict surface |
 
 ## Behavior

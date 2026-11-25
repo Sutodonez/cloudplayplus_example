@@ -1,33 +1,16 @@
-diff --git a/lib/entities/messages.dart b/lib/entities/messages.dart
-index 88376ef..bbe3ac5 100644
---- a/lib/entities/messages.dart
-+++ b/lib/entities/messages.dart
-@@ -20,6 +20,12 @@ const int LP_KEYPRESSED = 1 << 4; //16
- const int LP_EMPTY = 1 << 6; //64
- const int LP_AUDIO_CONNECT = 65;
- const int LP_AUDIO_DISCONNECT = 66;
-+/// Session file/folder transfer chunk (see plugins/session_file_transfer).
-+const int LP_FILE_CHUNK = 67;
-+/// Privacy / blank-display mode (reserved; privacy PR owns the wire value).
-+const int LP_PRIVACY_MODE = 68;
-+/// Remote terminal I/O chunk (reserved; see plugins/session_terminal_link).
-+const int LP_TERM_CHUNK = 69;
- const int LP_DISCONNECT = 1 << 7;
- // [--end of message definitions--]
- 
 diff --git a/lib/entities/session.dart b/lib/entities/session.dart
-index d74019c..3ddc74a 100644
+index ea19967..65c1e35 100644
 --- a/lib/entities/session.dart
 +++ b/lib/entities/session.dart
-@@ -13,6 +13,7 @@ import 'package:cloudplayplus/utils/widgets/message_box.dart';
- import 'package:flutter/foundation.dart';
- import 'package:flutter_webrtc/flutter_webrtc.dart';
+@@ -16,6 +16,7 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
  import 'package:hardware_simulator/hardware_simulator.dart';
+ import 'package:privacy_blank_display/privacy_blank_display.dart';
+ import 'package:session_terminal_link/session_terminal_link.dart';
 +import 'package:session_file_transfer/session_file_transfer.dart';
  import 'package:synchronized/synchronized.dart';
  import 'package:flutter/services.dart';
  import 'package:flutter/widgets.dart';
-@@ -20,6 +21,7 @@ import 'package:flutter/widgets.dart';
+@@ -23,6 +24,7 @@ import 'package:flutter/widgets.dart';
  import '../base/logging.dart';
  import '../global_settings/streaming_settings.dart';
  import '../services/app_info_service.dart';
@@ -35,9 +18,9 @@ index d74019c..3ddc74a 100644
  import '../services/webrtc_service.dart';
  import '../webrtctest/rtc_service_impl.dart';
  import '../utils/rtc_utils.dart';
-@@ -109,6 +111,10 @@ class StreamingSession {
-   Timer? _clipboardTimer;
-   String _lastClipboardContent = '';
+@@ -115,6 +117,10 @@ class StreamingSession {
+   /// Remote terminal linking (host shells on controlled; UI on controller).
+   TerminalLinkEngine? terminalLink;
  
 +  /// Isolated session file/folder transfer (reliable data channel).
 +  FileTransferEngine? fileTransfer;
@@ -46,9 +29,9 @@ index d74019c..3ddc74a 100644
    // 添加生命周期监听器
    static final _lifecycleObserver = _AppLifecycleObserver();
  
-@@ -118,6 +124,147 @@ class StreamingSession {
-     WidgetsBinding.instance.addObserver(_lifecycleObserver);
-   }
+@@ -147,6 +153,147 @@ class StreamingSession {
+   /// Public entry for UI sheets to ensure the engine exists.
+   void ensureTerminalLink() => _ensureTerminalLink();
  
 +  ({bool autoAccept, String receiveRoot}) _fileTransferPrefs() {
 +    final autoAccept =
@@ -194,26 +177,26 @@ index d74019c..3ddc74a 100644
    Function(String mediatype, MediaStream stream)? onAddRemoteStream;
  
    //We are the controller
-@@ -233,6 +380,7 @@ class StreamingSession {
-             if (state == RTCDataChannelState.RTCDataChannelOpen) {
+@@ -263,6 +410,7 @@ class StreamingSession {
                await channel?.send(RTCDataChannelMessage.fromBinary(
                    Uint8List.fromList([LP_PING, RP_PING])));
+               _ensureTerminalLink();
 +              _ensureFileTransfer();
                if (StreamingSettings.streamAudio!) {
                  StreamingSettings.audioBitrate ??= 32;
                  audioBitrate = StreamingSettings.audioBitrate!;
-@@ -463,6 +611,7 @@ class StreamingSession {
-         ..ordered = true;
+@@ -494,6 +642,7 @@ class StreamingSession {
        channel =
            await pc!.createDataChannel('userInput', reliableDataChannelDict);
+       _ensureTerminalLink();
 +      _ensureFileTransfer();
  
        channel?.onMessage = (RTCDataChannelMessage msg) {
          if (!image_hooked && !AppPlatform.isWeb) {
-@@ -742,6 +891,16 @@ class StreamingSession {
-     });
- 
+@@ -775,6 +924,15 @@ class StreamingSession {
      stopClipboardSync();
+     await terminalLink?.dispose();
+     terminalLink = null;
 +    await _fileTransferProgressSub?.cancel();
 +    _fileTransferProgressSub = null;
 +    final xfer = fileTransfer;
@@ -221,15 +204,14 @@ index d74019c..3ddc74a 100644
 +      try {
 +        await xfer.abort(reason: 'session closed');
 +      } catch (_) {}
-+      xfer.dispose();
 +    }
 +    fileTransfer = null;
    }
  
    Timer? _pingTimeoutTimer;
-@@ -837,11 +996,20 @@ class StreamingSession {
-           audioSession = AudioSession(channel!, controller, controlled, audioBitrate);
-           audioSession?.audioRequested();
+@@ -881,6 +1039,10 @@ class StreamingSession {
+           _ensureTerminalLink();
+           terminalLink?.onBinaryMessage(message.binary);
            break;
 +        case LP_FILE_CHUNK:
 +          _ensureFileTransfer();
@@ -238,8 +220,10 @@ index d74019c..3ddc74a 100644
          default:
            VLOG0("unhandled message.please debug");
        }
-     } else {
-       Map<String, dynamic> data = jsonDecode(message.text);
+@@ -891,6 +1053,11 @@ class StreamingSession {
+         terminalLink?.onTextMessage(message.text);
+         return;
+       }
 +      if (FileXferJsonCodec.isFileXferEnvelope(data)) {
 +        _ensureFileTransfer();
 +        fileTransfer?.onTextMessage(message.text);
@@ -248,9 +232,9 @@ index d74019c..3ddc74a 100644
        switch (data.keys.first) {
          case "candidate":
            var candidateMap = data["candidate"];
-@@ -894,11 +1062,20 @@ class StreamingSession {
-           break;
-         case LP_EMPTY:
+@@ -954,6 +1121,10 @@ class StreamingSession {
+           _ensureTerminalLink();
+           terminalLink?.onBinaryMessage(message.binary);
            break;
 +        case LP_FILE_CHUNK:
 +          _ensureFileTransfer();
@@ -259,8 +243,10 @@ index d74019c..3ddc74a 100644
          default:
            VLOG0("unhandled message from host.please debug");
        }
-     } else {
-       Map<String, dynamic> data = jsonDecode(message.text);
+@@ -964,6 +1135,11 @@ class StreamingSession {
+         terminalLink?.onTextMessage(message.text);
+         return;
+       }
 +      if (FileXferJsonCodec.isFileXferEnvelope(data)) {
 +        _ensureFileTransfer();
 +        fileTransfer?.onTextMessage(message.text);
@@ -270,20 +256,20 @@ index d74019c..3ddc74a 100644
          case "candidate":
            var candidateMap = data['candidate'];
 diff --git a/lib/settings_screen.dart b/lib/settings_screen.dart
-index fa49a5c..8a59b17 100644
+index 5bda5bd..6a9b8c8 100644
 --- a/lib/settings_screen.dart
 +++ b/lib/settings_screen.dart
-@@ -19,6 +19,7 @@ import 'plugins/flutter_settings_ui/flutter_settings_ui.dart';
- import 'services/shared_preferences_manager.dart';
- import 'theme/theme_provider.dart';
+@@ -23,6 +23,7 @@ import 'theme/theme_provider.dart';
  import 'utils/navigation.dart';
-+import 'utils/widgets/file_transfer_settings_screen.dart';
  import 'utils/widgets/virtual_gamepad/virtual_gamepad_settings_screen.dart';
  import 'utils/widgets/virtual_gamepad/control_manager.dart';
++import 'package:cloudplayplus/utils/widgets/file_transfer_settings_screen.dart';
  
-@@ -113,6 +114,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
-                   );
-                 },
+ class SettingsScreen extends StatefulWidget {
+   const SettingsScreen({super.key});
+@@ -134,6 +135,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
+                       }
+                     : null,
                ),
 +              SettingsTile.navigation(
 +                leading: const Icon(Icons.folder_open),
@@ -301,39 +287,43 @@ index fa49a5c..8a59b17 100644
            ),
            if (!AppPlatform.isDeskTop)
 diff --git a/lib/utils/widgets/device_tile_page.dart b/lib/utils/widgets/device_tile_page.dart
-index 9013cbd..ce6fd09 100644
+index ee9a491..0359a32 100644
 --- a/lib/utils/widgets/device_tile_page.dart
 +++ b/lib/utils/widgets/device_tile_page.dart
-@@ -6,6 +6,7 @@ import 'package:cloudplayplus/services/shared_preferences_manager.dart';
- import 'package:cloudplayplus/services/streaming_manager.dart';
- import 'package:cloudplayplus/services/websocket_service.dart';
- import 'package:cloudplayplus/utils/system_tray_manager.dart';
+@@ -23,6 +23,7 @@ import '../../entities/session.dart';
+ import '../../services/app_info_service.dart';
+ import '../hash_util.dart';
+ import 'cpp_icon.dart';
 +import 'package:cloudplayplus/utils/widgets/file_transfer_sheet.dart';
- import 'package:cloudplayplus/utils/widgets/global_remote_screen_renderer.dart';
- import 'package:cloudplayplus/utils/widgets/message_box.dart';
- import 'package:floating_menu_panel/floating_menu_panel.dart';
-@@ -313,7 +314,12 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
-                       ScreenController.setshowVirtualGamePad(
-                           !ScreenController.showVirtualGamePad.value);
+ 
+ class DeviceSelectManager {
+   static Device? lastSelectedDevice = null;
+@@ -337,12 +338,14 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+                         await session.requestHostPrivacyMode(next);
+                       }
                      }
-+                    // Floating toolbar merge order (with #9/#8):
-+                    // privacy (visibility_off) → file (folder_open) → terminal → close.
-                     if (index == 5) {
+-                    // Q2 merge order: privacy → file → terminal → close
+-                    // (file lands with #2; terminal is next for now).
++                    // Q2 merge order: privacy → file → terminal → close.
+                     if (index == 6) {
+-                      await TerminalLinkSheet.show(context);
 +                      await FileTransferSheet.show(context);
+                     }
+                     if (index == 7) {
++                      await TerminalLinkSheet.show(context);
 +                    }
-+                    if (index == 6) {
++                    if (index == 8) {
                        ScreenController.setshowDetailUseScrollView(true);
                        ScreenController.setOnlyShowRemoteScreen(false);
                        StreamingManager.stopStreaming(widget.device);
-@@ -325,6 +331,8 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
-                     Icons.keyboard,
+@@ -357,6 +360,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                      Icons.mouse,
                      Icons.gamepad,
-+                    // Intent: privacy → file → terminal before close when stacking #9/#2/#8.
+                     Icons.visibility_off,
 +                    Icons.folder_open,
+                     Icons.terminal,
                      Icons.close,
                    ],
-                 ),
 diff --git a/lib/utils/widgets/file_transfer_settings_screen.dart b/lib/utils/widgets/file_transfer_settings_screen.dart
 new file mode 100644
 index 0000000..9ecdd72
@@ -702,13 +692,13 @@ index 16808bf..60b5980 100644
 +  }
  }
 diff --git a/pubspec.yaml b/pubspec.yaml
-index e0efbf1..1588718 100644
+index f9c95d8..30614fc 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
-@@ -46,6 +46,9 @@ dependencies:
-     path: plugins/virtual.keyboard.dart
-   hardware_simulator:
-     path: plugins/hardware_simulator
+@@ -50,6 +50,9 @@ dependencies:
+     path: ../../plugins/privacy_blank_display
+   session_terminal_link:
+     path: ../../plugins/session_terminal_link
 +  session_file_transfer:
 +    path: ../../plugins/session_file_transfer
 +  file_picker: ^8.1.7
