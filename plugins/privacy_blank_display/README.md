@@ -7,16 +7,18 @@ CloudPlayPlus Plus host plugin for **privacy / blank display** (防窥).
 | Mode | Behavior |
 |------|----------|
 | `off` | No privacy surface |
-| `blankDisplay` | Power off physical monitors (`SC_MONITORPOWER`). Stronger UU “关闭显示屏 via virtual screen” can reuse CPP `VDISPLAY_OCCUPY` + Parsec VDD. |
+| `blankDisplay` | Power off physical monitors (`SC_MONITORPOWER`). Dart wireup auto-binds exclusive virtual display (`VDISPLAY_OCCUPY` + Parsec VDD) at session start. |
 | `privacyScreen` | Topmost black overlays with `WDA_EXCLUDEFROMCAPTURE` so DXGI capture still sees the real desktop |
+
+While any non-off mode is active, the host default render audio endpoint is **muted** and restored when privacy turns off.
 
 ## Host hotkey
 
-`Ctrl+Alt+P` dismisses the active privacy mode. Optional `LockWorkStation` after dismiss (default on).
+Rebindable dismiss hotkey (default `Ctrl+Alt+P`). Optional `LockWorkStation` after dismiss (default on). Configure via `PrivacyBlankDisplay.setHotkey` / host settings UI.
 
 ## Platform
 
-Windows host only for native blank/overlay. Other platforms: `isSupported() == false`.
+Windows host only for native blank/overlay/mute. Other platforms: `isSupported() == false` (settings entry is grayed out, not hidden).
 
 ## Constraints
 

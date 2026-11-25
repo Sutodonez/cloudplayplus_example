@@ -23,6 +23,10 @@ void main() {
           return true;
         case 'setDismissLocksHost':
           return null;
+        case 'setHotkey':
+          return true;
+        case 'getHotkey':
+          return {'modifiers': 3, 'keyCode': 0x50};
         case 'lockWorkstation':
           return true;
       }
@@ -50,5 +54,20 @@ void main() {
       await PrivacyBlankDisplay.setMode(PrivacyBlankMode.blankDisplay),
       isTrue,
     );
+  });
+
+  test('default hotkey label is Ctrl+Alt+P', () {
+    expect(PrivacyHotkey.defaultHotkey.label, 'Ctrl+Alt+P');
+  });
+
+  test('setHotkey / getHotkey round-trip', () async {
+    expect(
+      await PrivacyBlankDisplay.setHotkey(PrivacyHotkey.defaultHotkey),
+      isTrue,
+    );
+    final hotkey = await PrivacyBlankDisplay.getHotkey();
+    expect(hotkey.modifiers, 3);
+    expect(hotkey.keyCode, 0x50);
+    expect(hotkey.label, 'Ctrl+Alt+P');
   });
 }

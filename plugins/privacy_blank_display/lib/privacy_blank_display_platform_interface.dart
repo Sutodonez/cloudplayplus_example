@@ -1,5 +1,6 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+import 'privacy_blank_display.dart';
 import 'privacy_blank_display_method_channel.dart';
 
 abstract class PrivacyBlankDisplayPlatform extends PlatformInterface {
@@ -31,6 +32,14 @@ abstract class PrivacyBlankDisplayPlatform extends PlatformInterface {
 
   Future<void> setDismissLocksHost(bool enabled) {
     throw UnimplementedError('setDismissLocksHost() has not been implemented.');
+  }
+
+  Future<bool> setHotkey(int modifiers, int keyCode) {
+    throw UnimplementedError('setHotkey() has not been implemented.');
+  }
+
+  Future<PrivacyHotkey> getHotkey() {
+    throw UnimplementedError('getHotkey() has not been implemented.');
   }
 
   Future<bool> lockWorkstation() {

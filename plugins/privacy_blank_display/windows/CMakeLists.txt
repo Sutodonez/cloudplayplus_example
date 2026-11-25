@@ -26,8 +26,8 @@ target_include_directories(${PLUGIN_NAME} INTERFACE
   "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_link_libraries(${PLUGIN_NAME} PRIVATE flutter flutter_wrapper_plugin)
 
-# User32 for monitor / hotkey / overlay windows.
-target_link_libraries(${PLUGIN_NAME} PRIVATE user32 gdi32)
+# User32 for monitor / hotkey / overlay; ole32 for endpoint mute.
+target_link_libraries(${PLUGIN_NAME} PRIVATE user32 gdi32 ole32)
 
 set(privacy_blank_display_bundled_libraries
   ""

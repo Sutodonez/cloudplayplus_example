@@ -60,23 +60,30 @@ index d74019c..a34f9a9 100644
      if (message.isBinary) {
        switch (message.binary[0]) {
 diff --git a/lib/global_settings/streaming_settings.dart b/lib/global_settings/streaming_settings.dart
-index d4607d8..47977f9 100644
+index d4607d8..3844195 100644
 --- a/lib/global_settings/streaming_settings.dart
 +++ b/lib/global_settings/streaming_settings.dart
-@@ -91,6 +91,12 @@ class StreamingSettings {
+@@ -91,6 +91,19 @@ class StreamingSettings {
    static int customScreenWidth = 1920;
    static int customScreenHeight = 1080;
  
 +  // Host privacy / blank display (防窥). 0=off, 1=blankDisplay, 2=privacyScreen.
++  // Host default (persisted). Controller must not overwrite this for connect.
 +  static int privacyMode = 0;
 +  static bool privacyAutoOnConnect = true;
 +  static bool privacyDismissLocks = true;
 +  static bool privacyLockOnDisconnect = false;
++  // Dismiss hotkey: modifier bitmask (ctrl=1,alt=2,shift=4,win=8) + VK code.
++  static int privacyHotkeyModifiers = 3; // Ctrl|Alt
++  static int privacyHotkeyVk = 0x50; // 'P'
++  /// Controller temporary override for the next connect payload only.
++  /// null = follow host default (do not send privacyMode).
++  static int? controllerPrivacyOverride;
 +
    static bool? isStreamingStateEnabled;
  
    static void init() {
-@@ -170,6 +176,14 @@ class StreamingSettings {
+@@ -170,6 +183,19 @@ class StreamingSettings {
  
      isStreamingStateEnabled = SharedPreferencesManager.getBool('streamingState') ?? false;
      ScreenController.setShowVideoInfo(isStreamingStateEnabled!);
@@ -88,18 +95,25 @@ index d4607d8..47977f9 100644
 +        SharedPreferencesManager.getBool('privacyDismissLocks') ?? true;
 +    privacyLockOnDisconnect =
 +        SharedPreferencesManager.getBool('privacyLockOnDisconnect') ?? false;
++    privacyHotkeyModifiers =
++        SharedPreferencesManager.getInt('privacyHotkeyModifiers') ?? 3;
++    privacyHotkeyVk =
++        SharedPreferencesManager.getInt('privacyHotkeyVk') ?? 0x50;
++    controllerPrivacyOverride = null;
    }
  
    //Screen id setting is not global, so we need to call before start streaming.
-@@ -198,6 +212,7 @@ class StreamingSettings {
+@@ -198,6 +224,9 @@ class StreamingSettings {
        'streamMode': streamMode,
        'customScreenWidth': customScreenWidth,
        'customScreenHeight': customScreenHeight,
-+      'privacyMode': privacyMode,
++      // Only send when controller sets a temporary override (Q22).
++      if (controllerPrivacyOverride != null)
++        'privacyMode': controllerPrivacyOverride,
      };
      data.removeWhere((key, value) => value == null);
      return data;
-@@ -232,6 +247,8 @@ class StreamedSettings {
+@@ -232,6 +261,8 @@ class StreamedSettings {
    int? streamMode;
    int? customScreenWidth;
    int? customScreenHeight;
@@ -108,7 +122,7 @@ index d4607d8..47977f9 100644
  
    static StreamedSettings fromJson(Map<String, dynamic> settings) {
      return StreamedSettings()
-@@ -248,6 +265,7 @@ class StreamedSettings {
+@@ -248,6 +279,7 @@ class StreamedSettings {
        ..syncMousePosition = settings['syncMousePosition'] as bool?
        ..streamMode = settings['streamMode'] as int?
        ..customScreenWidth = settings['customScreenWidth'] as int?
@@ -138,12 +152,13 @@ index 91cadc9..0f2f166 100644
        HardwareSimulator.addDisplayCountChangedCallback((displayCount) {
 diff --git a/lib/services/privacy_blank_service.dart b/lib/services/privacy_blank_service.dart
 new file mode 100644
-index 0000000..4ba4e30
+index 0000000..19cdaff
 --- /dev/null
 +++ b/lib/services/privacy_blank_service.dart
-@@ -0,0 +1,126 @@
+@@ -0,0 +1,189 @@
 +import 'dart:async';
 +
++import 'package:cloudplayplus/base/constants.dart';
 +import 'package:cloudplayplus/base/logging.dart';
 +import 'package:cloudplayplus/global_settings/streaming_settings.dart';
 +import 'package:cloudplayplus/services/app_info_service.dart';
@@ -152,9 +167,13 @@ index 0000000..4ba4e30
 +
 +/// Host-side privacy / blank-display orchestrator.
 +///
++/// Product rule (Q22): **host settings are the default**; a controller may
++/// temporarily override for a session (including force-off). Mid-session
++/// opcode requests are also temporary overrides.
++///
 +/// Applies [PrivacyBlankMode] while at least one inbound stream session is
-+/// active (when auto-on), and restores [PrivacyBlankMode.off] when the last
-+/// session ends — unless the user dismissed via Ctrl+Alt+P (single-shot).
++/// active (when auto-on / override), and restores [PrivacyBlankMode.off] when
++/// the last session ends — unless the user dismissed via the host hotkey.
 +class PrivacyBlankService {
 +  PrivacyBlankService._();
 +
@@ -173,12 +192,24 @@ index 0000000..4ba4e30
 +
 +    await PrivacyBlankDisplay.setDismissLocksHost(
 +        StreamingSettings.privacyDismissLocks);
++    await _applyStoredHotkey();
 +    _dismissSub ??= PrivacyBlankDisplay.onDismissedByHotkey.listen((_) {
 +      _dismissedThisSession = true;
 +      _sessionEngaged = false;
 +      _active = PrivacyBlankMode.off;
 +      VLOG0('Privacy blank dismissed by host hotkey');
 +    });
++  }
++
++  static Future<void> _applyStoredHotkey() async {
++    final hotkey = PrivacyHotkey(
++      modifiers: StreamingSettings.privacyHotkeyModifiers,
++      keyCode: StreamingSettings.privacyHotkeyVk,
++    );
++    final ok = await PrivacyBlankDisplay.setHotkey(hotkey);
++    if (!ok) {
++      VLOG0('Privacy hotkey register failed: ${hotkey.label}');
++    }
 +  }
 +
 +  static PrivacyBlankMode modeFromIndex(int? index) {
@@ -188,12 +219,50 @@ index 0000000..4ba4e30
 +    return PrivacyBlankMode.values[index];
 +  }
 +
-+  /// Preferred mode for a new inbound session: controller request overrides
-+  /// host default when non-zero; otherwise host [StreamingSettings.privacyMode].
++  /// Resolve effective mode for a new inbound session.
++  ///
++  /// * If [requestedMode] is non-null → controller temporary override
++  ///   (0 = force off for this session).
++  /// * If null → host [StreamingSettings.privacyMode] default.
 +  static PrivacyBlankMode resolveModeForSession({int? requestedMode}) {
-+    final requested = modeFromIndex(requestedMode);
-+    if (requested != PrivacyBlankMode.off) return requested;
++    if (requestedMode != null) {
++      return modeFromIndex(requestedMode);
++    }
 +    return modeFromIndex(StreamingSettings.privacyMode);
++  }
++
++  /// Whether privacy should engage for this session (auto-on or override).
++  static bool shouldEngageForSession({int? requestedMode}) {
++    if (_dismissedThisSession) return false;
++    final auto = StreamingSettings.privacyAutoOnConnect;
++    if (!auto && requestedMode == null) return false;
++    return resolveModeForSession(requestedMode: requestedMode) !=
++        PrivacyBlankMode.off;
++  }
++
++  /// When blankDisplay will engage, force exclusive virtual-display path
++  /// (`VDISPLAY_OCCUPY`) so the desktop moves onto the VDD (Q21 auto-bind).
++  ///
++  /// Returns true if [settings.streamMode] was changed.
++  static bool ensureExclusiveForBlankDisplay(StreamedSettings settings) {
++    final mode =
++        resolveModeForSession(requestedMode: settings.privacyMode);
++    final engage = shouldEngageForSession(requestedMode: settings.privacyMode);
++    if (!engage || mode != PrivacyBlankMode.blankDisplay) {
++      return false;
++    }
++    if (settings.streamMode == VDISPLAY_OCCUPY) {
++      return false;
++    }
++    settings.streamMode = VDISPLAY_OCCUPY;
++    settings.customScreenWidth ??= StreamingSettings.customScreenWidth;
++    settings.customScreenHeight ??= StreamingSettings.customScreenHeight;
++    // Occupy path keys VDD by screenId then rewrites it to 0 after primary-only.
++    settings.screenId = 0;
++    VLOG0(
++        'blankDisplay auto-bound to VDISPLAY_OCCUPY '
++        '(${settings.customScreenWidth}x${settings.customScreenHeight})');
++    return true;
 +  }
 +
 +  static Future<bool> applyMode(PrivacyBlankMode mode) async {
@@ -204,6 +273,7 @@ index 0000000..4ba4e30
 +
 +    await PrivacyBlankDisplay.setDismissLocksHost(
 +        StreamingSettings.privacyDismissLocks);
++    await _applyStoredHotkey();
 +    final ok = await PrivacyBlankDisplay.setMode(mode);
 +    if (ok) {
 +      _active = mode;
@@ -222,13 +292,9 @@ index 0000000..4ba4e30
 +  static Future<void> onSessionStarted({int? requestedMode}) async {
 +    await init();
 +    if (!AppPlatform.isWindows) return;
-+    if (_dismissedThisSession) return;
++    if (!shouldEngageForSession(requestedMode: requestedMode)) return;
 +
-+    final auto = StreamingSettings.privacyAutoOnConnect;
 +    final mode = resolveModeForSession(requestedMode: requestedMode);
-+    if (!auto && (requestedMode == null || requestedMode == 0)) {
-+      return;
-+    }
 +    if (mode == PrivacyBlankMode.off) return;
 +    if (_sessionEngaged && _active == mode) return;
 +    await applyMode(mode);
@@ -255,21 +321,32 @@ index 0000000..4ba4e30
 +    required bool autoOnConnect,
 +    required bool dismissLocks,
 +    required bool lockOnDisconnect,
++    required int hotkeyModifiers,
++    required int hotkeyVk,
 +  }) async {
 +    StreamingSettings.privacyMode = mode;
 +    StreamingSettings.privacyAutoOnConnect = autoOnConnect;
 +    StreamingSettings.privacyDismissLocks = dismissLocks;
 +    StreamingSettings.privacyLockOnDisconnect = lockOnDisconnect;
++    StreamingSettings.privacyHotkeyModifiers = hotkeyModifiers;
++    StreamingSettings.privacyHotkeyVk = hotkeyVk;
 +    await SharedPreferencesManager.setInt('privacyMode', mode);
 +    await SharedPreferencesManager.setBool('privacyAutoOnConnect', autoOnConnect);
 +    await SharedPreferencesManager.setBool('privacyDismissLocks', dismissLocks);
 +    await SharedPreferencesManager.setBool(
 +        'privacyLockOnDisconnect', lockOnDisconnect);
++    await SharedPreferencesManager.setInt(
++        'privacyHotkeyModifiers', hotkeyModifiers);
++    await SharedPreferencesManager.setInt('privacyHotkeyVk', hotkeyVk);
 +    await PrivacyBlankDisplay.setDismissLocksHost(dismissLocks);
++    await PrivacyBlankDisplay.setHotkey(PrivacyHotkey(
++      modifiers: hotkeyModifiers,
++      keyCode: hotkeyVk,
++    ));
 +  }
 +}
 diff --git a/lib/services/streamed_manager.dart b/lib/services/streamed_manager.dart
-index fa8365f..bfdbec9 100644
+index fa8365f..cdc4111 100644
 --- a/lib/services/streamed_manager.dart
 +++ b/lib/services/streamed_manager.dart
 @@ -12,6 +12,7 @@ import '../base/logging.dart';
@@ -280,7 +357,17 @@ index fa8365f..bfdbec9 100644
  
  // ignore: constant_identifier_names
  const int AUDIO_SYSTEM = 255;
-@@ -268,7 +269,12 @@ class StreamedManager {
+@@ -195,6 +196,9 @@ class StreamedManager {
+ 
+       Completer<void>? displayCallbackCompleter;
+ 
++      // Q21: blankDisplay auto-binds exclusive virtual display (VDISPLAY_OCCUPY).
++      PrivacyBlankService.ensureExclusiveForBlankDisplay(settings);
++
+       if (settings.streamMode == VDISPLAY_OCCUPY || settings.streamMode == VDSIPLAY_EXTEND) {
+         //bool hasPending = await HardwareSimulator.hasPendingConfiguration();
+         /*if (settings.streamMode == VDISPLAY_OCCUPY && isVdisplayOccupied) {
+@@ -268,7 +272,12 @@ class StreamedManager {
              sources = await desktopCapturer.getSources(types: [SourceType.Screen]);
              //await HardwareSimulator.setMultiDisplayMode(MultiDisplayMode.primaryOnly);
              if (sources.length != 1) {
@@ -294,7 +381,7 @@ index fa8365f..bfdbec9 100644
                retryCount = 0;
                while (sources.length != 1) {
                  retryCount++;
-@@ -319,6 +325,9 @@ class StreamedManager {
+@@ -319,6 +328,9 @@ class StreamedManager {
        session.acceptRequest(settings);
        sessions[target.websocketSessionid] = session;
        setCurrentStreamedState(sessions.length);
@@ -304,7 +391,7 @@ index fa8365f..bfdbec9 100644
      });
    }
  
-@@ -360,6 +369,9 @@ class StreamedManager {
+@@ -360,6 +372,9 @@ class StreamedManager {
          VLOG0("No session found with sessionId: $target.websocketSessionid");
        }
        setCurrentStreamedState(sessions.length);
@@ -315,7 +402,7 @@ index fa8365f..bfdbec9 100644
    }
  
 diff --git a/lib/settings_screen.dart b/lib/settings_screen.dart
-index fa49a5c..dbd807c 100644
+index fa49a5c..b5ce1b3 100644
 --- a/lib/settings_screen.dart
 +++ b/lib/settings_screen.dart
 @@ -6,6 +6,7 @@ import 'package:cloudplayplus/pages/display_manager_page.dart';
@@ -326,26 +413,41 @@ index fa49a5c..dbd807c 100644
  import 'package:cloudplayplus/services/secure_storage_manager.dart';
  import 'package:cloudplayplus/services/websocket_service.dart';
  import 'package:cloudplayplus/utils/widgets/text_field_wrapper.dart';
-@@ -113,6 +114,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -13,6 +14,7 @@ import 'package:flutter/cupertino.dart';
+ import 'package:flutter/material.dart';
+ import 'package:flutter/services.dart';
+ import 'package:native_textfield_tv/native_textfield_tv.dart';
++import 'package:privacy_blank_display/privacy_blank_display.dart';
+ import 'package:provider/provider.dart';
+ import 'package:url_launcher/url_launcher.dart';
+ import 'plugins/flutter_settings_ui/flutter_settings_ui.dart';
+@@ -113,6 +115,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                    );
                  },
                ),
-+              if (AppPlatform.isWindows)
-+                SettingsTile.navigation(
-+                  leading: const Icon(Icons.visibility_off),
-+                  title: const Text('防窥 / Privacy blank display'),
-+                  onPressed: (context) {
-+                    Navigation.navigateTo(
-+                      context: context,
-+                      screen: const PrivacyBlankSettingsScreen(),
-+                      style: NavigationRouteStyle.cupertino,
-+                    );
-+                  },
++              SettingsTile.navigation(
++                leading: const Icon(Icons.visibility_off),
++                title: const Text('防窥'),
++                description: Text(
++                  AppPlatform.isWindows
++                      ? '被控端默认防窥模式与本机解除热键'
++                      : '仅 Windows 被控可用',
 +                ),
++                enabled: AppPlatform.isWindows,
++                onPressed: AppPlatform.isWindows
++                    ? (context) {
++                        Navigation.navigateTo(
++                          context: context,
++                          screen: const PrivacyBlankSettingsScreen(),
++                          style: NavigationRouteStyle.cupertino,
++                        );
++                      }
++                    : null,
++              ),
              ],
            ),
            if (!AppPlatform.isDeskTop)
-@@ -1637,3 +1650,136 @@ class _DisplaySettingsScreenState extends State<DisplaySettingsScreen> {
+@@ -1637,3 +1658,271 @@ class _DisplaySettingsScreenState extends State<DisplaySettingsScreen> {
      }
    }
  }
@@ -365,6 +467,13 @@ index fa49a5c..dbd807c 100644
 +  bool _autoOn = true;
 +  bool _dismissLocks = true;
 +  bool _lockOnDisconnect = false;
++  int _hotkeyModifiers = 3;
++  int _hotkeyVk = 0x50;
++
++  PrivacyHotkey get _hotkey => PrivacyHotkey(
++        modifiers: _hotkeyModifiers,
++        keyCode: _hotkeyVk,
++      );
 +
 +  @override
 +  void initState() {
@@ -373,6 +482,8 @@ index fa49a5c..dbd807c 100644
 +    _autoOn = StreamingSettings.privacyAutoOnConnect;
 +    _dismissLocks = StreamingSettings.privacyDismissLocks;
 +    _lockOnDisconnect = StreamingSettings.privacyLockOnDisconnect;
++    _hotkeyModifiers = StreamingSettings.privacyHotkeyModifiers;
++    _hotkeyVk = StreamingSettings.privacyHotkeyVk;
 +  }
 +
 +  Future<void> _persist() async {
@@ -381,7 +492,22 @@ index fa49a5c..dbd807c 100644
 +      autoOnConnect: _autoOn,
 +      dismissLocks: _dismissLocks,
 +      lockOnDisconnect: _lockOnDisconnect,
++      hotkeyModifiers: _hotkeyModifiers,
++      hotkeyVk: _hotkeyVk,
 +    );
++  }
++
++  Future<void> _captureHotkey() async {
++    final captured = await showDialog<PrivacyHotkey>(
++      context: context,
++      builder: (ctx) => const _PrivacyHotkeyCaptureDialog(),
++    );
++    if (captured == null) return;
++    setState(() {
++      _hotkeyModifiers = captured.modifiers;
++      _hotkeyVk = captured.keyCode;
++    });
++    await _persist();
 +  }
 +
 +  @override
@@ -389,7 +515,7 @@ index fa49a5c..dbd807c 100644
 +    return CupertinoPageScaffold(
 +      navigationBar: CupertinoNavigationBar(
 +        middle: Text(
-+          '防窥 / Privacy',
++          '防窥',
 +          style: TextStyle(
 +            color: Theme.of(context).textTheme.titleLarge?.color,
 +          ),
@@ -415,9 +541,9 @@ index fa49a5c..dbd807c 100644
 +                  },
 +                ),
 +                SettingsTile(
-+                  title: const Text('关闭显示屏 (blank display)'),
++                  title: const Text('关闭屏幕背光'),
 +                  description: const Text(
-+                    '关闭物理屏背光。更强的虚拟屏独占可用连接「独占模式」。',
++                    '关闭物理屏背光。彻底关闭显示屏需用独占模式（开启本项时会自动启用）。',
 +                  ),
 +                  leading: Icon(
 +                    Icons.check,
@@ -429,9 +555,9 @@ index fa49a5c..dbd807c 100644
 +                  },
 +                ),
 +                SettingsTile(
-+                  title: const Text('隐私屏保 (privacy screen)'),
++                  title: const Text('隐私屏保'),
 +                  description: const Text(
-+                    '物理屏黑屏遮罩，捕获排除遮罩 (WDA_EXCLUDEFROMCAPTURE)。',
++                    '本机屏幕显示遮罩画面（可后续自定义图片），远程仍可见真实桌面。',
 +                  ),
 +                  leading: Icon(
 +                    Icons.check,
@@ -456,8 +582,14 @@ index fa49a5c..dbd807c 100644
 +                    await _persist();
 +                  },
 +                ),
++                SettingsTile(
++                  title: const Text('本机解除热键'),
++                  description: Text('当前：${_hotkey.label}（点击改绑）'),
++                  leading: const Icon(Icons.keyboard),
++                  onPressed: (_) => _captureHotkey(),
++                ),
 +                SettingsTile.switchTile(
-+                  title: const Text('本机 Ctrl+Alt+P 解除后锁屏'),
++                  title: Text('本机 ${_hotkey.label} 解除后锁屏'),
 +                  leading: const Icon(Icons.lock),
 +                  initialValue: _dismissLocks,
 +                  onToggle: (v) async {
@@ -482,8 +614,113 @@ index fa49a5c..dbd807c 100644
 +    );
 +  }
 +}
++
++/// Capture a modifier+key dismiss hotkey for privacy blank display.
++class _PrivacyHotkeyCaptureDialog extends StatefulWidget {
++  const _PrivacyHotkeyCaptureDialog();
++
++  @override
++  State<_PrivacyHotkeyCaptureDialog> createState() =>
++      _PrivacyHotkeyCaptureDialogState();
++}
++
++class _PrivacyHotkeyCaptureDialogState
++    extends State<_PrivacyHotkeyCaptureDialog> {
++  String _hint = '请按下组合键（需含 Ctrl / Alt / Shift / Win 之一）';
++
++  KeyEventResult _onKey(FocusNode node, KeyEvent event) {
++    if (event is! KeyDownEvent) return KeyEventResult.handled;
++    final key = event.logicalKey;
++    if (key == LogicalKeyboardKey.controlLeft ||
++        key == LogicalKeyboardKey.controlRight ||
++        key == LogicalKeyboardKey.altLeft ||
++        key == LogicalKeyboardKey.altRight ||
++        key == LogicalKeyboardKey.shiftLeft ||
++        key == LogicalKeyboardKey.shiftRight ||
++        key == LogicalKeyboardKey.metaLeft ||
++        key == LogicalKeyboardKey.metaRight) {
++      return KeyEventResult.handled;
++    }
++
++    final vk = _logicalKeyToVk(key);
++    if (vk == null) {
++      setState(() => _hint = '不支持该按键，请换字母 / 数字 / F 键');
++      return KeyEventResult.handled;
++    }
++
++    var mods = 0;
++    if (HardwareKeyboard.instance.isControlPressed) {
++      mods |= PrivacyHotkeyModifiers.ctrl;
++    }
++    if (HardwareKeyboard.instance.isAltPressed) {
++      mods |= PrivacyHotkeyModifiers.alt;
++    }
++    if (HardwareKeyboard.instance.isShiftPressed) {
++      mods |= PrivacyHotkeyModifiers.shift;
++    }
++    if (HardwareKeyboard.instance.isMetaPressed) {
++      mods |= PrivacyHotkeyModifiers.win;
++    }
++    if (mods == 0) {
++      setState(() => _hint = '请同时按住修饰键（Ctrl / Alt / Shift / Win）');
++      return KeyEventResult.handled;
++    }
++
++    final hotkey = PrivacyHotkey(modifiers: mods, keyCode: vk);
++    Navigator.of(context).pop(hotkey);
++    return KeyEventResult.handled;
++  }
++
++  int? _logicalKeyToVk(LogicalKeyboardKey key) {
++    final label = key.keyLabel;
++    if (label.length == 1) {
++      final c = label.toUpperCase().codeUnitAt(0);
++      if ((c >= 0x30 && c <= 0x39) || (c >= 0x41 && c <= 0x5A)) {
++        return c;
++      }
++    }
++    const fKeys = <LogicalKeyboardKey, int>{
++      LogicalKeyboardKey.f1: 0x70,
++      LogicalKeyboardKey.f2: 0x71,
++      LogicalKeyboardKey.f3: 0x72,
++      LogicalKeyboardKey.f4: 0x73,
++      LogicalKeyboardKey.f5: 0x74,
++      LogicalKeyboardKey.f6: 0x75,
++      LogicalKeyboardKey.f7: 0x76,
++      LogicalKeyboardKey.f8: 0x77,
++      LogicalKeyboardKey.f9: 0x78,
++      LogicalKeyboardKey.f10: 0x79,
++      LogicalKeyboardKey.f11: 0x7A,
++      LogicalKeyboardKey.f12: 0x7B,
++    };
++    return fKeys[key];
++  }
++
++  @override
++  Widget build(BuildContext context) {
++    return Focus(
++      autofocus: true,
++      onKeyEvent: _onKey,
++      child: AlertDialog(
++        title: const Text('设置解除热键'),
++        content: Text(_hint),
++        actions: [
++          TextButton(
++            onPressed: () => Navigator.of(context).pop(),
++            child: const Text('取消'),
++          ),
++          TextButton(
++            onPressed: () =>
++                Navigator.of(context).pop(PrivacyHotkey.defaultHotkey),
++            child: const Text('恢复默认'),
++          ),
++        ],
++      ),
++    );
++  }
++}
 diff --git a/lib/utils/widgets/device_tile_page.dart b/lib/utils/widgets/device_tile_page.dart
-index 9013cbd..05078eb 100644
+index 9013cbd..85fd6a8 100644
 --- a/lib/utils/widgets/device_tile_page.dart
 +++ b/lib/utils/widgets/device_tile_page.dart
 @@ -4,6 +4,7 @@ import 'package:cloudplayplus/dev_settings.dart/develop_settings.dart';
@@ -508,25 +745,28 @@ index 9013cbd..05078eb 100644
  import '../hash_util.dart';
  import 'cpp_icon.dart';
  
-@@ -124,6 +125,8 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+@@ -124,6 +125,9 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
    int _virtualDisplayWidth = 1920; // 虚拟显示器宽度
    int _virtualDisplayHeight = 1080; // 虚拟显示器高度
    bool _syncRemoteMousePosition = false; // 同步远程鼠标位置
-+  // Controller-requested host privacy: 0=off, 1=blankDisplay, 2=privacyScreen
-+  int _privacyMode = 0;
++  // Controller temporary privacy override (Q22):
++  // -1 = follow host default; 0 = force off; 1 = blankDisplay; 2 = privacyScreen
++  int _privacyMode = -1;
    
    // 屏幕尺寸缓存，用于检测屏幕尺寸变化
    Size? _lastScreenSize;
-@@ -314,6 +317,19 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+@@ -314,6 +318,21 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                            !ScreenController.showVirtualGamePad.value);
                      }
                      if (index == 5) {
-+                      // Toggle host privacy screen mid-session.
++                      // Mid-session temporary override (Q22): toggle privacy screen.
 +                      final session = WebrtcService.currentRenderingSession;
 +                      if (session != null) {
-+                        final next = _privacyMode == 0
-+                            ? PrivacyBlankMode.privacyScreen
-+                            : PrivacyBlankMode.off;
++                        final currentlyOn = _privacyMode ==
++                            PrivacyBlankMode.privacyScreen.index;
++                        final next = currentlyOn
++                            ? PrivacyBlankMode.off
++                            : PrivacyBlankMode.privacyScreen;
 +                        setState(() {
 +                          _privacyMode = next.index;
 +                        });
@@ -537,7 +777,7 @@ index 9013cbd..05078eb 100644
                        ScreenController.setshowDetailUseScrollView(true);
                        ScreenController.setOnlyShowRemoteScreen(false);
                        StreamingManager.stopStreaming(widget.device);
-@@ -325,6 +341,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+@@ -325,6 +344,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                      Icons.keyboard,
                      Icons.mouse,
                      Icons.gamepad,
@@ -545,39 +785,54 @@ index 9013cbd..05078eb 100644
                      Icons.close,
                    ],
                  ),
-@@ -772,6 +789,46 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+@@ -772,6 +792,61 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                            );
                          }),
                          
 +                        const SizedBox(height: 16),
 +
 +                        const Text(
-+                          "被控端防窥 (Privacy)",
++                          "被控端防窥（主控临时覆盖）",
 +                          style: TextStyle(
 +                            fontSize: 14,
 +                            fontWeight: FontWeight.w500,
 +                          ),
 +                        ),
++                        const SizedBox(height: 4),
++                        const Text(
++                          "默认跟随被控设置；此处选择仅对本次连接临时生效。",
++                          style: TextStyle(fontSize: 12, color: Colors.grey),
++                        ),
 +                        const SizedBox(height: 8),
-+                        ...List.generate(3, (index) {
++                        ...List.generate(4, (index) {
++                          // Map UI index → override value (-1 follow / 0 / 1 / 2).
++                          final values = [-1, 0, 1, 2];
 +                          final names = [
-+                            "不启用",
-+                            "关闭显示屏",
++                            "跟随被控默认",
++                            "本次不启用",
++                            "关闭屏幕背光",
 +                            "隐私屏保",
 +                          ];
 +                          final descs = [
-+                            "不请求被控端防窥",
-+                            "关闭被控端物理屏背光 (Windows)",
-+                            "被控端黑屏遮罩且排除捕获",
++                            "使用被控端设置中的默认防窥模式",
++                            "本次连接强制关闭防窥",
++                            "关闭被控物理屏背光；彻底关闭显示屏需用独占模式（选此项会自动启用）",
++                            "被控本机显示遮罩画面（可后续自定义图片），远程仍可见真实桌面",
 +                          ];
++                          final value = values[index];
 +                          return ListTile(
 +                            contentPadding: EdgeInsets.zero,
 +                            leading: Radio(
-+                              value: index,
++                              value: value,
 +                              groupValue: _privacyMode,
-+                              onChanged: (int? value) {
++                              onChanged: (int? selected) {
 +                                setState(() {
-+                                  _privacyMode = value ?? 0;
++                                  _privacyMode = selected ?? -1;
++                                  // blankDisplay auto-selects exclusive mode.
++                                  if (_privacyMode == 1) {
++                                    _selectedMode = VDISPLAY_OCCUPY;
++                                    _syncRemoteMousePosition = false;
++                                  }
 +                                });
 +                              },
 +                            ),
@@ -592,11 +847,18 @@ index 9013cbd..05078eb 100644
                          const SizedBox(height: 16),
                          
                          // 虚拟显示器尺寸设置（仅在非标准模式下显示）
-@@ -1037,6 +1094,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+@@ -1037,6 +1112,14 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
      }
      StreamingSettings.customScreenWidth = _virtualDisplayWidth;
      StreamingSettings.customScreenHeight = _virtualDisplayHeight;
-+    StreamingSettings.privacyMode = _privacyMode;
++    // Q22: temporary override only — do not overwrite host privacyMode default.
++    StreamingSettings.controllerPrivacyOverride =
++        _privacyMode < 0 ? null : _privacyMode;
++    // blankDisplay → exclusive virtual display (also enforced on host).
++    if (_privacyMode == 1 && StreamingSettings.streamMode != VDISPLAY_OCCUPY) {
++      StreamingSettings.streamMode = VDISPLAY_OCCUPY;
++      StreamingSettings.updateScreenId(0);
++    }
      
      // 保存虚拟显示器尺寸到缓存
      await SharedPreferencesManager.setInt('virtualDisplayWidth', _virtualDisplayWidth);

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import 'privacy_blank_display.dart';
 import 'privacy_blank_display_platform_interface.dart';
 
 const String _channelName = 'privacy_blank_display';
@@ -55,6 +56,29 @@ class MethodChannelPrivacyBlankDisplay extends PrivacyBlankDisplayPlatform {
     await methodChannel.invokeMethod<void>('setDismissLocksHost', {
       'enabled': enabled,
     });
+  }
+
+  @override
+  Future<bool> setHotkey(int modifiers, int keyCode) async {
+    if (kIsWeb || defaultTargetPlatform != TargetPlatform.windows) {
+      return false;
+    }
+    final result = await methodChannel.invokeMethod<bool>('setHotkey', {
+      'modifiers': modifiers,
+      'keyCode': keyCode,
+    });
+    return result ?? false;
+  }
+
+  @override
+  Future<PrivacyHotkey> getHotkey() async {
+    if (kIsWeb || defaultTargetPlatform != TargetPlatform.windows) {
+      return PrivacyHotkey.defaultHotkey;
+    }
+    final result = await methodChannel.invokeMethod<Map<dynamic, dynamic>>(
+      'getHotkey',
+    );
+    return PrivacyHotkey.fromMap(result);
   }
 
   @override

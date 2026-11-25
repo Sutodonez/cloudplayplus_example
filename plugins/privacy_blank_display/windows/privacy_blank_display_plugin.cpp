@@ -7,6 +7,8 @@
 #include <flutter/standard_method_codec.h>
 
 #include <windows.h>
+#include <mmdeviceapi.h>
+#include <endpointvolume.h>
 
 #include <memory>
 #include <mutex>
@@ -25,7 +27,13 @@ namespace {
 constexpr int kModeOff = 0;
 constexpr int kModeBlankDisplay = 1;
 constexpr int kModePrivacyScreen = 2;
-constexpr int kHotkeyId = 0x50B1;  // Ctrl+Alt+P
+constexpr int kHotkeyId = 0x50B1;
+
+// Dart-side modifier bits (stable wire format).
+constexpr int kModCtrlBit = 1;
+constexpr int kModAltBit = 2;
+constexpr int kModShiftBit = 4;
+constexpr int kModWinBit = 8;
 
 struct OverlayWindow {
   HWND hwnd = nullptr;
@@ -41,7 +49,89 @@ UINT_PTR g_blank_timer = 0;
 flutter::PluginRegistrarWindows* g_registrar = nullptr;
 std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> g_event_sink;
 
+// Default dismiss hotkey: Ctrl+Alt+P
+int g_hotkey_mods = kModCtrlBit | kModAltBit;
+UINT g_hotkey_vk = 'P';
+
+// Host speaker mute while privacy is active; restore prior mute on exit.
+bool g_mute_saved = false;
+bool g_previous_mute = false;
+bool g_privacy_muted = false;
+
 const wchar_t kOverlayClass[] = L"CpppPrivacyBlankOverlay";
+
+UINT DartModsToWinMods(int dart_mods) {
+  UINT win = 0;
+  if (dart_mods & kModCtrlBit) win |= MOD_CONTROL;
+  if (dart_mods & kModAltBit) win |= MOD_ALT;
+  if (dart_mods & kModShiftBit) win |= MOD_SHIFT;
+  if (dart_mods & kModWinBit) win |= MOD_WIN;
+  return win;
+}
+
+bool SetEndpointMute(bool mute, bool* out_previous) {
+  HRESULT hr_init = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+  const bool need_uninit =
+      SUCCEEDED(hr_init) || hr_init == S_FALSE || hr_init == RPC_E_CHANGED_MODE;
+
+  IMMDeviceEnumerator* enumerator = nullptr;
+  HRESULT hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), nullptr,
+                                CLSCTX_ALL, IID_PPV_ARGS(&enumerator));
+  if (FAILED(hr) || enumerator == nullptr) {
+    if (need_uninit && hr_init != RPC_E_CHANGED_MODE) CoUninitialize();
+    return false;
+  }
+
+  IMMDevice* device = nullptr;
+  hr = enumerator->GetDefaultAudioEndpoint(eRender, eConsole, &device);
+  enumerator->Release();
+  if (FAILED(hr) || device == nullptr) {
+    if (need_uninit && hr_init != RPC_E_CHANGED_MODE) CoUninitialize();
+    return false;
+  }
+
+  IAudioEndpointVolume* volume = nullptr;
+  hr = device->Activate(__uuidof(IAudioEndpointVolume), CLSCTX_ALL, nullptr,
+                        reinterpret_cast<void**>(&volume));
+  device->Release();
+  if (FAILED(hr) || volume == nullptr) {
+    if (need_uninit && hr_init != RPC_E_CHANGED_MODE) CoUninitialize();
+    return false;
+  }
+
+  if (out_previous != nullptr) {
+    BOOL prev = FALSE;
+    if (SUCCEEDED(volume->GetMute(&prev))) {
+      *out_previous = prev != FALSE;
+    }
+  }
+
+  hr = volume->SetMute(mute ? TRUE : FALSE, nullptr);
+  volume->Release();
+  if (need_uninit && hr_init != RPC_E_CHANGED_MODE) CoUninitialize();
+  return SUCCEEDED(hr);
+}
+
+void ApplyHostMuteLocked(bool enable) {
+  if (enable) {
+    if (g_privacy_muted) return;
+    bool previous = false;
+    if (SetEndpointMute(true, &previous)) {
+      g_previous_mute = previous;
+      g_mute_saved = true;
+      g_privacy_muted = true;
+    }
+  } else {
+    if (!g_privacy_muted) return;
+    if (g_mute_saved) {
+      SetEndpointMute(g_previous_mute, nullptr);
+    } else {
+      SetEndpointMute(false, nullptr);
+    }
+    g_privacy_muted = false;
+    g_mute_saved = false;
+  }
+}
 
 LRESULT CALLBACK OverlayWndProc(HWND hwnd, UINT msg, WPARAM wparam,
                                 LPARAM lparam) {
@@ -129,11 +219,6 @@ void CreateOverlaysLocked() {
 }
 
 void StopBlankTimerLocked() {
-  if (g_blank_timer != 0 && g_registrar != nullptr) {
-    KillTimer(nullptr, g_blank_timer);
-    // Prefer registrar HWND timer if available; KillTimer with nullptr id is
-    // best-effort for the SetTimer path below.
-  }
   if (g_blank_timer != 0) {
     KillTimer(nullptr, g_blank_timer);
     g_blank_timer = 0;
@@ -178,17 +263,23 @@ void UnregisterHotkeyLocked() {
   }
 }
 
-void RegisterHotkeyLocked() {
+bool RegisterHotkeyLocked() {
   if (g_hotkey_registered) {
-    return;
+    return true;
   }
   HWND hwnd = RootHwnd();
   if (hwnd == nullptr) {
-    return;
+    return false;
   }
-  if (RegisterHotKey(hwnd, kHotkeyId, MOD_CONTROL | MOD_ALT, 'P')) {
+  UINT win_mods = DartModsToWinMods(g_hotkey_mods);
+  if (win_mods == 0 || g_hotkey_vk == 0) {
+    return false;
+  }
+  if (RegisterHotKey(hwnd, kHotkeyId, win_mods, g_hotkey_vk)) {
     g_hotkey_registered = true;
+    return true;
   }
+  return false;
 }
 
 void EmitDismissed() {
@@ -213,6 +304,7 @@ bool ApplyModeLocked(int mode) {
   }
   if (g_mode != kModeOff) {
     UnregisterHotkeyLocked();
+    ApplyHostMuteLocked(false);
   }
 
   g_mode = mode;
@@ -222,6 +314,7 @@ bool ApplyModeLocked(int mode) {
   }
 
   RegisterHotkeyLocked();
+  ApplyHostMuteLocked(true);
 
   if (mode == kModePrivacyScreen) {
     CreateOverlaysLocked();
@@ -236,6 +329,8 @@ bool ApplyModeLocked(int mode) {
     return true;
   }
 
+  ApplyHostMuteLocked(false);
+  UnregisterHotkeyLocked();
   g_mode = kModeOff;
   return false;
 }
@@ -251,6 +346,18 @@ void DismissByHotkey() {
   if (lock_host) {
     LockWorkStation();
   }
+}
+
+int ReadIntArg(const flutter::EncodableMap* args, const char* key,
+               int fallback) {
+  if (args == nullptr) return fallback;
+  auto it = args->find(flutter::EncodableValue(key));
+  if (it == args->end()) return fallback;
+  if (const auto* i = std::get_if<int32_t>(&it->second)) return *i;
+  if (const auto* i64 = std::get_if<int64_t>(&it->second)) {
+    return static_cast<int>(*i64);
+  }
+  return fallback;
 }
 
 }  // namespace
@@ -357,6 +464,43 @@ void PrivacyBlankDisplayPlugin::HandleMethodCall(
     std::lock_guard<std::mutex> lock(g_mutex);
     g_dismiss_locks = enabled;
     result->Success(nullptr);
+    return;
+  }
+
+  if (method == "getHotkey") {
+    std::lock_guard<std::mutex> lock(g_mutex);
+    flutter::EncodableMap map;
+    map[flutter::EncodableValue("modifiers")] =
+        flutter::EncodableValue(g_hotkey_mods);
+    map[flutter::EncodableValue("keyCode")] =
+        flutter::EncodableValue(static_cast<int>(g_hotkey_vk));
+    result->Success(flutter::EncodableValue(map));
+    return;
+  }
+
+  if (method == "setHotkey") {
+    const auto* args =
+        std::get_if<flutter::EncodableMap>(method_call.arguments());
+    const int mods = ReadIntArg(args, "modifiers", kModCtrlBit | kModAltBit);
+    const int key = ReadIntArg(args, "keyCode", static_cast<int>('P'));
+    if (mods == 0 || key <= 0 || key > 0xFF) {
+      result->Error("invalid_hotkey", "modifiers and keyCode required");
+      return;
+    }
+    bool ok = false;
+    {
+      std::lock_guard<std::mutex> lock(g_mutex);
+      const bool was_registered = g_hotkey_registered;
+      UnregisterHotkeyLocked();
+      g_hotkey_mods = mods;
+      g_hotkey_vk = static_cast<UINT>(key);
+      if (was_registered || g_mode != kModeOff) {
+        ok = RegisterHotkeyLocked();
+      } else {
+        ok = true;
+      }
+    }
+    result->Success(flutter::EncodableValue(ok));
     return;
   }
 

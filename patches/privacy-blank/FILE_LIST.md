@@ -8,13 +8,13 @@ Plugin (cppp root, not in patch): `plugins/privacy_blank_display/`
 | Path | Role |
 |------|------|
 | `pubspec.yaml` | Path dep → `../../plugins/privacy_blank_display` |
-| `lib/services/privacy_blank_service.dart` | Host orchestrator (new) |
+| `lib/services/privacy_blank_service.dart` | Host orchestrator (mute/hotkey/VDD auto-bind/Q22) |
 | `lib/services/app_init_service.dart` | Init privacy service on Windows |
-| `lib/services/streamed_manager.dart` | Engage/restore on session start/end; VDD map fix |
+| `lib/services/streamed_manager.dart` | Engage/restore; blankDisplay→VDISPLAY_OCCUPY |
 | `lib/entities/messages.dart` | `LP_PRIVACY_MODE = 68` |
 | `lib/entities/session.dart` | Opcode handler + `requestHostPrivacyMode` |
-| `lib/global_settings/streaming_settings.dart` | Host defaults + connect payload |
-| `lib/settings_screen.dart` | Host「防窥 / Privacy」settings |
+| `lib/global_settings/streaming_settings.dart` | Host defaults + controller override payload |
+| `lib/settings_screen.dart` | Host「防窥」settings (hotkey capture; non-Win grayed) |
 | `lib/utils/widgets/device_tile_page.dart` | Connect privacy picker + floating menu toggle |
 
 ## Replay
@@ -22,7 +22,7 @@ Plugin (cppp root, not in patch): `plugins/privacy_blank_display/`
 1. `scripts/submodule-init.sh`
 2. `scripts/apply-patches.sh`
 3. `cd vendor/cloudplayplus && flutter pub get`
-4. Manual: Windows host — enable privacy screen / blank display; Ctrl+Alt+P dismiss + lock
+4. Manual: Windows host — blank display (exclusive auto-bind) / privacy screen; rebind hotkey; mute; dismiss + lock
 
 ## Design anchors (reference only)
 
