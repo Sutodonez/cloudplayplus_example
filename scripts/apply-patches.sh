@@ -28,57 +28,44 @@ if [[ -n "$(git -C "$VENDOR" status --porcelain)" ]]; then
   exit 1
 fi
 
-# Windows: submodule worktree may be CRLF while patches are LF. Force LF in
-# the worktree (and keep it LF after each apply) so sequential patches match.
-echo "==> Normalizing vendor worktree to LF"
+# Patches are LF. Force vendor worktree to LF so sequential applies match on
+# Windows (where checkout / git apply may otherwise use CRLF).
+echo "==> Forcing LF vendor worktree"
 git -C "$VENDOR" config core.autocrlf false
 git -C "$VENDOR" config core.eol lf
 git -C "$VENDOR" reset --hard HEAD
 python3 - <<'PY'
 from pathlib import Path
 root = Path("vendor/cloudplayplus")
-skip_suffix = {
-    ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".dll", ".so",
-    ".dylib", ".exe", ".bin", ".jar", ".aar", ".zip", ".gz", ".7z",
-    ".pdf", ".ttf", ".otf", ".woff", ".woff2",
-}
-changed = 0
+skip = {".png",".jpg",".jpeg",".gif",".webp",".ico",".dll",".so",".dylib",".exe",".bin",".jar",".aar",".zip",".gz"}
+n = 0
 for path in root.rglob("*"):
-    if not path.is_file():
+    if not path.is_file() or ".git" in path.parts or "build" in path.parts:
         continue
-    if path.suffix.lower() in skip_suffix:
-        continue
-    # Skip VCS / build trees
-    parts = set(path.parts)
-    if ".git" in parts or "build" in parts:
+    if path.suffix.lower() in skip:
         continue
     try:
         data = path.read_bytes()
     except OSError:
         continue
-    if b"\x00" in data[:4096]:
-        continue  # binary
-    if b"\r" not in data:
+    if b"\x00" in data[:4096] or b"\r" not in data:
         continue
     path.write_bytes(data.replace(b"\r\n", b"\n").replace(b"\r", b"\n"))
-    changed += 1
-print(f"==> Stripped CR from {changed} file(s)")
+    n += 1
+print(f"==> Stripped CR from {n} file(s)")
 PY
 
 for patch in "${patches[@]}"; do
   echo "==> Applying $patch"
   git -C "$VENDOR" apply --whitespace=nowarn "$ROOT/$patch"
-  # Re-strip CR in case git apply re-introduced CRLF on Windows.
   python3 - <<'PY'
 from pathlib import Path
 root = Path("vendor/cloudplayplus")
+skip = {".png",".jpg",".jpeg",".gif",".webp",".ico",".dll",".so",".dylib",".exe",".bin",".jar",".aar",".zip",".gz"}
 for path in root.rglob("*"):
     if not path.is_file() or ".git" in path.parts or "build" in path.parts:
         continue
-    if path.suffix.lower() in {
-        ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".dll", ".so",
-        ".dylib", ".exe", ".bin", ".jar", ".aar", ".zip", ".gz",
-    }:
+    if path.suffix.lower() in skip:
         continue
     try:
         data = path.read_bytes()
