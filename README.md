@@ -39,6 +39,11 @@ cd vendor/cloudplayplus && flutter pub get && flutter run
 
 Bump upstream later with `scripts/bump-upstream.sh` (optional SHA), then replay `patches/`.
 
+## Out-of-stack punch trial (Windows)
+
+Trial tip: tag `trial/out-of-stack-punch` / branch `cursor/trial-out-of-stack-punch-434f` (PR #14).  
+Human how-to: [`docs/trial-out-of-stack-howto.md`](docs/trial-out-of-stack-howto.md). Do **not** treat this as in-stack SymmetricPunch or a merge-to-`main` gate pass.
+
 ## Constraints
 
 - Do not copy NetEase (网易) binaries or decompiled bodies into product / plugin / vendor code.
