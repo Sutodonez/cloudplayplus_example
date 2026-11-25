@@ -18,6 +18,7 @@ Use zero-padded numeric prefixes so lexical order matches apply order:
 | `0001-linux-cmake-allow-deprecated-literal-operator.patch` | Keep Linux `-Werror`, but allow `deprecated-literal-operator` so third-party `json.hpp` (via `flutter_secure_storage_linux`) does not fail CI on newer Clang/GCC. |
 | `0002-privacy-blank-display-wireup.patch` | Privacy / blank display wireup — see [`privacy-blank/`](./privacy-blank/) |
 | `0003-session-terminal-link.patch` | Server terminal linking — see [`terminal-link/`](./terminal-link/) |
+| `0004-session-file-transfer.patch` | Session file/folder transfer — see [`file-transfer/`](./file-transfer/) |
 
 ## Workflow
 
