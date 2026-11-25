@@ -1,0 +1,438 @@
+diff --git a/lib/global_settings/streaming_settings.dart b/lib/global_settings/streaming_settings.dart
+index eb4e6f5..4bdfcef 100644
+--- a/lib/global_settings/streaming_settings.dart
++++ b/lib/global_settings/streaming_settings.dart
+@@ -51,9 +51,14 @@ class StreamingSettings {
+   /// Force TURN-only ICE (`iceTransportPolicy: relay`).
+   static bool forceRelay = false;
+ 
++  /// Prefer in-stack PortAllocator punch when native reports available
++  /// (pin A). Default on; falls back to out-of-stack while rebuild_pending.
++  static bool preferInStackPunch = true;
++
+   static IcePunchOptions punchOptions() => IcePunchOptions(
+         enabled: enablePunch,
+         forceRelay: forceRelay,
++        preferInStackPunch: preferInStackPunch,
+       );
+ 
+   static String connectPasswordHash = "";
+@@ -170,6 +175,8 @@ class StreamingSettings {
+     // Punch defaults on for native; web falls back to no-op helper.
+     enablePunch = SharedPreferencesManager.getBool('enablePunch') ?? true;
+     forceRelay = SharedPreferencesManager.getBool('forceRelay') ?? false;
++    preferInStackPunch =
++        SharedPreferencesManager.getBool('preferInStackPunch') ?? true;
+ 
+     codec = SharedPreferencesManager.getString('codec') ?? 'default';
+ 
+diff --git a/lib/services/ice/ice_punch_options.dart b/lib/services/ice/ice_punch_options.dart
+index c720329..094c092 100644
+--- a/lib/services/ice/ice_punch_options.dart
++++ b/lib/services/ice/ice_punch_options.dart
+@@ -9,6 +9,11 @@ class IcePunchOptions {
+   /// Prefer TURN-only ICE (`iceTransportPolicy: relay`).
+   final bool forceRelay;
+ 
++  /// Prefer in-stack PortAllocator punch (CPPS pin A) when the native build
++  /// reports available. Falls back to out-of-stack MethodChannel / Dart UDP
++  /// when native returns `rebuild_pending` or MissingPluginException.
++  final bool preferInStackPunch;
++
+   /// Public hosts used for PunchCheckFireWall-style UDP probes (host only, port 53).
+   final List<String> probeHosts;
+ 
+@@ -32,6 +37,7 @@ class IcePunchOptions {
+   const IcePunchOptions({
+     this.enabled = true,
+     this.forceRelay = false,
++    this.preferInStackPunch = true,
+     this.probeHosts = defaultProbeHosts,
+     this.symmetricSocketCount = 8,
+     this.packetsPerSocket = 4,
+@@ -42,6 +48,7 @@ class IcePunchOptions {
+   IcePunchOptions copyWith({
+     bool? enabled,
+     bool? forceRelay,
++    bool? preferInStackPunch,
+     List<String>? probeHosts,
+     int? symmetricSocketCount,
+     int? packetsPerSocket,
+@@ -51,6 +58,7 @@ class IcePunchOptions {
+     return IcePunchOptions(
+       enabled: enabled ?? this.enabled,
+       forceRelay: forceRelay ?? this.forceRelay,
++      preferInStackPunch: preferInStackPunch ?? this.preferInStackPunch,
+       probeHosts: probeHosts ?? this.probeHosts,
+       symmetricSocketCount:
+           symmetricSocketCount ?? this.symmetricSocketCount,
+@@ -64,6 +72,7 @@ class IcePunchOptions {
+   Map<String, dynamic> toJson() => {
+         'enabled': enabled,
+         'forceRelay': forceRelay,
++        'preferInStackPunch': preferInStackPunch,
+         'probeHosts': probeHosts,
+         'symmetricSocketCount': symmetricSocketCount,
+         'packetsPerSocket': packetsPerSocket,
+@@ -77,6 +86,7 @@ class IcePunchOptions {
+     return IcePunchOptions(
+       enabled: json['enabled'] as bool? ?? true,
+       forceRelay: json['forceRelay'] as bool? ?? false,
++      preferInStackPunch: json['preferInStackPunch'] as bool? ?? true,
+       probeHosts: hosts is List
+           ? hosts.map((e) => e.toString()).toList()
+           : defaultProbeHosts,
+diff --git a/lib/services/ice/nat_punch_helper_io.dart b/lib/services/ice/nat_punch_helper_io.dart
+index c64818d..fad5380 100644
+--- a/lib/services/ice/nat_punch_helper_io.dart
++++ b/lib/services/ice/nat_punch_helper_io.dart
+@@ -15,10 +15,19 @@ import 'package:flutter_webrtc/flutter_webrtc.dart' as webrtc;
+ ///
+ /// Prefers the flutter-webrtc MethodChannel when available; falls back to
+ /// [RawDatagramSocket] so the feature still works without a rebuilt plugin.
++///
++/// When [IcePunchOptions.preferInStackPunch] is true, tries in-stack
++/// PortAllocator punch first (`natPunchInStackSymmetric`). Stock builds return
++/// `rebuild_pending` until a punch-capable libwebrtc.dll is dropped; then
++/// falls back to out-of-stack / Dart UDP.
+ class NatPunchHelper {
+-  NatPunchHelper(this.options);
++  NatPunchHelper(this.options, {this.peerConnectionId});
+ 
+   final IcePunchOptions options;
++
++  /// Optional RTCPeerConnection id for future in-stack wiring.
++  final String? peerConnectionId;
++
+   final Random _rng = Random();
+   bool _disposed = false;
+   final Set<String> _punchedTargets = {};
+@@ -144,11 +153,40 @@ class NatPunchHelper {
+       );
+     }
+ 
++    final targets = endpoints
++        .map((e) => <String, dynamic>{'ip': e.ip, 'port': e.port})
++        .toList();
++
++    if (options.preferInStackPunch) {
++      try {
++        final inStack = await webrtc.NatPunch.inStackSymmetric(
++          targets: targets,
++          peerConnectionId: peerConnectionId,
++          burstsPerEndpoint:
++              _packetsPerSocket * _socketCount,
++        );
++        if (inStack != null && inStack['available'] == true) {
++          final sent = inStack['attempts'] as int? ??
++              inStack['packetsSent'] as int? ??
++              0;
++          VLOG0(
++              'NatPunch in-stack symmetric: ${endpoints.length} targets, $sent attempts');
++          return SymmetricPunchResult(
++            supported: true,
++            targetsAttempted: endpoints.length,
++            packetsSent: sent,
++          );
++        }
++        VLOG0(
++            'NatPunch in-stack unavailable: ${inStack?['reason'] ?? 'null'} — falling back');
++      } catch (e) {
++        VLOG0('NatPunch in-stack call failed: $e — falling back');
++      }
++    }
++
+     try {
+       final native = await webrtc.NatPunch.symmetricPunch(
+-        targets: endpoints
+-            .map((e) => {'ip': e.ip, 'port': e.port})
+-            .toList(),
++        targets: targets,
+         socketCount: _socketCount,
+         packetsPerSocket: _packetsPerSocket,
+         intervalMs: options.burstInterval.inMilliseconds.clamp(0, 200),
+diff --git a/lib/services/ice/nat_punch_helper_stub.dart b/lib/services/ice/nat_punch_helper_stub.dart
+index 9402a65..65ab7ad 100644
+--- a/lib/services/ice/nat_punch_helper_stub.dart
++++ b/lib/services/ice/nat_punch_helper_stub.dart
+@@ -2,9 +2,10 @@ import 'package:cloudplayplus/services/ice/ice_punch_options.dart';
+ 
+ /// Web / unsupported platforms: punch is a no-op (browser owns ICE sockets).
+ class NatPunchHelper {
+-  NatPunchHelper(this.options);
++  NatPunchHelper(this.options, {this.peerConnectionId});
+ 
+   final IcePunchOptions options;
++  final String? peerConnectionId;
+   bool get isSupported => false;
+ 
+   Future<FirewallProbeResult> checkFirewall() async {
+diff --git a/lib/settings_screen.dart b/lib/settings_screen.dart
+index 194115d..dfc0d6e 100644
+--- a/lib/settings_screen.dart
++++ b/lib/settings_screen.dart
+@@ -759,6 +759,7 @@ class _NetworkSettingsScreenState extends State<NetworkSettingsScreen> {
+   bool useTurnServer = false;
+   bool enablePunch = true;
+   bool forceRelay = false;
++  bool preferInStackPunch = true;
+   String customTurnServerAddress = "";
+   String customTurnServerUsername = "";
+   String customTurnServerPassword = "";
+@@ -813,6 +814,7 @@ class _NetworkSettingsScreenState extends State<NetworkSettingsScreen> {
+     useTurnServer = StreamingSettings.useTurnServer;
+     enablePunch = StreamingSettings.enablePunch;
+     forceRelay = StreamingSettings.forceRelay;
++    preferInStackPunch = StreamingSettings.preferInStackPunch;
+     customTurnServerAddress =
+         SharedPreferencesManager.getString('customTurnServerAddress') ??
+             'turn:47.100.84.139:3478';
+@@ -964,6 +966,21 @@ class _NetworkSettingsScreenState extends State<NetworkSettingsScreen> {
+                     });
+                   },
+                 ),
++                SettingsTile.switchTile(
++                  title: const Text('优先栈内打洞 (preferInStackPunch)'),
++                  description: const Text(
++                      '优先 ICE PortAllocator 栈内 SymmetricPunch；重建未就绪时自动回退栈外'),
++                  leading: const Icon(Icons.layers),
++                  initialValue: preferInStackPunch,
++                  onToggle: (bool value) {
++                    setState(() {
++                      preferInStackPunch = value;
++                      StreamingSettings.preferInStackPunch = value;
++                      SharedPreferencesManager.setBool(
++                          'preferInStackPunch', value);
++                    });
++                  },
++                ),
+               ],
+             ),
+             SettingsSection(
+diff --git a/plugins/flutter-webrtc/common/cpp/include/flutter_nat_punch.h b/plugins/flutter-webrtc/common/cpp/include/flutter_nat_punch.h
+index cac92f7..5cc3c50 100644
+--- a/plugins/flutter-webrtc/common/cpp/include/flutter_nat_punch.h
++++ b/plugins/flutter-webrtc/common/cpp/include/flutter_nat_punch.h
+@@ -20,6 +20,14 @@ class FlutterNatPunch {
+   // Multi-socket UDP bursts toward remote ICE candidate endpoints.
+   static void SymmetricPunch(const EncodableMap& params,
+                              std::unique_ptr<MethodResultProxy> result);
++
++  // In-stack PortAllocator path (CPPS pin A). Until a punch-capable
++  // libwebrtc.dll is dropped, these return available=false / rebuild_pending
++  // without linking cricket symbols missing from the stock prebuilt.
++  static void InStackStatus(const EncodableMap& params,
++                            std::unique_ptr<MethodResultProxy> result);
++  static void InStackSymmetric(const EncodableMap& params,
++                               std::unique_ptr<MethodResultProxy> result);
+ };
+ 
+ }  // namespace flutter_webrtc_plugin
+diff --git a/plugins/flutter-webrtc/common/cpp/include/flutter_nat_punch_in_stack.h b/plugins/flutter-webrtc/common/cpp/include/flutter_nat_punch_in_stack.h
+new file mode 100644
+index 0000000..747cd0c
+--- /dev/null
++++ b/plugins/flutter-webrtc/common/cpp/include/flutter_nat_punch_in_stack.h
+@@ -0,0 +1,24 @@
++#ifndef FLUTTER_WEBRTC_NAT_PUNCH_IN_STACK_HXX
++#define FLUTTER_WEBRTC_NAT_PUNCH_IN_STACK_HXX
++
++// CPPS pin A — in-stack PortAllocator punch (scaffold).
++//
++// Until Aorus / rebuild host drops a punch-capable libwebrtc.dll that exports
++// a narrow SymmetricPunchToRemotes (or equivalent) C++ API, MethodChannel
++// handlers live in flutter_nat_punch.{h,cc} and return rebuild_pending.
++// Do NOT #include cricket headers or call missing DLL symbols from this tree.
++//
++// Future flip (after binary drop + wrapper C API):
++//   1. Set CPPS_IN_STACK_LIBWEBRTC_READY to 1 in flutter_nat_punch.cc
++//   2. Call libwebrtc wrapper from InStackSymmetric
++//   3. Keep out-of-stack natPunchSymmetric as fallback when available=false
++//
++// Reserved MethodChannel names (registered, stubbed):
++//   natPunchInStackStatus
++//   natPunchInStackSymmetric
++
++#ifndef CPPS_IN_STACK_LIBWEBRTC_READY
++#define CPPS_IN_STACK_LIBWEBRTC_READY 0
++#endif
++
++#endif  // FLUTTER_WEBRTC_NAT_PUNCH_IN_STACK_HXX
+diff --git a/plugins/flutter-webrtc/common/cpp/src/flutter_nat_punch.cc b/plugins/flutter-webrtc/common/cpp/src/flutter_nat_punch.cc
+index 188c699..db13a0d 100644
+--- a/plugins/flutter-webrtc/common/cpp/src/flutter_nat_punch.cc
++++ b/plugins/flutter-webrtc/common/cpp/src/flutter_nat_punch.cc
+@@ -1,4 +1,5 @@
+ #include "flutter_nat_punch.h"
++#include "flutter_nat_punch_in_stack.h"
+ 
+ #include <cctype>
+ #include <chrono>
+@@ -227,4 +228,40 @@ void FlutterNatPunch::SymmetricPunch(
+   }).detach();
+ }
+ 
++
++void FlutterNatPunch::InStackStatus(
++    const EncodableMap& /*params*/,
++    std::unique_ptr<MethodResultProxy> result) {
++  // Stock third_party libwebrtc has no SymmetricPunchToRemotes export yet.
++  // Flip when Aorus / rebuild host drops a punch-capable DLL + C API.
++  EncodableMap out;
++#if CPPS_IN_STACK_LIBWEBRTC_READY
++  out[EncodableValue("available")] = EncodableValue(true);
++  out[EncodableValue("reason")] = EncodableValue("ready");
++#else
++  out[EncodableValue("available")] = EncodableValue(false);
++  out[EncodableValue("reason")] = EncodableValue("rebuild_pending");
++#endif
++  out[EncodableValue("pin")] = EncodableValue("m125");
++  result->Success(EncodableValue(out));
++}
++
++void FlutterNatPunch::InStackSymmetric(
++    const EncodableMap& /*params*/,
++    std::unique_ptr<MethodResultProxy> result) {
++  EncodableMap out;
++#if CPPS_IN_STACK_LIBWEBRTC_READY
++  // Real path: resolve PeerConnection → PortAllocatorSession →
++  // SymmetricPunchToRemotes (see patches/in-stack-punch/external/).
++  out[EncodableValue("available")] = EncodableValue(false);
++  out[EncodableValue("reason")] = EncodableValue("not_wired");
++  out[EncodableValue("attempts")] = EncodableValue(0);
++#else
++  out[EncodableValue("available")] = EncodableValue(false);
++  out[EncodableValue("reason")] = EncodableValue("rebuild_pending");
++  out[EncodableValue("attempts")] = EncodableValue(0);
++#endif
++  result->Success(EncodableValue(out));
++}
++
+ }  // namespace flutter_webrtc_plugin
+diff --git a/plugins/flutter-webrtc/common/cpp/src/flutter_webrtc.cc b/plugins/flutter-webrtc/common/cpp/src/flutter_webrtc.cc
+index 91f1b0f..c10460a 100644
+--- a/plugins/flutter-webrtc/common/cpp/src/flutter_webrtc.cc
++++ b/plugins/flutter-webrtc/common/cpp/src/flutter_webrtc.cc
+@@ -1258,6 +1258,21 @@ void FlutterWebRTC::HandleMethodCall(
+     const EncodableMap params =
+         GetValue<EncodableMap>(*method_call.arguments());
+     FlutterNatPunch::SymmetricPunch(params, std::move(result));
++  } else if (method_call.method_name().compare("natPunchInStackStatus") == 0) {
++    const EncodableMap params =
++        method_call.arguments()
++            ? GetValue<EncodableMap>(*method_call.arguments())
++            : EncodableMap();
++    FlutterNatPunch::InStackStatus(params, std::move(result));
++  } else if (method_call.method_name().compare("natPunchInStackSymmetric") ==
++             0) {
++    if (!method_call.arguments()) {
++      result->Error("Bad Arguments", "Null arguments received");
++      return;
++    }
++    const EncodableMap params =
++        GetValue<EncodableMap>(*method_call.arguments());
++    FlutterNatPunch::InStackSymmetric(params, std::move(result));
+   } else {
+     if (HandleFrameCryptorMethodCall(method_call, std::move(result), &result)) {
+       return;
+diff --git a/plugins/flutter-webrtc/lib/src/native/nat_punch.dart b/plugins/flutter-webrtc/lib/src/native/nat_punch.dart
+index dea8479..5e5ca5e 100644
+--- a/plugins/flutter-webrtc/lib/src/native/nat_punch.dart
++++ b/plugins/flutter-webrtc/lib/src/native/nat_punch.dart
+@@ -7,6 +7,8 @@ import 'utils.dart';
+ /// Channel methods (ABI freeze — see patches/nat-punch/FILE_LIST.md):
+ /// - `natPunchProbeFirewall`
+ /// - `natPunchSymmetric`
++/// - `natPunchInStackStatus` (CPPS in-stack; may report rebuild_pending)
++/// - `natPunchInStackSymmetric`
+ ///
+ /// Returns null when the native plugin does not implement the method (older
+ /// builds); callers must fall back to Dart [RawDatagramSocket] punch.
+@@ -56,4 +58,43 @@ class NatPunch {
+       return null;
+     }
+   }
++
++  /// Query whether in-stack PortAllocator punch is linked in this build.
++  static Future<Map<String, dynamic>?> inStackStatus() async {
++    try {
++      final result = await WebRTC.invokeMethod('natPunchInStackStatus', {});
++      if (result is Map) {
++        return Map<String, dynamic>.from(result);
++      }
++      return null;
++    } on MissingPluginException {
++      return null;
++    } on PlatformException {
++      return null;
++    }
++  }
++
++  /// In-stack SymmetricPunch on ICE-owned ports (pin A). Until rebuild lands,
++  /// native returns `available: false` / `reason: rebuild_pending`.
++  static Future<Map<String, dynamic>?> inStackSymmetric({
++    required List<Map<String, dynamic>> targets,
++    String? peerConnectionId,
++    int burstsPerEndpoint = 32,
++  }) async {
++    try {
++      final result = await WebRTC.invokeMethod('natPunchInStackSymmetric', {
++        'targets': targets,
++        if (peerConnectionId != null) 'peerConnectionId': peerConnectionId,
++        'burstsPerEndpoint': burstsPerEndpoint,
++      });
++      if (result is Map) {
++        return Map<String, dynamic>.from(result);
++      }
++      return null;
++    } on MissingPluginException {
++      return null;
++    } on PlatformException {
++      return null;
++    }
++  }
+ }
+diff --git a/plugins/flutter-webrtc/lib/src/web/nat_punch.dart b/plugins/flutter-webrtc/lib/src/web/nat_punch.dart
+index 2922681..73eee64 100644
+--- a/plugins/flutter-webrtc/lib/src/web/nat_punch.dart
++++ b/plugins/flutter-webrtc/lib/src/web/nat_punch.dart
+@@ -14,4 +14,13 @@ class NatPunch {
+     int intervalMs = 20,
+   }) async =>
+       null;
++
++  static Future<Map<String, dynamic>?> inStackStatus() async => null;
++
++  static Future<Map<String, dynamic>?> inStackSymmetric({
++    required List<Map<String, dynamic>> targets,
++    String? peerConnectionId,
++    int burstsPerEndpoint = 32,
++  }) async =>
++      null;
+ }
+diff --git a/test/ice_policy_test.dart b/test/ice_policy_test.dart
+index dcd52a3..b75e4a1 100644
+--- a/test/ice_policy_test.dart
++++ b/test/ice_policy_test.dart
+@@ -176,12 +176,21 @@ void main() {
+       const opts = IcePunchOptions(
+         enabled: false,
+         forceRelay: true,
++        preferInStackPunch: false,
+         probeHosts: ['1.1.1.1'],
+       );
+       final again = IcePunchOptions.fromJson(opts.toJson());
+       expect(again.enabled, isFalse);
+       expect(again.forceRelay, isTrue);
++      expect(again.preferInStackPunch, isFalse);
+       expect(again.probeHosts, ['1.1.1.1']);
+     });
++
++    test('defaults preferInStackPunch to true', () {
++      const opts = IcePunchOptions();
++      expect(opts.preferInStackPunch, isTrue);
++      final again = IcePunchOptions.fromJson(const {});
++      expect(again.preferInStackPunch, isTrue);
++    });
+   });
+ }

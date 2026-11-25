@@ -25,6 +25,7 @@ Use zero-padded numeric prefixes so lexical order matches apply order:
 | `0008-bugbot-and-plugin-security-followup.patch` | Bugbot + plugin security follow-up — see [`bugbot-followup/`](./bugbot-followup/) |
 | `0009-nat-punch-ice-policy-and-wireup.patch` | Out-of-stack NAT punch — ICE policy, Dart helper, session/settings — see [`nat-punch/`](./nat-punch/) |
 | `0010-nat-punch-flutter-webrtc-methodchannel.patch` | Out-of-stack NAT punch — flutter-webrtc MethodChannel (bounded fork) |
+| `0011-in-stack-methodchannel-scaffold.patch` | In-stack MethodChannel scaffold (`preferInStackPunch`, rebuild_pending) — see [`in-stack-punch/`](./in-stack-punch/) |
 
 ## Workflow
 
