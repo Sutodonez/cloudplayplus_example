@@ -1,0 +1,1169 @@
+diff --git a/lib/entities/audiosession.dart b/lib/entities/audiosession.dart
+index 74e4533..6ea4939 100644
+--- a/lib/entities/audiosession.dart
++++ b/lib/entities/audiosession.dart
+@@ -1,3 +1,4 @@
++import 'dart:async';
+ import 'dart:convert';
+ 
+ import 'package:cloudplayplus/base/logging.dart';
+@@ -6,6 +7,8 @@ import 'package:cloudplayplus/entities/device.dart';
+ import 'package:cloudplayplus/entities/messages.dart';
+ import 'package:cloudplayplus/global_settings/streaming_settings.dart';
+ import 'package:cloudplayplus/services/app_info_service.dart';
++import 'package:cloudplayplus/services/ice/ice_policy.dart';
++import 'package:cloudplayplus/services/ice/nat_punch_helper.dart';
+ import 'package:cloudplayplus/services/streamed_manager.dart';
+ import 'package:cloudplayplus/services/webrtc_service.dart';
+ import 'package:cloudplayplus/webrtctest/rtc_service_impl.dart';
+@@ -26,40 +29,35 @@ class AudioSession {
+ 
+   int bitrate = 128;
+ 
++  NatPunchHelper? _punchHelper;
++
+   Future<RTCPeerConnection> createRTCPeerConnection() async {
+-    Map<String, dynamic> iceServers;
+-
+-    if (StreamingSettings.useTurnServer) {
+-      iceServers = {
+-        'iceServers': [
+-          {
+-            'urls': StreamingSettings.customTurnServerAddress,
+-            'username': StreamingSettings.customTurnServerUsername,
+-            'credential': StreamingSettings.customTurnServerPassword
+-          }
+-        ]
+-      };
+-    } else {
+-      iceServers = {
+-        'iceServers': [cloudPlayPlusStun]
+-      };
++    final punch = StreamingSettings.punchOptions();
++    _punchHelper?.dispose();
++    _punchHelper = NatPunchHelper(punch);
++    if (punch.enabled && !punch.forceRelay) {
++      await _punchHelper!.checkFirewall();
++    }
++
++    Map<String, dynamic>? testServers;
++    if (DevelopSettings.useRTCTestServer) {
++      testServers = await RTCServiceImpl().iceservers;
+     }
+ 
+-    final Map<String, dynamic> config = {
++    final peerConfig = IcePolicy.buildPeerConnectionConfiguration(
++      punch: punch,
++      useTurnServer: StreamingSettings.useTurnServer,
++      testIceServers: testServers,
++    );
++
++    final Map<String, dynamic> constraints = {
+       'mandatory': {},
+       'optional': [
+         {'DtlsSrtpKeyAgreement': true},
+       ]
+     };
+ 
+-    if (DevelopSettings.useRTCTestServer) {
+-      iceServers = await RTCServiceImpl().iceservers;
+-    }
+-
+-    return createPeerConnection({
+-      ...iceServers,
+-      ...{'sdpSemantics': 'unified-plan'}
+-    }, config);
++    return createPeerConnection(peerConfig, constraints);
+   }
+ 
+   AudioSession(this.channel, this.controller, this.controlled, this.bitrate);
+@@ -262,6 +260,8 @@ class AudioSession {
+ 
+   Future<void> addCandidate(RTCIceCandidate candidate) async {
+     await _lock.synchronized(() async {
++      unawaited(_punchHelper?.onRemoteIceCandidate(candidate.candidate) ??
++          Future.value());
+       if (pc == null) {
+         // This can not be triggered if we await properly. Keep this and We may resue this list in the future.
+         VLOG0("-----warning:this should not be triggered.");
+@@ -275,6 +275,8 @@ class AudioSession {
+ 
+   //TODO(haichao): answer,dispose, offer&answer in sessions.dart.
+   Future<void> dispose() async {
++    _punchHelper?.dispose();
++    _punchHelper = null;
+     if (controlled.websocketSessionid == AppStateService.websocketSessionid) {
+       StreamedManager.audioSenderCount--;
+       if (StreamedManager.audioSenderCount == 0) {
+diff --git a/lib/entities/session.dart b/lib/entities/session.dart
+index 5343cd5..3093aa1 100644
+--- a/lib/entities/session.dart
++++ b/lib/entities/session.dart
+@@ -25,6 +25,9 @@ import 'package:flutter/widgets.dart';
+ import '../base/logging.dart';
+ import '../global_settings/streaming_settings.dart';
+ import '../services/app_info_service.dart';
++import '../services/ice/ice_policy.dart';
++import '../services/ice/ice_punch_options.dart';
++import '../services/ice/nat_punch_helper.dart';
+ import '../services/shared_preferences_manager.dart';
+ import '../services/webrtc_service.dart';
+ import '../webrtctest/rtc_service_impl.dart';
+@@ -98,6 +101,9 @@ class StreamingSession {
+ 
+   List<RTCIceCandidate> candidates = [];
+ 
++  /// Per-session enhanced punch helper (firewall probe + symmetric bursts).
++  NatPunchHelper? _punchHelper;
++
+   int screenId = 0;
+ 
+   int cursorImageHookID = 0;
+@@ -381,10 +387,21 @@ class StreamingSession {
+           restartPingTimeoutTimer(40);
+         } else if (state ==
+             RTCPeerConnectionState.RTCPeerConnectionStateFailed) {
++          final suggestRelay = IcePolicy.shouldFallbackToRelay(
++            punch: _activePunchOptions(),
++            useTurnServer: StreamingSettings.useTurnServer,
++            alreadyTriedRelay: StreamingSettings.forceRelay,
++          );
+           controlled.connectionState.value =
+               StreamingSessionConnectionState.disconnected;
+-          MessageBoxManager()
+-              .showMessage("已断开或未能建立连接。请切换网络重试或在设置中启动turn服务器。", "连接失败");
++          if (suggestRelay) {
++            MessageBoxManager().showMessage(
++                "已断开或未能建立连接。可在网络设置中开启「强制中继(forceRelay)」或 TURN 后重试。",
++                "连接失败");
++          } else {
++            MessageBoxManager()
++                .showMessage("已断开或未能建立连接。请切换网络重试或在设置中启动turn服务器。", "连接失败");
++          }
+           close();
+         } else if (state ==
+             RTCPeerConnectionState.RTCPeerConnectionStateClosed) {
+@@ -484,62 +501,39 @@ class StreamingSession {
+     });
+   }
+ 
++  IcePunchOptions _activePunchOptions() => StreamingSettings.punchOptions();
++
++  Future<void> _ensurePunchHelper() async {
++    final opts = _activePunchOptions();
++    _punchHelper?.dispose();
++    _punchHelper = NatPunchHelper(opts);
++    if (opts.enabled && !opts.forceRelay) {
++      await _punchHelper!.checkFirewall();
++    }
++  }
++
+   Future<RTCPeerConnection> createRTCPeerConnection() async {
+-    Map<String, dynamic> iceServers;
+-
+-    /*if (streamSettings!.turnServerSettings == 2) {
+-      iceServers = {
+-        'iceServers': [
+-          {
+-            'urls': streamSettings!.turnServerAddress,
+-            'username': streamSettings!.turnServerUsername,
+-            'credential': streamSettings!.turnServerPassword
+-          },
+-        ]
+-      };
+-    } else {
+-      iceServers = {
+-        'iceServers': [
+-          {
+-            'urls': streamSettings!.turnServerAddress,
+-            'username': streamSettings!.turnServerUsername,
+-            'credential': streamSettings!.turnServerPassword
+-          },
+-          officialStun1,
+-        ]
+-      };
+-    }*/
+-    if (StreamingSettings.useTurnServer) {
+-      iceServers = {
+-        'iceServers': [
+-          {
+-            'urls': StreamingSettings.customTurnServerAddress,
+-            'username': StreamingSettings.customTurnServerUsername,
+-            'credential': StreamingSettings.customTurnServerPassword
+-          }
+-        ]
+-      };
+-    } else {
+-      iceServers = {
+-        'iceServers': [cloudPlayPlusStun]
+-      };
++    await _ensurePunchHelper();
++
++    Map<String, dynamic>? testServers;
++    if (DevelopSettings.useRTCTestServer) {
++      testServers = await RTCServiceImpl().iceservers;
+     }
+ 
+-    final Map<String, dynamic> config = {
++    final peerConfig = IcePolicy.buildPeerConnectionConfiguration(
++      punch: _activePunchOptions(),
++      useTurnServer: StreamingSettings.useTurnServer,
++      testIceServers: testServers,
++    );
++
++    final Map<String, dynamic> constraints = {
+       'mandatory': {},
+       'optional': [
+         {'DtlsSrtpKeyAgreement': true},
+       ]
+     };
+ 
+-    if (DevelopSettings.useRTCTestServer) {
+-      iceServers = await RTCServiceImpl().iceservers;
+-    }
+-
+-    return createPeerConnection({
+-      ...iceServers,
+-      ...{'sdpSemantics': 'unified-plan'}
+-    }, config);
++    return createPeerConnection(peerConfig, constraints);
+   }
+ 
+   void onRequestRejected() {
+@@ -858,6 +852,9 @@ class StreamingSession {
+       // It is possible that the peerconnection has not been inited. add to list and add later for this case.
+       RTCIceCandidate candidate = RTCIceCandidate(candidateMap['candidate'],
+           candidateMap['sdpMid'], candidateMap['sdpMLineIndex']);
++      // Enhanced punch: burst toward remote srflx/host before/while ICE checks.
++      unawaited(_punchHelper?.onRemoteIceCandidate(candidate.candidate) ??
++          Future.value());
+       if (pc == null) {
+         // This can not be triggered after adding lock. Keep this and We may resue this list in the future.
+         VLOG0("-----warning:this should not be triggered.");
+@@ -905,6 +902,9 @@ class StreamingSession {
+       audioSession?.dispose();
+       audioSession = null;
+ 
++      _punchHelper?.dispose();
++      _punchHelper = null;
++
+       candidates.clear();
+       inputController = null;
+       if (channel != null) {
+diff --git a/lib/global_settings/streaming_settings.dart b/lib/global_settings/streaming_settings.dart
+index 7e1555a..eb4e6f5 100644
+--- a/lib/global_settings/streaming_settings.dart
++++ b/lib/global_settings/streaming_settings.dart
+@@ -1,6 +1,7 @@
+ import 'package:cloudplayplus/controller/hardware_input_controller.dart';
+ import 'package:cloudplayplus/controller/screen_controller.dart';
+ import 'package:cloudplayplus/services/app_info_service.dart';
++import 'package:cloudplayplus/services/ice/ice_punch_options.dart';
+ import 'package:cloudplayplus/services/shared_preferences_manager.dart';
+ import 'package:privacy_blank_display/privacy_blank_display.dart';
+ 
+@@ -44,6 +45,17 @@ class StreamingSettings {
+   static String? customTurnServerUsername;
+   static String? customTurnServerPassword;
+ 
++  /// Enhanced / hard-NAT hole punch (default on for desktop/mobile native).
++  static bool enablePunch = true;
++
++  /// Force TURN-only ICE (`iceTransportPolicy: relay`).
++  static bool forceRelay = false;
++
++  static IcePunchOptions punchOptions() => IcePunchOptions(
++        enabled: enablePunch,
++        forceRelay: forceRelay,
++      );
++
+   static String connectPasswordHash = "";
+   //这两项会在连接的瞬间更新
+   static int? targetScreenId;
+@@ -155,6 +167,10 @@ class StreamingSettings {
+         SharedPreferencesManager.getString('customTurnServerPassword') ??
+             'zhuhaichao';
+ 
++    // Punch defaults on for native; web falls back to no-op helper.
++    enablePunch = SharedPreferencesManager.getBool('enablePunch') ?? true;
++    forceRelay = SharedPreferencesManager.getBool('forceRelay') ?? false;
++
+     codec = SharedPreferencesManager.getString('codec') ?? 'default';
+ 
+     hookCursorImage ??= (AppPlatform.isWeb || AppPlatform.isDeskTop || AppPlatform.isMobile);
+diff --git a/lib/services/ice/ice_candidate_endpoint.dart b/lib/services/ice/ice_candidate_endpoint.dart
+new file mode 100644
+index 0000000..1111111 100644
+--- /dev/null
++++ b/lib/services/ice/ice_candidate_endpoint.dart
+@@ -0,0 +1,78 @@
++/// Parsed `a=candidate:` / `candidate:` endpoint for punch targeting.
++class IceCandidateEndpoint {
++  IceCandidateEndpoint({
++    required this.ip,
++    required this.port,
++    required this.protocol,
++    required this.type,
++  });
++
++  final String ip;
++  final int port;
++  final String protocol;
++  final String type;
++
++  /// UDP host/srflx/prflx with a numeric public unicast IPv4 address.
++  ///
++  /// Rejects relay, hostnames, loopback, RFC1918, link-local, CGNAT, and
++  /// multicast so remote ICE lines cannot steer punch bursts at arbitrary
++  /// internal or non-literal destinations.
++  bool get isPunchable =>
++      protocol == 'udp' &&
++      (type == 'srflx' || type == 'host' || type == 'prflx') &&
++      type != 'relay' &&
++      port > 0 &&
++      port <= 65535 &&
++      isPublicUnicastIpv4(ip);
++
++  /// Literal IPv4 that is neither loopback, private, link-local, CGNAT, nor multicast.
++  static bool isPublicUnicastIpv4(String raw) {
++    final m = RegExp(r'^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$')
++        .firstMatch(raw.trim());
++    if (m == null) return false;
++    final o = List<int>.generate(4, (i) => int.parse(m.group(i + 1)!));
++    if (o.any((v) => v < 0 || v > 255)) return false;
++    final a = o[0], b = o[1];
++    // 0.0.0.0/8 unspecified; 127.0.0.0/8 loopback
++    if (a == 0 || a == 127) return false;
++    // 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16
++    if (a == 10) return false;
++    if (a == 172 && b >= 16 && b <= 31) return false;
++    if (a == 192 && b == 168) return false;
++    // 169.254.0.0/16 link-local; 100.64.0.0/10 CGNAT
++    if (a == 169 && b == 254) return false;
++    if (a == 100 && b >= 64 && b <= 127) return false;
++    // 224.0.0.0/4 multicast; 240.0.0.0/4 reserved
++    if (a >= 224) return false;
++    return true;
++  }
++
++  /// Example: `candidate:1 1 UDP 2122260223 203.0.113.1 54321 typ srflx ...`
++  static IceCandidateEndpoint? parse(String raw) {
++    var line = raw.trim();
++    if (line.startsWith('a=')) line = line.substring(2);
++    if (!line.startsWith('candidate:')) return null;
++    final parts = line.split(RegExp(r'\s+'));
++    if (parts.length < 8) return null;
++    // candidate:<foundation> <component> <protocol> <priority> <ip> <port> typ <type>
++    final protocol = parts[2].toLowerCase();
++    final ip = parts[4];
++    final port = int.tryParse(parts[5]) ?? 0;
++    final typIdx = parts.indexOf('typ');
++    if (typIdx < 0 || typIdx + 1 >= parts.length) return null;
++    final type = parts[typIdx + 1].toLowerCase();
++    // Reject non-literal addresses early (no DNS for punch targets).
++    if (!RegExp(r'^\d{1,3}(\.\d{1,3}){3}$').hasMatch(ip) &&
++        !ip.contains(':')) {
++      return null;
++    }
++    // IPv6 punch not supported in this out-of-stack path yet.
++    if (ip.contains(':')) return null;
++    return IceCandidateEndpoint(
++      ip: ip,
++      port: port,
++      protocol: protocol,
++      type: type,
++    );
++  }
++}
+diff --git a/lib/services/ice/ice_policy.dart b/lib/services/ice/ice_policy.dart
+new file mode 100644
+index 0000000..deadbeef
+--- /dev/null
++++ b/lib/services/ice/ice_policy.dart
+@@ -0,0 +1,114 @@
++import 'package:cloudplayplus/global_settings/streaming_settings.dart';
++import 'package:cloudplayplus/services/ice/ice_punch_options.dart';
++
++/// Builds RTCPeerConnection configuration for the soft ICE / TURN ladder
++/// that complements enhanced hole punch (does not replace punch).
++///
++/// Ladder (ideas only — not a copy of third-party binaries):
++/// 1. Prefer P2P: STUN (+ optional concurrent TURN) with `iceTransportPolicy: all`
++/// 2. Hard-NAT punch helper runs separately when [IcePunchOptions.enabled]
++/// 3. [IcePunchOptions.forceRelay] → TURN-only (`relay`)
++class IcePolicy {
++  IcePolicy._();
++
++  /// Returns the map passed to [createPeerConnection] (spread with sdpSemantics).
++  static Map<String, dynamic> buildPeerConnectionConfiguration({
++    required IcePunchOptions punch,
++    required bool useTurnServer,
++    String? turnUrl,
++    String? turnUsername,
++    String? turnCredential,
++    Map<String, dynamic>? stunServer,
++    Map<String, dynamic>? extraStunServer,
++    Map<String, dynamic>? testIceServers,
++  }) {
++    if (testIceServers != null) {
++      return {
++        ...testIceServers,
++        'sdpSemantics': 'unified-plan',
++        if (punch.forceRelay) 'iceTransportPolicy': 'relay', // test override
++      };
++    }
++
++    final iceServers = <Map<String, dynamic>>[];
++    final stun = stunServer ?? cloudPlayPlusStun;
++    final extraStun = extraStunServer ?? officialStun1;
++    final turn = _turnServerMap(
++      turnUrl ?? StreamingSettings.customTurnServerAddress,
++      turnUsername ?? StreamingSettings.customTurnServerUsername,
++      turnCredential ?? StreamingSettings.customTurnServerPassword,
++    );
++
++    // forceRelay requires a usable TURN URL. Without TURN, soft-degrade to
++    // STUN + iceTransportPolicy "all" — never pair relay policy with STUN-only
++    // (that combination cannot gather candidates and ICE fails hard).
++    final forceRelayActive = punch.forceRelay && turn != null;
++
++    if (forceRelayActive) {
++      iceServers.add(turn!);
++    } else if (punch.enabled) {
++      // Soft ladder complement: concurrent STUN + TURN (when configured).
++      iceServers.add(stun);
++      if (extraStun != null &&
++          extraStun['urls'] != stun['urls']) {
++        iceServers.add(extraStun);
++      }
++      if (useTurnServer && turn != null) {
++        iceServers.add(turn);
++      }
++    } else if (useTurnServer) {
++      // Legacy: TURN-only when user toggles turn without punch.
++      if (turn != null) {
++        iceServers.add(turn);
++      } else {
++        iceServers.add(stun);
++      }
++    } else {
++      iceServers.add(stun);
++    }
++
++    final config = <String, dynamic>{
++      'iceServers': iceServers,
++      'sdpSemantics': 'unified-plan',
++    };
++
++    if (forceRelayActive) {
++      config['iceTransportPolicy'] = 'relay';
++    } else {
++      config['iceTransportPolicy'] = 'all';
++    }
++
++    if (punch.enabled && !forceRelayActive && punch.iceCandidatePoolSize > 0) {
++      config['iceCandidatePoolSize'] = punch.iceCandidatePoolSize;
++    }
++
++    return config;
++  }
++
++  static Map<String, dynamic>? _turnServerMap(
++    String? url,
++    String? username,
++    String? credential,
++  ) {
++    if (url == null || url.isEmpty) return null;
++    return {
++      'urls': url,
++      'username': username ?? '',
++      'credential': credential ?? '',
++    };
++  }
++
++  /// Whether a failed ICE attempt should be retried with forceRelay.
++  static bool shouldFallbackToRelay({
++    required IcePunchOptions punch,
++    required bool useTurnServer,
++    required bool alreadyTriedRelay,
++    String? turnUrl,
++  }) {
++    if (alreadyTriedRelay) return false;
++    if (punch.forceRelay) return false;
++    if (!punch.enabled && !useTurnServer) return false;
++    final url = turnUrl ?? StreamingSettings.customTurnServerAddress;
++    return url != null && url.isNotEmpty;
++  }
++}
+diff --git a/lib/services/ice/ice_punch_options.dart b/lib/services/ice/ice_punch_options.dart
+new file mode 100644
+index 0000000..c720329
+--- /dev/null
++++ b/lib/services/ice/ice_punch_options.dart
+@@ -0,0 +1,91 @@
++/// Stable Dart surface for enhanced / hard-NAT hole punch.
++///
++/// ABI freeze (see docs/cpp-punch-replay.md / patches/nat-punch):
++/// do not rename fields casually — native MethodChannel keys mirror these names.
++class IcePunchOptions {
++  /// Run firewall UDP probes + symmetric punch bursts toward remote candidates.
++  final bool enabled;
++
++  /// Prefer TURN-only ICE (`iceTransportPolicy: relay`).
++  final bool forceRelay;
++
++  /// Public hosts used for PunchCheckFireWall-style UDP probes (host only, port 53).
++  final List<String> probeHosts;
++
++  /// How many UDP sockets / source ports to open for symmetric punch bursts.
++  final int symmetricSocketCount;
++
++  /// Packets sent per remote candidate per local socket.
++  final int packetsPerSocket;
++
++  /// Delay between burst packets.
++  final Duration burstInterval;
++
++  /// Soft ladder: gather a small ICE candidate pool before offer when punch is on.
++  final int iceCandidatePoolSize;
++
++  static const List<String> defaultProbeHosts = [
++    '119.29.29.29',
++    '223.5.5.5',
++  ];
++
++  const IcePunchOptions({
++    this.enabled = true,
++    this.forceRelay = false,
++    this.probeHosts = defaultProbeHosts,
++    this.symmetricSocketCount = 8,
++    this.packetsPerSocket = 4,
++    this.burstInterval = const Duration(milliseconds: 20),
++    this.iceCandidatePoolSize = 4,
++  });
++
++  IcePunchOptions copyWith({
++    bool? enabled,
++    bool? forceRelay,
++    List<String>? probeHosts,
++    int? symmetricSocketCount,
++    int? packetsPerSocket,
++    Duration? burstInterval,
++    int? iceCandidatePoolSize,
++  }) {
++    return IcePunchOptions(
++      enabled: enabled ?? this.enabled,
++      forceRelay: forceRelay ?? this.forceRelay,
++      probeHosts: probeHosts ?? this.probeHosts,
++      symmetricSocketCount:
++          symmetricSocketCount ?? this.symmetricSocketCount,
++      packetsPerSocket: packetsPerSocket ?? this.packetsPerSocket,
++      burstInterval: burstInterval ?? this.burstInterval,
++      iceCandidatePoolSize:
++          iceCandidatePoolSize ?? this.iceCandidatePoolSize,
++    );
++  }
++
++  Map<String, dynamic> toJson() => {
++        'enabled': enabled,
++        'forceRelay': forceRelay,
++        'probeHosts': probeHosts,
++        'symmetricSocketCount': symmetricSocketCount,
++        'packetsPerSocket': packetsPerSocket,
++        'burstIntervalMs': burstInterval.inMilliseconds,
++        'iceCandidatePoolSize': iceCandidatePoolSize,
++      };
++
++  static IcePunchOptions fromJson(Map<String, dynamic>? json) {
++    if (json == null) return const IcePunchOptions();
++    final hosts = json['probeHosts'];
++    return IcePunchOptions(
++      enabled: json['enabled'] as bool? ?? true,
++      forceRelay: json['forceRelay'] as bool? ?? false,
++      probeHosts: hosts is List
++          ? hosts.map((e) => e.toString()).toList()
++          : defaultProbeHosts,
++      symmetricSocketCount: json['symmetricSocketCount'] as int? ?? 8,
++      packetsPerSocket: json['packetsPerSocket'] as int? ?? 4,
++      burstInterval: Duration(
++        milliseconds: json['burstIntervalMs'] as int? ?? 20,
++      ),
++      iceCandidatePoolSize: json['iceCandidatePoolSize'] as int? ?? 4,
++    );
++  }
++}
+diff --git a/lib/services/ice/nat_punch_helper.dart b/lib/services/ice/nat_punch_helper.dart
+new file mode 100644
+index 0000000..26ba474
+--- /dev/null
++++ b/lib/services/ice/nat_punch_helper.dart
+@@ -0,0 +1,2 @@
++export 'nat_punch_helper_stub.dart'
++    if (dart.library.io) 'nat_punch_helper_io.dart';
+diff --git a/lib/services/ice/nat_punch_helper_io.dart b/lib/services/ice/nat_punch_helper_io.dart
+new file mode 100644
+index 0000000..1111111 100644
+--- /dev/null
++++ b/lib/services/ice/nat_punch_helper_io.dart
+@@ -0,0 +1,244 @@
++import 'dart:io';
++import 'dart:math';
++import 'dart:typed_data';
++
++import 'package:cloudplayplus/base/logging.dart';
++import 'package:cloudplayplus/services/ice/ice_candidate_endpoint.dart';
++import 'package:cloudplayplus/services/ice/ice_punch_options.dart';
++import 'package:flutter_webrtc/flutter_webrtc.dart' as webrtc;
++
++/// Enhanced hole-punch helper (ladder design from GV notes — original code).
++///
++/// 1. [checkFirewall] — UDP probes to public DNS IPs (PunchCheckFireWall idea)
++/// 2. [symmetricPunchToRemoteCandidates] — multi-socket UDP bursts toward
++///    remote srflx/host candidates (RandomSymmetricPunchToCone idea)
++///
++/// Prefers the flutter-webrtc MethodChannel when available; falls back to
++/// [RawDatagramSocket] so the feature still works without a rebuilt plugin.
++class NatPunchHelper {
++  NatPunchHelper(this.options);
++
++  final IcePunchOptions options;
++  final Random _rng = Random();
++  bool _disposed = false;
++  final Set<String> _punchedTargets = {};
++
++  /// Serialize candidate-driven punches (Medium: unbounded unawaited work).
++  Future<void> _punchQueue = Future<void>.value();
++  static const int _maxUniqueTargetsPerSession = 32;
++  static const int _maxTargetsPerBurst = 8;
++  static const int _maxSockets = 32;
++  static const int _maxPacketsPerSocket = 16;
++
++  bool get isSupported => true;
++
++  int get _socketCount =>
++      options.symmetricSocketCount.clamp(1, _maxSockets);
++
++  int get _packetsPerSocket =>
++      options.packetsPerSocket.clamp(1, _maxPacketsPerSocket);
++
++  Future<FirewallProbeResult> checkFirewall() async {
++    if (_disposed || !options.enabled) {
++      return const FirewallProbeResult(supported: true, reachableHosts: []);
++    }
++
++    try {
++      final native = await webrtc.NatPunch.probeFirewall(
++        hosts: options.probeHosts,
++        port: 53,
++        timeoutMs: 800,
++      );
++      if (native != null) {
++        final hosts = (native['reachableHosts'] as List?)
++                ?.map((e) => e.toString())
++                .toList() ??
++            [];
++        VLOG0('NatPunch native firewall probe: $hosts');
++        return FirewallProbeResult(supported: true, reachableHosts: hosts);
++      }
++    } catch (e) {
++      VLOG0('NatPunch native firewall probe unavailable: $e');
++    }
++
++    return _checkFirewallDart();
++  }
++
++  Future<FirewallProbeResult> _checkFirewallDart() async {
++    final reachable = <String>[];
++    for (final host in options.probeHosts) {
++      if (_disposed) break;
++      try {
++        InternetAddress address;
++        try {
++          address = InternetAddress(host);
++        } catch (_) {
++          final looked = await InternetAddress.lookup(host);
++          if (looked.isEmpty) continue;
++          address = looked.first;
++        }
++        final socket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, 0);
++        try {
++          socket.send(Uint8List.fromList([0x00]), address, 53);
++          reachable.add(host);
++        } finally {
++          socket.close();
++        }
++      } catch (e) {
++        VLOG0('NatPunch firewall probe failed for $host: $e');
++      }
++    }
++    VLOG0('NatPunch dart firewall probe: $reachable');
++    return FirewallProbeResult(supported: true, reachableHosts: reachable);
++  }
++
++  /// Parse and punch when a remote ICE candidate arrives (srflx / host UDP).
++  /// Work is queued so floods of candidates cannot pile up concurrent bursts.
++  Future<void> onRemoteIceCandidate(String? candidateLine) {
++    final next = _punchQueue.then((_) => _onRemoteIceCandidateBody(candidateLine));
++    _punchQueue = next.catchError((Object e, StackTrace st) {
++      VLOG0('NatPunch candidate punch error: $e');
++    });
++    return next;
++  }
++
++  Future<void> _onRemoteIceCandidateBody(String? candidateLine) async {
++    if (_disposed || !options.enabled || options.forceRelay) return;
++    if (candidateLine == null || candidateLine.isEmpty) return;
++    final parsed = IceCandidateEndpoint.parse(candidateLine);
++    if (parsed == null || !parsed.isPunchable) return;
++    final key = '${parsed.ip}:${parsed.port}';
++    if (_punchedTargets.contains(key)) return;
++    if (_punchedTargets.length >= _maxUniqueTargetsPerSession) {
++      VLOG0('NatPunch session target cap reached; skipping $key');
++      return;
++    }
++    _punchedTargets.add(key);
++    await symmetricPunchToRemoteCandidates([candidateLine]);
++  }
++
++  Future<SymmetricPunchResult> symmetricPunchToRemoteCandidates(
++    Iterable<String> candidateLines,
++  ) async {
++    if (_disposed || !options.enabled || options.forceRelay) {
++      return const SymmetricPunchResult(
++        supported: true,
++        targetsAttempted: 0,
++        packetsSent: 0,
++      );
++    }
++
++    final endpoints = <IceCandidateEndpoint>[];
++    for (final line in candidateLines) {
++      final e = IceCandidateEndpoint.parse(line);
++      if (e != null && e.isPunchable) {
++        endpoints.add(e);
++        if (endpoints.length >= _maxTargetsPerBurst) break;
++      }
++    }
++    if (endpoints.isEmpty) {
++      return const SymmetricPunchResult(
++        supported: true,
++        targetsAttempted: 0,
++        packetsSent: 0,
++      );
++    }
++
++    try {
++      final native = await webrtc.NatPunch.symmetricPunch(
++        targets: endpoints
++            .map((e) => {'ip': e.ip, 'port': e.port})
++            .toList(),
++        socketCount: _socketCount,
++        packetsPerSocket: _packetsPerSocket,
++        intervalMs: options.burstInterval.inMilliseconds.clamp(0, 200),
++      );
++      if (native != null) {
++        final sent = native['packetsSent'] as int? ?? 0;
++        VLOG0(
++            'NatPunch native symmetric punch: ${endpoints.length} targets, $sent packets');
++        return SymmetricPunchResult(
++          supported: true,
++          targetsAttempted: endpoints.length,
++          packetsSent: sent,
++        );
++      }
++    } catch (e) {
++      VLOG0('NatPunch native symmetric punch unavailable: $e');
++    }
++
++    return _symmetricPunchDart(endpoints);
++  }
++
++  Future<SymmetricPunchResult> _symmetricPunchDart(
++    List<IceCandidateEndpoint> endpoints,
++  ) async {
++    var packetsSent = 0;
++    final sockets = <RawDatagramSocket>[];
++    try {
++      for (var i = 0; i < _socketCount; i++) {
++        sockets.add(await RawDatagramSocket.bind(InternetAddress.anyIPv4, 0));
++      }
++      final payload = Uint8List(20);
++      // Minimal STUN-looking header (binding request type) — not a full STUN client.
++      payload[0] = 0x00;
++      payload[1] = 0x01;
++      for (var p = 0; p < _packetsPerSocket; p++) {
++        if (_disposed) break;
++        for (final socket in sockets) {
++          for (final ep in endpoints) {
++            try {
++              final addr = InternetAddress(ep.ip);
++              // Slight port jitter for symmetric NAT port prediction experiments.
++              final portJitter = (p == 0)
++                  ? ep.port
++                  : (ep.port + _rng.nextInt(5) - 2).clamp(1, 65535);
++              packetsSent += socket.send(payload, addr, portJitter);
++            } catch (_) {}
++          }
++        }
++        if (p + 1 < _packetsPerSocket) {
++          await Future<void>.delayed(options.burstInterval);
++        }
++      }
++    } finally {
++      for (final s in sockets) {
++        s.close();
++      }
++    }
++    VLOG0(
++        'NatPunch dart symmetric punch: ${endpoints.length} targets, $packetsSent packets');
++    return SymmetricPunchResult(
++      supported: true,
++      targetsAttempted: endpoints.length,
++      packetsSent: packetsSent,
++    );
++  }
++
++  void dispose() {
++    _disposed = true;
++    _punchedTargets.clear();
++  }
++}
++
++class FirewallProbeResult {
++  const FirewallProbeResult({
++    required this.supported,
++    required this.reachableHosts,
++  });
++
++  final bool supported;
++  final List<String> reachableHosts;
++}
++
++class SymmetricPunchResult {
++  const SymmetricPunchResult({
++    required this.supported,
++    required this.targetsAttempted,
++    required this.packetsSent,
++  });
++
++  final bool supported;
++  final int targetsAttempted;
++  final int packetsSent;
++}
+diff --git a/lib/services/ice/nat_punch_helper_stub.dart b/lib/services/ice/nat_punch_helper_stub.dart
+new file mode 100644
+index 0000000..9402a65
+--- /dev/null
++++ b/lib/services/ice/nat_punch_helper_stub.dart
+@@ -0,0 +1,49 @@
++import 'package:cloudplayplus/services/ice/ice_punch_options.dart';
++
++/// Web / unsupported platforms: punch is a no-op (browser owns ICE sockets).
++class NatPunchHelper {
++  NatPunchHelper(this.options);
++
++  final IcePunchOptions options;
++  bool get isSupported => false;
++
++  Future<FirewallProbeResult> checkFirewall() async {
++    return const FirewallProbeResult(supported: false, reachableHosts: []);
++  }
++
++  Future<SymmetricPunchResult> symmetricPunchToRemoteCandidates(
++    Iterable<String> candidateLines,
++  ) async {
++    return const SymmetricPunchResult(
++      supported: false,
++      targetsAttempted: 0,
++      packetsSent: 0,
++    );
++  }
++
++  Future<void> onRemoteIceCandidate(String? candidateLine) async {}
++
++  void dispose() {}
++}
++
++class FirewallProbeResult {
++  const FirewallProbeResult({
++    required this.supported,
++    required this.reachableHosts,
++  });
++
++  final bool supported;
++  final List<String> reachableHosts;
++}
++
++class SymmetricPunchResult {
++  const SymmetricPunchResult({
++    required this.supported,
++    required this.targetsAttempted,
++    required this.packetsSent,
++  });
++
++  final bool supported;
++  final int targetsAttempted;
++  final int packetsSent;
++}
+diff --git a/lib/settings_screen.dart b/lib/settings_screen.dart
+index 1d1da3c..194115d 100644
+--- a/lib/settings_screen.dart
++++ b/lib/settings_screen.dart
+@@ -757,6 +757,8 @@ class NetworkSettingsScreen extends StatefulWidget {
+ 
+ class _NetworkSettingsScreenState extends State<NetworkSettingsScreen> {
+   bool useTurnServer = false;
++  bool enablePunch = true;
++  bool forceRelay = false;
+   String customTurnServerAddress = "";
+   String customTurnServerUsername = "";
+   String customTurnServerPassword = "";
+@@ -809,6 +811,8 @@ class _NetworkSettingsScreenState extends State<NetworkSettingsScreen> {
+ 
+   Future<void> _loadSettings() async {
+     useTurnServer = StreamingSettings.useTurnServer;
++    enablePunch = StreamingSettings.enablePunch;
++    forceRelay = StreamingSettings.forceRelay;
+     customTurnServerAddress =
+         SharedPreferencesManager.getString('customTurnServerAddress') ??
+             'turn:47.100.84.139:3478';
+@@ -929,11 +933,46 @@ class _NetworkSettingsScreenState extends State<NetworkSettingsScreen> {
+                 ),
+               ],
+             ),
++            SettingsSection(
++              title: const Text('NAT 穿透 / 打洞'),
++              tiles: [
++                SettingsTile.switchTile(
++                  title: const Text('启用增强打洞 (enablePunch)'),
++                  description: const Text(
++                      '防火墙 UDP 探测 + 对称 NAT 多端口对打；与 ICE 并行，不替代中继兜底'),
++                  leading: const Icon(Icons.cell_tower),
++                  initialValue: enablePunch,
++                  onToggle: (bool value) {
++                    setState(() {
++                      enablePunch = value;
++                      StreamingSettings.enablePunch = value;
++                      SharedPreferencesManager.setBool('enablePunch', value);
++                    });
++                  },
++                ),
++                SettingsTile.switchTile(
++                  title: const Text('强制中继 (forceRelay)'),
++                  description: const Text(
++                      '仅使用 TURN（iceTransportPolicy: relay），跳过 P2P'),
++                  leading: const Icon(Icons.alt_route),
++                  initialValue: forceRelay,
++                  onToggle: (bool value) {
++                    setState(() {
++                      forceRelay = value;
++                      StreamingSettings.forceRelay = value;
++                      SharedPreferencesManager.setBool('forceRelay', value);
++                    });
++                  },
++                ),
++              ],
++            ),
+             SettingsSection(
+               title: const Text('turn服务器设置'),
+               tiles: [
+                 SettingsTile.switchTile(
+                   title: const Text('使用turn中继服务器'),
++                  description: const Text(
++                      '与增强打洞同时开启时：STUN+TURN 并发（软梯子）；仅开此项则 TURN-only'),
+                   leading: const Icon(Icons.network_ping),
+                   initialValue: useTurnServer,
+                   onToggle: (bool value) {
+diff --git a/test/ice_policy_test.dart b/test/ice_policy_test.dart
+new file mode 100644
+index 0000000..deadbeef
+--- /dev/null
++++ b/test/ice_policy_test.dart
+@@ -0,0 +1,187 @@
++import 'package:cloudplayplus/services/ice/ice_candidate_endpoint.dart';
++import 'package:cloudplayplus/services/ice/ice_policy.dart';
++import 'package:cloudplayplus/services/ice/ice_punch_options.dart';
++import 'package:flutter_test/flutter_test.dart';
++
++void main() {
++  group('IceCandidateEndpoint.parse', () {
++    test('parses srflx UDP candidate', () {
++      const line =
++          'candidate:1 1 UDP 2122260223 203.0.113.1 54321 typ srflx raddr 10.0.0.1 rport 54321';
++      final ep = IceCandidateEndpoint.parse(line);
++      expect(ep, isNotNull);
++      expect(ep!.ip, '203.0.113.1');
++      expect(ep.port, 54321);
++      expect(ep.protocol, 'udp');
++      expect(ep.type, 'srflx');
++      expect(ep.isPunchable, isTrue);
++    });
++
++    test('rejects relay candidates', () {
++      const line =
++          'candidate:2 1 udp 16777215 198.51.100.2 3478 typ relay raddr 10.0.0.2 rport 9';
++      final ep = IceCandidateEndpoint.parse(line);
++      expect(ep, isNotNull);
++      expect(ep!.isPunchable, isFalse);
++    });
++
++    test('parses a= prefix', () {
++      const line =
++          'a=candidate:1 1 udp 2122260223 192.0.2.1 10000 typ host';
++      final ep = IceCandidateEndpoint.parse(line);
++      expect(ep, isNotNull);
++      expect(ep!.type, 'host');
++      expect(ep.isPunchable, isTrue);
++    });
++
++    test('rejects private and loopback punch targets', () {
++      expect(
++        IceCandidateEndpoint.parse(
++                'candidate:1 1 udp 1 10.0.0.5 10000 typ host')!
++            .isPunchable,
++        isFalse,
++      );
++      expect(
++        IceCandidateEndpoint.parse(
++                'candidate:1 1 udp 1 192.168.1.2 10000 typ srflx')!
++            .isPunchable,
++        isFalse,
++      );
++      expect(
++        IceCandidateEndpoint.parse(
++                'candidate:1 1 udp 1 127.0.0.1 10000 typ host')!
++            .isPunchable,
++        isFalse,
++      );
++      expect(
++        IceCandidateEndpoint.isPublicUnicastIpv4('203.0.113.9'),
++        isTrue,
++      );
++    });
++
++    test('rejects hostname candidate addresses', () {
++      expect(
++        IceCandidateEndpoint.parse(
++            'candidate:1 1 udp 1 evil.example 10000 typ host'),
++        isNull,
++      );
++    });
++  });
++
++  group('IcePolicy.buildPeerConnectionConfiguration', () {
++    final turn = {
++      'urls': 'turn:example.com:3478',
++      'username': 'u',
++      'credential': 'p',
++    };
++    final stun = {'urls': 'stun:stun.example:3478'};
++
++    test('punch enabled + turn → concurrent STUN+TURN, policy all', () {
++      final cfg = IcePolicy.buildPeerConnectionConfiguration(
++        punch: const IcePunchOptions(enabled: true, forceRelay: false),
++        useTurnServer: true,
++        turnUrl: turn['urls'],
++        turnUsername: turn['username'],
++        turnCredential: turn['credential'],
++        stunServer: stun,
++        extraStunServer: null,
++      );
++      expect(cfg['iceTransportPolicy'], 'all');
++      final servers = cfg['iceServers'] as List;
++      expect(servers.length, greaterThanOrEqualTo(2));
++      expect(cfg['iceCandidatePoolSize'], 4);
++    });
++
++    test('forceRelay → relay policy and TURN', () {
++      final cfg = IcePolicy.buildPeerConnectionConfiguration(
++        punch: const IcePunchOptions(enabled: true, forceRelay: true),
++        useTurnServer: false,
++        turnUrl: turn['urls'],
++        turnUsername: turn['username'],
++        turnCredential: turn['credential'],
++        stunServer: stun,
++      );
++      expect(cfg['iceTransportPolicy'], 'relay');
++      final servers = cfg['iceServers'] as List;
++      expect(servers.length, 1);
++      expect((servers.first as Map)['urls'], turn['urls']);
++    });
++
++    test('forceRelay without TURN soft-degrades to STUN + all', () {
++      final cfg = IcePolicy.buildPeerConnectionConfiguration(
++        punch: const IcePunchOptions(enabled: true, forceRelay: true),
++        useTurnServer: false,
++        stunServer: stun,
++      );
++      expect(cfg['iceTransportPolicy'], 'all');
++      final servers = cfg['iceServers'] as List;
++      expect(servers.length, 1);
++      expect((servers.first as Map)['urls'], stun['urls']);
++    });
++
++    test('legacy turn-only without punch', () {
++      final cfg = IcePolicy.buildPeerConnectionConfiguration(
++        punch: const IcePunchOptions(enabled: false, forceRelay: false),
++        useTurnServer: true,
++        turnUrl: turn['urls'],
++        turnUsername: turn['username'],
++        turnCredential: turn['credential'],
++        stunServer: stun,
++      );
++      final servers = cfg['iceServers'] as List;
++      expect(servers.length, 1);
++      expect((servers.first as Map)['urls'], turn['urls']);
++    });
++
++    test('legacy stun-only without punch', () {
++      final cfg = IcePolicy.buildPeerConnectionConfiguration(
++        punch: const IcePunchOptions(enabled: false, forceRelay: false),
++        useTurnServer: false,
++        stunServer: stun,
++      );
++      final servers = cfg['iceServers'] as List;
++      expect(servers.length, 1);
++      expect((servers.first as Map)['urls'], stun['urls']);
++    });
++  });
++
++  group('IcePolicy.shouldFallbackToRelay', () {
++    test('suggests relay when punch on and turn configured', () {
++      expect(
++        IcePolicy.shouldFallbackToRelay(
++          punch: const IcePunchOptions(enabled: true),
++          useTurnServer: true,
++          alreadyTriedRelay: false,
++          turnUrl: 'turn:example.com:3478',
++        ),
++        isTrue,
++      );
++    });
++
++    test('does not suggest when already forceRelay', () {
++      expect(
++        IcePolicy.shouldFallbackToRelay(
++          punch: const IcePunchOptions(enabled: true, forceRelay: true),
++          useTurnServer: true,
++          alreadyTriedRelay: false,
++          turnUrl: 'turn:example.com:3478',
++        ),
++        isFalse,
++      );
++    });
++  });
++
++  group('IcePunchOptions', () {
++    test('round-trips json', () {
++      const opts = IcePunchOptions(
++        enabled: false,
++        forceRelay: true,
++        probeHosts: ['1.1.1.1'],
++      );
++      final again = IcePunchOptions.fromJson(opts.toJson());
++      expect(again.enabled, isFalse);
++      expect(again.forceRelay, isTrue);
++      expect(again.probeHosts, ['1.1.1.1']);
++    });
++  });
++}

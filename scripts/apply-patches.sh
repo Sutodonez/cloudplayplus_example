@@ -28,11 +28,32 @@ if [[ -n "$(git -C "$VENDOR" status --porcelain)" ]]; then
   exit 1
 fi
 
+# Windows runners / Git Bash often expose `python` or `py -3` but not `python3`.
+resolve_python() {
+  if command -v python3 >/dev/null 2>&1; then
+    echo python3
+    return 0
+  fi
+  if command -v python >/dev/null 2>&1; then
+    echo python
+    return 0
+  fi
+  if command -v py >/dev/null 2>&1; then
+    echo "py -3"
+    return 0
+  fi
+  echo "ERROR: need python3, python, or py -3 for LF normalize on Windows." >&2
+  exit 1
+}
+PYTHON_BIN="$(resolve_python)"
+# shellcheck disable=SC2206
+PYTHON_CMD=($PYTHON_BIN)
+
 # The upstream pin mixes LF and CRLF blobs. Normalize the worktree (and each
 # patch) to LF before applying so sequential patches are portable on Windows.
 normalize_lf() {
   local target="$1"
-  python3 - "$target" <<'PY'
+  "${PYTHON_CMD[@]}" - "$target" <<'PY'
 import sys
 from pathlib import Path
 root = Path(sys.argv[1])
@@ -58,7 +79,7 @@ print(f"==> LF-normalized {n} path(s) under {root}")
 PY
 }
 
-echo "==> Normalizing vendor worktree to LF"
+echo "==> Normalizing vendor worktree to LF (via $PYTHON_BIN)"
 git -C "$VENDOR" config core.autocrlf false
 git -C "$VENDOR" config core.eol lf
 normalize_lf "$VENDOR"
@@ -70,7 +91,7 @@ for patch in "${patches[@]}"; do
   echo "==> Applying $patch"
   base=$(basename "$patch")
   # Force LF patch bytes regardless of how the file was checked out.
-  python3 - "$ROOT/$patch" "$tmpdir/$base" <<'PY'
+  "${PYTHON_CMD[@]}" - "$ROOT/$patch" "$tmpdir/$base" <<'PY'
 import sys
 src, dst = sys.argv[1], sys.argv[2]
 data = open(src, "rb").read().replace(b"\r\n", b"\n").replace(b"\r", b"\n")

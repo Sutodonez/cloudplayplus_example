@@ -21,6 +21,10 @@ Use zero-padded numeric prefixes so lexical order matches apply order:
 | `0004-session-file-transfer.patch` | Session file/folder transfer — see [`file-transfer/`](./file-transfer/) |
 | `0005-vhid-relative-mouse-hs.patch` | Optional WinUHid VHID mouse (relative + absolute) in nested `hardware_simulator` — see [`vhid-relative-mouse/`](./vhid-relative-mouse/) |
 | `0006-vhid-relative-mouse-app-wireup.patch` | Host `useVhidMouse` settings + WinUHid install guide |
+| `0007-post-merge-security-hardening.patch` | Post-merge channel / privacy / file defaults — see [`post-merge-security/`](./post-merge-security/) |
+| `0008-bugbot-and-plugin-security-followup.patch` | Bugbot + plugin security follow-up — see [`bugbot-followup/`](./bugbot-followup/) |
+| `0009-nat-punch-ice-policy-and-wireup.patch` | Out-of-stack NAT punch — ICE policy, Dart helper, session/settings — see [`nat-punch/`](./nat-punch/) |
+| `0010-nat-punch-flutter-webrtc-methodchannel.patch` | Out-of-stack NAT punch — flutter-webrtc MethodChannel (bounded fork) |
 
 ## Workflow
 
