@@ -2,8 +2,20 @@
 
 **中文优先 · bilingual how-to**  
 **Branch / PR:** [`cursor/trial-out-of-stack-punch-434f`](https://github.com/Sutodonez/cloudplayplus_plus/tree/cursor/trial-out-of-stack-punch-434f) · [#14](https://github.com/Sutodonez/cloudplayplus_plus/pull/14)  
-**Tag:** `trial/out-of-stack-punch`  
+**Tag:** `trial/out-of-stack-punch` @ `045e380`  
 **Scope:** Windows Desktop first. This is **not** in-stack PortAllocator SymmetricPunch and does **not** authorize merging punch to `main`.
+
+### Alpha 便携包 / Portable alpha
+
+| 项 | 值 |
+|----|-----|
+| **Version** | `0.1.0-alpha.out-of-stack+045e380` |
+| **Release** | [v0.1.0-alpha.out-of-stack](https://github.com/Sutodonez/cloudplayplus_plus/releases/tag/v0.1.0-alpha.out-of-stack) (prerelease) |
+| **Zip** | `cppp-trial-oos-0.1.0-alpha+045e380-windows-x64.zip` — 解压后运行 `cloudplayplus.exe` |
+| **Binary tip** | `045e3807fc8176735c442d042d1336a475234d31`（`+045e380` 始终指向 **二进制** tip） |
+| **配对约定** | 日后栈内 alpha：`0.1.0-alpha.in-stack+<tip7>`（共享 major.minor `0.1.0`） |
+
+详情：`docs/alpha-out-of-stack-release.md`（仓库 / Project store）。
 
 ---
 
