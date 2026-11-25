@@ -1,27 +1,28 @@
 # CloudPlayPlus enhancement — portable handoff (cross-Project)
 
-**Updated:** 2026-11-24 Asia/Shanghai  
+**Updated:** 2026-11-25 Asia/Shanghai  
 **Important:** Cursor Project Context / Agent Store links **do not open in another Project**. Use this file + GitHub URLs only.
 
 **Repo:** https://github.com/Sutodonez/cloudplayplus_plus  
-**Branch:** `docs/cpp-enhancement-handoff`
+**Branch:** `main` (after handoff merge; feature docs may land via later PRs)
 
 ### GitHub URLs (open from any Project)
 
 | File | blob | raw |
 |------|------|-----|
-| README (this file) | https://github.com/Sutodonez/cloudplayplus_plus/blob/docs/cpp-enhancement-handoff/docs/handoff/README.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/docs/cpp-enhancement-handoff/docs/handoff/README.md |
-| cpp-migration-plan.md | https://github.com/Sutodonez/cloudplayplus_plus/blob/docs/cpp-enhancement-handoff/docs/handoff/cpp-migration-plan.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/docs/cpp-enhancement-handoff/docs/handoff/cpp-migration-plan.md |
-| cpp-punch-replay.md | https://github.com/Sutodonez/cloudplayplus_plus/blob/docs/cpp-enhancement-handoff/docs/handoff/cpp-punch-replay.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/docs/cpp-enhancement-handoff/docs/handoff/cpp-punch-replay.md |
-| cloudplayplus-vs-gameviewer.md | https://github.com/Sutodonez/cloudplayplus_plus/blob/docs/cpp-enhancement-handoff/docs/handoff/cloudplayplus-vs-gameviewer.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/docs/cpp-enhancement-handoff/docs/handoff/cloudplayplus-vs-gameviewer.md |
-| gameviewer-public-features.md | https://github.com/Sutodonez/cloudplayplus_plus/blob/docs/cpp-enhancement-handoff/docs/handoff/gameviewer-public-features.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/docs/cpp-enhancement-handoff/docs/handoff/gameviewer-public-features.md |
-| gameviewer-tech-notes-plain.md | https://github.com/Sutodonez/cloudplayplus_plus/blob/docs/cpp-enhancement-handoff/docs/handoff/gameviewer-tech-notes-plain.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/docs/cpp-enhancement-handoff/docs/handoff/gameviewer-tech-notes-plain.md |
-| cpp-handoff.md (legacy) | https://github.com/Sutodonez/cloudplayplus_plus/blob/docs/cpp-enhancement-handoff/docs/handoff/cpp-handoff.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/docs/cpp-enhancement-handoff/docs/handoff/cpp-handoff.md |
-| internal-cpp-punch-pr-report.md | https://github.com/Sutodonez/cloudplayplus_plus/blob/docs/cpp-enhancement-handoff/docs/handoff/internal-cpp-punch-pr-report.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/docs/cpp-enhancement-handoff/docs/handoff/internal-cpp-punch-pr-report.md |
-| internal-file-transfer-implementation.md | https://github.com/Sutodonez/cloudplayplus_plus/blob/docs/cpp-enhancement-handoff/docs/handoff/internal-file-transfer-implementation.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/docs/cpp-enhancement-handoff/docs/handoff/internal-file-transfer-implementation.md |
-| internal-vhid-relative-mouse-pr.md | https://github.com/Sutodonez/cloudplayplus_plus/blob/docs/cpp-enhancement-handoff/docs/handoff/internal-vhid-relative-mouse-pr.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/docs/cpp-enhancement-handoff/docs/handoff/internal-vhid-relative-mouse-pr.md |
+| README (this file) | https://github.com/Sutodonez/cloudplayplus_plus/blob/main/docs/handoff/README.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/main/docs/handoff/README.md |
+| cpp-migration-plan.md | https://github.com/Sutodonez/cloudplayplus_plus/blob/main/docs/handoff/cpp-migration-plan.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/main/docs/handoff/cpp-migration-plan.md |
+| cpp-punch-replay.md | https://github.com/Sutodonez/cloudplayplus_plus/blob/main/docs/handoff/cpp-punch-replay.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/main/docs/handoff/cpp-punch-replay.md |
+| cloudplayplus-vs-gameviewer.md | https://github.com/Sutodonez/cloudplayplus_plus/blob/main/docs/handoff/cloudplayplus-vs-gameviewer.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/main/docs/handoff/cloudplayplus-vs-gameviewer.md |
+| gameviewer-public-features.md | https://github.com/Sutodonez/cloudplayplus_plus/blob/main/docs/handoff/gameviewer-public-features.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/main/docs/handoff/gameviewer-public-features.md |
+| gameviewer-tech-notes-plain.md | https://github.com/Sutodonez/cloudplayplus_plus/blob/main/docs/handoff/gameviewer-tech-notes-plain.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/main/docs/handoff/gameviewer-tech-notes-plain.md |
+| cpp-handoff.md (legacy) | https://github.com/Sutodonez/cloudplayplus_plus/blob/main/docs/handoff/cpp-handoff.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/main/docs/handoff/cpp-handoff.md |
+| internal-cpp-punch-pr-report.md | https://github.com/Sutodonez/cloudplayplus_plus/blob/main/docs/handoff/internal-cpp-punch-pr-report.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/main/docs/handoff/internal-cpp-punch-pr-report.md |
+| internal-file-transfer-implementation.md | https://github.com/Sutodonez/cloudplayplus_plus/blob/main/docs/handoff/internal-file-transfer-implementation.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/main/docs/handoff/internal-file-transfer-implementation.md |
+| internal-vhid-relative-mouse-pr.md | https://github.com/Sutodonez/cloudplayplus_plus/blob/main/docs/handoff/internal-vhid-relative-mouse-pr.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/main/docs/handoff/internal-vhid-relative-mouse-pr.md |
+| privacy-blank-display.md | https://github.com/Sutodonez/cloudplayplus_plus/blob/main/docs/handoff/privacy-blank-display.md | https://raw.githubusercontent.com/Sutodonez/cloudplayplus_plus/main/docs/handoff/privacy-blank-display.md |
 
-**Sibling docs in this folder:** [cpp-migration-plan.md](./cpp-migration-plan.md) · [cpp-punch-replay.md](./cpp-punch-replay.md) · [cloudplayplus-vs-gameviewer.md](./cloudplayplus-vs-gameviewer.md) · [gameviewer-public-features.md](./gameviewer-public-features.md) · [gameviewer-tech-notes-plain.md](./gameviewer-tech-notes-plain.md) · [cpp-handoff.md](./cpp-handoff.md) · [internal-cpp-punch-pr-report.md](./internal-cpp-punch-pr-report.md) · [internal-file-transfer-implementation.md](./internal-file-transfer-implementation.md) · [internal-vhid-relative-mouse-pr.md](./internal-vhid-relative-mouse-pr.md)
+**Sibling docs in this folder:** [cpp-migration-plan.md](./cpp-migration-plan.md) · [cpp-punch-replay.md](./cpp-punch-replay.md) · [cloudplayplus-vs-gameviewer.md](./cloudplayplus-vs-gameviewer.md) · [gameviewer-public-features.md](./gameviewer-public-features.md) · [gameviewer-tech-notes-plain.md](./gameviewer-tech-notes-plain.md) · [cpp-handoff.md](./cpp-handoff.md) · [internal-cpp-punch-pr-report.md](./internal-cpp-punch-pr-report.md) · [internal-file-transfer-implementation.md](./internal-file-transfer-implementation.md) · [internal-vhid-relative-mouse-pr.md](./internal-vhid-relative-mouse-pr.md) · [privacy-blank-display.md](./privacy-blank-display.md)
 
 ---
 
@@ -32,6 +33,8 @@
 | Enhanced hole punch + soft ICE | https://github.com/Sutodonez/cloudplayplus_plus/pull/1 | `cursor/feat-enhanced-hole-punch-cc1d` |
 | File / folder transfer | https://github.com/Sutodonez/cloudplayplus_plus/pull/2 | `cursor/feat-file-transfer-c757` |
 | VHID relative mouse | https://github.com/Sutodonez/cloudplayplus_plus/pull/3 | `cursor/vhid-relative-mouse-5758` |
+| Server terminal | https://github.com/Sutodonez/cloudplayplus_plus/pull/8 | `cursor/server-terminal-link-c1a9` |
+| Privacy / blank display | https://github.com/Sutodonez/cloudplayplus_plus/pull/9 | `cursor/privacy-blank-display-11c0` |
 
 Workers/subagents **cannot** transfer across Projects. New Project: new workers; reuse these PRs/branches.
 
@@ -53,6 +56,8 @@ Workers/subagents **cannot** transfer across Projects. New Project: new workers;
 - **Punch:** global `settings_screen` section「NAT 穿透 / 打洞」— `enablePunch`, `forceRelay` (with existing TURN).
 - **Files:** in-session floating menu folder icon → `FileTransferSheet` (send files/folder + progress). Host auto-accepts to `Downloads/CloudPlayPlusTransfers`. Web unsupported.
 - **VHID:** host「键鼠设置」—「虚拟 HID 相对鼠标」`useVhidMouse`. Falls back to SendInput if WinUHid missing. No controller HUD.
+- **Privacy:** host settings + connect picker; opcode `LP_PRIVACY_MODE=68`. See [privacy-blank-display.md](./privacy-blank-display.md).
+- **Terminal:** in-session server terminal; opcode `LP_TERMINAL=69` (privacy keeps 68).
 
 ---
 
@@ -98,6 +103,7 @@ Gaps: no in-stack PortAllocator punch (prebuilt libwebrtc only); mobile/Apple na
 
 - **Files:** Web unsupported; large-file sha default ≤4 MiB; UU resume parity UNKNOWN; package `plugins/session_file_transfer`; opcode `LP_FILE_CHUNK=67`.  
 - **VHID:** WinUHid driver+DLL not bundled; absolute mouse still SendInput; HS absorbed as path tree + `docs/patches/vhid-relative-mouse/` (fork create 403 at authoring time).
+- **Privacy:** custom screensaver image deferred; non-Windows native deferred. See [privacy-blank-display.md](./privacy-blank-display.md).
 
 ---
 
