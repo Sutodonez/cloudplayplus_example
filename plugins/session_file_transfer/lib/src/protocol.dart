@@ -6,6 +6,21 @@ const int kFileChunkOpcode = 67;
 /// JSON envelope root key for control messages (offer/accept/resume/…).
 const String kFileXferJsonKey = 'file_xfer';
 
+/// Receiver-side caps for control envelopes / offers (post-merge plugin review).
+abstract final class FileXferLimits {
+  /// Max UTF-8 bytes for a single control JSON text frame.
+  static const int maxControlJsonBytes = 1024 * 1024;
+
+  /// Max number of files declared in one offer / resume query.
+  static const int maxFilesPerOffer = 4096;
+
+  /// Max sum of declared file sizes across one offer.
+  static const int maxTotalDeclaredBytes = 1024 * 1024 * 1024 * 1024; // 1 TiB
+
+  /// Hex sha256 length (32 bytes → 64 hex chars).
+  static const int sha256HexLength = 64;
+}
+
 /// Control operations.
 abstract final class FileXferOp {
   static const String offer = 'offer';

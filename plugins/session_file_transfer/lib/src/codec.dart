@@ -94,6 +94,11 @@ abstract final class FileXferJsonCodec {
 
   static FileXferControl? tryDecodeText(String text) {
     try {
+      // Cap before parse to limit JSON DoS (plugin security Medium #3).
+      final byteLen = utf8.encode(text).length;
+      if (byteLen > FileXferLimits.maxControlJsonBytes) {
+        return null;
+      }
       final decoded = jsonDecode(text);
       if (decoded is! Map) return null;
       final map = Map<String, dynamic>.from(decoded);

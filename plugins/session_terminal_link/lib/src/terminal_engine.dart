@@ -332,6 +332,13 @@ class TerminalLinkEngine {
             await _hostVisibleAttach(control.sessionId!);
           }
           break;
+        // Client→host ops only above; ignore peer/echo / unknown ops.
+        case TermLinkOp.listResult:
+        case TermLinkOp.state:
+        case TermLinkOp.error:
+        case TermLinkOp.visibleAttachResult:
+        default:
+          break;
       }
       return;
     }
@@ -340,15 +347,32 @@ class TerminalLinkEngine {
     switch (control.op) {
       case TermLinkOp.visibleAttachResult:
         if (!_stateController.isClosed) {
+          TermSessionInfo? prev;
+          final sid = control.sessionId ?? activeSessionId;
+          if (sid != null) {
+            for (final s in _remoteSessions) {
+              if (s.sessionId == sid) {
+                prev = s;
+                break;
+              }
+            }
+          }
           _stateController.add(TermSessionInfo(
             sessionId: control.sessionId ?? activeSessionId ?? 'visible',
-            name: control.name ?? 'visible_attach',
-            shell: control.shell ?? '',
+            name: control.name ?? prev?.name ?? 'visible_attach',
+            shell: (control.shell != null && control.shell!.isNotEmpty)
+                ? control.shell!
+                : (prev?.shell ?? ''),
             state: (control.ok ?? false)
                 ? TermSessionState.ready
                 : TermSessionState.failed,
+            // Human-readable attach detail belongs in error/detail, not backend.
             error: control.ok == true ? null : control.detail,
-            backend: control.detail,
+            backend: control.backend ?? prev?.backend,
+            muxSession: control.muxSession ?? prev?.muxSession,
+            panes: control.panes.isNotEmpty
+                ? control.panes
+                : (prev?.panes ?? const <String>[]),
           ));
         }
         break;
@@ -420,6 +444,19 @@ class TerminalLinkEngine {
             error: control.error ?? 'unknown error',
           ));
         }
+        break;
+      // Host→client ops only above; ignore peer-originated / unknown ops.
+      case TermLinkOp.open:
+      case TermLinkOp.attach:
+      case TermLinkOp.detach:
+      case TermLinkOp.kill:
+      case TermLinkOp.list:
+      case TermLinkOp.resize:
+      case TermLinkOp.input:
+      case TermLinkOp.splitPane:
+      case TermLinkOp.selectPane:
+      case TermLinkOp.visibleAttach:
+      default:
         break;
     }
   }
@@ -543,8 +580,13 @@ class TerminalLinkEngine {
       op: TermLinkOp.visibleAttachResult,
       sessionId: sessionId,
       name: s.name,
+      shell: s.shell,
       ok: result.ok,
       detail: result.detail,
+      // Real backend id (pipe / conpty / …), not the human detail string.
+      backend: s.backendKind,
+      muxSession: s.muxSession,
+      panes: s.info.panes,
     )));
   }
 

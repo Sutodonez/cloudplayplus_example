@@ -242,10 +242,19 @@ void DestroyOverlaysLocked() {
   g_overlays.clear();
 }
 
-BOOL CALLBACK MonitorEnumProc(HMONITOR monitor, HDC, LPRECT, LPARAM) {
+struct OverlayBuildState {
+  int monitors = 0;
+  int failures = 0;
+};
+
+BOOL CALLBACK MonitorEnumProc(HMONITOR monitor, HDC, LPRECT, LPARAM lparam) {
+  auto* state = reinterpret_cast<OverlayBuildState*>(lparam);
+  state->monitors++;
+
   MONITORINFO mi = {};
   mi.cbSize = sizeof(mi);
   if (!GetMonitorInfo(monitor, &mi)) {
+    state->failures++;
     return TRUE;
   }
 
@@ -256,6 +265,8 @@ BOOL CALLBACK MonitorEnumProc(HMONITOR monitor, HDC, LPRECT, LPARAM) {
       r.left, r.top, r.right - r.left, r.bottom - r.top, nullptr, nullptr,
       GetModuleHandle(nullptr), nullptr);
   if (!hwnd) {
+    // Any monitor failure → whole privacyScreen fails (no partial success).
+    state->failures++;
     return TRUE;
   }
 
@@ -264,6 +275,7 @@ BOOL CALLBACK MonitorEnumProc(HMONITOR monitor, HDC, LPRECT, LPARAM) {
   // otherwise the overlay would blank the remote view as well.
   if (!SetWindowDisplayAffinity(hwnd, WDA_EXCLUDEFROMCAPTURE)) {
     DestroyWindow(hwnd);
+    state->failures++;
     return TRUE;
   }
   SetLayeredWindowAttributes(hwnd, 0, 255, LWA_ALPHA);
@@ -281,7 +293,15 @@ BOOL CALLBACK MonitorEnumProc(HMONITOR monitor, HDC, LPRECT, LPARAM) {
 void CreateOverlaysLocked() {
   DestroyOverlaysLocked();
   EnsureOverlayClass();
-  EnumDisplayMonitors(nullptr, nullptr, MonitorEnumProc, 0);
+  OverlayBuildState state;
+  EnumDisplayMonitors(nullptr, nullptr, MonitorEnumProc,
+                      reinterpret_cast<LPARAM>(&state));
+  // Require every monitor to get a WDA overlay; otherwise tear down so
+  // ApplyModeLocked rolls back mute/hotkey and returns false (bugbot High).
+  if (state.failures > 0 || state.monitors == 0 ||
+      static_cast<int>(g_overlays.size()) != state.monitors) {
+    DestroyOverlaysLocked();
+  }
 }
 
 void StopBlankTimerLocked() {
