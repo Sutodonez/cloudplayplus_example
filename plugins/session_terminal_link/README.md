@@ -42,7 +42,7 @@ decompiled bodies from `docs/reference/gameviewer/artifacts/`.
 | Topic | Status |
 |-------|--------|
 | Lock-screen account verification | **Deferred** (pre-merge checklist Q17) |
-| Web as **host** | Unsupported (`dart:io` / ConPTY) — deferred |
+| Web as **host** | Unsupported (`dart:io` / ConPTY) — deferred; Web **controller** builds use conditional stubs so `dart:ffi` is not imported |
 | Web as **controller** | Supported (UI + channel) |
 | UU CLI `term` / `lterm` parity | Out of scope for this slice |
 | Shared PTY when psmux absent + WT visible attach | WT launches a **separate** shell; shared attach needs psmux |
