@@ -135,7 +135,7 @@ index d74019c..acb3142 100644
          case "candidate":
            var candidateMap = data['candidate'];
 diff --git a/lib/utils/widgets/device_tile_page.dart b/lib/utils/widgets/device_tile_page.dart
-index 9013cbd..e9a4b99 100644
+index 9013cbd..94ca042 100644
 --- a/lib/utils/widgets/device_tile_page.dart
 +++ b/lib/utils/widgets/device_tile_page.dart
 @@ -8,6 +8,7 @@ import 'package:cloudplayplus/services/websocket_service.dart';
@@ -146,9 +146,12 @@ index 9013cbd..e9a4b99 100644
  import 'package:floating_menu_panel/floating_menu_panel.dart';
  import 'package:flutter/material.dart';
  import 'package:flutter/services.dart';
-@@ -314,6 +315,9 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+@@ -313,18 +314,26 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+                       ScreenController.setshowVirtualGamePad(
                            !ScreenController.showVirtualGamePad.value);
                      }
++                    // Terminal entry. Merge order with privacy (#9) + file (#2)
++                    // per Q2: privacy → file → terminal (then close).
                      if (index == 5) {
 +                      await TerminalLinkSheet.show(context);
 +                    }
@@ -156,7 +159,13 @@ index 9013cbd..e9a4b99 100644
                        ScreenController.setshowDetailUseScrollView(true);
                        ScreenController.setOnlyShowRemoteScreen(false);
                        StreamingManager.stopStreaming(widget.device);
-@@ -325,6 +329,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
+                     }
+                   },
++                  // When merging with #9/#2, insert visibility_off then
++                  // folder_open immediately before Icons.terminal (Q2).
+                   buttons: const [
+                     Icons.crop_free,
+                     Icons.open_in_full,
                      Icons.keyboard,
                      Icons.mouse,
                      Icons.gamepad,
@@ -166,10 +175,10 @@ index 9013cbd..e9a4b99 100644
                  ),
 diff --git a/lib/utils/widgets/terminal_link_sheet.dart b/lib/utils/widgets/terminal_link_sheet.dart
 new file mode 100644
-index 0000000..66108c6
+index 0000000..aaeeab2
 --- /dev/null
 +++ b/lib/utils/widgets/terminal_link_sheet.dart
-@@ -0,0 +1,322 @@
+@@ -0,0 +1,417 @@
 +import 'dart:async';
 +import 'dart:convert';
 +
@@ -181,23 +190,23 @@ index 0000000..66108c6
 +import 'package:flutter/services.dart';
 +import 'package:session_terminal_link/session_terminal_link.dart';
 +
-+/// In-session UI for remote terminal linking (controller side).
++/// 会话内「终端连接」底栏（主控端）。
 +class TerminalLinkSheet {
 +  static Future<void> show(BuildContext context) async {
 +    final session = WebrtcService.currentRenderingSession;
 +    if (session == null ||
 +        session.connectionState != StreamingSessionConnectionState.connected) {
 +      MessageBoxManager().showMessage(
-+        'No connected streaming session.',
-+        'Terminal',
++        '当前没有已连接的远控会话。',
++        '终端连接',
 +      );
 +      return;
 +    }
 +    session.ensureTerminalLink();
 +    if (session.terminalLink == null) {
 +      MessageBoxManager().showMessage(
-+        'Terminal link is not ready yet. Wait for the data channel.',
-+        'Terminal',
++        '终端通道尚未就绪，请等待数据通道建立后再试。',
++        '终端连接',
 +      );
 +      return;
 +    }
@@ -248,6 +257,32 @@ index 0000000..66108c6
 +
 +  TerminalLinkEngine? get _engine => widget.session.terminalLink;
 +
++  TermSessionInfo? get _activeInfo {
++    final id = _activeId;
++    if (id == null) return null;
++    for (final s in _sessions) {
++      if (s.sessionId == id) return s;
++    }
++    return null;
++  }
++
++  static String _stateLabel(TermSessionState s) {
++    switch (s) {
++      case TermSessionState.starting:
++        return '启动中';
++      case TermSessionState.ready:
++        return '就绪';
++      case TermSessionState.attached:
++        return '已附着';
++      case TermSessionState.detached:
++        return '已分离';
++      case TermSessionState.exited:
++        return '已退出';
++      case TermSessionState.failed:
++        return '失败';
++    }
++  }
++
 +  @override
 +  void initState() {
 +    super.initState();
@@ -269,15 +304,15 @@ index 0000000..66108c6
 +    _stateSub = engine.sessionStates.listen((info) {
 +      if (!mounted) return;
 +      setState(() {
-+        _status = '${info.name}: ${info.state.name}'
-+            '${info.error != null ? ' — ${info.error}' : ''}';
++        final backend = info.backend != null ? ' · ${info.backend}' : '';
++        _status =
++            '${info.name}: ${_stateLabel(info.state)}$backend${info.error != null ? ' — ${info.error}' : ''}';
 +        if (info.state == TermSessionState.attached ||
 +            info.state == TermSessionState.ready) {
 +          _activeId = info.sessionId;
 +        }
 +      });
 +    });
-+    // Refresh list from host.
 +    // ignore: discarded_futures
 +    engine.list();
 +  }
@@ -287,7 +322,7 @@ index 0000000..66108c6
 +    final id = _activeId;
 +    final engine = _engine;
 +    if (id != null && engine != null) {
-+      // Detach only — keep host process alive (UU-style).
++      // 仅分离主控显示；被控进程继续运行（对齐 UU）。
 +      // ignore: discarded_futures
 +      engine.detach(id);
 +    }
@@ -315,7 +350,7 @@ index 0000000..66108c6
 +      _output.clear();
 +      await engine.open();
 +    } catch (e) {
-+      MessageBoxManager().showMessage(e.toString(), 'Terminal');
++      MessageBoxManager().showMessage(e.toString(), '终端连接');
 +    } finally {
 +      if (mounted) setState(() => _busy = false);
 +    }
@@ -332,7 +367,7 @@ index 0000000..66108c6
 +    try {
 +      await engine.attach(info.sessionId);
 +    } catch (e) {
-+      MessageBoxManager().showMessage(e.toString(), 'Terminal');
++      MessageBoxManager().showMessage(e.toString(), '终端连接');
 +    } finally {
 +      if (mounted) setState(() => _busy = false);
 +    }
@@ -350,6 +385,41 @@ index 0000000..66108c6
 +    }
 +  }
 +
++  Future<void> _splitPane({required bool vertical}) async {
++    final engine = _engine;
++    final id = _activeId;
++    if (engine == null || id == null) return;
++    setState(() => _busy = true);
++    try {
++      await engine.splitPane(id, vertical: vertical);
++    } catch (e) {
++      MessageBoxManager().showMessage(
++        '分屏失败（需被控端已安装 psmux）：$e',
++        '终端连接',
++      );
++    } finally {
++      if (mounted) setState(() => _busy = false);
++    }
++  }
++
++  Future<void> _visibleAttach() async {
++    final engine = _engine;
++    final id = _activeId;
++    if (engine == null || id == null) return;
++    setState(() => _busy = true);
++    try {
++      await engine.visibleAttach(id);
++      MessageBoxManager().showMessage(
++        '已请求被控端打开本机 Windows Terminal 附着窗口。',
++        '终端连接',
++      );
++    } catch (e) {
++      MessageBoxManager().showMessage(e.toString(), '终端连接');
++    } finally {
++      if (mounted) setState(() => _busy = false);
++    }
++  }
++
 +  Future<void> _submitInput([String? raw]) async {
 +    final engine = _engine;
 +    final id = _activeId;
@@ -357,7 +427,7 @@ index 0000000..66108c6
 +    final text = raw ?? _inputController.text;
 +    if (text.isEmpty) return;
 +    _inputController.clear();
-+    // Local echo for pipe-backed shells that may not echo.
++    // 管道回退时可能无回显，本地先显示一行。
 +    setState(() => _output.write('$text\n'));
 +    _scrollToEnd();
 +    final payload = text.endsWith('\n') ? text : '$text\n';
@@ -368,15 +438,18 @@ index 0000000..66108c6
 +  @override
 +  Widget build(BuildContext context) {
 +    final theme = Theme.of(context);
++    final active = _activeInfo;
++    final hasMux = active?.muxSession != null ||
++        (active?.backend?.startsWith('psmux') ?? false);
++
 +    return Column(
 +      crossAxisAlignment: CrossAxisAlignment.stretch,
 +      children: [
-+        Text('Remote terminal', style: theme.textTheme.titleLarge),
++        Text('远程终端', style: theme.textTheme.titleLarge),
 +        const SizedBox(height: 4),
 +        Text(
-+          'Shell on the host over the session data channel. '
-+          'Closing this sheet detaches; the host process keeps running. '
-+          'Pipe-backed (no ConPTY yet) — TUI apps may misbehave.',
++          '通过会话数据通道在被控端打开命令行。关闭本面板仅分离显示，被控进程继续运行。'
++          'Windows 被控优先使用 ConPTY；若已安装 psmux 则支持多窗格，并可本机用 Windows Terminal 附着查看。',
 +          style: theme.textTheme.bodySmall,
 +        ),
 +        if (_status != null) ...[
@@ -384,14 +457,15 @@ index 0000000..66108c6
 +          Text(_status!, style: theme.textTheme.labelMedium),
 +        ],
 +        const SizedBox(height: 8),
-+        Row(
++        Wrap(
++          spacing: 8,
++          runSpacing: 8,
 +          children: [
 +            FilledButton.icon(
 +              onPressed: _busy ? null : _newSession,
 +              icon: const Icon(Icons.add),
-+              label: const Text('New session'),
++              label: const Text('新建会话'),
 +            ),
-+            const SizedBox(width: 8),
 +            OutlinedButton.icon(
 +              onPressed: _busy
 +                  ? null
@@ -399,10 +473,38 @@ index 0000000..66108c6
 +                      await _engine?.list();
 +                    },
 +              icon: const Icon(Icons.refresh),
-+              label: const Text('Refresh'),
++              label: const Text('刷新'),
++            ),
++            OutlinedButton.icon(
++              onPressed: _busy || _activeId == null
++                  ? null
++                  : () => _splitPane(vertical: true),
++              icon: const Icon(Icons.horizontal_split),
++              label: const Text('垂直分屏'),
++            ),
++            OutlinedButton.icon(
++              onPressed: _busy || _activeId == null
++                  ? null
++                  : () => _splitPane(vertical: false),
++              icon: const Icon(Icons.vertical_split),
++              label: const Text('水平分屏'),
++            ),
++            OutlinedButton.icon(
++              onPressed:
++                  _busy || _activeId == null ? null : _visibleAttach,
++              icon: const Icon(Icons.open_in_new),
++              label: const Text('本机终端附着'),
 +            ),
 +          ],
 +        ),
++        if (_activeId != null && !hasMux)
++          Padding(
++            padding: const EdgeInsets.only(top: 6),
++            child: Text(
++              '当前会话未走 psmux：分屏与共享附着需被控端安装 psmux（winget install psmux）。',
++              style: theme.textTheme.bodySmall,
++            ),
++          ),
 +        if (_sessions.isNotEmpty) ...[
 +          const SizedBox(height: 8),
 +          SizedBox(
@@ -414,9 +516,11 @@ index 0000000..66108c6
 +              itemBuilder: (context, i) {
 +                final s = _sessions[i];
 +                final selected = s.sessionId == _activeId;
++                final backend = s.backend != null ? ' · ${s.backend}' : '';
 +                return InputChip(
 +                  selected: selected,
-+                  label: Text('${s.name} (${s.state.name})'),
++                  label: Text(
++                      '${s.name} (${_stateLabel(s.state)}$backend)'),
 +                  onPressed: _busy ? null : () => _attach(s),
 +                  onDeleted: _busy ? null : () => _kill(s),
 +                  deleteIcon: const Icon(Icons.close, size: 16),
@@ -456,7 +560,7 @@ index 0000000..66108c6
 +          onKeyEvent: (event) {
 +            if (event is KeyDownEvent &&
 +                event.logicalKey == LogicalKeyboardKey.enter) {
-+              // Handled by TextField onSubmitted.
++              // 由 TextField.onSubmitted 处理。
 +            }
 +          },
 +          child: TextField(
@@ -466,8 +570,8 @@ index 0000000..66108c6
 +            style: const TextStyle(fontFamily: 'monospace'),
 +            decoration: InputDecoration(
 +              hintText: _activeId == null
-+                  ? 'Open or attach a session first'
-+                  : 'Type a command and press Enter',
++                  ? '请先新建或附着会话'
++                  : '输入命令后按 Enter',
 +              border: const OutlineInputBorder(),
 +              isDense: true,
 +              suffixIcon: IconButton(
@@ -484,7 +588,7 @@ index 0000000..66108c6
 +          Padding(
 +            padding: const EdgeInsets.only(top: 6),
 +            child: Text(
-+              'Controller UI works on web; the host must be a desktop build.',
++              '网页端可作为主控使用；被控端须为桌面版（不支持 Web 被控）。',
 +              style: theme.textTheme.bodySmall,
 +            ),
 +          ),

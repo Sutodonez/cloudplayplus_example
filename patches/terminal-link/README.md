@@ -17,10 +17,14 @@ Public UX reference: UU「终端连接」help / work features pages.
 
 | Piece | Location |
 |-------|----------|
-| Plugin (protocol + host `Process` shells + engine) | `plugins/session_terminal_link/` |
-| Vendor hooks + GUI | `patches/0001-session-terminal-link.patch` |
+| Plugin (ConPTY FFI, psmux, WT visible attach, engine) | `plugins/session_terminal_link/` |
+| Vendor hooks + Chinese GUI | `patches/0001-session-terminal-link.patch` |
 
-**Not in this slice:** ConPTY/OpenConsole PTY, psmux binary, visible Windows Terminal attach, lock-screen auth, NetEase `conpty_bridge` / `uuyc-mux`.
+**Included:** Windows ConPTY host backend; psmux multi-pane (`split_pane` / `select_pane`); Windows Terminal local visible attach; Chinese UI strings.
+
+**Deferred:** lock-screen account verification; Web as host.
+
+**Toolbar merge (Q2):** when combining with privacy (#9) and file (#2), order is **privacy → file → terminal** (then close). Comments in the patch mark the insertion point.
 
 ## Apply
 
@@ -28,4 +32,10 @@ Public UX reference: UU「终端连接」help / work features pages.
 scripts/submodule-init.sh
 scripts/apply-patches.sh
 cd vendor/cloudplayplus && flutter pub get
+```
+
+On Windows hosts, install psmux for multi-pane + best visible attach:
+
+```powershell
+winget install psmux
 ```

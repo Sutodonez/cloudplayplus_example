@@ -151,6 +151,49 @@ class TerminalLinkEngine {
     )));
   }
 
+  /// Split a psmux-backed session into another pane (Windows host).
+  Future<void> splitPane(String sessionId, {bool vertical = true}) async {
+    _ensureAlive();
+    if (isHost) {
+      await _hostSplit(sessionId, vertical: vertical);
+      return;
+    }
+    await sendText(TermLinkJsonCodec.encodeControl(TermLinkControl(
+      op: TermLinkOp.splitPane,
+      sessionId: sessionId,
+      vertical: vertical,
+    )));
+  }
+
+  /// Select a pane inside a psmux session.
+  Future<void> selectPane(String sessionId, String paneId) async {
+    _ensureAlive();
+    if (isHost) {
+      await _hostSessions[sessionId]?.selectPane(paneId);
+      final s = _hostSessions[sessionId];
+      if (s != null) await _sendState(s.info);
+      return;
+    }
+    await sendText(TermLinkJsonCodec.encodeControl(TermLinkControl(
+      op: TermLinkOp.selectPane,
+      sessionId: sessionId,
+      paneId: paneId,
+    )));
+  }
+
+  /// Ask the host to open a locally-visible Windows Terminal window.
+  Future<void> visibleAttach(String sessionId) async {
+    _ensureAlive();
+    if (isHost) {
+      await _hostVisibleAttach(sessionId);
+      return;
+    }
+    await sendText(TermLinkJsonCodec.encodeControl(TermLinkControl(
+      op: TermLinkOp.visibleAttach,
+      sessionId: sessionId,
+    )));
+  }
+
   void onTextMessage(String text) {
     final control = TermLinkJsonCodec.tryDecodeText(text);
     if (control == null) return;
@@ -228,12 +271,65 @@ class TerminalLinkEngine {
             _hostSessions[control.sessionId!]?.writeInput(control.data!);
           }
           break;
+        case TermLinkOp.splitPane:
+          if (control.sessionId != null) {
+            try {
+              await _hostSplit(
+                control.sessionId!,
+                vertical: control.vertical ?? true,
+              );
+            } catch (e) {
+              await sendText(TermLinkJsonCodec.encodeControl(TermLinkControl(
+                op: TermLinkOp.error,
+                sessionId: control.sessionId,
+                error: e.toString(),
+                state: TermSessionState.failed,
+              )));
+            }
+          }
+          break;
+        case TermLinkOp.selectPane:
+          if (control.sessionId != null && control.paneId != null) {
+            try {
+              await _hostSessions[control.sessionId!]
+                  ?.selectPane(control.paneId!);
+              final s = _hostSessions[control.sessionId!];
+              if (s != null) await _sendState(s.info);
+            } catch (e) {
+              await sendText(TermLinkJsonCodec.encodeControl(TermLinkControl(
+                op: TermLinkOp.error,
+                sessionId: control.sessionId,
+                error: e.toString(),
+                state: TermSessionState.failed,
+              )));
+            }
+          }
+          break;
+        case TermLinkOp.visibleAttach:
+          if (control.sessionId != null) {
+            await _hostVisibleAttach(control.sessionId!);
+          }
+          break;
       }
       return;
     }
 
     // Client side
     switch (control.op) {
+      case TermLinkOp.visibleAttachResult:
+        if (!_stateController.isClosed) {
+          _stateController.add(TermSessionInfo(
+            sessionId: control.sessionId ?? activeSessionId ?? 'visible',
+            name: control.name ?? 'visible_attach',
+            shell: control.shell ?? '',
+            state: (control.ok ?? false)
+                ? TermSessionState.ready
+                : TermSessionState.failed,
+            error: control.ok == true ? null : control.detail,
+            backend: control.detail,
+          ));
+        }
+        break;
       case TermLinkOp.state:
         if (control.sessionId == null) return;
         final info = TermSessionInfo(
@@ -350,9 +446,40 @@ class TerminalLinkEngine {
       cols: s.cols,
       rows: s.rows,
       exitCode: s.info.exitCode,
+      backend: s.backendKind,
+      muxSession: s.muxSession,
     ));
     await _sendListResult();
     _emitHostList();
+  }
+
+  Future<void> _hostSplit(String sessionId, {bool vertical = true}) async {
+    final s = _hostSessions[sessionId];
+    if (s == null) return;
+    await s.splitPane(vertical: vertical);
+    await _sendState(s.info);
+    await _sendListResult();
+  }
+
+  Future<void> _hostVisibleAttach(String sessionId) async {
+    final s = _hostSessions[sessionId];
+    if (s == null) {
+      await sendText(TermLinkJsonCodec.encodeControl(TermLinkControl(
+        op: TermLinkOp.visibleAttachResult,
+        sessionId: sessionId,
+        ok: false,
+        detail: 'session not found',
+      )));
+      return;
+    }
+    final result = await s.visibleAttach();
+    await sendText(TermLinkJsonCodec.encodeControl(TermLinkControl(
+      op: TermLinkOp.visibleAttachResult,
+      sessionId: sessionId,
+      name: s.name,
+      ok: result.ok,
+      detail: result.detail,
+    )));
   }
 
   Future<void> _sendState(TermSessionInfo info) async {

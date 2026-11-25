@@ -18,6 +18,14 @@ abstract final class TermLinkOp {
   static const String input = 'input';
   static const String state = 'state';
   static const String error = 'error';
+  /// Split a psmux session into another pane (`-h` / `-v`).
+  static const String splitPane = 'split_pane';
+  /// Select a pane inside a psmux session.
+  static const String selectPane = 'select_pane';
+  /// Open a locally-visible Windows Terminal window on the host.
+  static const String visibleAttach = 'visible_attach';
+  /// Reply for [visibleAttach].
+  static const String visibleAttachResult = 'visible_attach_result';
 }
 
 /// Lifecycle / readiness of a terminal session.
@@ -40,6 +48,12 @@ class TermSessionInfo {
   final int rows;
   final int? exitCode;
   final String? error;
+  /// Backend kind: `pipe` / `conpty` / `psmux+conpty` / …
+  final String? backend;
+  /// psmux session name when multiplexed (may equal [sessionId]).
+  final String? muxSession;
+  /// Known pane ids (psmux `#{pane_id}`), when available.
+  final List<String> panes;
 
   const TermSessionInfo({
     required this.sessionId,
@@ -50,6 +64,9 @@ class TermSessionInfo {
     this.rows = 40,
     this.exitCode,
     this.error,
+    this.backend,
+    this.muxSession,
+    this.panes = const [],
   });
 
   Map<String, dynamic> toJson() => {
@@ -61,6 +78,9 @@ class TermSessionInfo {
         'rows': rows,
         if (exitCode != null) 'exitCode': exitCode,
         if (error != null) 'error': error,
+        if (backend != null) 'backend': backend,
+        if (muxSession != null) 'muxSession': muxSession,
+        if (panes.isNotEmpty) 'panes': panes,
       };
 
   factory TermSessionInfo.fromJson(Map<String, dynamic> json) =>
@@ -76,6 +96,12 @@ class TermSessionInfo {
         rows: (json['rows'] as num?)?.toInt() ?? 40,
         exitCode: (json['exitCode'] as num?)?.toInt(),
         error: json['error'] as String?,
+        backend: json['backend'] as String?,
+        muxSession: json['muxSession'] as String?,
+        panes: (json['panes'] as List?)
+                ?.map((e) => e.toString())
+                .toList(growable: false) ??
+            const [],
       );
 
   TermSessionInfo copyWith({
@@ -87,6 +113,9 @@ class TermSessionInfo {
     int? rows,
     int? exitCode,
     String? error,
+    String? backend,
+    String? muxSession,
+    List<String>? panes,
   }) =>
       TermSessionInfo(
         sessionId: sessionId ?? this.sessionId,
@@ -97,6 +126,9 @@ class TermSessionInfo {
         rows: rows ?? this.rows,
         exitCode: exitCode ?? this.exitCode,
         error: error ?? this.error,
+        backend: backend ?? this.backend,
+        muxSession: muxSession ?? this.muxSession,
+        panes: panes ?? this.panes,
       );
 }
 
@@ -114,6 +146,13 @@ class TermLinkControl {
   final TermSessionState? state;
   final String? error;
   final int? exitCode;
+  /// For [TermLinkOp.splitPane]: `true` = vertical split (`-v`).
+  final bool? vertical;
+  /// For [TermLinkOp.selectPane]: pane id / target.
+  final String? paneId;
+  /// Backend / visible-attach detail echoed to the controller.
+  final String? detail;
+  final bool? ok;
 
   const TermLinkControl({
     required this.op,
@@ -127,6 +166,10 @@ class TermLinkControl {
     this.state,
     this.error,
     this.exitCode,
+    this.vertical,
+    this.paneId,
+    this.detail,
+    this.ok,
   });
 
   Map<String, dynamic> toEnvelope() => {
@@ -143,6 +186,10 @@ class TermLinkControl {
           if (state != null) 'state': state!.name,
           if (error != null) 'error': error,
           if (exitCode != null) 'exitCode': exitCode,
+          if (vertical != null) 'vertical': vertical,
+          if (paneId != null) 'paneId': paneId,
+          if (detail != null) 'detail': detail,
+          if (ok != null) 'ok': ok,
         },
       };
 
@@ -173,6 +220,10 @@ class TermLinkControl {
             ),
       error: map['error'] as String?,
       exitCode: (map['exitCode'] as num?)?.toInt(),
+      vertical: map['vertical'] as bool?,
+      paneId: map['paneId'] as String?,
+      detail: map['detail'] as String?,
+      ok: map['ok'] as bool?,
     );
   }
 }

@@ -4,13 +4,16 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'backends/backend_factory.dart';
+import 'backends/psmux.dart';
+import 'backends/shell_backend.dart';
+import 'backends/visible_attach_win.dart';
 import 'protocol.dart';
 
 /// Default interactive shell for the current host OS.
 ///
 /// Windows defaults to PowerShell (UU public docs); macOS/Linux use `$SHELL`
-/// with bash/zsh fallbacks. This is a pipe-backed process, **not** ConPTY —
-/// full TTY/mux is a documented gap (see plugin README / GV reference).
+/// with bash/zsh fallbacks.
 String defaultHostShell() {
   if (Platform.isWindows) {
     return 'powershell.exe';
@@ -32,7 +35,6 @@ List<String> shellLaunchArgs(String shell) {
     }
     return const [];
   }
-  // Best-effort interactive login-less shell.
   return ['-i'];
 }
 
@@ -53,7 +55,7 @@ class _OutputRing {
   Uint8List snapshot() => Uint8List.fromList(_bytes);
 }
 
-/// One host-side shell process owned by [TerminalLinkEngine] (host role).
+/// One host-side shell / PTY session owned by [TerminalLinkEngine] (host role).
 class HostShellSession {
   final String sessionId;
   final String name;
@@ -61,9 +63,11 @@ class HostShellSession {
   int cols;
   int rows;
 
-  Process? _process;
-  StreamSubscription<List<int>>? _stdoutSub;
-  StreamSubscription<List<int>>? _stderrSub;
+  ShellBackend? _backend;
+  String _backendKind = 'pipe';
+  String? _muxSession;
+  List<String> _panes = const [];
+  StreamSubscription<Uint8List>? _outSub;
   final _OutputRing _ring = _OutputRing();
   final _outputController = StreamController<TerminalOutputEvent>.broadcast();
   final _stateController = StreamController<TermSessionInfo>.broadcast();
@@ -85,6 +89,9 @@ class HostShellSession {
   Stream<TerminalOutputEvent> get output => _outputController.stream;
   Stream<TermSessionInfo> get stateChanges => _stateController.stream;
 
+  String get backendKind => _backendKind;
+  String? get muxSession => _muxSession;
+
   TermSessionInfo get info => TermSessionInfo(
         sessionId: sessionId,
         name: name,
@@ -101,25 +108,36 @@ class HostShellSession {
         rows: rows,
         exitCode: _exitCode,
         error: _error,
+        backend: _backendKind,
+        muxSession: _muxSession,
+        panes: _panes,
       );
 
   Future<void> start() async {
     if (_disposed) return;
     try {
       final args = shellLaunchArgs(shell);
-      final process = await Process.start(
-        shell,
-        args,
-        runInShell: false,
-        workingDirectory: Platform.environment['USERPROFILE'] ??
-            Platform.environment['HOME'],
-        environment: _augmentedEnvironment(),
+      // Use sessionId as mux name (hex, tmux-safe).
+      final muxName = 'cppp-$sessionId';
+      final choice = await ShellBackendFactory.create(
+        shell: shell,
+        shellArgs: args,
+        cols: cols,
+        rows: rows,
+        muxSessionName: muxName,
+        preferMux: Platform.isWindows,
       );
-      _process = process;
+      _backend = choice.backend;
+      _backendKind = choice.kind;
+      if (choice.kind.startsWith('psmux')) {
+        _muxSession = muxName;
+        await _refreshPanes();
+      }
+
       _state = TermSessionState.ready;
       _emitState();
 
-      _stdoutSub = process.stdout.listen((chunk) {
+      _outSub = choice.backend.stdout.listen((chunk) {
         _ring.add(chunk);
         if (_attached && !_outputController.isClosed) {
           _outputController.add(TerminalOutputEvent(
@@ -131,19 +149,8 @@ class HostShellSession {
         _error = e.toString();
       });
 
-      _stderrSub = process.stderr.listen((chunk) {
-        _ring.add(chunk);
-        if (_attached && !_outputController.isClosed) {
-          _outputController.add(TerminalOutputEvent(
-            sessionId: sessionId,
-            bytes: chunk,
-            isStderr: true,
-          ));
-        }
-      });
-
       // ignore: unawaited_futures
-      process.exitCode.then((code) {
+      choice.backend.exitCode.then((code) {
         _exitCode = code;
         _state = TermSessionState.exited;
         _emitState();
@@ -156,13 +163,57 @@ class HostShellSession {
     }
   }
 
-  Map<String, String> _augmentedEnvironment() {
-    final env = Map<String, String>.from(Platform.environment);
-    // Hint columns/rows for tools that read them (no real PTY yet).
-    env['COLUMNS'] = cols.toString();
-    env['LINES'] = rows.toString();
-    env['TERM'] = env['TERM'] ?? 'xterm-256color';
-    return env;
+  Future<void> _refreshPanes() async {
+    final mux = _muxSession;
+    if (mux == null) return;
+    final cli = await ShellBackendFactory.psmux();
+    if (cli == null) return;
+    _panes = await cli.listPanes(mux);
+  }
+
+  /// Split the psmux window into another pane (no-op without psmux).
+  Future<void> splitPane({bool vertical = true}) async {
+    final mux = _muxSession;
+    final cli = await ShellBackendFactory.psmux();
+    if (mux == null || cli == null) {
+      throw StateError('split_pane requires a psmux-backed session on Windows');
+    }
+    await cli.splitWindow(target: mux, vertical: vertical, shell: shell);
+    await _refreshPanes();
+    _emitState();
+  }
+
+  Future<void> selectPane(String paneId) async {
+    final mux = _muxSession;
+    final cli = await ShellBackendFactory.psmux();
+    if (mux == null || cli == null) {
+      throw StateError('select_pane requires a psmux-backed session on Windows');
+    }
+    await cli.selectPane(target: mux, pane: paneId);
+    _emitState();
+  }
+
+  /// Open a locally-visible Windows Terminal window on the host.
+  Future<WindowsTerminalVisibleAttach> visibleAttach() async {
+    final mux = _muxSession;
+    final cli = await ShellBackendFactory.psmux();
+    if (mux != null && cli != null) {
+      await WindowsTerminalVisibleAttach.ensureProfile(
+        profileName: 'CloudPlayPlus:$mux',
+        commandLine: '${cli.executable} attach -t $mux',
+      );
+      return WindowsTerminalVisibleAttach.attach(
+        psmuxExe: cli.executable,
+        psmuxAttachSession: mux,
+        displayName: name,
+      );
+    }
+    // Without psmux: launch WT with the same shell (separate process — not a
+    // shared PTY attach; documented limitation when mux is absent).
+    return WindowsTerminalVisibleAttach.attach(
+      commandLine: shell,
+      displayName: name,
+    );
   }
 
   void attach() {
@@ -193,24 +244,24 @@ class HostShellSession {
   void resize(int newCols, int newRows) {
     cols = newCols;
     rows = newRows;
-    // Without ConPTY/ioctl TIOCSWINSZ this is informational only.
+    _backend?.resize(newCols, newRows);
     _emitState();
   }
 
   void writeInput(String data) {
-    final proc = _process;
-    if (proc == null || _state == TermSessionState.exited) return;
-    proc.stdin.add(utf8.encode(data));
+    if (_backend == null || _state == TermSessionState.exited) return;
+    _backend!.write(utf8.encode(data));
   }
 
   Future<void> kill() async {
-    final proc = _process;
-    if (proc != null) {
-      proc.kill(ProcessSignal.sigkill);
+    final mux = _muxSession;
+    if (mux != null) {
+      final cli = await ShellBackendFactory.psmux();
       try {
-        await proc.exitCode.timeout(const Duration(seconds: 2));
+        await cli?.killSession(mux);
       } catch (_) {}
     }
+    await _backend?.kill();
     _state = TermSessionState.exited;
     _emitState();
   }
@@ -224,9 +275,9 @@ class HostShellSession {
   Future<void> dispose() async {
     if (_disposed) return;
     _disposed = true;
-    await _stdoutSub?.cancel();
-    await _stderrSub?.cancel();
+    await _outSub?.cancel();
     await kill();
+    await _backend?.dispose();
     await _outputController.close();
     await _stateController.close();
   }
@@ -238,3 +289,7 @@ String newTerminalSessionId() {
   final bytes = List<int>.generate(8, (_) => r.nextInt(256));
   return bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
 }
+
+/// Whether psmux was detected on this host (Windows only).
+Future<bool> hostHasPsmux() async =>
+    (await ShellBackendFactory.psmux()) != null;
