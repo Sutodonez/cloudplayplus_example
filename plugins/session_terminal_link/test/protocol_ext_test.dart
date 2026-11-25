@@ -62,4 +62,35 @@ void main() {
     expect(decoded.muxSession, 'cppp-s1');
     expect(decoded.panes, ['%0', '%1']);
   });
+
+  test('visibleAttachResult keeps backend id separate from detail text',
+      () async {
+    final infos = <TermSessionInfo>[];
+    final client = TerminalLinkEngine(
+      isHost: false,
+      sendText: (_) async {},
+      sendBinary: (_) async {},
+    );
+    final sub = client.sessionStates.listen(infos.add);
+
+    client.onTextMessage(TermLinkJsonCodec.encodeControl(TermLinkControl(
+      op: TermLinkOp.visibleAttachResult,
+      sessionId: 's1',
+      name: 'session-s1',
+      shell: 'powershell.exe',
+      ok: true,
+      detail: 'launched Windows Terminal pid=42',
+      backend: 'psmux+conpty',
+    )));
+    await Future<void>.delayed(const Duration(milliseconds: 20));
+
+    expect(infos, isNotEmpty);
+    final last = infos.last;
+    expect(last.backend, 'psmux+conpty');
+    expect(last.backend, isNot(contains('Windows Terminal')));
+    expect(last.error, isNull);
+
+    await sub.cancel();
+    client.dispose();
+  });
 }
