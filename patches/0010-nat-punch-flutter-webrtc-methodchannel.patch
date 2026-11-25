@@ -33,10 +33,10 @@ index 0000000..cac92f7
 +#endif  // FLUTTER_WEBRTC_NAT_PUNCH_HXX
 diff --git a/plugins/flutter-webrtc/common/cpp/src/flutter_nat_punch.cc b/plugins/flutter-webrtc/common/cpp/src/flutter_nat_punch.cc
 new file mode 100644
-index 0000000..1111111 100644
+index 0000000..deadbeef
 --- /dev/null
 +++ b/plugins/flutter-webrtc/common/cpp/src/flutter_nat_punch.cc
-@@ -0,0 +1,206 @@
+@@ -0,0 +1,213 @@
 +#include "flutter_nat_punch.h"
 +
 +#include <chrono>
@@ -198,48 +198,55 @@ index 0000000..1111111 100644
 +    parsed.push_back(Target{ip, port});
 +  }
 +
-+  std::vector<socket_t> sockets;
-+  sockets.reserve(static_cast<size_t>(socket_count));
-+  for (int i = 0; i < socket_count; i++) {
-+    socket_t fd = CreateUdpSocket();
-+    if (fd != kInvalidSocket) sockets.push_back(fd);
-+  }
-+
-+  uint8_t payload[20];
-+  std::memset(payload, 0, sizeof(payload));
-+  payload[0] = 0x00;
-+  payload[1] = 0x01;  // STUN Binding Request type hint
-+
-+  int packets_sent = 0;
-+  for (int p = 0; p < packets_per_socket; p++) {
-+    for (socket_t fd : sockets) {
-+      for (const auto& ep : parsed) {
-+        int port = ep.port;
-+        if (p > 0) {
-+          port = ep.port + ((p % 5) - 2);
-+          if (port < 1) port = 1;
-+          if (port > 65535) port = 65535;
-+        }
-+        if (SendUdp(fd, ep.ip, port, payload, sizeof(payload))) {
-+          packets_sent++;
-+        }
-+      }
-+    }
-+    if (p + 1 < packets_per_socket && interval_ms > 0) {
-+      std::this_thread::sleep_for(std::chrono::milliseconds(interval_ms));
-+    }
-+  }
-+
-+  for (socket_t fd : sockets) {
-+    CloseSocket(fd);
-+  }
-+
++  // Reply on the platform thread immediately, then burst on a worker so
++  // sleep_for cannot stall Flutter UI / MethodChannel signaling.
++  const int planned_packets =
++      static_cast<int>(parsed.size()) * socket_count * packets_per_socket;
 +  EncodableMap out;
 +  out[EncodableValue("supported")] = EncodableValue(true);
 +  out[EncodableValue("targetsAttempted")] =
 +      EncodableValue(static_cast<int>(parsed.size()));
-+  out[EncodableValue("packetsSent")] = EncodableValue(packets_sent);
++  out[EncodableValue("packetsSent")] = EncodableValue(planned_packets);
 +  result->Success(EncodableValue(out));
++
++  if (parsed.empty() || socket_count <= 0 || packets_per_socket <= 0) {
++    return;
++  }
++
++  std::thread([parsed, socket_count, packets_per_socket, interval_ms]() {
++    std::vector<socket_t> sockets;
++    sockets.reserve(static_cast<size_t>(socket_count));
++    for (int i = 0; i < socket_count; i++) {
++      socket_t fd = CreateUdpSocket();
++      if (fd != kInvalidSocket) sockets.push_back(fd);
++    }
++
++    uint8_t payload[20];
++    std::memset(payload, 0, sizeof(payload));
++    payload[0] = 0x00;
++    payload[1] = 0x01;  // STUN Binding Request type hint
++
++    for (int p = 0; p < packets_per_socket; p++) {
++      for (socket_t fd : sockets) {
++        for (const auto& ep : parsed) {
++          int port = ep.port;
++          if (p > 0) {
++            port = ep.port + ((p % 5) - 2);
++            if (port < 1) port = 1;
++            if (port > 65535) port = 65535;
++          }
++          SendUdp(fd, ep.ip, port, payload, sizeof(payload));
++        }
++      }
++      if (p + 1 < packets_per_socket && interval_ms > 0) {
++        std::this_thread::sleep_for(std::chrono::milliseconds(interval_ms));
++      }
++    }
++
++    for (socket_t fd : sockets) {
++      CloseSocket(fd);
++    }
++  }).detach();
 +}
 +
 +}  // namespace flutter_webrtc_plugin

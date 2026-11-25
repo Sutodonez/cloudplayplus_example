@@ -377,7 +377,7 @@ index 0000000..1111111 100644
 +}
 diff --git a/lib/services/ice/ice_policy.dart b/lib/services/ice/ice_policy.dart
 new file mode 100644
-index 0000000..a6317b3
+index 0000000..deadbeef
 --- /dev/null
 +++ b/lib/services/ice/ice_policy.dart
 @@ -0,0 +1,114 @@
@@ -409,7 +409,7 @@ index 0000000..a6317b3
 +      return {
 +        ...testIceServers,
 +        'sdpSemantics': 'unified-plan',
-+        if (punch.forceRelay) 'iceTransportPolicy': 'relay',
++        if (punch.forceRelay) 'iceTransportPolicy': 'relay', // test override
 +      };
 +    }
 +
@@ -422,13 +422,13 @@ index 0000000..a6317b3
 +      turnCredential ?? StreamingSettings.customTurnServerPassword,
 +    );
 +
-+    if (punch.forceRelay) {
-+      // force_relay: TURN only.
-+      if (turn != null) {
-+        iceServers.add(turn);
-+      } else {
-+        iceServers.add(stun);
-+      }
++    // forceRelay requires a usable TURN URL. Without TURN, soft-degrade to
++    // STUN + iceTransportPolicy "all" — never pair relay policy with STUN-only
++    // (that combination cannot gather candidates and ICE fails hard).
++    final forceRelayActive = punch.forceRelay && turn != null;
++
++    if (forceRelayActive) {
++      iceServers.add(turn!);
 +    } else if (punch.enabled) {
 +      // Soft ladder complement: concurrent STUN + TURN (when configured).
 +      iceServers.add(stun);
@@ -455,13 +455,13 @@ index 0000000..a6317b3
 +      'sdpSemantics': 'unified-plan',
 +    };
 +
-+    if (punch.forceRelay) {
++    if (forceRelayActive) {
 +      config['iceTransportPolicy'] = 'relay';
 +    } else {
 +      config['iceTransportPolicy'] = 'all';
 +    }
 +
-+    if (punch.enabled && !punch.forceRelay && punch.iceCandidatePoolSize > 0) {
++    if (punch.enabled && !forceRelayActive && punch.iceCandidatePoolSize > 0) {
 +      config['iceCandidatePoolSize'] = punch.iceCandidatePoolSize;
 +    }
 +
@@ -976,10 +976,10 @@ index 1d1da3c..194115d 100644
                    onToggle: (bool value) {
 diff --git a/test/ice_policy_test.dart b/test/ice_policy_test.dart
 new file mode 100644
-index 0000000..1111111 100644
+index 0000000..deadbeef
 --- /dev/null
 +++ b/test/ice_policy_test.dart
-@@ -0,0 +1,175 @@
+@@ -0,0 +1,187 @@
 +import 'package:cloudplayplus/services/ice/ice_candidate_endpoint.dart';
 +import 'package:cloudplayplus/services/ice/ice_policy.dart';
 +import 'package:cloudplayplus/services/ice/ice_punch_options.dart';
@@ -1087,6 +1087,18 @@ index 0000000..1111111 100644
 +      final servers = cfg['iceServers'] as List;
 +      expect(servers.length, 1);
 +      expect((servers.first as Map)['urls'], turn['urls']);
++    });
++
++    test('forceRelay without TURN soft-degrades to STUN + all', () {
++      final cfg = IcePolicy.buildPeerConnectionConfiguration(
++        punch: const IcePunchOptions(enabled: true, forceRelay: true),
++        useTurnServer: false,
++        stunServer: stun,
++      );
++      expect(cfg['iceTransportPolicy'], 'all');
++      final servers = cfg['iceServers'] as List;
++      expect(servers.length, 1);
++      expect((servers.first as Map)['urls'], stun['urls']);
 +    });
 +
 +    test('legacy turn-only without punch', () {
