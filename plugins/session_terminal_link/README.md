@@ -32,7 +32,7 @@ decompiled bodies from `docs/reference/gameviewer/artifacts/`.
 ## App wiring
 
 1. Path-depend this package from the vendor app (`../../plugins/session_terminal_link`).
-2. Apply `patches/0001-session-terminal-link.patch` (opcode, session hooks, floating-menu GUI).
+2. Apply `patches/0003-session-terminal-link.patch` (opcode, session hooks, floating-menu GUI).
 3. Construct `TerminalLinkEngine(sendText:, sendBinary:, isHost:)` on both peers.
 4. Route data-channel text/binary into `onTextMessage` / `onBinaryMessage`.
 5. On Windows hosts, install [psmux](https://github.com/psmux/psmux) for multi-pane + best WT attach (`winget install psmux`).

@@ -18,7 +18,7 @@ Public UX reference: UU「终端连接」help / work features pages.
 | Piece | Location |
 |-------|----------|
 | Plugin (ConPTY FFI, psmux, WT visible attach, engine) | `plugins/session_terminal_link/` |
-| Vendor hooks + Chinese GUI | `patches/0001-session-terminal-link.patch` |
+| Vendor hooks + Chinese GUI | `patches/0003-session-terminal-link.patch` |
 
 **Included:** Windows ConPTY host backend; psmux multi-pane (`split_pane` / `select_pane`); Windows Terminal local visible attach; Chinese UI strings.
 
